@@ -1,0 +1,15 @@
+[
+  {
+ "control": "desa",
+ "col": "B",
+ "rowStart": "15",
+ "rowEnd": "31",
+ "parameter": {
+"desa": "B",
+"kunjungan1_bulan_lalu": "H",
+"kunjungan1_bulan_ini": "I",
+"kunjungan4_bulan_lalu": "N",
+"kunjungan4_bulan_ini": "O"
+  }
+  }
+]
