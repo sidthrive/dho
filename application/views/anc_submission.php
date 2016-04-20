@@ -2,16 +2,21 @@
 
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 		<script type="text/javascript">
-		$(document).ready(function() {
-			var options = {
+                var userId = ["User1","User2","User3","User4","User5","User6","User8","User9","User10"];
+                var titleText = ["User 1","User 2","User 3","User 4","User 5","User 6","User 8","User 9","User 10"];
+                var docName = ["user1","user2","user3","user4","user5","user6","user8","user9","user10"];
+		var i=0;
+                
+                $(document).ready(function() {
+                    var options = {
 	            chart: {
-	                renderTo: 'User1',
+	                renderTo: userId[0],
 	                type: 'column',
 	                marginRight: 130,
 	                marginBottom: 60
 	            },
 	            title: {
-	            	text: 'User 1',
+	            	text: titleText[0],
 	                x: -20 //center
 	            },
 	            subtitle: {
@@ -48,7 +53,7 @@
 	            
 	            series: []
 	        }
-	        $.getJSON("Anc_submission/user1", function(json) {
+	        $.getJSON("Anc_submission/"+docName[0], function(json) {
 	        	options.xAxis.categories = json[0]['data'];
 	        	options.series[0] = json[1];
 	        //	options.series[1] = json[2];
@@ -57,19 +62,17 @@
 
 	        });
 	    });
-		</script>
-
-		<script type="text/javascript">
+                i=i+1;
 		$(document).ready(function() {
 			var options = {
 	            chart: {
-	                renderTo: 'User2',
+	                renderTo: userId[1],
 	                type: 'column',
 	                marginRight: 130,
 	                marginBottom: 60
 	            },
 	            title: {
-	            	text: 'User 2',
+	            	text: titleText[1],
 	                x: -20 //center
 	            },
 	            subtitle: {
@@ -106,7 +109,7 @@
 	            
 	            series: []
 	        }
-	        $.getJSON("Anc_submission/user2", function(json) {
+	        $.getJSON("Anc_submission/"+docName[1], function(json) {
 	        	options.xAxis.categories = json[0]['data'];
 	        	options.series[0] = json[1];
 	        //	options.series[1] = json[2];
@@ -115,19 +118,17 @@
 
 	        });
 	    });
-		</script>
-
-		<script type="text/javascript">
+		
 		$(document).ready(function() {
 			var options = {
 	            chart: {
-	                renderTo: 'User3',
+	                renderTo: userId[2],
 	                type: 'column',
 	                marginRight: 130,
 	                marginBottom: 60
 	            },
 	            title: {
-	            	text: 'User 3',
+	            	text: titleText[2],
 	                x: -20 //center
 	            },
 	            subtitle: {
@@ -164,7 +165,7 @@
 	            
 	            series: []
 	        }
-	        $.getJSON("Anc_submission/user3", function(json) {
+	        $.getJSON("Anc_submission/"+docName[2], function(json) {
 	        	options.xAxis.categories = json[0]['data'];
 	        	options.series[0] = json[1];
 	        //	options.series[1] = json[2];
@@ -173,19 +174,17 @@
 
 	        });
 	    });
-		</script>
-
-		<script type="text/javascript">
-		$(document).ready(function() {
+		
+                $(document).ready(function() {
 			var options = {
 	            chart: {
-	                renderTo: 'User4',
+	                renderTo: userId[3],
 	                type: 'column',
 	                marginRight: 130,
 	                marginBottom: 60
 	            },
 	            title: {
-	            	text: 'User 4',
+	            	text: titleText[3],
 	                x: -20 //center
 	            },
 	            subtitle: {
@@ -222,7 +221,7 @@
 	            
 	            series: []
 	        }
-	        $.getJSON("Anc_submission/user4", function(json) {
+	        $.getJSON("Anc_submission/"+docName[3], function(json) {
 	        	options.xAxis.categories = json[0]['data'];
 	        	options.series[0] = json[1];
 	        //	options.series[1] = json[2];
