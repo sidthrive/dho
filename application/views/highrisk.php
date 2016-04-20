@@ -57,7 +57,6 @@
 	        	options.series[4] = json[5];
 	        	options.series[5] = json[6];
 	        	
-	        	
 		        chart = new Highcharts.Chart(options);
 
 	        });
@@ -126,8 +125,6 @@
 	        	options.series[2] = json[3];
 	        	options.series[3] = json[4];
 	        	options.series[4] = json[5];
-	        	
-	        	
 	        	
 		        chart = new Highcharts.Chart(options);
 

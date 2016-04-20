@@ -8,6 +8,14 @@
 					<li ><a href="<?php echo site_url() ?>/kia3">KIA IBU 3</a></li>
 					<li><a href="<?php echo site_url() ?>/kia4">KIA IBU 4</a></li>
 					<li><a href="<?php echo site_url() ?>/kia5">KIA IBU 5</a></li>
+                                        
+                                        <li>
+                                        <br/>
+                                        <br/>
+                                        <br/></li>
+                                        <li>
+                                            <a href="<?php echo site_url()?>/Upload">Upload XLS</li>
+                                            <li></li>
 				</ul>
 			</div>
 			

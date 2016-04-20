@@ -6,7 +6,8 @@
 <meta name="keywords" content="" />
 <meta name="description" content="" />
 <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet" />
-<link href="<?php echo base_url() ?>assets/default.css" rel="stylesheet" type="text/css">
+<link href="<?php echo base_url() ?>assets/default.css" rel="stylesheet" type="text/css"/>
+</head>
 <body>
 <div id="wrapper">
 	<div id="header-wrapper">
@@ -24,11 +25,12 @@
 			
 				<li><a href="<?php echo site_url() ?>/highrisk" accesskey="5" title="">High Risk</a></li>
 				
-				<li><a href="<?php echo site_url() ?>/anc_submission" accesskey="5" title="">Bidan Submission</a></li>
-				<li><a href="<?php echo site_url() ?>/download" accesskey="5" title="">Download Xls</a></li>
+				<li><a href="<?php echo site_url() ?>/anc_submission" accesskey="5" title="">Submission</a></li>
+				<li><a href="<?php echo site_url() ?>/download" accesskey="5" title="">Download</a></li>
 				<li><a href="http://www.sid-indonesia.org" accesskey="5" title="">Contact Us</a></li>
 				<li><a href="<?= site_url('welcome/logout') ?>">Logout</a></li>
 				
 			</ul>
 		</div>
 	</div>
+   
