@@ -10,27 +10,30 @@
 </head>
 <body>
 <div id="wrapper">
-	<div id="header-wrapper">
-		<div id="header" class="container">
-			<div id="logo">
-				<h1><img src="<?php echo base_url() ?>assets/images/opensrp.png" alt="" align="left" style="min-width: 100; height: 100px;"/> <a href="http://sid-indonesia.org">DHO Report</a></h1>
-				
-				<h3><a href="http://sid-indonesia.org/" rel="nofollow">Summit Institute of Development</a></h3>
-			</div>
-		</div>
-		<div id="menu" class="container">
-			<ul>
-				<li ><a href="<?php echo site_url() ?>/welcome" accesskey="1" title="">Homepage</a></li>
-				<li><a href="<?php echo site_url() ?>/ibu" accesskey="5" title="">Services</a></li>
-			
-				<li><a href="<?php echo site_url() ?>/highrisk" accesskey="5" title="">High Risk</a></li>
-				
-				<li><a href="<?php echo site_url() ?>/anc_submission" accesskey="5" title="">Submission</a></li>
-				<li><a href="<?php echo site_url() ?>/download" accesskey="5" title="">Download</a></li>
-				<li><a href="http://www.sid-indonesia.org" accesskey="5" title="">Contact Us</a></li>
-				<li><a href="<?= site_url('welcome/logout') ?>">Logout</a></li>
-				
-			</ul>
-		</div>
-	</div>
+    <div id="header-wrapper">
+        <div id="header" class="container">
+            <div id="logo">
+                <h1><img src="<?php echo base_url() ?>assets/images/opensrp.png" alt="" align="left" style="min-width: 100; height: 100px;"/> <a href="http://sid-indonesia.org">DHO Report</a></h1>
+
+                <h3><a href="http://sid-indonesia.org/" rel="nofollow">Summit Institute of Development</a></h3>
+            </div>
+            <div>
+
+            </div>
+        </div>
+        <div id="menu" class="container">
+            <ul>
+                <li ><a href="<?php echo site_url() ?>/welcome" accesskey="1" title="">Homepage</a></li>
+                <li><a href="<?php echo site_url() ?>/ibu" accesskey="5" title="">Total Entry</a></li>
+
+                <li align="center"><a href="<?php echo site_url() ?>/highrisk" accesskey="5" title="">Quality Care of Indicator</a></li>
+
+                <li><a href="<?php echo site_url() ?>/download" accesskey="5" title="">PWS</a></li>
+                <li><a href="<?php echo site_url() ?>/anc_submission" accesskey="5" title="">Sertifikasi</a></li>
+                <li><a href="http://www.sid-indonesia.org" accesskey="5" title="">Contact Us</a></li>
+                <li><a href="<?= site_url('welcome/logout') ?>">Logout</a></li>
+
+            </ul>
+        </div>
+    </div>
    
