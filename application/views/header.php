@@ -24,15 +24,13 @@
         <div id="menu" class="container">
             <ul>
                 <li ><a href="<?php echo site_url() ?>/welcome" accesskey="1" title="">Homepage</a></li>
-                <li><a href="<?php echo site_url() ?>/ibu" accesskey="5" title="">Total Entry</a></li>
+                <li><a href="<?php echo site_url() ?>/dataentry/dataentry" accesskey="5" title="">Data Entry</a></li>
 
-                <li align="center"><a href="<?php echo site_url() ?>/highrisk" accesskey="5" title="">Quality Care of Indicator</a></li>
+                <li align="center"><a href="<?php echo site_url() ?>/QCI/QCI" accesskey="5" title="">Quality Care of Indicator</a></li>
 
-                <li><a href="<?php echo site_url() ?>/download" accesskey="5" title="">PWS</a></li>
-                <li><a href="<?php echo site_url() ?>/anc_submission" accesskey="5" title="">Sertifikasi</a></li>
-                <li><a href="http://www.sid-indonesia.org" accesskey="5" title="">Contact Us</a></li>
-                <li><a href="<?= site_url('welcome/logout') ?>">Logout</a></li>
-
+                <li><a href="<?php echo site_url() ?>/laporan/laporan" accesskey="5" title="">Laporan</a></li>
+                <li><a href="<?php echo site_url() ?>/standarisasi/standarisasi" accesskey="5" title="">Standarisasi</a></li>
+                
             </ul>
         </div>
     </div>

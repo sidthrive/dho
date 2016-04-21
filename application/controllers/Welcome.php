@@ -29,10 +29,10 @@ class Welcome extends CI_Controller {
             }
             $this->load->model('PHPExcelModel');
             
-            $this->load->view('header');
+            $this->load->view('header');  
             $this->load->view('sidebar_lounge');
             $this->load->view('welcome_message');
-            
+            $this->load->view('footer');
             
         }
 	public function index()
