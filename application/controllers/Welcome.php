@@ -157,7 +157,7 @@ class Welcome extends CI_Controller {
             force_download($name, $data);
         }
         
-	 public function logout() {
+	public function logout() {
         $data = ['id_user', 'username'];
         $this->session->unset_userdata($data);
  

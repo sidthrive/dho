@@ -1,22 +1,29 @@
 <div id="page" class="container">
     <div id="sidebar1">
         <div id="box1">
-            <ul class="style2">
-                <li class="first">Bidan</li>
-                <ul>
-                    <li><a href=<?php echo site_url() ."/laporan/CakupanStandar"?>>Cakupan (Standar & Non)</a></li>
-                    <li><a href=<?php echo site_url() ."/laporan/CakupanIndikatorPWS"?>>Cakupan Indikator PWS</a></li>
-                    <li><a href=<?php echo site_url() ."/laporan/DownloadBidanPWS"?>>Download PWS</a></li>
-                </ul>
-                <li>Gizi</li>
-                <ul>
-                    <li><a href=<?php echo site_url() ."/laporan/StatusGizi"?>>Status Gizi</a></li>
-                    <li><a href=<?php echo site_url() ."/laporan/DownloadGiziPWS"?>>Download PWS</a></li>
-                </ul>
-                <li >Jurim</li>
-                <ul>
-                    <li><a href=<?php echo site_url() ."/laporan/DownloadJurimPWS"?>>Download PWS</a></li>
-                </ul>
-            </ul>
+            <h2>Menu Laporan</h2>
+            
+            <div id="laporanBidan">
+              <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#bidansubmenu" style="width: 250px; text-align: left;">Bidan</button>
+              <div id="bidansubmenu" class="collapse" style="padding-left: 25px;">
+                <p><a href=<?php echo site_url() ."/laporan/CakupanStandar"?>>Cakupan (Standar & Non)</a></p>
+                <p><a href=<?php echo site_url() ."/laporan/CakupanIndikatorPWS"?>>Cakupan Indikator PWS</a></p>
+                <p><a href=<?php echo site_url() ."/laporan/DownloadBidanPWS"?>>Download PWS</a></p>
+              </div>
+            </div>
+            <div id="laporanGizi">
+              <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#gizisubmenu" style="width: 250px; text-align: left;">Gizi</button>
+              <div id="gizisubmenu" class="collapse" style="padding-left: 25px;">
+                <p><a href=<?php echo site_url() ."/laporan/StatusGizi"?>>Status Gizi</a></p>
+                <p><a href=<?php echo site_url() ."/laporan/DownloadGiziPWS"?>>Download PWS</a></p>                
+              </div>
+            </div>
+            <div id="laporanJurim">
+              <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#jurimsubmenu" style="width: 250px; text-align: left;">Jurim</button>
+              <div id="jurimsubmenu" class="collapse" style="padding-left: 25px;">
+                <p><a href=<?php echo site_url() ."/laporan/DownloadJurimPWS"?>>Download PWS</a></p>
+              </div>
+            </div>
+            
         </div>
     </div>
