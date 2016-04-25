@@ -6,6 +6,7 @@ class BidanTrimester1 extends CI_Controller{
         $this->load->view("header");
         $this->load->view("qci/qcisidebar");
         $this->load->view("qci/qcipage");
+        
         $this->load->view("footer");
     }
     
