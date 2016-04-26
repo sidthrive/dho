@@ -30,9 +30,11 @@ class Welcome extends CI_Controller {
             $this->load->model('PHPExcelModel');
             
             $this->load->view('header');  
+            //$this->load->view('chartModule');
             $this->load->view('sidebar_lounge');
             $this->load->view('welcome_message');
             $this->load->view('footer');
+            $this->load->view('chartModule');
             
         }
 	public function index()
@@ -82,39 +84,39 @@ class Welcome extends CI_Controller {
     }
     
     public function getK1_akses(){
-        return $this->getXLSData('download/k1_akses.xls');
+        return $this->PHPExcelModel->getXLSData('download/k1_akses.xls');
     }
     
     public function getK4(){
-        return $this->getXLSData('download/k4.xls');
+        return $this->PHPExcelModel->getXLSData('download/k4.xls');
     }
     
     public function getKematianBalita(){
-        return $this->getXLSData('download/kematian_balita.xls');
+        return $this->PHPExcelModel->getXLSData('download/kematian_balita.xls');
     }
     
     public function getKematianBayi(){
-        return $this->getXLSData('download/kematian_bayi.xls');
+        return $this->PHPExcelModel->getXLSData('download/kematian_bayi.xls');
     }
     
     public function getKunjunganNeonatal1(){
-        return $this->getXLSData('download/kunjungan_neonatal_1.xls');
+        return $this->PHPExcelModel->getXLSData('download/kunjungan_neonatal_1.xls');
     }
     
     public function getKunjunganNeonatal3(){
-        return $this->getXLSData('download/kunjungan_neonatal_3.xls');
+        return $this->PHPExcelModel->getXLSData('download/kunjungan_neonatal_3.xls');
     }
     
     public function getKunjunganNifas(){
-        return $this->getXLSData('download/kunjungan_nifas.xls');
+        return $this->PHPExcelModel->getXLSData('download/kunjungan_nifas.xls');
     }
     
     public function getPersalinanFasilitasKesehatan(){
-        return $this->getXLSData('download/persalinan_fasilitas_kesehatan.xls');
+        return $this->PHPExcelModel->getXLSData('download/persalinan_fasilitas_kesehatan.xls');
     }
     
     public function getPersalinanTenagaKesehatan(){
-        return $this->getXLSData('download/persalinan_tenaga_kesehatan.xls');
+        return $this->PHPExcelModel->getXLSData('download/persalinan_tenaga_kesehatan.xls');
     }
 
 

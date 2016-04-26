@@ -9,15 +9,15 @@
                 <div id="subbidanentry" style="padding-left:25px;">
                   <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#TEtF" style="width: 225px; text-align: left;">Total Entry tiap Form </button>
                   <div id="TEtF" class="collapse" style="padding-left:40px;">
-                      <p><a href=<?php echo site_url() ."/dataEntry/BidanFormSengkol"?>>Kecamatan Sengkol</a></p>
-                      <p><a href=<?php echo site_url() ."/dataEntry/BidanFormJanapria"?>>Kecamatan Janapria</a></p>
+                      <p><a href=<?php echo site_url() ."dataEntry/BidanByForm/Sengkol"?>>Kecamatan Sengkol</a></p>
+                      <p><a href=<?php echo site_url() ."dataEntry/BidanByForm/Janapria"?>>Kecamatan Janapria</a></p>
                   </div>
                 </div>
                 <div id="subbidanentrytanggal" style="padding-left:25px;">
-                  <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#TEtT" style="width: 225px; text-align: left;">Total Entry tiap Form </button>
+                  <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#TEtT" style="width: 225px; text-align: left;">Total Entry tiap Tanggal </button>
                   <div id="TEtT" class="collapse" style="padding-left:40px;">
-                      <p><a href=<?php echo site_url() ."/dataEntry/BidanTanggalSengkol"?>>Kecamatan Sengkol</a></p>
-                      <p><a href=<?php echo site_url() ."/dataEntry/BidanTanggalJanapria"?>>Kecamatan Janapria</a></p>
+                      <p><a href=<?php echo site_url() ."dataEntry/BidanByTanggal/Sengkol"?>>Kecamatan Sengkol</a></p>
+                      <p><a href=<?php echo site_url() ."dataEntry/BidanByTanggal/Janapria"?>>Kecamatan Janapria</a></p>
                   </div>
                 </div>
               </div>
@@ -26,16 +26,16 @@
             <div id="Gizi">
               <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#gizientry" style="width: 250px; text-align: left;">Gizi</button>
               <div id="gizientry" class="collapse" style="padding-left: 25px;">
-                <p><a href=<?php echo site_url() ."/dataEntry/GiziSengkol"?>>Kecamatan Sengkol</a></p>
-                <p><a href=<?php echo site_url() ."/dataEntry/GiziJanapria"?>>Kecamatan Janapria</a></p>
+                <p><a href=<?php echo site_url() ."dataEntry/Gizi/Sengkol"?>>Kecamatan Sengkol</a></p>
+                <p><a href=<?php echo site_url() ."dataEntry/Gizi/Janapria"?>>Kecamatan Janapria</a></p>
               </div>
             </div>
             <!-- Data Entry Jurim-->
             <div id="Gizi">
               <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#jurimentry" style="width: 250px; text-align: left;">Jurim</button>
               <div id="jurimentry" class="collapse" style="padding-left: 25px;">
-                <p><a href=<?php echo site_url() ."/dataEntry/JurimSengkol"?>>Kecamatan Sengkol</a></p>
-                <p><a href=<?php echo site_url() ."/dataEntry/JurimJanapria"?>>Kecamatan Janapria</a></p>
+                <p><a href=<?php echo site_url() ."dataEntry/Jurim/Sengkol"?>>Kecamatan Sengkol</a></p>
+                <p><a href=<?php echo site_url() ."dataEntry/Jurim/Janapria"?>>Kecamatan Janapria</a></p>
               </div>
             </div>
         </div>
