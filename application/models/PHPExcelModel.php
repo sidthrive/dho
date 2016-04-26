@@ -8,7 +8,7 @@ class PHPExcelModel extends CI_Model{
         parent::__construct();
     }
     
-    public function readXLS($filePath){
+    private function readXLS($filePath){
         $file = APPPATH.$filePath;
         $this->load->library('PHPExcell');
         $fileObject = PHPExcel_IOFactory::load($file);
@@ -36,6 +36,20 @@ class PHPExcelModel extends CI_Model{
         return $data;
     }
     
-   
+    public function getXLSData($filePath){
+        $temp = $this->readXLS($filePath);
+        $xlabel = array();
+        $yvalue = array();
+
+        foreach($temp['values'] as $i => $data){
+            $xlabel[$i] = $data['A'];
+            $yvalue[$i] = ($data[strpos($filePath,'mati')?'C':'E']*100);
+        }
+        
+        $dataXLS['xlabel']=$xlabel;
+        $dataXLS['yvalue']=$yvalue;
+        
+        return $dataXLS;
+    }
     
 }
