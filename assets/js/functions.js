@@ -164,17 +164,21 @@ $.fn.showChartDataEntryBulan = function(data){
         }
     });
     
-    $.each(chart_data,function(user,weeks){
+    $.each(chart_data,function(user,months){
         var x = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
         var y_now = [];
         var y_last = [];
-        $.each(weeks,function(week,form){
-            if(week=='thisweek'){
+        var thisyear = 0;
+        var lastyear = 0;
+        $.each(months,function(month,form){
+            if(month=='thisyear'){
                 $.each(form,function(index,value){
+                    thisyear = index.split("-");
                     y_now.push(value);
                 });
             }else{
                 $.each(form,function(index,value){
+                    lastyear = index.split("-");
                     y_last.push(value);
                 });
             }
@@ -221,7 +225,7 @@ $.fn.showChartDataEntryBulan = function(data){
                 }
             },
             series: [{
-                    name: 'Minggu Ini',
+                    name: 'Tahun '+thisyear[0],
                     type: 'column',
                     data: y_now,
                     color: '#0000ff',
@@ -229,7 +233,7 @@ $.fn.showChartDataEntryBulan = function(data){
                         valueSuffix: ''
                     }
                 },{
-                    name: 'Minggu Lalu',
+                    name: 'Tahun '+lastyear[0],
                     type: 'column',
                     data: y_last,
                     color: '#ff0000',

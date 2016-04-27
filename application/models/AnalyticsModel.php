@@ -76,7 +76,7 @@ class AnalyticsModel extends CI_Model{
         return $result_data;
     }
     
-    public function getCountPerMode($kecamatan="",$mode="week"){
+    public function getCountPerMode($kecamatan="",$mode="Mingguan"){
         date_default_timezone_set("Asia/Makassar"); 
         $analyticsDB = $this->load->database('analytics', TRUE);
         $query  = $analyticsDB->query("SHOW TABLES FROM analytics");
@@ -120,7 +120,21 @@ class AnalyticsModel extends CI_Model{
                 $data['lastweek'] = $day_temp;
                 
             }elseif($mode=='Bulanan'){
-                
+                $data['thisyear'] = array();
+                $data['lastyear'] = array();
+                $this_month = date("n");
+                $month  = array();
+                for($i=1;$i<=12;$i++){
+                    $date   = date("Y-m",strtotime("+".(-$this_month+$i)." months"));
+                    $month[$date]   =   0;
+                }
+                $data['thisyear'] = $month;
+                $month  = array();
+                for($i=1;$i<=12;$i++){
+                    $date   = date("Y-m",strtotime("+".(-$this_month+$i-12)." months"));
+                    $month[$date]   =   0;
+                }
+                $data['lastyear'] = $month;
             }
             $result_data[$user] = $data;
         }
@@ -136,10 +150,18 @@ class AnalyticsModel extends CI_Model{
             
             //query tha data
             if($kecamatan=='Sengkol'){
-                $query = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." where (userid='user8' or userid='user9' or userid='user10' or userid='user11' or userid='user12' or userid='user13' or userid='user14') and (submissiondate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' and submissiondate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."') group by userid, submissiondate");
+                if($mode=='Mingguan'){
+                    $query = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." where (userid='user8' or userid='user9' or userid='user10' or userid='user11' or userid='user12' or userid='user13' or userid='user14') and (submissiondate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' and submissiondate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."') group by userid, submissiondate");
+                }elseif($mode=='Bulanan'){
+                    $query = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." where (userid='user8' or userid='user9' or userid='user10' or userid='user11' or userid='user12' or userid='user13' or userid='user14') and (submissiondate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' and submissiondate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."') group by userid, submissiondate");
+                }
             }
             elseif($kecamatan=='Janapria'){
-                $query = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." where (userid='user1' or userid='user2' or userid='user3' or userid='user4' or userid='user5' or userid='user6') and (submissiondate >= '".date("Y-m-d",strtotime("-30 days"))."' and submissiondate <= '".date("Y-m-d")."') group by userid, submissiondate");
+                if($mode=='Mingguan'){
+                    $query = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." where (userid='user1' or userid='user2' or userid='user3' or userid='user4' or userid='user5' or userid='user6') and (submissiondate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' and submissiondate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."') group by userid, submissiondate");
+                }elseif($mode=='Bulanan'){
+                    $query = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." where (userid='user1' or userid='user2' or userid='user3' or userid='user4' or userid='user5' or userid='user6') and (submissiondate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' and submissiondate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."') group by userid, submissiondate");
+                }
             }
             else{
                 $query = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." where (submissiondate >= '2015-06-24' and submissiondate <= '2015-07-24') group by userid, submissiondate");
@@ -160,7 +182,21 @@ class AnalyticsModel extends CI_Model{
                         $week['lastweek'] = $lastweek;
                         $result_data[$datas->userid] = $week;
                     }elseif($mode=='Bulanan'){
-                        
+                        $month = $result_data[$datas->userid];
+                        $thisyear = $month['thisyear'];
+                        $lastyear = $month['lastyear'];
+                        $m = explode('-', $datas->submissiondate);
+                        array_pop($m);
+                        $datas->submissiondate = implode('-',$m);
+                        if(array_key_exists($datas->submissiondate, $thisyear)){
+                            $thisyear[$datas->submissiondate] +=1;
+                        }
+                        if(array_key_exists($datas->submissiondate, $lastyear)){
+                            $lastyear[$datas->submissiondate] +=1;
+                        }
+                        $month['thisyear'] = $thisyear;
+                        $month['lastyear'] = $lastyear;
+                        $result_data[$datas->userid] = $month;
                     }
                 }
                 
