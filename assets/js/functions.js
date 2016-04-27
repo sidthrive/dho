@@ -33,7 +33,7 @@ $.fn.showChartDataEntry = function(data){
                         }
                     },
                     title: {
-                        text: 'Prosentase (%)',
+                        text: 'Jumlah Entry',
                         style: {
                             color: Highcharts.getOptions().colors[1]
                         }
@@ -50,12 +50,12 @@ $.fn.showChartDataEntry = function(data){
                     borderWidth: 0,
                     dataLabels: {
                         enabled: true,
-                        format: '{point.y:.2f}'
+                        format: '{point.y}'
                     }
                 }
             },
             series: [{
-                    name: 'Realisasi Kinerja',
+                    name: 'Jumlah Entry',
                     type: 'column',
                     data: y,
                     color: '#73c1f7',
