@@ -3,6 +3,7 @@
 class DataEntry extends CI_Controller{
     public function __construct() {
         parent::__construct();
+        $this->load->model('AnalyticsModel');
     }
     
     public function index(){
@@ -14,6 +15,7 @@ class DataEntry extends CI_Controller{
     
     public function bidanByForm(){
         $data['kecamatan']		= $this->uri->segment(3);
+        $data['data']                    = $this->AnalyticsModel->getCountPerForm($data['kecamatan']);
         $this->load->view("header");
         $this->load->view("dataentry/dataentrysidebar");
         $this->load->view("dataentry/bidanentryform",$data);
@@ -22,6 +24,7 @@ class DataEntry extends CI_Controller{
     
     public function bidanByTanggal(){
         $data['kecamatan']		= $this->uri->segment(3);
+        $data['data']                    = $this->AnalyticsModel->getCountPerDay($data['kecamatan']);
         $this->load->view("header");
         $this->load->view("dataentry/dataentrysidebar");
         $this->load->view("dataentry/bidanentrytanggal",$data);
