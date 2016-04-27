@@ -8,6 +8,7 @@
     -->
     <?php foreach($data as $user => $form){
     ?>
+    <br>
     <div title="Total Entry Oleh <?=ucwords($user)?>">
             <div id="">
                 <center><span style="font-size:16px; font-family:'Droid Sans',Arial,Verdana,sans-serif;"><strong>Total Entry Oleh <?=ucwords($user)?></strong>
@@ -17,6 +18,7 @@
                 <!-- END Script Block for Chart -->                
             </div>
         </div>
+    <br><br>
     <?php
     }
     ?>

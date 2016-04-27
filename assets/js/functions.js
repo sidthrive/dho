@@ -17,7 +17,7 @@ $.fn.showChartDataEntry = function(data){
         $('#'+user).highcharts({			
             chart: {
                 zoomType: 'xy',
-                height: 220
+                height: 400
             },
             title: {
                 text: ''
