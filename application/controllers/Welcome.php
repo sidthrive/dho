@@ -34,7 +34,7 @@ class Welcome extends CI_Controller {
             $this->load->view('sidebar_lounge');
             $this->load->view('welcome_message');
             $this->load->view('footer');
-            $this->load->view('chartModule');
+            //$this->load->view('chartModule');
             
         }
 	public function index()
@@ -67,56 +67,40 @@ class Welcome extends CI_Controller {
             
 	}
         
-    private function getXLSData($filePath){
-        $temp = $this->PHPExcelModel->readXLS($filePath);
-        $xlabel = array();
-        $yvalue = array();
-
-        foreach($temp['values'] as $i => $data){
-            $xlabel[$i] = $data['A'];
-            $yvalue[$i] = ($data[strpos($filePath,'mati')?'C':'E']*100);
-        }
-        
-        $dataXLS['xlabel']=$xlabel;
-        $dataXLS['yvalue']=$yvalue;
-        
-        return $dataXLS;
-    }
-    
-    public function getK1_akses(){
-        return $this->PHPExcelModel->getXLSData('download/k1_akses.xls');
+   public function getK1_akses(){
+        return $this->PHPExcelModel->getXLSData('download/k1_akses.xls','E');
     }
     
     public function getK4(){
-        return $this->PHPExcelModel->getXLSData('download/k4.xls');
+        return $this->PHPExcelModel->getXLSData('download/k4.xls','E');
     }
     
     public function getKematianBalita(){
-        return $this->PHPExcelModel->getXLSData('download/kematian_balita.xls');
+        return $this->PHPExcelModel->getXLSData('download/kematian_balita.xls','E');
     }
     
     public function getKematianBayi(){
-        return $this->PHPExcelModel->getXLSData('download/kematian_bayi.xls');
+        return $this->PHPExcelModel->getXLSData('download/kematian_bayi.xls','E');
     }
     
     public function getKunjunganNeonatal1(){
-        return $this->PHPExcelModel->getXLSData('download/kunjungan_neonatal_1.xls');
+        return $this->PHPExcelModel->getXLSData('download/kunjungan_neonatal_1.xls','E');
     }
     
     public function getKunjunganNeonatal3(){
-        return $this->PHPExcelModel->getXLSData('download/kunjungan_neonatal_3.xls');
+        return $this->PHPExcelModel->getXLSData('download/kunjungan_neonatal_3.xls','E');
     }
     
     public function getKunjunganNifas(){
-        return $this->PHPExcelModel->getXLSData('download/kunjungan_nifas.xls');
+        return $this->PHPExcelModel->getXLSData('download/kunjungan_nifas.xls','E');
     }
     
     public function getPersalinanFasilitasKesehatan(){
-        return $this->PHPExcelModel->getXLSData('download/persalinan_fasilitas_kesehatan.xls');
+        return $this->PHPExcelModel->getXLSData('download/persalinan_fasilitas_kesehatan.xls','E');
     }
     
     public function getPersalinanTenagaKesehatan(){
-        return $this->PHPExcelModel->getXLSData('download/persalinan_tenaga_kesehatan.xls');
+        return $this->PHPExcelModel->getXLSData('download/persalinan_tenaga_kesehatan.xls','E');
     }
 
 
@@ -150,13 +134,6 @@ class Welcome extends CI_Controller {
             //array_push($result,$series3);
 
             print json_encode($result, JSON_NUMERIC_CHECK);
-        }
-        
-        public function getVideuURL(){
-            $this->load->helper('download');
-            $data = file_get_contents(site_url()."/views/sketchuptutorial.mp4");
-            $name = "video.mp4";
-            force_download($name, $data);
         }
         
 	public function logout() {

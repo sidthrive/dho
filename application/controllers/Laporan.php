@@ -12,85 +12,54 @@ class Laporan extends CI_Controller{
         $this->load->view('footer');
     }
     
-    public function cakupanStandar(){
-        
-        $temp = $this->PHPExcelModel->getXLSData('download/anc1_std_cov');
-        $dataXLS['ANC1SCxlabel']=$temp['xlabel'];
-        $dataXLS['ANC1SCvalue']=$temp['yvalue'];
-        
-        $temp = $this->PHPExcelModel->getXLSData('download/anc1_nonstd_cov');
-        $dataXLS['ANC1NCxlabel']=$temp['xlabel'];
-        $dataXLS['ANC1NCvalue']=$temp['yvalue'];
-        
-        $temp = $this->PHPExcelModel->getXLSData('download/anc4_std_cov');
-        $dataXLS['ANC4SCxlabel']=$temp['xlabel'];
-        $dataXLS['ANC4SCvalue']=$temp['yvalue'];
-        
-        $temp = $this->PHPExcelModel->getXLSData('download/anc4_nonstd_cov');
-        $dataXLS['ANC4NCxlabel']=$temp['xlabel'];
-        $dataXLS['ANC4NCvalue']=$temp['yvalue'];
-        
-        $temp = $this->PHPExcelModel->getXLSData('download/birth_cov');
-        $dataXLS['BCxlabel']=$temp['xlabel'];
-        $dataXLS['BCvalue']=$temp['yvalue'];
-        
-        $temp = $this->PHPExcelModel->getXLSData('download/pnc_cov');
-        $dataXLS['PNCCxlabel']=$temp['xlabel'];
-        $dataXLS['PNCCvalue']=$temp['yvalue'];
-        
-        $this->load->view("header");
-        $this->load->view("laporan/laporansidebar");
-        $this->load->view("laporan/standar",$dataXLS,false);
-        $this->load->view("footer");
-    }
-    
     public function cakupanIndikatorPWS(){
+        $this->load->model('PHPExcelModel');
         
-        $temp = $this->PHPExcelModel->getXLSData('download/k1_akses');
+        $temp = $this->PHPExcelModel->getXLSData('download/k1_akses.xls','E');
         $dataXLS['K1xlabel']=$temp['xlabel'];
         $dataXLS['K1value']=$temp['yvalue'];
         
-        $temp = $this->PHPExcelModel->getXLSData('download/k4');
+        $temp = $this->PHPExcelModel->getXLSData('download/k4.xls','E');
         $dataXLS['k4xlabel']=$temp['xlabel'];
         $dataXLS['k4value']=$temp['yvalue'];
         
-        $temp = $this->PHPExcelModel->getXLSData('download/maternal_tertangani');
+        $temp = $this->PHPExcelModel->getXLSData('download/maternal_tertangani.xls','E');
         $dataXLS['MTxlabel']=$temp['xlabel'];
         $dataXLS['MTvalue']=$temp['yvalue'];
         
-        $temp = $this->PHPExcelModel->getXLSData('download/persalinan_fasilitas_kesehatan');
+        $temp = $this->PHPExcelModel->getXLSData('download/persalinan_fasilitas_kesehatan.xls','E');
         $dataXLS['PDFKxlabel']=$temp['xlabel'];
         $dataXLS['PDFKvalue']=$temp['yvalue'];
         
-        $temp = $this->PHPExcelModel->getXLSData('download/persalinan_tenaga_kesehatan');
+        $temp = $this->PHPExcelModel->getXLSData('download/persalinan_tenaga_kesehatan.xls','E');
         $dataXLS['PDTKxlabel']=$temp['xlabel'];
         $dataXLS['PDTKvalue']=$temp['yvalue'];
         
-        $temp = $this->PHPExcelModel->getXLSData('download/kunjungan_nifas');
+        $temp = $this->PHPExcelModel->getXLSData('download/kunjungan_nifas.xls','E');
         $dataXLS['KNxlabel']=$temp['xlabel'];
         $dataXLS['KNvalue']=$temp['yvalue'];
         
-        $temp = $this->PHPExcelModel->getXLSData('download/kunjungan_neonatal_1');
+        $temp = $this->PHPExcelModel->getXLSData('download/kunjungan_neonatal_1.xls','E');
         $dataXLS['KN1xlabel']=$temp['xlabel'];
         $dataXLS['KN1value']=$temp['yvalue'];
         
-        $temp = $this->PHPExcelModel->getXLSData('download/kunjungan_neonatal_3');
+        $temp = $this->PHPExcelModel->getXLSData('download/kunjungan_neonatal_3.xls','E');
         $dataXLS['KN3xlabel']=$temp['xlabel'];
         $dataXLS['KN3value']=$temp['yvalue'];
         
-        $temp = $this->PHPExcelModel->getXLSData('download/kematian_maternal');
+        $temp = $this->PHPExcelModel->getXLSData('download/kematian_maternal.xls','E');
         $dataXLS['KMxlabel']=$temp['xlabel'];
         $dataXLS['KMvalue']=$temp['yvalue'];
         
-        $temp = $this->PHPExcelModel->getXLSData('download/kematian_neonatal');
+        $temp = $this->PHPExcelModel->getXLSData('download/kematian_neonatal.xls','E');
         $dataXLS['KNNxlabel']=$temp['xlabel'];
         $dataXLS['KNNvalue']=$temp['yvalue'];
         
-        $temp = $this->PHPExcelModel->getXLSData('download/kematian_bayi');
+        $temp = $this->PHPExcelModel->getXLSData('download/kematian_bayi.xls','E');
         $dataXLS['KBxlabel']=$temp['xlabel'];
         $dataXLS['KBvalue']=$temp['yvalue'];
         
-        $temp = $this->PHPExcelModel->getXLSData('download/kematian_balita');
+        $temp = $this->PHPExcelModel->getXLSData('download/kematian_balita.xls','E');
         $dataXLS['KBLTxlabel']=$temp['xlabel'];
         $dataXLS['KBLTvalue']=$temp['yvalue'];
         

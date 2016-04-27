@@ -23,7 +23,7 @@ class PHPExcelModel extends CI_Model{
             $row = $fileObject->getActiveSheet()->getCell($cell)->getRow();
             $data_value = $fileObject->getActiveSheet()->getCell($cell)->getValue();
 
-            if ($row == 1) {
+            if ($row == 0) {
                 continue;
             } else {
                 $arr_data[$row-1][$column] = $data_value;
@@ -36,14 +36,22 @@ class PHPExcelModel extends CI_Model{
         return $data;
     }
     
-    public function getXLSData($filePath){
+    public function showEntireData($filePath){
+        $temp = $this->readXLS($filePath);
+        
+        echo '<pre>';
+            print_r($temp);
+        echo '</pre>';
+    }
+    
+    public function getXLSData($filePath,$columnData){
         $temp = $this->readXLS($filePath);
         $xlabel = array();
         $yvalue = array();
 
         foreach($temp['values'] as $i => $data){
             $xlabel[$i] = $data['A'];
-            $yvalue[$i] = ($data[strpos($filePath,'mati')?'C':'E']*100);
+            $yvalue[$i] = isset($data[$columnData]) ? $data[$columnData]*100: 0;
         }
         
         $dataXLS['xlabel']=$xlabel;

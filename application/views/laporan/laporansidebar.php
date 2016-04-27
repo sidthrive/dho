@@ -6,7 +6,6 @@
             <div id="laporanBidan">
               <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#bidansubmenu" style="width: 250px; text-align: left;">Bidan</button>
               <div id="bidansubmenu" class="collapse" style="padding-left: 25px;">
-                <p><a href=<?php echo site_url() ."/laporan/CakupanStandar"?>>Cakupan (Standar & Non)</a></p>
                 <p><a href=<?php echo site_url() ."/laporan/CakupanIndikatorPWS"?>>Cakupan Indikator PWS</a></p>
                 <p><a href=<?php echo site_url() ."/laporan/DownloadBidanPWS"?>>Download PWS</a></p>
               </div>
