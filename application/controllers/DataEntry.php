@@ -24,7 +24,8 @@ class DataEntry extends CI_Controller{
     
     public function bidanByTanggal(){
         $data['kecamatan']		= $this->uri->segment(3);
-        $data['data']                    = $this->AnalyticsModel->getCountPerDay($data['kecamatan']);
+        $data['mode']                   = $this->uri->segment(4);
+        $data['data']                   = $this->AnalyticsModel->getCountPerDay($data['kecamatan'],$data['mode']);
         $this->load->view("header");
         $this->load->view("dataentry/dataentrysidebar");
         $this->load->view("dataentry/bidanentrytanggal",$data);

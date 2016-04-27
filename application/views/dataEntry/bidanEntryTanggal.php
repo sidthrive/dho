@@ -29,5 +29,15 @@
 <script src="<?=base_url()?>assets/js/functions.js"></script>
 <script>
     var json = <?=json_encode($data)?>;
-    $.fn.showChartDataEntry(json);
+    <?php 
+    if(isset($mode)){
+        if($mode=='Mingguan'){
+            echo '$.fn.showChartDataEntryMinggu(json);';
+        }else{
+            echo '$.fn.showChartDataEntryBulan(json);';
+        }
+    }else{
+        echo '$.fn.showChartDataEntryTanggal(json);';
+    } ?> 
+        
 </script> 

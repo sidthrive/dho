@@ -29,5 +29,5 @@
 <script src="<?=base_url()?>assets/js/functions.js"></script>
 <script>
     var json = <?=json_encode($data)?>;
-    $.fn.showChartDataEntry(json);
+    $.fn.showChartDataEntryForm(json);
 </script> 
