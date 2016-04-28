@@ -10,11 +10,11 @@
             <?php foreach($data as $user => $form){
             ?>
             <br>
-            <div title="Total Entry Oleh <?=ucwords($user)?>">
+            <div title="Desa <?=ucwords($user)?>">
                     <div id="">
-                        <center><span style="font-size:16px; font-family:'Droid Sans',Arial,Verdana,sans-serif;"><strong>Total Entry Oleh <?=ucwords($user)?></strong>
+                        <center><span style="font-size:16px; font-family:'Droid Sans',Arial,Verdana,sans-serif;"><strong>Desa <?=ucwords($user)?></strong>
                         <!-- START Script Block for Chart -->
-                        <div id="<?=$user?>" align="center">
+                        <div id="<?=str_replace(' ', '_', $user);?>" align="center">
                         </div>
                         <!-- END Script Block for Chart -->                
                     </div>

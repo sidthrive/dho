@@ -22,24 +22,24 @@ class AnalyticsModel extends CI_Model{
             array_push($tables, $table->Tables_in_analytics);
         }
         
-        if($kecamatan=='Sengkol'){
-            $users = ['user8','user9','user10','user11','user12','user13','user14'];
+       if($kecamatan=='Sengkol'){
+            $users = ['user8'=>'Ketara','user9'=>'Sengkol','user10'=>'Sengkol','user11'=>'Kawo','user12'=>'Tanak Awu','user13'=>'Pengembur','user14'=>'Segala Anyar'];
         }elseif($kecamatan=='Janapria'){
-            $users = ['user1','user2','user3','user4','user5','user6'];
+            $users = ['user1'=>'Lekor','user2'=>'Saba','user3'=>'Pendem','user4'=>'Setuta','user5'=>'Jango','user6'=>'Janapria'];
         }else{
-            $users = ['user1','user2','user3','user4','user5','user6','user8','user9','user10','user11','user12','user13','user14'];
+            return;
         }
         
         //make result array from the tables name
         $result_data = array();
-        foreach ($users as $user){
+        foreach ($users as $user=>$desa){
             $data = array();
             for($i=1;$i<=30;$i++){
                 $day     = 30-$i;
                 $date    = date("Y-m-d",  strtotime("-".$day." days"));
                 $data[$date] = 0;
             }
-            $result_data[$user] = $data;
+            $result_data[$desa] = $data;
         }
         
         
@@ -62,12 +62,12 @@ class AnalyticsModel extends CI_Model{
                 $query = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." where (submissiondate >= '2015-06-24' and submissiondate <= '2015-07-24') group by userid, submissiondate");
             }
             foreach ($query->result() as $datas){
-                if(array_key_exists($datas->userid, $result_data)){
-                    $data_count                  = $result_data[$datas->userid];
+                if(array_key_exists($datas->userid, $users)){
+                    $data_count                  = $result_data[$users[$datas->userid]];
                     if(array_key_exists($datas->submissiondate, $data_count)){
                         $data_count[$datas->submissiondate] +=1;
                     }
-                    $result_data[$datas->userid] = $data_count;
+                    $result_data[$users[$datas->userid]] = $data_count;
                 }
                 
             }
@@ -88,17 +88,17 @@ class AnalyticsModel extends CI_Model{
         }
         
         if($kecamatan=='Sengkol'){
-            $users = ['user8','user9','user10','user11','user12','user13','user14'];
+            $users = ['user8'=>'Ketara','user9'=>'Sengkol','user10'=>'Sengkol','user11'=>'Kawo','user12'=>'Tanak Awu','user13'=>'Pengembur','user14'=>'Segala Anyar'];
         }elseif($kecamatan=='Janapria'){
-            $users = ['user1','user2','user3','user4','user5','user6'];
+            $users = ['user1'=>'Lekor','user2'=>'Saba','user3'=>'Pendem','user4'=>'Setuta','user5'=>'Jango','user6'=>'Janapria'];
         }else{
-            $users = ['user1','user2','user3','user4','user5','user6','user8','user9','user10','user11','user12','user13','user14'];
+            return;
         }
         
         //make result array from the tables name
         $result_data = array();
         $now    = date("Y-m-d");
-        foreach ($users as $user){
+        foreach ($users as $user=>$desa){
             $data = array();
             
             if($mode=='Mingguan'){
@@ -136,7 +136,7 @@ class AnalyticsModel extends CI_Model{
                 }
                 $data['lastyear'] = $month;
             }
-            $result_data[$user] = $data;
+            $result_data[$desa] = $data;
         }
         
         
@@ -167,9 +167,9 @@ class AnalyticsModel extends CI_Model{
                 $query = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." where (submissiondate >= '2015-06-24' and submissiondate <= '2015-07-24') group by userid, submissiondate");
             }
             foreach ($query->result() as $datas){
-                if(array_key_exists($datas->userid, $result_data)){
+                if(array_key_exists($datas->userid, $users)){
                     if($mode=='Mingguan'){
-                        $week   =   $result_data[$datas->userid];
+                        $week   =   $result_data[$users[$datas->userid]];
                         $thisweek   = $week['thisweek'];
                         $lastweek   = $week['lastweek'];
                         if(array_key_exists($datas->submissiondate, $thisweek)){
@@ -180,9 +180,9 @@ class AnalyticsModel extends CI_Model{
                         }
                         $week['thisweek'] = $thisweek;
                         $week['lastweek'] = $lastweek;
-                        $result_data[$datas->userid] = $week;
+                        $result_data[$users[$datas->userid]] = $week;
                     }elseif($mode=='Bulanan'){
-                        $month = $result_data[$datas->userid];
+                        $month = $result_data[$users[$datas->userid]];
                         $thisyear = $month['thisyear'];
                         $lastyear = $month['lastyear'];
                         $m = explode('-', $datas->submissiondate);
@@ -196,7 +196,7 @@ class AnalyticsModel extends CI_Model{
                         }
                         $month['thisyear'] = $thisyear;
                         $month['lastyear'] = $lastyear;
-                        $result_data[$datas->userid] = $month;
+                        $result_data[$users[$datas->userid]] = $month;
                     }
                 }
                 
@@ -209,35 +209,50 @@ class AnalyticsModel extends CI_Model{
     public function getCountPerForm($kecamatan=""){
         $analyticsDB = $this->load->database('analytics', TRUE);
         $query  = $analyticsDB->query("SHOW TABLES FROM analytics");
-        
+        $table_default = [
+            'kartu_ibu_registration'=>'Registrasi Ibu',
+            'kohort_kb_registration'=>'Registrasi KB',
+            'kartu_anc_registration'=>'Registrasi ANC',
+            'kartu_anc_registration_oa'=>'Registrasi ANC',
+            'kartu_anc_rencana_persalinan'=>'Rencana Persalinan',
+            'kartu_anc_visit'=>'Kunjungan ANC',
+            'kartu_pnc_regitration_oa'=>'Registrasi PNC',
+            'kartu_pnc_dokumentasi_persalinan'=>'Dokumentasi Persalinan',
+            'kartu_pnc_visit'=>'Kunjungan PNC',
+            'kohort_bayi_registration'=>'Registrasi Anak',
+            'kohort_bayi_registration_oa'=>'Registrasi Anak',
+            'kohort_bayi_neonatal_period'=>'Kunjungan Neonatal',
+            'kohort_bayi_kunjungan'=>'Kunjungan Bayi'];
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
-            array_push($tables, $table->Tables_in_analytics);
+            if(array_key_exists($table->Tables_in_analytics, $table_default)){
+                $tables[$table->Tables_in_analytics]=$table_default[$table->Tables_in_analytics];
+            }
         }
         
         if($kecamatan=='Sengkol'){
-            $users = ['user8','user9','user10','user11','user12','user13','user14'];
+            $users = ['user8'=>'Ketara','user9'=>'Sengkol','user10'=>'Sengkol','user11'=>'Kawo','user12'=>'Tanak Awu','user13'=>'Pengembur','user14'=>'Segala Anyar'];
         }elseif($kecamatan=='Janapria'){
-            $users = ['user1','user2','user3','user4','user5','user6'];
+            $users = ['user1'=>'Lekor','user2'=>'Saba','user3'=>'Pendem','user4'=>'Setuta','user5'=>'Jango','user6'=>'Janapria'];
         }else{
-            $users = ['user1','user2','user3','user4','user5','user6','user8','user9','user10','user11','user12','user13','user14'];
+            return;
         }
         
         //make result array from the tables name
         $result_data = array();
-        foreach ($users as $user){
+        foreach ($users as $user=>$desa){
             $data = array();
-            foreach ($tables as $table){
+            foreach ($tables as $table=>$legend){
                 $table_name = 0;
-                $data[$table] = $table_name;
+                $data[$legend] = $table_name;
             }
-            $result_data[$user] = $data;
+            $result_data[$desa] = $data;
         }
         
         //retrieve all the columns in the table
         $columns = array();
-        foreach ($tables as $table){
+        foreach ($tables as $table=>$legend){
             $query = $analyticsDB->query("SHOW COLUMNS FROM ".$table);
             foreach ($query->result() as $column){
                 array_push($columns, $column->Field);
@@ -250,14 +265,11 @@ class AnalyticsModel extends CI_Model{
             elseif($kecamatan=='Janapria'){
                 $query = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." where (userid='user1' or userid='user2' or userid='user3' or userid='user4' or userid='user5' or userid='user6') group by userid, submissiondate");
             }
-            else{
-                $query = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." group by userid, submissiondate");
-            }
             foreach ($query->result() as $datas){
-                if(array_key_exists($datas->userid, $result_data)){
-                    $data_count                  = $result_data[$datas->userid];
-                    $data_count[$table]         += $datas->counts;
-                    $result_data[$datas->userid] = $data_count;
+                if(array_key_exists($datas->userid, $users)){
+                    $data_count                  = $result_data[$users[$datas->userid]];
+                    $data_count[$legend]         += $datas->counts;
+                    $result_data[$users[$datas->userid]] = $data_count;
                 }
             }
         }
