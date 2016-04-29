@@ -10,6 +10,10 @@ class Upload extends CI_Controller {
 
     function __construct(){
         parent::__construct();
+        if(empty($this->session->userdata('id_user'))&&$this->session->userdata('admin_valid') == FALSE) {
+            $this->session->set_flashdata('flash_data', 'You don\'t have access!');
+            redirect('login');
+        }
         $this->load->helper(array('form', 'url'));
     }
 

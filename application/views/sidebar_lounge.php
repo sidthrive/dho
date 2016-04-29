@@ -4,10 +4,18 @@
             <h2>News Flash</h2>
 
             <ul class="style1">
-                    <li class="first"><a href="<?php echo site_url() ?>/Berita/berita">Berita 1</a></li>
-                    <li><a href="<?php echo site_url() ?>/Berita/berita">Berita 2</a></li>
-                    <li><a href="<?php echo site_url() ?>/Berita/berita">Berita 3</a></li>
-                    
+                <?php 
+                    $post = $this->BeritaModel->getPost("all",3);
+                    if (empty($post)) {
+                            echo "<li class='first'>Tidak ada berita terbaru</li>";
+                    } else {
+                        foreach ($post as $p) {
+                ?>
+                    <li><a href="<?=$p->guid?>"><?=$p->post_title?></a></li>
+                <?php
+                    }
+                }
+                ?>
             </ul>
         </div>
     </div>
