@@ -25,7 +25,6 @@
             ?>
         </div>
     </div>
-</div>
 
 <script src="<?=base_url()?>assets/js/highcharts.js"></script>
 <script src="<?=base_url()?>assets/js/exporting.js"></script>
