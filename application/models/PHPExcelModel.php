@@ -8,6 +8,27 @@ class PHPExcelModel extends CI_Model{
         parent::__construct();
     }
     
+    public function createXLS($filename,$data){
+        $file = APPPATH.$filename;
+        $this->load->library('PHPExcell');
+        //print_r($data);
+        $fileObject = PHPExcel_IOFactory::load($file);
+        
+        $fileObject->setActiveSheetIndex(0);
+        
+        $fileObject->getActiveSheet()->setCellValue("H11", "200");
+        
+        
+        $savedFileName = 'download.xlsx';
+        
+//        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+//        header('Content-Disposition: attachment;filename="'.$filename.'"'); 
+//        header('Cache-Control: max-age=0'); 
+
+        $saveContainer = PHPExcel_IOFactory::createWriter($fileObject);
+        $saveContainer->save(APPPATH.'/download/'.$savedFileName);
+        
+    }
     private function readXLS($filePath){
         $file = APPPATH.$filePath;
         $this->load->library('PHPExcell');
@@ -36,6 +57,8 @@ class PHPExcelModel extends CI_Model{
         return $data;
     }
     
+    
+    
     public function showEntireData($filePath){
         $temp = $this->readXLS($filePath);
         
@@ -50,6 +73,9 @@ class PHPExcelModel extends CI_Model{
         $yvalue = array();
 
         foreach($temp['values'] as $i => $data){
+            if($i==0){
+                continue;
+            }
             $xlabel[$i] = $data['A'];
             $yvalue[$i] = isset($data[$columnData]) ? $data[$columnData]*100: 0;
         }
