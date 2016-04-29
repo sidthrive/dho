@@ -12,7 +12,7 @@ class CheckFile extends CI_Controller{
         }
         $this->load->model('PHPExcelModel');
         //$this->load->view('header');
-        $this->PHPExcelModel->showEntireData('download/tekanan_darah_tri1.xls');
+        $this->PHPExcelModel->showEntireData('download/kematian_neonatal.xls');
         //$this->load->view('footer');
     
     }

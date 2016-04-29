@@ -247,9 +247,64 @@ class HHHScore extends CI_Controller{
         $this->load->view('footer');
     }
     public function heartscore(){
+        $this->load->model('PHPExcelModel');
+        $xlsForm = [];
+        
+        $temp = $this->PHPExcelModel->getXLSData('download/completeAnc_hrp.xls','D');
+        foreach($temp['xlabel'] as $i => $data){
+            $form[$data]=$temp['yvalue'][$i];
+        }
+        $series['page']='ANC';
+        $series['form']=$form;
+        $series['y_label'] = 'persentase';
+        $series['series_name'] = 'persentase';
+        array_push($xlsForm, $series);
+        
+        $temp = $this->PHPExcelModel->getXLSData('download/completePnc_hrp.xls','D');
+        foreach($temp['xlabel'] as $i => $data){
+            $form[$data]=$temp['yvalue'][$i];
+        }
+        $series['page']='PNC';
+        $series['form']=$form;
+        $series['y_label'] = 'persentase';
+        $series['series_name'] = 'persentase';
+        array_push($xlsForm, $series);
+        
+        $temp = $this->PHPExcelModel->getXLSData('download/hb0_given.xls','D');
+        foreach($temp['xlabel'] as $i => $data){
+            $form[$data]=$temp['yvalue'][$i];
+        }
+        $series['page']='Hb';
+        $series['form']=$form;
+        $series['y_label'] = 'persentase';
+        $series['series_name'] = 'persentase';
+        array_push($xlsForm, $series);
+        
+        $temp = $this->PHPExcelModel->getXLSData('download/Homevisit.xls','D');
+        foreach($temp['xlabel'] as $i => $data){
+            $form[$data]=$temp['yvalue'][$i];
+        }
+        $series['page']='KPNC';
+        $series['form']=$form;
+        $series['y_label'] = 'persentase';
+        $series['series_name'] = 'persentase';
+        array_push($xlsForm, $series);
+        
+        $temp = $this->PHPExcelModel->getXLSData('download/isi_rencana_persalinan.xls','D');
+        foreach($temp['xlabel'] as $i => $data){
+            $form[$data]=$temp['yvalue'][$i];
+        }
+        $series['page']='PRP';
+        $series['form']=$form;
+        $series['y_label'] = 'persentase';
+        $series['series_name'] = 'persentase';
+        array_push($xlsForm, $series);
+        
+        $dataXLS['xlsForm']=$xlsForm;
+        
         $this->load->view('header');
         $this->load->view('hhhscore/hhhsidebar');
-        $this->load->view('hhhscore/heartscore');
+        $this->load->view('hhhscore/heartscore',$dataXLS);
         $this->load->view('footer');
     }
     
