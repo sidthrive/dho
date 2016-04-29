@@ -319,3 +319,72 @@ $.fn.showChartDataEntryForm = function(data){
     });
     
 };
+
+$.fn.showChart = function(data,id,title_text,series_name){
+    title_text = title_text || "";
+    series_name = series_name || "";
+    var x = [];
+    var y = [];
+    $.each(data,function(index,value){
+        x.push(index);
+        y.push(value);
+    });
+    Highcharts.setOptions({
+        lang: {
+            decimalPoint: ',',
+            thousandsSep: '.'
+        }
+    });
+    
+    $('#'+id).highcharts({			
+        chart: {
+            zoomType: 'xy',
+            height: 400
+        },
+        title: {
+            text: ''
+        },
+        xAxis: [{
+                categories: x
+            }],
+        yAxis: [{min:0,startOnTick: false},{min:0,startOnTick: false,opposite: true},{ // Primary yAxis
+            labels: {
+                format: '{value}',
+                style: {
+                    color: Highcharts.getOptions().colors[1]
+                    }
+                },
+                title: {
+                    text: title_text,
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                }
+            }],
+        tooltip: {
+            shared: true
+        },
+        legend: {
+            enabled : false
+        },
+        plotOptions: {
+            series: {
+                borderWidth: 0,
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.y}'
+                }
+            }
+        },
+        series: [{
+                name: series_name,
+                type: 'column',
+                data: y,
+                color: '#73c1f7',
+                tooltip: {
+                    valueSuffix: ''
+                }
+            }]
+    });
+    
+};
