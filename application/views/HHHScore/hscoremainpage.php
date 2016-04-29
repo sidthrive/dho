@@ -1,4 +1,13 @@
-<h2>
-    <u>HHH SCORE MAIN PAGE</u>
-</h2>
-<h4>guess what??? it's under construction too. LOL</h4>
+<div id="container" style="padding-left: 280px; line-height: 28px;">
+    <h1>HHH SCORE</h1>
+    <br/>
+    <br/>
+    <ul>
+        <li>Halaman HHH Score menyajikan menu dan informasi mengenai penilaian terhadap petugas kesehatan garis depan dan untuk saat ini hanya tersedia untuk petugas bidan.</li>
+        <li>Menu HHH Score memiliiki tiga submenu utama yaitu Head score, Hand Score dan Heart Score.</li>
+        <li>Head Score: pengetahuan tentang aplikasi, pengetahuan kebidanan, tugas bidan(pelayanan, rujukan, laporan dsb). Oleh karena itu setiap bidan diharuskan untuk mengambil ujian standarisasi yang bisa diakses di submenu ini.</li>
+        <li>Hand Score: evaluasi kinerja bidan (cakupan, pelayanan tepat waktu, kualitas data, dsb)</li>
+        <li>Heart Score: responsif dalam memberikan pelayanan (follow-up bagi pasien risti).</li>
+    </ul>
+</div>
+</div>
