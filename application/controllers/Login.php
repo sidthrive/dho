@@ -21,10 +21,14 @@ class Login extends CI_Controller
             if(!empty($result)) {
                 $data = [
                     'id_user' => $result->id_user,
-                    'username' => $result->username
+                    'username' => $result->username,
+                    'level' => $result->level,
+                    'last_login' => $result->last_login,
+                    'admin_valid' => true
                 ];
  
                 $this->session->set_userdata($data);
+                $this->db->query("UPDATE users SET last_login=current_timestamp WHERE username = '".$result->id_user."'");
                 redirect('welcome');
             } else {
                 $this->session->set_flashdata('flash_data', 'Username or password is wrong!');
