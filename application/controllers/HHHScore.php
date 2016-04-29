@@ -23,41 +23,56 @@ class HHHScore extends CI_Controller{
         $xlsForm = [];
         
         $temp = $this->PHPExcelModel->getXLSData('download/tekanan_darah_tri1.xls','D');
-        $form['label']=$temp['xlabel'];
-        $form['value']=$temp['yvalue'];
-        $series['page']='Pemeriksaan Tekanan Darah';
+        foreach($temp['xlabel'] as $i => $data){
+            $form[$data]=$temp['yvalue'][$i];
+        }
+        $series['page']='TDT1';
         $series['form']=$form;
+        $series['y_label']='persentase';
+        $series['series_name']='persentase';
         array_push($xlsForm, $series);
         
         $temp = $this->PHPExcelModel->getXLSData('download/berat_badan_tri1.xls','D');
-        $form['label']=$temp['xlabel'];
-        $form['value']=$temp['yvalue'];
-        $series['page']='Pemeriksaan Berat Badan ';
+        foreach($temp['xlabel'] as $i => $data){
+            $form[$data]=$temp['yvalue'][$i];
+        }
+        $series['page']='BBT1';
         $series['form']=$form;
+        $series['y_label']='persentase';
+        $series['series_name']='persentase';
         array_push($xlsForm, $series);
         
         $temp = $this->PHPExcelModel->getXLSData('download/lila_tri1.xls','D');
-        $form['label']=$temp['xlabel'];
-        $form['value']=$temp['yvalue'];
-        $series['page']='Pemeriksaan LILA';
+        foreach($temp['xlabel'] as $i => $data){
+            $form[$data]=$temp['yvalue'][$i];
+        }
+        $series['page']='LIKAT1';
         $series['form']=$form;
+        $series['y_label']='persentase';
+        $series['series_name']='persentase';
         array_push($xlsForm, $series);
         
         $temp = $this->PHPExcelModel->getXLSData('download/pemeriksaan_hb_tri1.xls','D');
-        $form['label']=$temp['xlabel'];
-        $form['value']=$temp['yvalue'];
-        $series['page']='Pemeriksaan Hb';
+        foreach($temp['xlabel'] as $i => $data){
+            $form[$data]=$temp['yvalue'][$i];
+        }
+        $series['page']='HBT1';
         $series['form']=$form;
+        $series['y_label']='persentase';
+        $series['series_name']='persentase';
         array_push($xlsForm, $series);
         
         $temp = $this->PHPExcelModel->getXLSData('download/golongan_darah_tri1.xls','D');
-        $form['label']=$temp['xlabel'];
-        $form['value']=$temp['yvalue'];
-        $series['page']='Pemeriksaan Golongan Darah';
+        foreach($temp['xlabel'] as $i => $data){
+            $form[$data]=$temp['yvalue'][$i];
+        }
+        $series['page']='GOLDART1';
         $series['form']=$form;
+        $series['y_label'] = 'persentase';
+        $series['series_name'] = 'persentase';
         array_push($xlsForm, $series);
         
-        $dataXLS = json_encode($xlsForm);
+        $dataXLS['xlsForm']=$xlsForm;
         
         $this->load->view("header");
         $this->load->view("hhhscore/hhhsidebar");
@@ -69,41 +84,56 @@ class HHHScore extends CI_Controller{
         $xlsForm = [];
         
         $temp = $this->PHPExcelModel->getXLSData('download/tekanan_darah_tri2.xls','D');
-        $form['label']=$temp['xlabel'];
-        $form['value']=$temp['yvalue'];
-        $series['page']='Pemeriksaan Tekanan Darah';
+        foreach($temp['xlabel'] as $i => $data){
+            $form[$data]=$temp['yvalue'][$i];
+        }
+        $series['page']='TDT2';
         $series['form']=$form;
+        $series['y_label'] = 'persentase';
+        $series['series_name'] = 'persentase';
         array_push($xlsForm, $series);
         
         $temp = $this->PHPExcelModel->getXLSData('download/berat_badan_tri2.xls','D');
-        $form['label']=$temp['xlabel'];
-        $form['value']=$temp['yvalue'];
-        $series['page']='Pemeriksaan Berat Badan';
+        foreach($temp['xlabel'] as $i => $data){
+            $form[$data]=$temp['yvalue'][$i];
+        }
+        $series['page']='BBT2';
         $series['form']=$form;
+        $series['y_label'] = 'persentase';
+        $series['series_name'] = 'persentase';
         array_push($xlsForm, $series);
         
         $temp = $this->PHPExcelModel->getXLSData('download/tfu_tri2.xls','D');
-        $form['label']=$temp['xlabel'];
-        $form['value']=$temp['yvalue'];
-        $series['page']='Pemeriksaan Tinggi Fundus Uterus';
+        foreach($temp['xlabel'] as $i => $data){
+            $form[$data]=$temp['yvalue'][$i];
+        }
+        $series['page']='TFUT2';
         $series['form']=$form;
+        $series['y_label'] = 'persentase';
+        $series['series_name'] = 'persentase';
         array_push($xlsForm, $series);
         
         $temp = $this->PHPExcelModel->getXLSData('download/pres_janin_tri2.xls','D');
-        $form['label']=$temp['xlabel'];
-        $form['value']=$temp['yvalue'];
-        $series['page']='Pemeriksaan Presentase Janin';
+        foreach($temp['xlabel'] as $i => $data){
+            $form[$data]=$temp['yvalue'][$i];
+        }
+        $series['page']='PJT2';
         $series['form']=$form;
+        $series['y_label'] = 'persentase';
+        $series['series_name'] = 'persentase';
         array_push($xlsForm, $series);
         
         $temp = $this->PHPExcelModel->getXLSData('download/djj_tri2.xls','D');
-        $form['label']=$temp['xlabel'];
-        $form['value']=$temp['yvalue'];
-        $series['page']='Pemeriksaan Denyut Jantung Janin';
+        foreach($temp['xlabel'] as $i => $data){
+            $form[$data]=$temp['yvalue'][$i];
+        }
+        $series['page']='DJJT2';
         $series['form']=$form;
+        $series['y_label'] = 'persentase';
+        $series['series_name'] = 'persentase';
         array_push($xlsForm, $series);
         
-        $dataXLS = json_encode($xlsForm);
+        $dataXLS['xlsForm']=$xlsForm;
         
         $this->load->view("header");
         $this->load->view("hhhscore/hhhsidebar");
@@ -115,20 +145,26 @@ class HHHScore extends CI_Controller{
         $xlsForm = [];
         
         $temp = $this->PHPExcelModel->getXLSData('download/tekanan_darah_tri3.xls','D');
-        $form['label']=$temp['xlabel'];
-        $form['value']=$temp['yvalue'];
-        $series['page']='Pemeriksaan Tekanan Darah';
+        foreach($temp['xlabel'] as $i => $data){
+            $form[$data]=$temp['yvalue'][$i];
+        }
+        $series['page']='TDT3';
         $series['form']=$form;
+        $series['y_label'] = 'persentase';
+        $series['series_name'] = 'persentase';
         array_push($xlsForm, $series);
         
         $temp = $this->PHPExcelModel->getXLSData('download/berat_badan_tri3.xls','D');
-        $form['label']=$temp['xlabel'];
-        $form['value']=$temp['yvalue'];
-        $series['page']='Pemeriksaan Berat Badan';
+        foreach($temp['xlabel'] as $i => $data){
+            $form[$data]=$temp['yvalue'][$i];
+        }
+        $series['page']='BBT3';
         $series['form']=$form;
+        $series['y_label'] = 'persentase';
+        $series['series_name'] = 'persentase';
         array_push($xlsForm, $series);
         
-        $dataXLS = json_encode($xlsForm);
+        $dataXLS['xlsForm']=$xlsForm;
         
         $this->load->view("header");
         $this->load->view("hhhscore/hhhsidebar");
@@ -137,34 +173,73 @@ class HHHScore extends CI_Controller{
     }
     public function standar(){
         $this->load->model('PHPExcelModel');
+        $xlsForm = [];
         
         $temp = $this->PHPExcelModel->getXLSData('download/tekanan_darah_tri2.xls','D');
-        $form['label']=$temp['xlabel'];
-        $form['value']=$temp['yvalue'];
+        foreach($temp['xlabel'] as $i => $data){
+            $form[$data]=$temp['yvalue'][$i];
+        }
+        $series['page']='ANC1SC';
+        $series['form']=$form;
+        $series['y_label'] = 'persentase';
+        $series['series_name'] = 'persentase';
+        array_push($xlsForm, $series);
         
         $temp = $this->PHPExcelModel->getXLSData('download/berat_badan_tri2.xls','D');
-        $form['label']=$temp['xlabel'];
-        $form['value']=$temp['yvalue'];
+        foreach($temp['xlabel'] as $i => $data){
+            $form[$data]=$temp['yvalue'][$i];
+        }
+        $series['page']='ANC1NC';
+        $series['form']=$form;
+        $series['y_label'] = 'persentase';
+        $series['series_name'] = 'persentase';
+        array_push($xlsForm, $series);
         
         $temp = $this->PHPExcelModel->getXLSData('download/tfu_tri2.xls','D');
-        $form['label']=$temp['xlabel'];
-        $form['value']=$temp['yvalue'];
+        foreach($temp['xlabel'] as $i => $data){
+            $form[$data]=$temp['yvalue'][$i];
+        }
+        $series['page']='ANC4SC';
+        $series['form']=$form;
+        $series['y_label'] = 'persentase';
+        $series['series_name'] = 'persentase';
+        array_push($xlsForm, $series);
         
         $temp = $this->PHPExcelModel->getXLSData('download/pres_janin_tri2.xls','D');
-        $form['label']=$temp['xlabel'];
-        $form['value']=$temp['yvalue'];
+        foreach($temp['xlabel'] as $i => $data){
+            $form[$data]=$temp['yvalue'][$i];
+        }
+        $series['page']='ANC4NC';
+        $series['form']=$form;
+        $series['y_label'] = 'persentase';
+        $series['series_name'] = 'persentase';
+        array_push($xlsForm, $series);
         
         $temp = $this->PHPExcelModel->getXLSData('download/djj_tri2.xls','D');
-        $form['label']=$temp['xlabel'];
-        $form['value']=$temp['yvalue'];
+        foreach($temp['xlabel'] as $i => $data){
+            $form[$data]=$temp['yvalue'][$i];
+        }
+        $series['page']='BC';
+        $series['form']=$form;
+        $series['y_label'] = 'persentase';
+        $series['series_name'] = 'persentase';
+        array_push($xlsForm, $series);
         
         $temp = $this->PHPExcelModel->getXLSData('download/djj_tri2.xls','D');
-        $form['label']=$temp['xlabel'];
-        $form['value']=$temp['yvalue'];
-                
+        foreach($temp['xlabel'] as $i => $data){
+            $form[$data]=$temp['yvalue'][$i];
+        }
+        $series['page']='PNCC';
+        $series['form']=$form;
+        $series['y_label'] = 'persentase';
+        $series['series_name'] = 'persentase';
+        array_push($xlsForm, $series);
+        
+        $dataXLS['xlsForm']=$xlsForm;
+        
         $this->load->view('header');
         $this->load->view('hhhscore/hhhsidebar');
-        $this->load->view('hhhscore/standar');
+        $this->load->view('hhhscore/standar',$dataXLS);
         $this->load->view('footer');
     }
     public function heartscore(){

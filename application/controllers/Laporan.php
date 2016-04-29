@@ -96,5 +96,19 @@ class Laporan extends CI_Controller{
         $this->load->view("laporan/downloadPWSJurim");
         $this->load->view("footer");
     }
+    
+    public function download(){
+        $this->load->helper('download');
+        $this->load->model('PHPExcelModel');
         
+        $data['cell']=['H11','H12'];
+        $data['value']=['1000','2000'];
+        
+        $this->PHPExcelModel->createXLS("download/pws1.xlsx",$data);
+        
+        $this->load->view("header");
+        $this->load->view("laporan/laporansidebar");
+        $this->load->view("laporan/downloadPWSGizi");
+        $this->load->view("footer");
+    }
 }

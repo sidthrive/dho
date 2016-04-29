@@ -15,7 +15,7 @@ class DataEntry extends CI_Controller{
     
     public function bidanByForm(){
         $data['kecamatan']		= $this->uri->segment(3);
-        $data['data']                    = $this->AnalyticsModel->getCountPerForm($data['kecamatan']);
+        $data['data']                   = $this->AnalyticsModel->getCountPerForm($data['kecamatan']);
         $this->load->view("header");
         $this->load->view("dataentry/dataentrysidebar");
         $this->load->view("dataentry/bidanentryform",$data);

@@ -8,7 +8,7 @@ class CheckFile extends CI_Controller{
     public function index(){
         $this->load->model('PHPExcelModel');
         //$this->load->view('header');
-        $this->PHPExcelModel->showEntireData('/download/kunjungan_nifas.xls');
+        $this->PHPExcelModel->showEntireData('download/tekanan_darah_tri1.xls');
         //$this->load->view('footer');
     
     }
