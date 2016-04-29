@@ -23,117 +23,62 @@ class Welcome extends CI_Controller {
 	function __construct() {
         parent::__construct();
  
-            if(empty($this->session->userdata('id_user'))) {
+            if(empty($this->session->userdata('id_user'))&&$this->session->userdata('admin_valid') == FALSE) {
                 $this->session->set_flashdata('flash_data', 'You don\'t have access!');
                 redirect('login');
             }
-            $this->load->model('PHPExcelModel');
-            
-            $this->load->view('header');  
-            //$this->load->view('chartModule');
-            $this->load->view('sidebar_lounge');
-            $this->load->view('welcome_message');
-            $this->load->view('footer');
-            //$this->load->view('chartModule');
+            $this->load->model('BeritaModel');
             
         }
 	public function index()
 	{
-	    $temp = $this->getK1_akses();
-            $dataXLS['K1username']=$temp['xlabel'];
-            $dataXLS['K1percentage']=$temp['yvalue'];
-            
-            $temp = $this->getK4();
-            $dataXLS['K4username']=$temp['xlabel'];
-            $dataXLS['K4percentage']=$temp['yvalue'];
-            
-            $temp = $this->getKunjunganNeonatal1();
-            $dataXLS['KNeo1username']=$temp['xlabel'];
-            $dataXLS['KNeo1percentage']=$temp['yvalue'];
-            
-            $temp = $this->getKunjunganNeonatal3();
-            $dataXLS['KNeo3username']=$temp['xlabel'];
-            $dataXLS['KNeo3percentage']=$temp['yvalue'];
-            
-            $temp = $this->getKunjunganNifas();
-            $dataXLS['KNifasusername']=$temp['xlabel'];
-            $dataXLS['KNifaspercentage']=$temp['yvalue'];
-            
-            $temp = $this->getKematianBalita();
-            $dataXLS['KBalitausername']=$temp['xlabel'];
-            $dataXLS['KBalitapercentage']=$temp['yvalue'];
-            
-            $this->load->view('welcome_chart_graphic',$dataXLS,false);
-            
-	}
+            redirect("welcome/page");
+        }
         
-   public function getK1_akses(){
-        return $this->PHPExcelModel->getXLSData('download/k1_akses.xls','E');
-    }
-    
-    public function getK4(){
-        return $this->PHPExcelModel->getXLSData('download/k4.xls','E');
-    }
-    
-    public function getKematianBalita(){
-        return $this->PHPExcelModel->getXLSData('download/kematian_balita.xls','E');
-    }
-    
-    public function getKematianBayi(){
-        return $this->PHPExcelModel->getXLSData('download/kematian_bayi.xls','E');
-    }
-    
-    public function getKunjunganNeonatal1(){
-        return $this->PHPExcelModel->getXLSData('download/kunjungan_neonatal_1.xls','E');
-    }
-    
-    public function getKunjunganNeonatal3(){
-        return $this->PHPExcelModel->getXLSData('download/kunjungan_neonatal_3.xls','E');
-    }
-    
-    public function getKunjunganNifas(){
-        return $this->PHPExcelModel->getXLSData('download/kunjungan_nifas.xls','E');
-    }
-    
-    public function getPersalinanFasilitasKesehatan(){
-        return $this->PHPExcelModel->getXLSData('download/persalinan_fasilitas_kesehatan.xls','E');
-    }
-    
-    public function getPersalinanTenagaKesehatan(){
-        return $this->PHPExcelModel->getXLSData('download/persalinan_tenaga_kesehatan.xls','E');
-    }
+        public function page(){
+            /* pagination */	
+            $total_row		= $this->BeritaModel->getTotalPost();
+            $per_page		= 2;
 
+            $awal	= $this->uri->segment(3); 
+            $awal	= (empty($awal) || $awal == 1) ? 0 : $awal;
 
-        public function data(){
-            $data = $this->coverage->get_anc_data();
+            //if (empty($awal) || $awal == 1) { $awal = 0; } { $awal = $awal; }
+            $akhir	= $per_page;
+            
+            $CI 	=& get_instance();
+            $CI->load->library('pagination');
+            $config['base_url'] 	= base_url()."welcome/page";
+            $config['total_rows'] 	= $total_row;
+            $config['uri_segment'] 	= 3;
+            $config['per_page'] 	= $per_page; 
+            $config['num_tag_open'] = '<li>';
+            $config['num_tag_close']= '</li>';
+            $config['prev_link'] 	= '&lt;';
+            $config['prev_tag_open']='<li>';
+            $config['prev_tag_close']='</li>';
+            $config['next_link'] 	= '&gt;';
+            $config['next_tag_open']='<li>';
+            $config['next_tag_close']='</li>';
+            $config['cur_tag_open']='<li class="active disabled"><a href="#"  style="background: #e3e3e3">';
+            $config['cur_tag_close']='</a></li>';
+            $config['first_tag_open']='<li>';
+            $config['first_tag_close']='</li>';
+            $config['last_tag_open']='<li>';
+            $config['last_tag_close']='</li>';
 
-            $category = array();
-            $category['name'] = 'desa';
-
-            $series1 = array();
-            $series1['name'] = 'K1 (ANC 1)';
-
-            $series2 = array();
-            $series2['name'] = 'K4 (ANC 4)';
-
-            //$series3 = array();
-    //	$series3['name'] = 'Highcharts';
-
-            foreach ($data as $row)
-            {
-                $category['data'][] = $row->desa;
-                $series1['data'][] = $row->k1_coverage;
-                $series2['data'][] = $row->k4_coverage;
-            //	$series3['data'][] = $row->highcharts;
-            }
-
-            $result = array();
-            array_push($result,$category);
-            array_push($result,$series1);
-            array_push($result,$series2);
-            //array_push($result,$series3);
-
-            print json_encode($result, JSON_NUMERIC_CHECK);
+            $CI->pagination->initialize($config); 
+            
+            $data['pagi']	= $CI->pagination->create_links();
+            /* */
+            
+            $data['post'] = $this->BeritaModel->getPost("all",$akhir,$awal);
+            
+            $this->load->view('header');  
+            $this->load->view('sidebar_lounge');
+            $this->load->view('welcome_message');
+            $this->load->view('berita/newslist',$data);
+            $this->load->view('footer');
         }
         
 	public function logout() {
