@@ -27,7 +27,7 @@ class Welcome extends CI_Controller {
                 $this->session->set_flashdata('flash_data', 'You don\'t have access!');
                 redirect('login');
             }
-
+            
             $this->load->model('PHPExcelModel');
             $this->load->model('BeritaModel');
         }
