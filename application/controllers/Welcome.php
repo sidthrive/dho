@@ -29,28 +29,20 @@ class Welcome extends CI_Controller {
             }
 
             $this->load->model('PHPExcelModel');
-            
-            $this->load->view('header');  
-            //$this->load->view('chartModule');
-            $this->load->view('sidebar_lounge');
-            $this->load->view('welcome_message');
-            $this->load->view('footer');
-            //$this->load->view('chartModule');
-
             $this->load->model('BeritaModel');
-            
-
         }
 
         public function index()
 	{
-
-            
+            redirect("welcome/page");
 	}
         
         public function logout() {
 
-            redirect("welcome/page");
+            $data = ['id_user', 'username'];
+            $this->session->unset_userdata($data);
+
+            redirect('login');
         }
         
         public function page(){
