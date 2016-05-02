@@ -12,8 +12,8 @@ class DataEntry extends CI_Controller{
     
     public function index(){
         $this->load->view('header');
-        $this->load->view('dataEntry/dataentrysidebar');
-        $this->load->view('dataEntry/dataentrymainpage');
+        $this->load->view('dataentry/dataentrysidebar');
+        $this->load->view('dataentry/dataentrymainpage');
         $this->load->view('footer');
     }
     
