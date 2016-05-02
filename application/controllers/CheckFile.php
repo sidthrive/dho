@@ -12,7 +12,8 @@ class CheckFile extends CI_Controller{
         }
         $this->load->model('PHPExcelModel');
         //$this->load->view('header');
-        $this->PHPExcelModel->showEntireData('download/kematian_neonatal.xls');
+        
+        $this->PHPExcelModel->showEntireData('download/cakupan_resiko_maret_sengkol.xls');
         //$this->load->view('footer');
     
     }

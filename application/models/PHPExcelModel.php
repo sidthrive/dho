@@ -8,7 +8,7 @@ class PHPExcelModel extends CI_Model{
         parent::__construct();
     }
     
-    public function createXLS($filename,$data){
+    public function createXLS($filename){
         $file = APPPATH.$filename;
         $this->load->library('PHPExcell');
         //print_r($data);
@@ -17,16 +17,15 @@ class PHPExcelModel extends CI_Model{
         $fileObject->setActiveSheetIndex(0);
         
         $fileObject->getActiveSheet()->setCellValue("H11", "200");
+       
+        $savedFileName = 'download PWS.xlsx';
         
-        
-        $savedFileName = 'download.xlsx';
-        
-//        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-//        header('Content-Disposition: attachment;filename="'.$filename.'"'); 
-//        header('Cache-Control: max-age=0'); 
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="'.$savedFileName.'"'); 
+        header('Cache-Control: max-age=0'); 
 
-        $saveContainer = PHPExcel_IOFactory::createWriter($fileObject);
-        $saveContainer->save(APPPATH.'/download/'.$savedFileName);
+        $saveContainer = PHPExcel_IOFactory::createWriter($fileObject,'Excel2007');
+        $saveContainer->save('php://output');
         
     }
     private function readXLS($filePath){
@@ -62,10 +61,21 @@ class PHPExcelModel extends CI_Model{
     public function showEntireData($filePath){
         $temp = $this->readXLS($filePath);
         
-        echo '<pre>';
-            print_r($temp);
-        echo '</pre>';
+        foreach ($temp as $i){
+            foreach($i as $j=>$datax){
+                if($j==0){
+                    continue;
+                }
+                echo $j.' ';
+                foreach($datax as $dummy){
+                    echo ' '.$dummy;
+                }
+                echo '<br/>';
+            }
+            echo '<br/>';
+        }
     }
+    
     
     public function getXLSData($filePath,$columnData){
         $temp = $this->readXLS($filePath);
