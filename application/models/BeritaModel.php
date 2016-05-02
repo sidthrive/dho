@@ -12,7 +12,7 @@ class BeritaModel extends CI_Model{
         $BeritaDB = $this->load->database('dho_news', TRUE);
         $judul  = $data['judul'];
         $isi    = $data['isi'];
-        $guid   = base_url()."berita/show?p=".(self::getLastId()+1);
+        $guid   = "berita/show?p=".(self::getLastId()+1);
         if($BeritaDB->query('INSERT INTO dho_post VALUES("","'.$this->session->userdata('id_user').'",NOW(),"'.$isi.'","'.$judul.'","'.$guid.'")')){
             return $guid;
         }
