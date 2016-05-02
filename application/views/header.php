@@ -33,16 +33,18 @@ additional bootstrap import for sidebar collapse style
             </div>
         </div>
         <div id="menu" class="container">
-            <ul>
-                <li ><a href="<?php echo site_url() ?>welcome" accesskey="1" title="">Homepage</a></li>
-                <?php if($this->session->userdata('level')=="master"||$this->session->userdata('level')=="super"){?>
-                <li><a href="<?php echo site_url() ?>berita/post" accesskey="5" title="">Berita</a></li>
-                <?php }if($this->session->userdata('level')!="master"){?>
-                <li><a href="<?php echo site_url() ?>dataentry" accesskey="5" title="">Data Entry</a></li>
-                <li><a href="<?php echo site_url() ?>laporan" accesskey="5" title="">Laporan</a></li>
-                <li><a href="<?php echo site_url() ?>hhhscore" accesskey="5" title="">HHH Score</a></li>
-                <?php }?>
-            </ul>
+            <nav>
+                <ul class="nav nav-justified">
+                    <li<?=$this->uri->segment(1)=='welcome'?' class="current_page_item"':''?>><a href="<?php echo site_url() ?>welcome" accesskey="1" title="">Homepage</a></li>
+                    <?php if($this->session->userdata('level')=="master"||$this->session->userdata('level')=="super"){?>
+                    <li<?=$this->uri->segment(1)=='berita'?' class="current_page_item"':''?>><a href="<?php echo site_url() ?>berita/post" accesskey="5" title="">Berita</a></li>
+                    <?php }if($this->session->userdata('level')!="master"){?>
+                    <li<?=$this->uri->segment(1)=='dataentry'?' class="current_page_item"':''?>><a href="<?php echo site_url() ?>dataentry" accesskey="5" title="">Data Entry</a></li>
+                    <li<?=$this->uri->segment(1)=='laporan'?' class="current_page_item"':''?>><a href="<?php echo site_url() ?>laporan" accesskey="5" title="">Laporan</a></li>
+                    <li<?=$this->uri->segment(1)=='hhhscore'?' class="current_page_item"':''?>><a href="<?php echo site_url() ?>hhhscore" accesskey="5" title="">HHH Score</a></li>
+                    <?php }?>
+                </ul>
+            </nav>
         </div>
     </div>
    

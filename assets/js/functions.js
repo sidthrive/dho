@@ -362,7 +362,8 @@ $.fn.showChart = function(data){
                     }
                 }],
             tooltip: {
-                shared: true
+                shared: true,
+                pointFormat: data1['y_label']+": {point.y:.2f} %"
             },
             legend: {
                 enabled : false
@@ -372,7 +373,7 @@ $.fn.showChart = function(data){
                     borderWidth: 0,
                     dataLabels: {
                         enabled: true,
-                        format: '{point.y}'
+                        format: '{point.y:.2f}'
                     }
                 }
             },

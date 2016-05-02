@@ -138,7 +138,7 @@ hr {
     background: #308576;
 }
 
-#menu ul {
+/*#menu ul {
     margin: 0px 0px 0px 0px;
     padding: 0px 0px;
     list-style: none;
@@ -147,7 +147,7 @@ hr {
 
 #menu li {
     display: inline-block;
-}
+}*/
 
 #menu a {
     display: block;
@@ -162,9 +162,13 @@ hr {
     border: none;
 }
 
-#menu a:hover, #menu .current_page_item a {
+#menu a:hover{
     text-decoration: none;
-    color: rgba(255,255,255,0.8);
+    color: black;
+}
+
+#menu .current_page_item {
+    background-color: #1e584e;
 }
 
 #menu .current_page_item a {
@@ -205,6 +209,10 @@ hr {
 {
     font-size: 1.5em;
     font-weight: 400;
+}
+
+.panel-collapse > .panel {
+    margin-left: 30px;
 }
 
 /** SIDEBAR 2 */
