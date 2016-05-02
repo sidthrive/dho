@@ -71,6 +71,7 @@ class PHPExcelModel extends CI_Model{
                     echo ' '.$dummy;
                 }
                 echo '<br/>';
+                
             }
             echo '<br/>';
         }
