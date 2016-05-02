@@ -59,7 +59,7 @@
                         </div>
                     </div>
                     <div class="panel panel-default">
-                        <div <?=($this->uri->segment(2)=='bidanbyform'&&$this->uri->segment(3)=='Sengkol')?' style="background-color:#909090"':''?> class="panel-heading">
+                        <div <?=($this->uri->segment(2)=='heartscore')?' style="background-color:#909090"':''?> class="panel-heading">
                             <h4 class="panel-title">
                                 <a data-parent="#bidan_menu" href="<?php echo site_url() ."hhhscore/heartscore"?>">Heart Score</a>
                             </h4>
