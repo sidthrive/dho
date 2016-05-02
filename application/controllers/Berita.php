@@ -32,13 +32,13 @@ class Berita extends CI_Controller{
             if($data['mode']=='edit'){
                 $id = $this->uri->segment(4);
                 $data['post'] = $this->BeritaModel->getPost($id);
-                $this->load->view('berita/formPost',$data);
+                $this->load->view('berita/formpost',$data);
             }elseif($data['mode']=='new'){
                 $data['post'] = null;
-                $this->load->view('berita/formPost',$data);
+                $this->load->view('berita/formpost',$data);
             }else{
                 $data['post'] = $this->BeritaModel->getPost("all");
-                $this->load->view('berita/listPost',$data);
+                $this->load->view('berita/listpost',$data);
             }
             $this->load->view('footer');
         } 
