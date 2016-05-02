@@ -11,7 +11,7 @@
                     } else {
                         foreach ($post as $p) {
                 ?>
-                    <li><a href="<?=$p->guid?>"><?=$p->post_title?></a></li>
+                    <li><a href="<?=base_url().$p->guid?>"><?=$p->post_title?></a></li>
                 <?php
                     }
                 }
