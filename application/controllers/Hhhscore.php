@@ -19,7 +19,7 @@ class HHHScore extends CI_Controller{
     public function headscore(){
         $this->load->view('header');
         $this->load->view('hhhscore/hhhsidebar');
-        $this->load->view('hhhscore/HeadScore');
+        $this->load->view('hhhscore/headscore');
         $this->load->view('footer');
     }
     public function bidanTrimester1(){
