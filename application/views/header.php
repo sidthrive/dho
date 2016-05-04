@@ -23,13 +23,18 @@ additional bootstrap import for sidebar collapse style
 <div id="wrapper">
     <div id="header-wrapper">
         <div id="header" class="container">
-            <div id="logo">
+            <div id="log_stat">
                 <p style="font-size: 10px;text-align: right;">| <?php echo $_SESSION['username'];?> | <a href="<?= site_url('welcome/logout') ?>" rel="nofollow">Logout</a> |</p>
-                <h1><img src="<?php echo base_url() ?>assets/images/opensrp.png" alt="" align="left" style="min-width: 100; height: 85px; padding-right: 10px;"/> <a href="http://sid-indonesia.org">DHO Report</a></h1>
-                <h3 style="margin-top: 5px;"><a href="http://sid-indonesia.org/" rel="nofollow">Summit Institute of Development</a></h3>
             </div>
-            <div>
-
+            <div id="logo">
+                <img src="<?php echo base_url() ?>assets/images/logo_loteng.gif" alt="" align="left" style="min-width: 60; height: 60px; padding-right: 10px;"/>
+                <img src="<?php echo base_url() ?>assets/images/sid.jpg" alt="" align="left" style="min-width: 60; height: 60px; padding-right: 10px;"/>
+                <img src="<?php echo base_url() ?>assets/images/opensrp.png" alt="" align="left" style="min-width: 60; height: 60px; padding-right: 10px;"/>
+            </div>
+            <div id="head" class="center">
+                <h1>DHO Report</h1>
+                <h3 style="margin-top: 5px;">Dinas Kesehatan Lombok Tengah</h3>
+                <h3 style="margin-top: 5px;">Summit Institute of Development</h3>
             </div>
         </div>
         <div id="menu" class="container">
