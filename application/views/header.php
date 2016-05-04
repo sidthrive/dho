@@ -28,13 +28,13 @@ additional bootstrap import for sidebar collapse style
             </div>
             <div id="logo">
                 <img src="<?php echo base_url() ?>assets/images/logo_loteng.gif" alt="" align="left" style="padding-right: 10px;"/>
-                <img src="<?php echo base_url() ?>assets/images/sid.jpg" alt="" align="left" style="padding-right: 10px;"/>
-                <img src="<?php echo base_url() ?>assets/images/opensrp.png" alt="" align="left" style="padding-right: 10px;"/>
+<!--                <img src="<?php echo base_url() ?>assets/images/sid.jpg" alt="" align="left" style="padding-right: 10px;"/>
+                <img src="<?php echo base_url() ?>assets/images/opensrp.png" alt="" align="left" style="padding-right: 10px;"/>-->
             </div>
             <div id="head" class="center">
                 <h1>DHO Report</h1>
                 <h3 style="margin-top: 5px;">Dinas Kesehatan Lombok Tengah</h3>
-                <h3 style="margin-top: 5px;">Summit Institute of Development</h3>
+<!--                <h3 style="margin-top: 5px;">Summit Institute of Development</h3>-->
             </div>
         </div>
         <div id="menu" class="container">

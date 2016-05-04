@@ -96,7 +96,7 @@ hr {
 #logo {
     float: left;
     height: auto;
-    padding: 20px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
     }
 #logoimage{
     background: #333 url(images/opensrp.png) no-repeat;
@@ -109,12 +109,12 @@ hr {
 }
 
 
-#head {
+/*#head {
     text-align: center;
     margin: auto;
     width: 60%;
     padding: 10px;
-}
+}*/
 
 #head h1, #logo p {
     margin: 0;
@@ -128,7 +128,7 @@ hr {
 }
 
 #head h3 {
-    font-size: 1em;
+    font-size: 1.25em;
 }
 
 #head .center {
