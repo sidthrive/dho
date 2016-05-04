@@ -242,9 +242,9 @@ class Laporan extends CI_Controller{
         $result_index['cakupan_resiko_bulan_lalu']=['Q11','Q12','Q13','Q14','Q15','Q16'];
         $result_index['cakupan_resiko_bulan_ini']=['R11','R12','R13','R14','R15','R16'];
         
-        $datak1 = $this->PHPExcelModel->getCellRange('download/kia1/cakupan_k1'.$namefile,'A2:E7');
-        $datak4 = $this->PHPExcelModel->getCellRange('download/kia1/cakupan_k4'.$namefile,'A2:E7');
-        $dataresiko = $this->PHPExcelModel->getCellRange('download/kia1/cakupan_resiko'.$namefile,'A2:E7');
+        $datak1 = $this->PHPExcelModel->getCellRange('download/kia1/cakupan_k1'.$namefile,'A2:E8');
+        $datak4 = $this->PHPExcelModel->getCellRange('download/kia1/cakupan_k4'.$namefile,'A2:E8');
+        $dataresiko = $this->PHPExcelModel->getCellRange('download/kia1/cakupan_resiko'.$namefile,'A2:E8');
         
         foreach ($datak1 as $k1){
             if(array_search($k1['C'],$result['desa'])>=0){
@@ -294,7 +294,7 @@ class Laporan extends CI_Controller{
         $result_index['komplikasi_bulan_lalu']=['G11','G12','G13','G14','G15','G16'];
         $result_index['komplikasi_bulan_ini']=['H11','H12','H13','H14','H15','H16'];
         
-        $datakomplikasi = $this->PHPExcelModel->getCellRange('download/kia2/cakupan_komplikasi'.$namefile,'A2:E7');
+        $datakomplikasi = $this->PHPExcelModel->getCellRange('download/kia2/cakupan_komplikasi'.$namefile,'A2:E8');
         
         foreach ($datakomplikasi as $komplikasi){
             if(array_search($komplikasi['C'],$result['desa'])>=0){
@@ -342,8 +342,8 @@ class Laporan extends CI_Controller{
         $result_index['nolinakes_L_bulan_ini']=['S11','S12','S13','S14','S15','S16'];
         $result_index['nolinakes_P_bulan_ini']=['T11','T12','T13','T14','T15','T16'];
         
-        $datalinakes = $this->PHPExcelModel->getCellRange('download/kia3/cakupan_linakes'.$namefile,'A2:G7');
-        $datanolinakes = $this->PHPExcelModel->getCellRange('download/kia3/cakupan_nolinakes'.$namefile,'A2:G7');
+        $datalinakes = $this->PHPExcelModel->getCellRange('download/kia3/cakupan_linakes'.$namefile,'A2:G8');
+        $datanolinakes = $this->PHPExcelModel->getCellRange('download/kia3/cakupan_nolinakes'.$namefile,'A2:G8');
         
         foreach ($datalinakes as $linakes){
             if(array_search($linakes['C'],$result['desa'])>=0){
@@ -394,8 +394,8 @@ class Laporan extends CI_Controller{
         $result_index['k_nifas_bulan_lalu']=['L11','L12','L13','L14','L15','L16'];
         $result_index['k_nifas_bulan_ini']=['M11','M12','M13','M14','M15','M16'];
         
-        $datafasilitas = $this->PHPExcelModel->getCellRange('download/kia4/cakupan_fasilkes'.$namefile,'A2:E7');
-        $datanifas = $this->PHPExcelModel->getCellRange('download/kia4/cakupan_k_nifas'.$namefile,'A2:E7');
+        $datafasilitas = $this->PHPExcelModel->getCellRange('download/kia4/cakupan_fasilkes'.$namefile,'A2:E8');
+        $datanifas = $this->PHPExcelModel->getCellRange('download/kia4/cakupan_k_nifas'.$namefile,'A2:E8');
         
         foreach ($datafasilitas as $fasilitas){
             if(array_search($fasilitas['C'],$result['desa'])>=0){
@@ -442,8 +442,8 @@ class Laporan extends CI_Controller{
         $result_index['kek_bulan_lalu']=['K11','K12','K13','K14','K15','K16'];
         $result_index['kek_bulan_ini']=['L11','L12','L13','L14','L15','L16'];
         
-        $dataanemia = $this->PHPExcelModel->getCellRange('download/kia5/cakupan_bumil_anemia'.$namefile,'A2:E7');
-        $datakek = $this->PHPExcelModel->getCellRange('download/kia5/cakupan_bumil_kek'.$namefile,'A2:E7');
+        $dataanemia = $this->PHPExcelModel->getCellRange('download/kia5/cakupan_bumil_anemia'.$namefile,'A2:E8');
+        $datakek = $this->PHPExcelModel->getCellRange('download/kia5/cakupan_bumil_kek'.$namefile,'A2:E8');
         
         foreach ($dataanemia as $anemia){
             if(array_search($anemia['C'],$result['desa'])>=0){
