@@ -88,31 +88,59 @@ hr {
 
 #header {
     overflow: hidden;
-    height: 190px;
+    height: auto;
 }
 
 /** LOGO */
 
 #logo {
-    height: 150px;
-    padding: 50px 0px 0px 0px;
+    float: left;
+    height: auto;
+    padding: 0px 0px 0px 0px;
     }
 #logoimage{
     background: #333 url(images/opensrp.png) no-repeat;
     float: right;
 }
-#logo h1, #logo p {
+
+#logo img {
+    min-width: 90px;
+    height: 80px;
+}
+
+
+/*#head {
+    text-align: center;
+    margin: auto;
+    width: 60%;
+    padding: 10px;
+}*/
+
+#head h1, #logo p {
     margin: 0;
     padding: 0;
 }
 
-#logo h1 {
+#head h1 {
     letter-spacing: -1px;
     text-transform: uppercase;
     font-size: 3.5em;
 }
 
-#logo p {
+#head h3 {
+    font-size: 1.25em;
+}
+
+#head .center {
+    
+}
+
+#log_stat {
+    padding: 20px 0px 0px 0px;
+    float: right;
+}
+
+#log_stat p {
     padding: 0px;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -120,11 +148,11 @@ hr {
     color: rgba(0,0,0,.4);
 }
 
-#logo p a {
+#log_stat p a {
     color: rgba(0,0,0,.4);
 }
 
-#logo a {
+#log_stat a {
     border: none;
     background: none;
     text-decoration: none;

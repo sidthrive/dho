@@ -28,6 +28,37 @@ class PHPExcelModel extends CI_Model{
         $saveContainer->save('php://output');
         
     }
+    
+    public function createPwsXLS($filename,$data,$index){
+        $file = APPPATH.$filename;
+        $this->load->library('PHPExcell');
+        //print_r($data);
+        $fileObject = PHPExcel_IOFactory::load($file);
+        $fileObject->setActiveSheetIndex(0);
+        
+        foreach ($data as $key1=>$cell){
+            foreach ($cell as $key2=>$value){
+                if(isset($index[$key1][$key2]))
+                    $fileObject->getActiveSheet()->setCellValue($index[$key1][$key2], $value);
+            }
+        }
+        $kec = explode(" ",$data['kecamatan'][0]);
+        $kecamatan = end($kec);
+        $bt = explode(" ",$data['bulan'][0]);
+        $tahun = end($bt);
+        $bulan = prev($bt);
+        
+        $savedFileName = 'PWS-'.strtoupper($data['form'][0]).'-'.strtoupper($kecamatan).'-'.strtoupper($bulan).'-'.strtoupper($tahun).'.xlsx';
+        
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="'.$savedFileName.'"'); 
+        header('Cache-Control: max-age=0');
+
+        $saveContainer = PHPExcel_IOFactory::createWriter($fileObject,'Excel2007');
+        $saveContainer->save('php://output');
+        
+    }
+    
     private function readXLS($filePath){
         $file = APPPATH.$filePath;
         $this->load->library('PHPExcell');
@@ -56,28 +87,6 @@ class PHPExcelModel extends CI_Model{
         return $data;
     }
     
-    
-    
-    public function showEntireData($filePath){
-        $temp = $this->readXLS($filePath);
-        
-        foreach ($temp as $i){
-            foreach($i as $j=>$datax){
-                if($j==0){
-                    continue;
-                }
-                echo $j.' ';
-                foreach($datax as $dummy){
-                    echo ' '.$dummy;
-                }
-                echo '<br/>';
-                
-            }
-            echo '<br/>';
-        }
-    }
-    
-    
     public function getXLSData($filePath,$columnData){
         $temp = $this->readXLS($filePath);
         $xlabel = array();
@@ -97,4 +106,62 @@ class PHPExcelModel extends CI_Model{
         return $dataXLS;
     }
     
+    public function showEntireData($filePath){
+        return $this->readXLS($filePath);
+        
+//        foreach ($temp as $i){
+//            foreach($i as $j=>$datax){
+//                if($j==0){
+//                    continue;
+//                }
+//                echo $j.' ';
+//                foreach($datax as $dummy){
+//                    echo ' '.$dummy;
+//                }
+//                echo '<br/>';
+//                
+//            }
+//            echo '<br/>';
+//        }
+    }
+    
+    public function showEntireData2($filePath){
+        $temp = $this->readXLS($filePath);
+        
+        foreach ($temp as $i){
+            foreach($i as $j=>$datax){
+//                if($j==0){
+//                    continue;
+//                }
+                echo $j.' ';
+                foreach($datax as $dummy){
+                    echo ' '.$dummy;
+                }
+                echo '<br/>';
+                
+            }
+            echo '<br/>';
+        }
+    }
+    
+    public function getSheetName($filename){
+        $file = APPPATH.$filename;
+        $this->load->library('PHPExcell');
+        $fileObject = PHPExcel_IOFactory::load($file);
+        $fileObject->setActiveSheetIndex(0);
+        return $fileObject->getSheetNames();
+    }
+    
+    public function getCellRange($filepath,$range){
+        $file = APPPATH.$filepath;
+        $this->load->library('PHPExcell');
+        $fileObject = PHPExcel_IOFactory::load($file);
+        return $fileObject->getActiveSheet()->rangeToArray(
+                    $range,
+                NULL,
+                TRUE,
+                TRUE,
+                TRUE
+                );
+    }
 }

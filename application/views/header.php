@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title></title>
+<title>DHO REPORT - <?=strtoupper($this->uri->segment(1))?></title>
 <meta name="keywords" content="" />
 <meta name="description" content="" />
 <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet" />
 <link href="<?php echo base_url() ?>assets/default.css" rel="stylesheet" type="text/css"/>
-
+<link rel="icon" href="<?=base_url()?>favicon.png" type="image/png"/>
 <!--
 additional bootstrap import for sidebar collapse style
 
@@ -23,13 +23,18 @@ additional bootstrap import for sidebar collapse style
 <div id="wrapper">
     <div id="header-wrapper">
         <div id="header" class="container">
-            <div id="logo">
+            <div id="log_stat">
                 <p style="font-size: 10px;text-align: right;">| <?php echo $_SESSION['username'];?> | <a href="<?= site_url('welcome/logout') ?>" rel="nofollow">Logout</a> |</p>
-                <h1><img src="<?php echo base_url() ?>assets/images/opensrp.png" alt="" align="left" style="min-width: 100; height: 85px; padding-right: 10px;"/> <a href="http://sid-indonesia.org">DHO Report</a></h1>
-                <h3 style="margin-top: 5px;"><a href="http://sid-indonesia.org/" rel="nofollow">Summit Institute of Development</a></h3>
             </div>
-            <div>
-
+            <div id="logo">
+                <img src="<?php echo base_url() ?>assets/images/logo_loteng.gif" alt="" align="left" style="padding-right: 10px;"/>
+<!--                <img src="<?php echo base_url() ?>assets/images/sid.jpg" alt="" align="left" style="padding-right: 10px;"/>
+                <img src="<?php echo base_url() ?>assets/images/opensrp.png" alt="" align="left" style="padding-right: 10px;"/>-->
+            </div>
+            <div id="head" class="center">
+                <h1>DHO Report</h1>
+                <h3 style="margin-top: 5px;">Dinas Kesehatan Lombok Tengah</h3>
+<!--                <h3 style="margin-top: 5px;">Summit Institute of Development</h3>-->
             </div>
         </div>
         <div id="menu" class="container">
