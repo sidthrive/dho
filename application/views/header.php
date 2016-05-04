@@ -7,7 +7,7 @@
 <meta name="description" content="" />
 <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet" />
 <link href="<?php echo base_url() ?>assets/default.css" rel="stylesheet" type="text/css"/>
-
+<link rel="icon" href="<?=base_url()?>favicon.png" type="image/png"/>
 <!--
 additional bootstrap import for sidebar collapse style
 
