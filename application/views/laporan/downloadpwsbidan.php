@@ -37,6 +37,7 @@
             </div>
             <br/>
             <br/>
+            <?php echo $this->session->flashdata("file");?>
             <br/>
             <div id="sadasd">
                 <button class="btn btn-success" type="submit">DOWNLOAD</button>

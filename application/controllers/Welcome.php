@@ -38,10 +38,7 @@ class Welcome extends CI_Controller {
 	}
         
         public function logout() {
-
-            $data = ['id_user', 'username'];
-            $this->session->unset_userdata($data);
-
+            $this->session->sess_destroy();
             redirect('login');
         }
         

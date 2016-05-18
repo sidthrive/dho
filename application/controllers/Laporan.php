@@ -242,32 +242,38 @@ class Laporan extends CI_Controller{
         $result_index['cakupan_resiko_bulan_lalu']=['Q11','Q12','Q13','Q14','Q15','Q16'];
         $result_index['cakupan_resiko_bulan_ini']=['R11','R12','R13','R14','R15','R16'];
         
-        $datak1 = $this->PHPExcelModel->getCellRange('download/kia1/cakupan_k1'.$namefile,'A2:E7');
-        $datak4 = $this->PHPExcelModel->getCellRange('download/kia1/cakupan_k4'.$namefile,'A2:E7');
-        $dataresiko = $this->PHPExcelModel->getCellRange('download/kia1/cakupan_resiko'.$namefile,'A2:E7');
-        
-        foreach ($datak1 as $k1){
-            if(array_search($k1['C'],$result['desa'])>=0){
-                $key=array_search($k1['C'],$result['desa']);
-                $result['cakupan_k1_bulan_lalu'][$key] += (int)$k1['B'];
-                $result['cakupan_k1_bulan_ini'][$key] += (int)$k1['E'];
+        try{
+            $datak1 = $this->PHPExcelModel->getCellRange('download/kia1/cakupan_k1'.$namefile,'A2:E8');
+            $datak4 = $this->PHPExcelModel->getCellRange('download/kia1/cakupan_k4'.$namefile,'A2:E8');
+            $dataresiko = $this->PHPExcelModel->getCellRange('download/kia1/cakupan_resiko'.$namefile,'A2:E8');
+            
+            foreach ($datak1 as $k1){
+                if(array_search($k1['C'],$result['desa'])>=0){
+                    $key=array_search($k1['C'],$result['desa']);
+                    $result['cakupan_k1_bulan_lalu'][$key] += (int)$k1['B'];
+                    $result['cakupan_k1_bulan_ini'][$key] += (int)$k1['E'];
+                }
             }
-        }
-        foreach ($datak4 as $k4){
-            if(array_search($k4['C'],$result['desa'])>=0){
-                $key=array_search($k4['C'],$result['desa']);
-                $result['cakupan_k4_bulan_lalu'][$key] += (int)$k4['B'];
-                $result['cakupan_k4_bulan_ini'][$key] += (int)$k4['E'];
+            foreach ($datak4 as $k4){
+                if(array_search($k4['C'],$result['desa'])>=0){
+                    $key=array_search($k4['C'],$result['desa']);
+                    $result['cakupan_k4_bulan_lalu'][$key] += (int)$k4['B'];
+                    $result['cakupan_k4_bulan_ini'][$key] += (int)$k4['E'];
+                }
             }
-        }
-        foreach ($dataresiko as $resiko){
-            if(array_search($resiko['C'],$result['desa'])>=0){
-                $key=array_search($resiko['C'],$result['desa']);
-                $result['cakupan_resiko_bulan_lalu'][$key] += (int)$resiko['B'];
-                $result['cakupan_resiko_bulan_ini'][$key] += (int)$resiko['E'];
+            foreach ($dataresiko as $resiko){
+                if(array_search($resiko['C'],$result['desa'])>=0){
+                    $key=array_search($resiko['C'],$result['desa']);
+                    $result['cakupan_resiko_bulan_lalu'][$key] += (int)$resiko['B'];
+                    $result['cakupan_resiko_bulan_ini'][$key] += (int)$resiko['E'];
+                }
             }
+            
+            $this->PHPExcelModel->createPwsXLS("download/kia1/template_pws_ibu1.xlsx",$result,$result_index);
+        } catch (Exception $ex) {
+            $this->session->set_flashdata('file', '<div class="alert alert-danger">Tidak ada data '.$form.' untuk bulan '.$month.'</div>');
+            redirect("laporan/downloadbidanpws");
         }
-        $this->PHPExcelModel->createPwsXLS("download/kia1/template_pws_ibu1.xlsx",$result,$result_index);
     }
     
     private function kia2($kec,$year,$month,$form){
@@ -294,16 +300,21 @@ class Laporan extends CI_Controller{
         $result_index['komplikasi_bulan_lalu']=['G11','G12','G13','G14','G15','G16'];
         $result_index['komplikasi_bulan_ini']=['H11','H12','H13','H14','H15','H16'];
         
-        $datakomplikasi = $this->PHPExcelModel->getCellRange('download/kia2/cakupan_komplikasi'.$namefile,'A2:E7');
+        try {
+            $datakomplikasi = $this->PHPExcelModel->getCellRange('download/kia2/cakupan_komplikasi'.$namefile,'A2:E8');
         
-        foreach ($datakomplikasi as $komplikasi){
-            if(array_search($komplikasi['C'],$result['desa'])>=0){
-                $key=array_search($komplikasi['C'],$result['desa']);
-                $result['komplikasi_bulan_lalu'][$key] += (int)$komplikasi['B'];
-                $result['komplikasi_bulan_ini'][$key] += (int)$komplikasi['E'];
+            foreach ($datakomplikasi as $komplikasi){
+                if(array_search($komplikasi['C'],$result['desa'])>=0){
+                    $key=array_search($komplikasi['C'],$result['desa']);
+                    $result['komplikasi_bulan_lalu'][$key] += (int)$komplikasi['B'];
+                    $result['komplikasi_bulan_ini'][$key] += (int)$komplikasi['E'];
+                }
             }
+            $this->PHPExcelModel->createPwsXLS("download/kia2/template_pws_ibu2.xlsx",$result,$result_index);
+        } catch (Exception $ex) {
+            $this->session->set_flashdata('file', '<div class="alert alert-danger">Tidak ada data '.$form.' untuk bulan '.$month.'</div>');
+            redirect("laporan/downloadbidanpws");
         }
-        $this->PHPExcelModel->createPwsXLS("download/kia2/template_pws_ibu2.xlsx",$result,$result_index);
     }
     
     private function kia3($kec,$year,$month,$form){
@@ -342,28 +353,33 @@ class Laporan extends CI_Controller{
         $result_index['nolinakes_L_bulan_ini']=['S11','S12','S13','S14','S15','S16'];
         $result_index['nolinakes_P_bulan_ini']=['T11','T12','T13','T14','T15','T16'];
         
-        $datalinakes = $this->PHPExcelModel->getCellRange('download/kia3/cakupan_linakes'.$namefile,'A2:G7');
-        $datanolinakes = $this->PHPExcelModel->getCellRange('download/kia3/cakupan_nolinakes'.$namefile,'A2:G7');
-        
-        foreach ($datalinakes as $linakes){
-            if(array_search($linakes['C'],$result['desa'])>=0){
-                $key=array_search($linakes['C'],$result['desa']);
-                $result['linakes_L_bulan_lalu'][$key] += (int)$linakes['B'];
-                $result['linakes_P_bulan_lalu'][$key] += (int)$linakes['F'];
-                $result['linakes_L_bulan_ini'][$key] += (int)$linakes['E'];
-                $result['linakes_L_bulan_ini'][$key] += (int)$linakes['G'];
+        try {
+            $datalinakes = $this->PHPExcelModel->getCellRange('download/kia3/cakupan_linakes'.$namefile,'A2:G8');
+            $datanolinakes = $this->PHPExcelModel->getCellRange('download/kia3/cakupan_nolinakes'.$namefile,'A2:G8');
+
+            foreach ($datalinakes as $linakes){
+                if(array_search($linakes['C'],$result['desa'])>=0){
+                    $key=array_search($linakes['C'],$result['desa']);
+                    $result['linakes_L_bulan_lalu'][$key] += (int)$linakes['B'];
+                    $result['linakes_P_bulan_lalu'][$key] += (int)$linakes['F'];
+                    $result['linakes_L_bulan_ini'][$key] += (int)$linakes['E'];
+                    $result['linakes_L_bulan_ini'][$key] += (int)$linakes['G'];
+                }
             }
-        }
-        foreach ($datanolinakes as $nolinakes){
-            if(array_search($nolinakes['C'],$result['desa'])>=0){
-                $key=array_search($nolinakes['C'],$result['desa']);
-                $result['nolinakes_L_bulan_lalu'][$key] += (int)$nolinakes['B'];
-                $result['nolinakes_P_bulan_lalu'][$key] += (int)$nolinakes['F'];
-                $result['nolinakes_L_bulan_ini'][$key] += (int)$nolinakes['E'];
-                $result['nolinakes_L_bulan_ini'][$key] += (int)$nolinakes['G'];
+            foreach ($datanolinakes as $nolinakes){
+                if(array_search($nolinakes['C'],$result['desa'])>=0){
+                    $key=array_search($nolinakes['C'],$result['desa']);
+                    $result['nolinakes_L_bulan_lalu'][$key] += (int)$nolinakes['B'];
+                    $result['nolinakes_P_bulan_lalu'][$key] += (int)$nolinakes['F'];
+                    $result['nolinakes_L_bulan_ini'][$key] += (int)$nolinakes['E'];
+                    $result['nolinakes_L_bulan_ini'][$key] += (int)$nolinakes['G'];
+                }
             }
+            $this->PHPExcelModel->createPwsXLS("download/kia3/template_pws_ibu3.xlsx",$result,$result_index);
+        } catch (Exception $ex) {
+            $this->session->set_flashdata('file', '<div class="alert alert-danger">Tidak ada data '.$form.' untuk bulan '.$month.'</div>');
+            redirect("laporan/downloadbidanpws");
         }
-        $this->PHPExcelModel->createPwsXLS("download/kia3/template_pws_ibu3.xlsx",$result,$result_index);
     }
     
     private function kia4($kec,$year,$month,$form){
@@ -394,24 +410,29 @@ class Laporan extends CI_Controller{
         $result_index['k_nifas_bulan_lalu']=['L11','L12','L13','L14','L15','L16'];
         $result_index['k_nifas_bulan_ini']=['M11','M12','M13','M14','M15','M16'];
         
-        $datafasilitas = $this->PHPExcelModel->getCellRange('download/kia4/cakupan_fasilkes'.$namefile,'A2:E7');
-        $datanifas = $this->PHPExcelModel->getCellRange('download/kia4/cakupan_k_nifas'.$namefile,'A2:E7');
-        
-        foreach ($datafasilitas as $fasilitas){
-            if(array_search($fasilitas['C'],$result['desa'])>=0){
-                $key=array_search($fasilitas['C'],$result['desa']);
-                $result['fasilitas_bulan_lalu'][$key] += (int)$fasilitas['B'];
-                $result['fasilitas_bulan_ini'][$key] += (int)$fasilitas['E'];
+        try{
+            $datafasilitas = $this->PHPExcelModel->getCellRange('download/kia4/cakupan_fasilkes'.$namefile,'A2:E8');
+            $datanifas = $this->PHPExcelModel->getCellRange('download/kia4/cakupan_k_nifas'.$namefile,'A2:E8');
+
+            foreach ($datafasilitas as $fasilitas){
+                if(array_search($fasilitas['C'],$result['desa'])>=0){
+                    $key=array_search($fasilitas['C'],$result['desa']);
+                    $result['fasilitas_bulan_lalu'][$key] += (int)$fasilitas['B'];
+                    $result['fasilitas_bulan_ini'][$key] += (int)$fasilitas['E'];
+                }
             }
-        }
-        foreach ($datanifas as $nifas){
-            if(array_search($nifas['C'],$result['desa'])>=0){
-                $key=array_search($nifas['C'],$result['desa']);
-                $result['k_nifas_bulan_lalu'][$key] += (int)$nifas['B'];
-                $result['k_nifas_bulan_ini'][$key] += (int)$nifas['E'];
+            foreach ($datanifas as $nifas){
+                if(array_search($nifas['C'],$result['desa'])>=0){
+                    $key=array_search($nifas['C'],$result['desa']);
+                    $result['k_nifas_bulan_lalu'][$key] += (int)$nifas['B'];
+                    $result['k_nifas_bulan_ini'][$key] += (int)$nifas['E'];
+                }
             }
+            $this->PHPExcelModel->createPwsXLS("download/kia4/template_pws_ibu4.xlsx",$result,$result_index);
+        } catch (Exception $ex) {
+            $this->session->set_flashdata('file', '<div class="alert alert-danger">Tidak ada data '.$form.' untuk bulan '.$month.'</div>');
+            redirect("laporan/downloadbidanpws");
         }
-        $this->PHPExcelModel->createPwsXLS("download/kia4/template_pws_ibu4.xlsx",$result,$result_index);
     }
     
     private function kia5($kec,$year,$month,$form){
@@ -442,23 +463,28 @@ class Laporan extends CI_Controller{
         $result_index['kek_bulan_lalu']=['K11','K12','K13','K14','K15','K16'];
         $result_index['kek_bulan_ini']=['L11','L12','L13','L14','L15','L16'];
         
-        $dataanemia = $this->PHPExcelModel->getCellRange('download/kia5/cakupan_bumil_anemia'.$namefile,'A2:E7');
-        $datakek = $this->PHPExcelModel->getCellRange('download/kia5/cakupan_bumil_kek'.$namefile,'A2:E7');
-        
-        foreach ($dataanemia as $anemia){
-            if(array_search($anemia['C'],$result['desa'])>=0){
-                $key=array_search($anemia['C'],$result['desa']);
-                $result['anemia_bulan_lalu'][$key] += (int)$anemia['B'];
-                $result['anemia_bulan_ini'][$key] += (int)$anemia['E'];
+        try{
+            $dataanemia = $this->PHPExcelModel->getCellRange('download/kia5/cakupan_bumil_anemia'.$namefile,'A2:E8');
+            $datakek = $this->PHPExcelModel->getCellRange('download/kia5/cakupan_bumil_kek'.$namefile,'A2:E8');
+
+            foreach ($dataanemia as $anemia){
+                if(array_search($anemia['C'],$result['desa'])>=0){
+                    $key=array_search($anemia['C'],$result['desa']);
+                    $result['anemia_bulan_lalu'][$key] += (int)$anemia['B'];
+                    $result['anemia_bulan_ini'][$key] += (int)$anemia['E'];
+                }
             }
-        }
-        foreach ($datakek as $kek){
-            if(array_search($kek['C'],$result['desa'])>=0){
-                $key=array_search($kek['C'],$result['desa']);
-                $result['kek_bulan_lalu'][$key] += (int)$kek['B'];
-                $result['kek_bulan_ini'][$key] += (int)$kek['E'];
+            foreach ($datakek as $kek){
+                if(array_search($kek['C'],$result['desa'])>=0){
+                    $key=array_search($kek['C'],$result['desa']);
+                    $result['kek_bulan_lalu'][$key] += (int)$kek['B'];
+                    $result['kek_bulan_ini'][$key] += (int)$kek['E'];
+                }
             }
+            $this->PHPExcelModel->createPwsXLS("download/kia5/template_pws_ibu5.xlsx",$result,$result_index);
+        } catch (Exception $ex) {
+            $this->session->set_flashdata('file', '<div class="alert alert-danger">Tidak ada data '.$form.' untuk bulan '.$month.'</div>');
+            redirect("laporan/downloadbidanpws");
         }
-        $this->PHPExcelModel->createPwsXLS("download/kia5/template_pws_ibu5.xlsx",$result,$result_index);
     }
 }
