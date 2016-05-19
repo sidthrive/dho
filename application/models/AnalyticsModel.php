@@ -65,7 +65,7 @@ class AnalyticsModel extends CI_Model{
                 if(array_key_exists($datas->userid, $users)){
                     $data_count                  = $result_data[$users[$datas->userid]];
                     if(array_key_exists($datas->submissiondate, $data_count)){
-                        $data_count[$datas->submissiondate] +=1;
+                        $data_count[$datas->submissiondate] +=$datas->counts;
                     }
                     $result_data[$users[$datas->userid]] = $data_count;
                 }
@@ -173,10 +173,10 @@ class AnalyticsModel extends CI_Model{
                         $thisweek   = $week['thisweek'];
                         $lastweek   = $week['lastweek'];
                         if(array_key_exists($datas->submissiondate, $thisweek)){
-                            $thisweek[$datas->submissiondate] +=1;
+                            $thisweek[$datas->submissiondate] +=$datas->counts;
                         }
                         if(array_key_exists($datas->submissiondate, $lastweek)){
-                            $lastweek[$datas->submissiondate] +=1;
+                            $lastweek[$datas->submissiondate] +=$datas->counts;
                         }
                         $week['thisweek'] = $thisweek;
                         $week['lastweek'] = $lastweek;
@@ -189,10 +189,10 @@ class AnalyticsModel extends CI_Model{
                         array_pop($m);
                         $datas->submissiondate = implode('-',$m);
                         if(array_key_exists($datas->submissiondate, $thisyear)){
-                            $thisyear[$datas->submissiondate] +=1;
+                            $thisyear[$datas->submissiondate] +=$datas->counts;
                         }
                         if(array_key_exists($datas->submissiondate, $lastyear)){
-                            $lastyear[$datas->submissiondate] +=1;
+                            $lastyear[$datas->submissiondate] +=$datas->counts;
                         }
                         $month['thisyear'] = $thisyear;
                         $month['lastyear'] = $lastyear;
