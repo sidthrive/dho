@@ -85,12 +85,12 @@
                     <div class="panel panel-default">
                         <div class="panel-heading"<?=($this->uri->segment(2)=='jurim'&&$this->uri->segment(3)=='Sengkol')?' style="background-color:#909090"':''?>>
                             <h4 class="panel-title">
-                                <a href="<?php echo site_url() ."dataEntry/Jurim/Sengkol"?>">Kecamatan Sengkol</a>
+                                <a href="<?php echo site_url() ."dataentry/Jurim/Sengkol"?>">Kecamatan Sengkol</a>
                             </h4>
                         </div>
                         <div class="panel-heading"<?=($this->uri->segment(2)=='jurim'&&$this->uri->segment(3)=='Janapria')?' style="background-color:#909090"':''?>>
                             <h4 class="panel-title">
-                                <a href="<?php echo site_url() ."dataEntry/Jurim/Janapria"?>">Kecamatan Janapria</a>
+                                <a href="<?php echo site_url() ."dataentry/Jurim/Janapria"?>">Kecamatan Janapria</a>
                             </h4>
                         </div>
                     </div>

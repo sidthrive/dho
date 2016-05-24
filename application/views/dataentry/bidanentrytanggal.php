@@ -1,6 +1,24 @@
+<?php
+    if($this->uri->segment(4)=="Mingguan"){
+        $opt = "Minggu";
+    }elseif($this->uri->segment(4)=="Bulanan"){
+        $opt = "Bulan";
+    }else{
+        $opt = "Tanggal";
+    }
+    
+?>    
     <div id="content">
+        <div id="text">
+            Tampilkan Berdasarkan : <select>
+                <option id="tgl" value=""<?=$opt=="Tanggal"?" selected":""?>>Tanggal</option>
+                <option id="mng" value="Mingguan"<?=$opt=="Minggu"?" selected":""?>>Minggu</option>
+                <option id="bln" value="Bulanan"<?=$opt=="Bulan"?" selected":""?>>Bulan</option>
+            </select>
+        </div>
+        <br>
         <div id="text" style="text-align: center;">
-            <h3>Total Entri tiap Tanggal</h3>
+            <h3>Total Entri tiap <?=$opt?></h3>
             <h3>Kecamatan <?=$kecamatan?></h3>
         </div>
         <div id="container">
@@ -41,5 +59,20 @@
     }else{
         echo '$.fn.showChartDataEntryTanggal(json);';
     } ?> 
-        
+    var mode = $( "select option:selected" ).attr("id");
+    $( "select" ).change(function() {
+        $( "select option:selected" ).each(function() {
+            var newmode = $( "select option:selected" ).attr("id");
+            if(mode!=newmode){
+                var modeurl = "";
+                if(newmode=="mng"){
+                    modeurl = "/Mingguan";
+                }else if(newmode=="bln"){
+                    modeurl = "/Bulanan";
+                }
+                window.location.href = "<?=base_url()."dataentry/bidanbytanggal/".$kecamatan?>"+modeurl;
+            }
+            console.log($( "select option:selected" ).attr("id"));
+        });    
+    }).trigger( "change" );
 </script>
