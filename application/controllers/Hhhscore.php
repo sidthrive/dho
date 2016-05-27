@@ -216,7 +216,7 @@ class HHHScore extends CI_Controller{
         $user_village = ['user1'=>'Lekor','user2'=>'Saba','user3'=>'Pendem','user4'=>'Setuta','user5'=>'Jango','user6'=>'Janapria','user8'=>'Ketara','user9'=>'Sengkol','user10'=>'Sengkol','user11'=>'Kawo','user12'=>'Tanak Awu','user13'=>'Pengembur','user14'=>'Segala Anyar'];
         
         $form = $user;
-        $temp = $this->PHPExcelModel->getXLSData('download/tekanan_darah_tri2.xls','D');
+        $temp = $this->PHPExcelModel->getXLSData('download/anc1_std_cov.xls','D');
         foreach($temp['xlabel'] as $i => $data){
             if($data==="user9") continue;
             $form[$user_village[$data]]+=$temp['yvalue'][$i];
@@ -228,7 +228,7 @@ class HHHScore extends CI_Controller{
         array_push($xlsForm, $series);
         
         $form = $user;
-        $temp = $this->PHPExcelModel->getXLSData('download/berat_badan_tri2.xls','D');
+        $temp = $this->PHPExcelModel->getXLSData('download/anc1_nonstd_cov.xls','D');
         foreach($temp['xlabel'] as $i => $data){
             if($data==="user9") continue;
             $form[$user_village[$data]]+=$temp['yvalue'][$i];
@@ -240,7 +240,7 @@ class HHHScore extends CI_Controller{
         array_push($xlsForm, $series);
         
         $form = $user;
-        $temp = $this->PHPExcelModel->getXLSData('download/tfu_tri2.xls','D');
+        $temp = $this->PHPExcelModel->getXLSData('download/anc4_std_cov.xls','D');
         foreach($temp['xlabel'] as $i => $data){
             if($data==="user9") continue;
             $form[$user_village[$data]]+=$temp['yvalue'][$i];
@@ -252,7 +252,7 @@ class HHHScore extends CI_Controller{
         array_push($xlsForm, $series);
         
         $form = $user;
-        $temp = $this->PHPExcelModel->getXLSData('download/pres_janin_tri2.xls','D');
+        $temp = $this->PHPExcelModel->getXLSData('download/anc4_nonstd_cov.xls','D');
         foreach($temp['xlabel'] as $i => $data){
             if($data==="user9") continue;
             $form[$user_village[$data]]+=$temp['yvalue'][$i];
@@ -264,7 +264,7 @@ class HHHScore extends CI_Controller{
         array_push($xlsForm, $series);
         
         $form = $user;
-        $temp = $this->PHPExcelModel->getXLSData('download/djj_tri2.xls','D');
+        $temp = $this->PHPExcelModel->getXLSData('download/birth_cov.xls','D');
         foreach($temp['xlabel'] as $i => $data){
             if($data==="user9") continue;
             $form[$user_village[$data]]+=$temp['yvalue'][$i];
@@ -276,7 +276,7 @@ class HHHScore extends CI_Controller{
         array_push($xlsForm, $series);
         
         $form = $user;
-        $temp = $this->PHPExcelModel->getXLSData('download/djj_tri2.xls','D');
+        $temp = $this->PHPExcelModel->getXLSData('download/pnc_cov.xls','D');
         foreach($temp['xlabel'] as $i => $data){
             if($data==="user9") continue;
             $form[$user_village[$data]]+=$temp['yvalue'][$i];

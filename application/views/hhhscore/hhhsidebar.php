@@ -52,7 +52,7 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading"<?=($this->uri->segment(2)=='standar')?' style="background-color:#909090"':''?>>
                                     <h4 class="panel-title">
-                                        <a data-parent="#bidan_menu" href="<?php echo site_url() ."hhhscore/standar"?>">Cakupan Standar</a>
+                                        <a data-parent="#bidan_menu" href="<?php echo site_url() ."hhhscore/standar"?>">Cakupan Pelayanan</a>
                                     </h4>
                                 </div>
                             </div>
