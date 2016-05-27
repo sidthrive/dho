@@ -10,7 +10,7 @@
         <div title="tekanan darah trimester 3">
             <div id="">
                 <!-- START Script Block for Chart -->
-                <h3>Persentase Tekanan Darah</h3>
+                <h3>Pemeriksaan Tekanan Darah</h3>
                 <div id="TDT3" align="center">
                 </div>
 
@@ -22,7 +22,7 @@
         <div title="berat badan trimester 3">
             <div id="">
                 <!-- START Script Block for Chart -->
-                <h3>Persentase Berat Badan</h3>
+                <h3>Pemeriksaan Berat Badan</h3>
                 <div id="BBT3" align="center">
                 </div>
 
