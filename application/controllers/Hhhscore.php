@@ -37,8 +37,8 @@ class HHHScore extends CI_Controller{
         }
         $series['page']='TDT1';
         $series['form']=$form;
-        $series['y_label']='persentase';
-        $series['series_name']='persentase';
+        $series['y_label']='Persentase';
+        $series['series_name']='Persentase';
         array_push($xlsForm, $series);
         
         $form = $user;
@@ -49,8 +49,8 @@ class HHHScore extends CI_Controller{
         }
         $series['page']='BBT1';
         $series['form']=$form;
-        $series['y_label']='persentase';
-        $series['series_name']='persentase';
+        $series['y_label']='Persentase';
+        $series['series_name']='Persentase';
         array_push($xlsForm, $series);
         
         $form = $user;
@@ -61,8 +61,8 @@ class HHHScore extends CI_Controller{
         }
         $series['page']='LIKAT1';
         $series['form']=$form;
-        $series['y_label']='persentase';
-        $series['series_name']='persentase';
+        $series['y_label']='Persentase';
+        $series['series_name']='Persentase';
         array_push($xlsForm, $series);
         
         $form = $user;
@@ -73,8 +73,8 @@ class HHHScore extends CI_Controller{
         }
         $series['page']='HBT1';
         $series['form']=$form;
-        $series['y_label']='persentase';
-        $series['series_name']='persentase';
+        $series['y_label']='Persentase';
+        $series['series_name']='Persentase';
         array_push($xlsForm, $series);
         
         $form = $user;
@@ -85,8 +85,8 @@ class HHHScore extends CI_Controller{
         }
         $series['page']='GOLDART1';
         $series['form']=$form;
-        $series['y_label'] = 'persentase';
-        $series['series_name'] = 'persentase';
+        $series['y_label'] = 'Persentase';
+        $series['series_name'] = 'Persentase';
         array_push($xlsForm, $series);
         
         $dataXLS['xlsForm']=$xlsForm;
@@ -111,8 +111,8 @@ class HHHScore extends CI_Controller{
         }
         $series['page']='TDT2';
         $series['form']=$form;
-        $series['y_label'] = 'persentase';
-        $series['series_name'] = 'persentase';
+        $series['y_label'] = 'Persentase';
+        $series['series_name'] = 'Persentase';
         array_push($xlsForm, $series);
         
         $form = $user;
@@ -123,8 +123,8 @@ class HHHScore extends CI_Controller{
         }
         $series['page']='BBT2';
         $series['form']=$form;
-        $series['y_label'] = 'persentase';
-        $series['series_name'] = 'persentase';
+        $series['y_label'] = 'Persentase';
+        $series['series_name'] = 'Persentase';
         array_push($xlsForm, $series);
         
         $form = $user;
@@ -135,8 +135,8 @@ class HHHScore extends CI_Controller{
         }
         $series['page']='TFUT2';
         $series['form']=$form;
-        $series['y_label'] = 'persentase';
-        $series['series_name'] = 'persentase';
+        $series['y_label'] = 'Persentase';
+        $series['series_name'] = 'Persentase';
         array_push($xlsForm, $series);
         
         $form = $user;
@@ -147,8 +147,8 @@ class HHHScore extends CI_Controller{
         }
         $series['page']='PJT2';
         $series['form']=$form;
-        $series['y_label'] = 'persentase';
-        $series['series_name'] = 'persentase';
+        $series['y_label'] = 'Persentase';
+        $series['series_name'] = 'Persentase';
         array_push($xlsForm, $series);
         
         $form = $user;
@@ -159,8 +159,8 @@ class HHHScore extends CI_Controller{
         }
         $series['page']='DJJT2';
         $series['form']=$form;
-        $series['y_label'] = 'persentase';
-        $series['series_name'] = 'persentase';
+        $series['y_label'] = 'Persentase';
+        $series['series_name'] = 'Persentase';
         array_push($xlsForm, $series);
         
         $dataXLS['xlsForm']=$xlsForm;
@@ -185,8 +185,8 @@ class HHHScore extends CI_Controller{
         }
         $series['page']='TDT3';
         $series['form']=$form;
-        $series['y_label'] = 'persentase';
-        $series['series_name'] = 'persentase';
+        $series['y_label'] = 'Persentase';
+        $series['series_name'] = 'Persentase';
         array_push($xlsForm, $series);
         
         $form = $user;
@@ -197,8 +197,8 @@ class HHHScore extends CI_Controller{
         }
         $series['page']='BBT3';
         $series['form']=$form;
-        $series['y_label'] = 'persentase';
-        $series['series_name'] = 'persentase';
+        $series['y_label'] = 'Persentase';
+        $series['series_name'] = 'Persentase';
         array_push($xlsForm, $series);
         
         $dataXLS['xlsForm']=$xlsForm;
@@ -223,8 +223,8 @@ class HHHScore extends CI_Controller{
         }
         $series['page']='ANC1SC';
         $series['form']=$form;
-        $series['y_label'] = 'persentase';
-        $series['series_name'] = 'persentase';
+        $series['y_label'] = 'Persentase';
+        $series['series_name'] = 'Persentase';
         array_push($xlsForm, $series);
         
         $form = $user;
@@ -235,8 +235,8 @@ class HHHScore extends CI_Controller{
         }
         $series['page']='ANC1NC';
         $series['form']=$form;
-        $series['y_label'] = 'persentase';
-        $series['series_name'] = 'persentase';
+        $series['y_label'] = 'Persentase';
+        $series['series_name'] = 'Persentase';
         array_push($xlsForm, $series);
         
         $form = $user;
@@ -247,8 +247,8 @@ class HHHScore extends CI_Controller{
         }
         $series['page']='ANC4SC';
         $series['form']=$form;
-        $series['y_label'] = 'persentase';
-        $series['series_name'] = 'persentase';
+        $series['y_label'] = 'Persentase';
+        $series['series_name'] = 'Persentase';
         array_push($xlsForm, $series);
         
         $form = $user;
@@ -259,8 +259,8 @@ class HHHScore extends CI_Controller{
         }
         $series['page']='ANC4NC';
         $series['form']=$form;
-        $series['y_label'] = 'persentase';
-        $series['series_name'] = 'persentase';
+        $series['y_label'] = 'Persentase';
+        $series['series_name'] = 'Persentase';
         array_push($xlsForm, $series);
         
         $form = $user;
@@ -271,8 +271,8 @@ class HHHScore extends CI_Controller{
         }
         $series['page']='BC';
         $series['form']=$form;
-        $series['y_label'] = 'persentase';
-        $series['series_name'] = 'persentase';
+        $series['y_label'] = 'Persentase';
+        $series['series_name'] = 'Persentase';
         array_push($xlsForm, $series);
         
         $form = $user;
@@ -283,8 +283,8 @@ class HHHScore extends CI_Controller{
         }
         $series['page']='PNCC';
         $series['form']=$form;
-        $series['y_label'] = 'persentase';
-        $series['series_name'] = 'persentase';
+        $series['y_label'] = 'Persentase';
+        $series['series_name'] = 'Persentase';
         array_push($xlsForm, $series);
         
         $dataXLS['xlsForm']=$xlsForm;
@@ -309,8 +309,8 @@ class HHHScore extends CI_Controller{
         }
         $series['page']='ANC';
         $series['form']=$form;
-        $series['y_label'] = 'persentase';
-        $series['series_name'] = 'persentase';
+        $series['y_label'] = 'Persentase';
+        $series['series_name'] = 'Persentase';
         array_push($xlsForm, $series);
         
         $form = $user;
@@ -321,8 +321,8 @@ class HHHScore extends CI_Controller{
         }
         $series['page']='PNC';
         $series['form']=$form;
-        $series['y_label'] = 'persentase';
-        $series['series_name'] = 'persentase';
+        $series['y_label'] = 'Persentase';
+        $series['series_name'] = 'Persentase';
         array_push($xlsForm, $series);
         
         $form = $user;
@@ -333,8 +333,8 @@ class HHHScore extends CI_Controller{
         }
         $series['page']='Hb';
         $series['form']=$form;
-        $series['y_label'] = 'persentase';
-        $series['series_name'] = 'persentase';
+        $series['y_label'] = 'Persentase';
+        $series['series_name'] = 'Persentase';
         array_push($xlsForm, $series);
         
         $form = $user;
@@ -345,8 +345,8 @@ class HHHScore extends CI_Controller{
         }
         $series['page']='KPNC';
         $series['form']=$form;
-        $series['y_label'] = 'persentase';
-        $series['series_name'] = 'persentase';
+        $series['y_label'] = 'Persentase';
+        $series['series_name'] = 'Persentase';
         array_push($xlsForm, $series);
         
         $form = $user;
@@ -357,8 +357,8 @@ class HHHScore extends CI_Controller{
         }
         $series['page']='PRP';
         $series['form']=$form;
-        $series['y_label'] = 'persentase';
-        $series['series_name'] = 'persentase';
+        $series['y_label'] = 'Persentase';
+        $series['series_name'] = 'Persentase';
         array_push($xlsForm, $series);
         
         $dataXLS['xlsForm']=$xlsForm;
