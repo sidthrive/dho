@@ -347,7 +347,7 @@ $.fn.showChart = function(data){
             xAxis: [{
                     categories: x
                 }],
-            yAxis: [{min:0,startOnTick: false},{min:0,startOnTick: false,opposite: true},{ // Primary yAxis
+            yAxis: [{min:0,minrange:100},{ // Primary yAxis
                 labels: {
                     format: '{value}',
                     style: {

@@ -89,19 +89,26 @@ class PHPExcelModel extends CI_Model{
     
     public function getXLSData($filePath,$columnData){
         $temp = $this->readXLS($filePath);
-        $xlabel = array();
-        $yvalue = array();
+        $datas = array();
+        $datas['xlabel'] = array();
+        foreach ($columnData as $col){
+            $datas[$col] = array();
+        }
 
         foreach($temp['values'] as $i => $data){
             if($i==0){
                 continue;
             }
-            $xlabel[$i] = $data['A'];
-            $yvalue[$i] = isset($data[$columnData]) ? $data[$columnData]*100: 0;
+            $datas['xlabel'][$i] = $data['A'];
+            foreach ($columnData as $col){
+                $datas[$col][$i] = isset($data[$col])?$data[$col]:0;
+                
+            }
         }
-        
-        $dataXLS['xlabel']=$xlabel;
-        $dataXLS['yvalue']=$yvalue;
+        $dataXLS['xlabel']=$datas['xlabel'];
+        foreach ($columnData as $col){
+            $dataXLS[$col] = $datas[$col];
+        }
         
         return $dataXLS;
     }
