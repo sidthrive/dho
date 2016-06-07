@@ -20,24 +20,30 @@ class Berita extends CI_Controller{
         } 
     }
     
-    public function post(){
+    public function post($mode="",$id="",$jenis=""){
         if($this->session->userdata('level')!="master"&&$this->session->userdata('level')!="super") {
             $this->load->view('header');
             $this->load->view('errors/error_privilege');
             $this->load->view('footer');
         }else{
-            $data['mode']                   = $this->uri->segment(3);
+            $data['mode'] = $mode;
+            $data['jenis'] = $jenis;
             $this->load->view('header');
             $this->load->view('sidebar_lounge');
             if($data['mode']=='edit'){
                 $id = $this->uri->segment(4);
                 $data['post'] = $this->BeritaModel->getPost($id);
                 $this->load->view('berita/formpost',$data);
+            }elseif($data['mode']=='delete'){
+                $id = $this->uri->segment(4);
+                $this->BeritaModel->deletePost($id);
+                redirect('berita/post');
             }elseif($data['mode']=='new'){
                 $data['post'] = null;
                 $this->load->view('berita/formpost',$data);
             }else{
-                $data['post'] = $this->BeritaModel->getPost("all");
+                $data['berita'] = $this->BeritaModel->getPost("berita");
+                $data['artikel'] = $this->BeritaModel->getPost("artikel");
                 $this->load->view('berita/listpost',$data);
             }
             $this->load->view('footer');
@@ -54,6 +60,7 @@ class Berita extends CI_Controller{
             $data['id'] = $this->input->post('id');
             $data['judul'] = $this->input->post('judul');
             $data['isi']   = $this->input->post('isi');
+            $data['jenis']   = $this->input->post('jenis');
             $guid = "";
             if($mode=="edit"){
                 $guid = $this->BeritaModel->editPost($data);

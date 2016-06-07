@@ -1,10 +1,10 @@
 <?php
-    $page_header = "TAMBAH BERITA BARU";
+    $page_header = "TAMBAH ".$jenis." BARU";
     $id     = "";
     $judul  = "";
     $isi    = "";
     if($post!=null){
-        $page_header = "EDIT BERITA";
+        $page_header = "EDIT ".$jenis;
         $id     = $post->id;
         $judul  = $post->post_title;
         $isi    = $post->post_content;
@@ -22,8 +22,9 @@
     <div id="container">
         <form action="<?=base_URL()?>berita/setpost" method="post">
             <input type="hidden" name="mode" value="<?=$mode?>"/>
+            <input type="hidden" name="jenis" value="<?=$jenis?>"/>
             <input type="hidden" name="id" value="<?=$id?>"/>
-            <div style="margin-bottom: 30px"><input type="text" name="judul" required style="width: 100%;font-size:25px;height: 50px" autofocus class="form-control" placeholder="Judul Berita" value="<?=$judul?>"></div>
+            <div style="margin-bottom: 30px"><input type="text" name="judul" required style="width: 100%;font-size:25px;height: 50px" autofocus class="form-control" placeholder="Judul <?=$jenis?>" value="<?=$judul?>"></div>
             <div style="margin-bottom: 30px"><textarea id="textarea" name="isi"><?=$isi?></textarea></div>
             <div><button type="submit" class="btn btn-success">SIMPAN</button></div>
         </form>
