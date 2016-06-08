@@ -19,7 +19,7 @@
         <br>
         <div id="text" style="text-align: center;">
             <h3>Total Entri tiap <?=$opt?></h3>
-            <h3>Kecamatan <?=$kecamatan?></h3>
+            <h3>Puskesmas <?=$kecamatan?></h3>
         </div>
         <div id="container">
             <!--

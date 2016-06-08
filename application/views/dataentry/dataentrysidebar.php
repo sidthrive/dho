@@ -19,12 +19,12 @@
                             <div class="panel panel-default">
                                 <div <?=($this->uri->segment(2)=='bidanbyform'&&$this->uri->segment(3)=='Sengkol')?' style="background-color:#909090"':''?> class="panel-heading">
                                     <h4 class="panel-title">
-                                        <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanbyform/Sengkol"?>">Kecamatan Sengkol</a>
+                                        <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanbyform/Sengkol"?>">Puskesmas Sengkol</a>
                                     </h4>
                                 </div>
                                 <div <?=($this->uri->segment(2)=='bidanbyform'&&$this->uri->segment(3)=='Janapria')?' style="background-color:#909090"':''?> class="panel-heading<?=($this->uri->segment(2)=='bidanbyform'&&$this->uri->segment(3)=='Janapria')?' active':''?>">
                                     <h4 class="panel-title">
-                                        <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanbyform/Janapria"?>">Kecamatan Janapria</a>
+                                        <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanbyform/Janapria"?>">Puskesmas Janapria</a>
                                     </h4>
                                 </div>
                             </div>
@@ -40,12 +40,12 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading"<?=($this->uri->segment(2)=='bidanbytanggal'&&$this->uri->segment(3)=='Sengkol')?' style="background-color:#909090"':''?>>
                                     <h4 class="panel-title">
-                                        <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanbytanggal/Sengkol"?>">Kecamatan Sengkol</a>
+                                        <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanbytanggal/Sengkol"?>">Puskesmas Sengkol</a>
                                     </h4>
                                 </div>
                                 <div class="panel-heading"<?=($this->uri->segment(2)=='bidanbytanggal'&&$this->uri->segment(3)=='Janapria')?' style="background-color:#909090"':''?>>
                                     <h4 class="panel-title">
-                                        <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanbytanggal/Janapria"?>">Kecamatan Janapria</a>
+                                        <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanbytanggal/Janapria"?>">Puskesmas Janapria</a>
                                     </h4>
                                 </div>
                             </div>
