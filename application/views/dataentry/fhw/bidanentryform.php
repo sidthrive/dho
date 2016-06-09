@@ -7,7 +7,7 @@
             <!--
                 graphic container
             -->
-            <?php var_dump($data); foreach($data as $user => $form){
+            <?php foreach($data as $user => $form){
             ?>
             <br>
             <div title="Dusun <?=ucwords($user)?>">
