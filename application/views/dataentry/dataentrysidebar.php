@@ -16,17 +16,43 @@
                             </h4>
                         </div>
                         <div id="by_form" class="panel-collapse collapse<?=$this->uri->segment(2)=='bidanbyform'?' in':''?>">
-                            <div class="panel panel-default">
+                            <div class="panel panel-default panel-collapse">
                                 <div <?=($this->uri->segment(2)=='bidanbyform'&&$this->uri->segment(3)=='Sengkol')?' style="background-color:#909090"':''?> class="panel-heading">
                                     <h4 class="panel-title">
                                         <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanbyform/Sengkol"?>">Puskesmas Sengkol</a>
                                     </h4>
                                 </div>
+                                <?php if($this->uri->segment(3)=='Sengkol'){ ?>
+                                <div class="panel panel-default">
+                                    <?php foreach($data as $user => $form){
+                                    ?>
+                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords($user))?' style="background-color:#909090"':''?>>
+                                        <h4 class="panel-title">
+                                            <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanbyform/Sengkol/".ucwords($user)?>">Desa <?=ucwords($user)?></a>
+                                        </h4>
+                                    </div>
+                                    <?php }?>
+                                </div>
+                                <?php }?>
+                            </div>
+                            <div class="panel panel-default panel-collapse">
                                 <div <?=($this->uri->segment(2)=='bidanbyform'&&$this->uri->segment(3)=='Janapria')?' style="background-color:#909090"':''?> class="panel-heading<?=($this->uri->segment(2)=='bidanbyform'&&$this->uri->segment(3)=='Janapria')?' active':''?>">
                                     <h4 class="panel-title">
                                         <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanbyform/Janapria"?>">Puskesmas Janapria</a>
                                     </h4>
                                 </div>
+                                <?php if($this->uri->segment(3)=='Janapria'){ ?>
+                                <div class="panel panel-default">
+                                    <?php foreach($data as $user => $form){
+                                    ?>
+                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords($user))?' style="background-color:#909090"':''?>>
+                                        <h4 class="panel-title">
+                                            <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanbyform/Janapria/".ucwords($user)?>">Desa <?=ucwords($user)?></a>
+                                        </h4>
+                                    </div>
+                                    <?php }?>
+                                </div>
+                                <?php }?>
                             </div>
                         </div>
                     </div>

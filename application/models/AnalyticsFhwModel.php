@@ -13,7 +13,7 @@ class AnalyticsFhwModel extends CI_Model{
                         ,'user8'=>array("Dese"=>"Dese","Abe"=>"Abe","Sampet"=>"Sampet","Ketara"=>"Ketara","Sempalan"=>"Sempalan","Selak"=>"Selak","Dayen+Rurung"=>"Dayen Rurung","Embung+Rungkas"=>"Embung Rungkas","Reban"=>"Reban","Plangsang"=>"Plangsang","Lebak"=>"Lebak","Bagek+Payung"=>"Bagek Payung","bagek payung"=>"Bagek Payung","Sarah"=>"Sarah","Bagek+Dewe"=>"Bagek Dewe","Perigi"=>"Perigi","Bagek Dewe"=>"Bagek Dewe","Lainnya"=>"Lainnya")
                         ,'user9'=>array("Piyang"=>"Piyang","Belong"=>"Belong","Sengkol+I"=>"Sengkol I","Gentang"=>"Gentang","Sekong"=>"Sekong","Sedo"=>"Sedo","Kekale"=>"Kekale","Tajuk"=>"Tajuk","Puji+Rahayu"=>"Puji Rahayu","Junge"=>"Junge","Sereneng"=>"Sereneng","Kale"=>"Kale","Sengkol+II"=>"Sengkol II","Pesarih"=>"Pesarih","Penambong"=>"Penambong","Peresak"=>"Peresak","Senundal"=>"Senundal","Soweng"=>"Soweng","Lainnya"=>"Lainnya")
                         ,'user10'=>array("Piyang"=>"Piyang","Belong"=>"Belong","Sengkol+I"=>"Sengkol I","Gentang"=>"Gentang","Sekong"=>"Sekong","Sedo"=>"Sedo","Kekale"=>"Kekale","Tajuk"=>"Tajuk","Puji+Rahayu"=>"Puji Rahayu","Junge"=>"Junge","Sereneng"=>"Sereneng","Kale"=>"Kale","Sengkol+II"=>"Sengkol II","Pesarih"=>"Pesarih","Penambong"=>"Penambong","Peresak"=>"Peresak","Senundal"=>"Senundal","Soweng"=>"Soweng","Lainnya"=>"Lainnya")
-                        ,'user11'=>array("Karang+Jangkong"=>"Karang Jangkong","Gilik"=>"Gilik","Karang+Daye"=>"Karang+Daye","Balen+Along"=>"Balen+Along","Bale+Montong+I"=>"Bale Montong I","Gubuk+Direk"=>"Gubuk Direk","Pengadang"=>"Pengadang","Sarang+Angin"=>"Sarang Angin","Dayen+Kubur"=>"Dayen Kubur","Bale+Montong+II"=>"Bale Montong II","Gonjong"=>"Gonjong","Gampung"=>"Gampung","Taman+Bumi+Gora"=>"Taman Bumi Gora","Buntereng"=>"Buntereng","Wareng"=>"Wareng","Pance"=>"Pance","Bumi+Gora"=>"Bumi Gora","Batu+Bangke"=>"Batu Bangke","Bumi Gora"=>"Bumi Gora","Bale Montong I"=>"Bale Montong I","Balen Along"=>"Balen Along","Bale Montong II"=>"Bale Montong II","Lainnya"=>"Lainnya")
+                        ,'user11'=>array("Karang+Jangkong"=>"Karang Jangkong","Gilik"=>"Gilik","Karang+Daye"=>"Karang Daye","Balen+Along"=>"Balen Along","Bale+Montong+I"=>"Bale Montong I","Gubuk+Direk"=>"Gubuk Direk","Pengadang"=>"Pengadang","Sarang+Angin"=>"Sarang Angin","Dayen+Kubur"=>"Dayen Kubur","Bale+Montong+II"=>"Bale Montong II","Gonjong"=>"Gonjong","Gampung"=>"Gampung","Taman+Bumi+Gora"=>"Taman Bumi Gora","Buntereng"=>"Buntereng","Wareng"=>"Wareng","Pance"=>"Pance","Bumi+Gora"=>"Bumi Gora","Batu+Bangke"=>"Batu Bangke","Bumi Gora"=>"Bumi Gora","Bale Montong I"=>"Bale Montong I","Balen Along"=>"Balen Along","Bale Montong II"=>"Bale Montong II","Lainnya"=>"Lainnya")
                         ,'user12'=>array("Lenser"=>"Lenser","Tanak+Awu+Bat"=>"Tanak Awu Bat","Selawang"=>"Selawang","Toro"=>"Toro","Tanak+Awu+I"=>"Tanak Awu I","Singe"=>"Singe","Tongkek"=>"Tongkek","Perendik"=>"Perendik","Bale+Bowo"=>"Bale Bowo","Gantang+Daye"=>"Gantang Daye","Tanak+Awu+II"=>"Tanak Awu II","Rebile"=>"Rebile","Tatak"=>"Tatak","Reak+II"=>"Reak II","Reak+I"=>"Reak I","Piyang"=>"Piyang","Gantang+Lauk"=>"Gantang Lauk","Batu+Butir"=>"Batu Butir","Penujak"=>"Penujak","Jambek"=>"Jambek","Gantang+Bat"=>"Gantang Bat","Gantang+Timuk"=>"Gantang Timuk","Lebak"=>"Lebak","Bongkem"=>"Bongkem","Kekale"=>"Kekale","Pelangsang"=>"Pelangsang","Gunung+Kosong"=>"Gunung Kosong","Mangkung"=>"Mangkung","Tamping"=>"Tamping","semayan"=>"Semayan","Tolot+Tolot"=>"Tolot Tolot","Gubuk+Baru"=>"Gubuk Baru","Gemel"=>"Gemel","Sengkol+II"=>"Sengkol II","Kapak"=>"Kapak","Tanpok"=>"Tanpok","Selawang+Timuq"=>"Selawang Timuq","Selawang+Bat"=>"Selawang Bat","Jambek+II"=>"Jambek II","Jambek+I"=>"Jambek I","Gantang Daye"=>"Gantang Daye","Tanak Awu Bat"=>"Tanak Awu Bat","Reak I"=>"Reak I","Reak II"=>"Reak II","Selawang Timuq"=>"Selawang Timuq","Gantang Bat"=>"Gantang Bat","Jambek II"=>"Jambek II","Jambek I"=>"Jambek I","Tanak Awu II"=>"Tanak Awu II","Gantang Lauk"=>"Gantang Lauk","Tanak Awu I"=>"Tanak Awu I","Lainnya"=>"Lainnya")
                         ,'user13'=>array("Pengembur+III"=>"Pengembur III","Pelangi"=>"Pelangi","Rajan"=>"Rajan","Melati"=>"Melati","Tamping"=>"Tamping","Mawar"=>"Mawar","Bunga+Seroja"=>"Bunga Seroja","Sepit"=>"Sepit","Penyampi"=>"Penyampi","Siwang"=>"Siwang","Perigi"=>"Perigi","Keramat"=>"Keramat","Tawah"=>"Tawah","Pengembur+II"=>"Pengembur II","Sinah"=>"Sinah","Pengembur+I"=>"Pengembur I","Batu+Belek"=>"Batu Belek","Pengembur I"=>"Pengembur I","Batu Belek"=>"Batu Belek","Pengembur II"=>"Pengembur II","Pengembur III"=>"Pengembur III","Lainnya"=>"Lainnya")
                         ,'user14'=>array("Anak+Anjan"=>"Anak Anjan","Penupi"=>"Penupi","Kadik+I"=>"Kadik I","Karang+baru"=>"Karang Baru","Tenang"=>"Tenang","Lamben"=>"Lamben","Tuban"=>"Tuban","Segale"=>"Segale","Tenang+Baru"=>"Tenang Baru","Kadik+II"=>"Kadik II","Anak Anjan"=>"Anak Anjan","Kadik II"=>"Kadik II","Dasan Duah"=>"Dasan Duah")];
@@ -23,7 +23,7 @@ class AnalyticsFhwModel extends CI_Model{
         parent::__construct();
     }
     
-    public function getCountPerForm($kecamatan=""){
+    public function getCountPerForm($desa=""){
         $analyticsDB = $this->load->database('analytics', TRUE);
         $query  = $analyticsDB->query("SHOW TABLES FROM analytics");
         $table_default = [
@@ -47,11 +47,16 @@ class AnalyticsFhwModel extends CI_Model{
                 $tables[$table->Tables_in_analytics]=$table_default[$table->Tables_in_analytics];
             }
         }
+        if($desa==""){
+            $username = $this->session->userdata('username');
+            $namadusun = $this->listdusun[$username];
+            $users = [$username=>$this->listdesa[$username]];
+        }else{
+            $username = array_search($desa,$this->listdesa);
+            $namadusun = $this->listdusun[$username];
+            $users = [$username=>$this->listdesa[$username]];
+        }
         
-        $username = $this->session->userdata('username');
-        $namadusun = $this->listdusun[$username];
-        
-        $users = [$username=>$this->listdesa[$username]];
         
         //make result array from the tables name
         $result_data = array();
