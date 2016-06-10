@@ -187,201 +187,849 @@ class AnalyticsFhwModel extends CI_Model{
         return $result_data;
     }
     
-//    public function getCountPerDay($kecamatan="",$mode=""){
-//        if($mode!=""){
-//            return self::getCountPerMode($kecamatan,$mode);
-//        }
-//        date_default_timezone_set("Asia/Makassar"); 
-//        $analyticsDB = $this->load->database('analytics', TRUE);
-//        $query  = $analyticsDB->query("SHOW TABLES FROM analytics");
-//        
-//        //retrieve the tables name
-//        $tables = array();
-//        foreach ($query->result() as $table){
-//            array_push($tables, $table->Tables_in_analytics);
-//        }
-//        
-//       if($kecamatan=='Sengkol'){
-//            $users = ['user8'=>'Ketara','user9'=>'Sengkol','user10'=>'Sengkol','user11'=>'Kawo','user12'=>'Tanak Awu','user13'=>'Pengembur','user14'=>'Segala Anyar'];
-//        }elseif($kecamatan=='Janapria'){
-//            $users = ['user1'=>'Lekor','user2'=>'Saba','user3'=>'Pendem','user4'=>'Setuta','user5'=>'Jango','user6'=>'Janapria'];
-//        }else{
-//            return;
-//        }
-//        
-//        //make result array from the tables name
-//        $result_data = array();
-//        foreach ($users as $user=>$desa){
-//            $data = array();
-//            for($i=1;$i<=30;$i++){
-//                $day     = 30-$i;
-//                $date    = date("Y-m-d",  strtotime("-".$day." days"));
-//                $data[$date] = 0;
-//            }
-//            $result_data[$desa] = $data;
-//        }
-//        
-//        
-//        //retrieve all the columns in the table
-//        $columns = array();
-//        foreach ($tables as $table){
-//            $query = $analyticsDB->query("SHOW COLUMNS FROM ".$table);
-//            foreach ($query->result() as $column){
-//                array_push($columns, $column->Field);
-//            }
-//            
-//            //query tha data
-//            if($kecamatan=='Sengkol'){
-//                $query = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." where (userid='user8' or userid='user9' or userid='user10' or userid='user11' or userid='user12' or userid='user13' or userid='user14') and (submissiondate >= '".date("Y-m-d",strtotime("-30 days"))."' and submissiondate <= '".date("Y-m-d")."') group by userid, submissiondate");
-//            }
-//            elseif($kecamatan=='Janapria'){
-//                $query = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." where (userid='user1' or userid='user2' or userid='user3' or userid='user4' or userid='user5' or userid='user6') and (submissiondate >= '".date("Y-m-d",strtotime("-30 days"))."' and submissiondate <= '".date("Y-m-d")."') group by userid, submissiondate");
-//            }
-//            else{
-//                $query = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." where (submissiondate >= '2015-06-24' and submissiondate <= '2015-07-24') group by userid, submissiondate");
-//            }
-//            foreach ($query->result() as $datas){
-//                if(array_key_exists($datas->userid, $users)){
-//                    $data_count                  = $result_data[$users[$datas->userid]];
-//                    if(array_key_exists($datas->submissiondate, $data_count)){
-//                        $data_count[$datas->submissiondate] +=$datas->counts;
-//                    }
-//                    $result_data[$users[$datas->userid]] = $data_count;
-//                }
-//                
-//            }
-//        }
-//        
-//        return $result_data;
-//    }
-//    
-//    public function getCountPerMode($kecamatan="",$mode="Mingguan"){
-//        date_default_timezone_set("Asia/Makassar"); 
-//        $analyticsDB = $this->load->database('analytics', TRUE);
-//        $query  = $analyticsDB->query("SHOW TABLES FROM analytics");
-//        
-//        //retrieve the tables name
-//        $tables = array();
-//        foreach ($query->result() as $table){
-//            array_push($tables, $table->Tables_in_analytics);
-//        }
-//        
-//        if($kecamatan=='Sengkol'){
-//            $users = ['user8'=>'Ketara','user9'=>'Sengkol','user10'=>'Sengkol','user11'=>'Kawo','user12'=>'Tanak Awu','user13'=>'Pengembur','user14'=>'Segala Anyar'];
-//        }elseif($kecamatan=='Janapria'){
-//            $users = ['user1'=>'Lekor','user2'=>'Saba','user3'=>'Pendem','user4'=>'Setuta','user5'=>'Jango','user6'=>'Janapria'];
-//        }else{
-//            return;
-//        }
-//        
-//        //make result array from the tables name
-//        $result_data = array();
-//        $now    = date("Y-m-d");
-//        foreach ($users as $user=>$desa){
-//            $data = array();
-//            
-//            if($mode=='Mingguan'){
-//                $data['thisweek'] = array();
-//                $data['lastweek'] = array();                       
-//                $day_temp = array();
-//                for($i=1;$i<=6;$i++){
-//                    $days     = 6-$i;
-//                    $date    = date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")."-".$days." days"));
-//                    $day_temp[$date] = 0;
-//                }
-//                $data['thisweek'] = $day_temp;
-//                $day_temp = array();
-//                for($i=1;$i<=6;$i++){
-//                    $days     = 6-$i;
-//                    $date    = date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-".$days." days"));
-//                    $day_temp[$date] = 0;
-//                }
-//                $data['lastweek'] = $day_temp;
-//                
-//            }elseif($mode=='Bulanan'){
-//                $data['thisyear'] = array();
-//                $data['lastyear'] = array();
-//                $this_month = date("n");
-//                $month  = array();
-//                for($i=1;$i<=12;$i++){
-//                    $date   = date("Y-m",strtotime("+".(-$this_month+$i)." months"));
-//                    $month[$date]   =   0;
-//                }
-//                $data['thisyear'] = $month;
-//                $month  = array();
-//                for($i=1;$i<=12;$i++){
-//                    $date   = date("Y-m",strtotime("+".(-$this_month+$i-12)." months"));
-//                    $month[$date]   =   0;
-//                }
-//                $data['lastyear'] = $month;
-//            }
-//            $result_data[$desa] = $data;
-//        }
-//        
-//        
-//        //retrieve all the columns in the table
-//        $columns = array();
-//        foreach ($tables as $table){
-//            $query = $analyticsDB->query("SHOW COLUMNS FROM ".$table);
-//            foreach ($query->result() as $column){
-//                array_push($columns, $column->Field);
-//            }
-//            
-//            //query tha data
-//            if($kecamatan=='Sengkol'){
-//                if($mode=='Mingguan'){
-//                    $query = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." where (userid='user8' or userid='user9' or userid='user10' or userid='user11' or userid='user12' or userid='user13' or userid='user14') and (submissiondate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' and submissiondate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."') group by userid, submissiondate");
-//                }elseif($mode=='Bulanan'){
-//                    $query = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." where (userid='user8' or userid='user9' or userid='user10' or userid='user11' or userid='user12' or userid='user13' or userid='user14') and (submissiondate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' and submissiondate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."') group by userid, submissiondate");
-//                }
-//            }
-//            elseif($kecamatan=='Janapria'){
-//                if($mode=='Mingguan'){
-//                    $query = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." where (userid='user1' or userid='user2' or userid='user3' or userid='user4' or userid='user5' or userid='user6') and (submissiondate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' and submissiondate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."') group by userid, submissiondate");
-//                }elseif($mode=='Bulanan'){
-//                    $query = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." where (userid='user1' or userid='user2' or userid='user3' or userid='user4' or userid='user5' or userid='user6') and (submissiondate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' and submissiondate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."') group by userid, submissiondate");
-//                }
-//            }
-//            else{
-//                $query = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." where (submissiondate >= '2015-06-24' and submissiondate <= '2015-07-24') group by userid, submissiondate");
-//            }
-//            foreach ($query->result() as $datas){
-//                if(array_key_exists($datas->userid, $users)){
-//                    if($mode=='Mingguan'){
-//                        $week   =   $result_data[$users[$datas->userid]];
-//                        $thisweek   = $week['thisweek'];
-//                        $lastweek   = $week['lastweek'];
-//                        if(array_key_exists($datas->submissiondate, $thisweek)){
-//                            $thisweek[$datas->submissiondate] +=$datas->counts;
-//                        }
-//                        if(array_key_exists($datas->submissiondate, $lastweek)){
-//                            $lastweek[$datas->submissiondate] +=$datas->counts;
-//                        }
-//                        $week['thisweek'] = $thisweek;
-//                        $week['lastweek'] = $lastweek;
-//                        $result_data[$users[$datas->userid]] = $week;
-//                    }elseif($mode=='Bulanan'){
-//                        $month = $result_data[$users[$datas->userid]];
-//                        $thisyear = $month['thisyear'];
-//                        $lastyear = $month['lastyear'];
-//                        $m = explode('-', $datas->submissiondate);
-//                        array_pop($m);
-//                        $datas->submissiondate = implode('-',$m);
-//                        if(array_key_exists($datas->submissiondate, $thisyear)){
-//                            $thisyear[$datas->submissiondate] +=$datas->counts;
-//                        }
-//                        if(array_key_exists($datas->submissiondate, $lastyear)){
-//                            $lastyear[$datas->submissiondate] +=$datas->counts;
-//                        }
-//                        $month['thisyear'] = $thisyear;
-//                        $month['lastyear'] = $lastyear;
-//                        $result_data[$users[$datas->userid]] = $month;
-//                    }
-//                }
-//                
-//            }
-//        }
-//        
-//        return $result_data;
-//    }
+    public function getCountPerDay($desa="",$mode=""){
+        if($mode!=""){
+            return self::getCountPerMode($desa,$mode);
+        }
+        date_default_timezone_set("Asia/Makassar"); 
+        $analyticsDB = $this->load->database('analytics', TRUE);
+        $query  = $analyticsDB->query("SHOW TABLES FROM analytics");
+        
+        $table_default = [
+            'kartu_ibu_registration'=>'Registrasi Ibu', //have own ``
+            'kohort_kb_registration'=>'Registrasi KB', //have own ``
+            'kartu_anc_registration'=>'Registrasi ANC', //from kir(kiId) ``
+            'kartu_anc_registration_oa'=>'Registrasi ANC', //have own ``
+            'kartu_anc_rencana_persalinan'=>'Rencana Persalinan', //from kar(motherId), kar(kiId) -> kir(kiId) ``
+            'kartu_anc_visit'=>'Kunjungan ANC', //form kir(kiId) ``
+            'kartu_pnc_regitration_oa'=>'Registrasi PNC', //have own  ``
+            'kartu_pnc_dokumentasi_persalinan'=>'Dokumentasi Persalinan', //from kar(motherId), kar(kiId) -> kir(kiId) ``
+            'kartu_pnc_visit'=>'Kunjungan PNC', //from kar_oa(motherId)
+            'kohort_bayi_registration'=>'Registrasi Anak', //form kir(kiId) ``
+            'kohort_bayi_registration_oa'=>'Registrasi Anak', //have won ``
+            'kohort_bayi_neonatal_period'=>'Kunjungan Neonatal', // from pnc_doc(childId), pnc_doc(motherId)->kar(motherId),kar(kiId) -> kir(kiId)
+            'kohort_bayi_kunjungan'=>'Kunjungan Bayi', // from kbr_oa(childId)
+            //'kartu_anc_visit_integrasi'=>'', 
+            'kartu_anc_visit_labtest'=>'', //from kar(motherId), kar(kiId)->kir(kiId)
+            'kohort_bayi_immunization'=>'', // from pnc_doc(childId), pnc_doc(motherId)->kar(motherId),kar(kiId) -> kir(kiId)
+            'kohort_kb_pelayanan'=>'', //from kir(kiId)
+            'kohort_kb_update'=>'']; //from kkr(kiId)
+        //retrieve the tables name
+        
+        $tables = array();
+        foreach ($query->result() as $table){
+            if(array_key_exists($table->Tables_in_analytics, $table_default)){
+                array_push($tables, $table->Tables_in_analytics);
+            }
+        }
+        
+        if($desa==""){
+            $username = $this->session->userdata('username');
+            $namadusun = $this->listdusun[$username];
+            $users = [$username=>$this->listdesa[$username]];
+        }else{
+            $username = array_search($desa,$this->listdesa);
+            $namadusun = $this->listdusun[$username];
+            $users = [$username=>$this->listdesa[$username]];
+        }
+        
+        //make result array from the tables name
+        $result_data = array();
+        foreach ($namadusun as $dusun=>$nama){
+            $data = array();
+            for($i=1;$i<=30;$i++){
+                $day     = 30-$i;
+                $date    = date("Y-m-d",  strtotime("-".$day." days"));
+                $data[$date] = 0;
+            }
+            $result_data[$nama] = $data;
+        }
+        
+        
+        //retrieve all the columns in the table
+        $columns = array();
+        foreach ($tables as $table){
+            $query = $analyticsDB->query("SHOW COLUMNS FROM ".$table);
+            foreach ($query->result() as $column){
+                array_push($columns, $column->Field);
+            }
+            
+            if($table=="kartu_ibu_registration"||$table=="kohort_kb_registration"||$table=="kartu_anc_registration_oa"||$table=="kartu_pnc_regitration_oa"||$table=="kohort_bayi_registration_oa"){
+                $query = $analyticsDB->query("SELECT userid, submissiondate,dusun,count(*) as counts from ".$table." where (userid='$username') group by dusun,submissiondate");
+                foreach ($query->result() as $datas){
+                    if(array_key_exists($datas->dusun, $namadusun)){
+                        $data_count                  = $result_data[$namadusun[$datas->dusun]];
+                        if(array_key_exists($datas->submissiondate, $data_count)){
+                            $data_count[$datas->submissiondate] +=$datas->counts;
+                        }
+                        $result_data[$namadusun[$datas->dusun]] = $data_count;
+                    }else{
+                        $data_count                  = $result_data["Lainnya"];
+                        if(array_key_exists($datas->submissiondate, $data_count)){
+                            $data_count[$datas->submissiondate] +=$datas->counts;
+                        }
+                        $result_data["Lainnya"] = $data_count;
+                    }
+                }
+            }elseif($table=="kartu_anc_registration"||$table=="kartu_anc_visit"||$table=="kohort_bayi_registration"||$table=="kohort_kb_pelayanan"){
+                $query = $analyticsDB->query("SELECT userid, kiId, submissiondate from ".$table." where (userid='$username')");
+                foreach ($query->result() as $c_data){
+                    $query2 = $analyticsDB->query("SELECT dusun FROM kartu_ibu_registration where kiId='$c_data->kiId'");
+                    foreach ($query2->result() as $c2_data){
+                        if(array_key_exists($c2_data->dusun, $namadusun)){
+                            $data_count                  = $result_data[$namadusun[$c2_data->dusun]];
+                            if(array_key_exists($c_data->submissiondate, $data_count)){
+                                $data_count[$c_data->submissiondate] += 1;;
+                            }
+                            $result_data[$namadusun[$c2_data->dusun]] = $data_count;
+                        }else{
+                            $data_count                  = $result_data["Lainnya"];
+                            if(array_key_exists($c_data->submissiondate, $data_count)){
+                                $data_count[$c_data->submissiondate] += 1;;
+                            }
+                            $result_data["Lainnya"] = $data_count;
+                        }
+                    }
+                }
+            }elseif($table=="kartu_anc_rencana_persalinan"||$table=="kartu_pnc_dokumentasi_persalinan"||$table=="kartu_anc_visit_labtest"){
+                $query = $analyticsDB->query("SELECT userid, motherId, submissiondate from ".$table." where (userid='$username')");
+                foreach ($query->result() as $c_data){
+                    $query2 = $analyticsDB->query("SELECT kiId FROM kartu_anc_registration where motherId='$c_data->motherId'");
+                    foreach ($query2->result() as $c2_data){
+                        $query3 = $analyticsDB->query("SELECT dusun FROM kartu_ibu_registration where kiId='$c2_data->kiId'");
+                        foreach ($query3->result() as $p_data){
+                            if(array_key_exists($p_data->dusun, $namadusun)){
+                                $data_count                  = $result_data[$namadusun[$p_data->dusun]];
+                                if(array_key_exists($c_data->submissiondate, $data_count)){
+                                    $data_count[$c_data->submissiondate] += 1;;
+                                }
+                                $result_data[$namadusun[$p_data->dusun]] = $data_count;
+                            }else{
+                                $data_count                  = $result_data["Lainnya"];
+                                if(array_key_exists($c_data->submissiondate, $data_count)){
+                                    $data_count[$c_data->submissiondate] += 1;;
+                                }
+                                $result_data["Lainnya"] = $data_count;
+                            }
+                        }
+                    }
+                }
+            }elseif($table=="kartu_pnc_visit"){
+                $query = $analyticsDB->query("SELECT userid, motherId, submissiondate from ".$table." where (userid='$username')");
+                foreach ($query->result() as $c_data){
+                    $query2 = $analyticsDB->query("SELECT dusun FROM kartu_anc_registration_oa where motherId='$c_data->motherId'");
+                    foreach ($query2->result() as $c2_data){
+                        if(array_key_exists($c2_data->dusun, $namadusun)){
+                            $data_count                  = $result_data[$namadusun[$c2_data->dusun]];
+                            if(array_key_exists($c_data->submissiondate, $data_count)){
+                                $data_count[$c_data->submissiondate] += 1;;
+                            }
+                            $result_data[$namadusun[$c2_data->dusun]] = $data_count;
+                        }else{
+                            $data_count                  = $result_data["Lainnya"];
+                            if(array_key_exists($c_data->submissiondate, $data_count)){
+                                $data_count[$c_data->submissiondate] += 1;;
+                            }
+                            $result_data["Lainnya"] = $data_count;
+                        }
+                    }
+                }
+            }elseif($table=="kohort_bayi_kunjungan"){
+                $query = $analyticsDB->query("SELECT userid, childId, submissiondate from ".$table." where (userid='$username')");
+                foreach ($query->result() as $c_data){
+                    $query2 = $analyticsDB->query("SELECT dusun FROM kohort_bayi_registration_oa where childId='$c_data->childId'");
+                    foreach ($query2->result() as $c2_data){
+                        if(array_key_exists($c2_data->dusun, $namadusun)){
+                            $data_count                  = $result_data[$namadusun[$c2_data->dusun]];
+                            if(array_key_exists($c_data->submissiondate, $data_count)){
+                                $data_count[$c_data->submissiondate] += 1;;
+                            }
+                            $result_data[$namadusun[$c2_data->dusun]] = $data_count;
+                        }else{
+                            $data_count                  = $result_data["Lainnya"];
+                            if(array_key_exists($c_data->submissiondate, $data_count)){
+                                $data_count[$c_data->submissiondate] += 1;;
+                            }
+                            $result_data["Lainnya"] = $data_count;
+                        }
+                    }
+                }
+            }elseif($table=="kohort_bayi_neonatal_period"||$table=="kohort_bayi_immunization"){
+                $query = $analyticsDB->query("SELECT userid, childId, submissiondate from ".$table." where (userid='$username')");
+                foreach ($query->result() as $c_data){
+                    $query2 = $analyticsDB->query("SELECT motherId FROM kartu_pnc_dokumentasi_persalinan where childId='$c_data->childId'");
+                    foreach ($query2->result() as $c2_data){
+                        $query3 = $analyticsDB->query("SELECT kiId FROM kartu_anc_registration where motherId='$c2_data->motherId'");
+                        foreach ($query3->result() as $c3_data){
+                            $query4 = $analyticsDB->query("SELECT dusun FROM kartu_ibu_registration where kiId='$c3_data->kiId'");
+                            foreach ($query4->result() as $p_data){
+                                if(array_key_exists($p_data->dusun, $namadusun)){
+                                    $data_count                  = $result_data[$namadusun[$p_data->dusun]];
+                                    if(array_key_exists($c_data->submissiondate, $data_count)){
+                                        $data_count[$c_data->submissiondate] += 1;;
+                                    }
+                                    $result_data[$namadusun[$p_data->dusun]] = $data_count;
+                                }else{
+                                    $data_count                  = $result_data["Lainnya"];
+                                    if(array_key_exists($c_data->submissiondate, $data_count)){
+                                        $data_count[$c_data->submissiondate] += 1;;
+                                    }
+                                    $result_data["Lainnya"] = $data_count;
+                                }
+                            }
+                        }
+                    }
+                }
+            }elseif($table=="kohort_kb_update"){
+                $query = $analyticsDB->query("SELECT userid, kiId, submissiondate from ".$table." where (userid='$username')");
+                foreach ($query->result() as $c_data){
+                    $query2 = $analyticsDB->query("SELECT dusun FROM kohort_kb_registration where kiId='$c_data->kiId'");
+                    foreach ($query2->result() as $c2_data){
+                        if(array_key_exists($c2_data->dusun, $namadusun)){
+                            $data_count                  = $result_data[$namadusun[$c2_data->dusun]];
+                            if(array_key_exists($c_data->submissiondate, $data_count)){
+                                $data_count[$c_data->submissiondate] += 1;;
+                            }
+                            $result_data[$namadusun[$c2_data->dusun]] = $data_count;
+                        }else{
+                            $data_count                  = $result_data["Lainnya"];
+                            if(array_key_exists($c_data->submissiondate, $data_count)){
+                                $data_count[$c_data->submissiondate] += 1;;
+                            }
+                            $result_data["Lainnya"] = $data_count;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return $result_data;
+    }
+    
+    public function getCountPerMode($desa="",$mode="Mingguan"){
+        date_default_timezone_set("Asia/Makassar"); 
+        $analyticsDB = $this->load->database('analytics', TRUE);
+        $query  = $analyticsDB->query("SHOW TABLES FROM analytics");
+        
+        $table_default = [
+            'kartu_ibu_registration'=>'Registrasi Ibu', //have own ``
+            'kohort_kb_registration'=>'Registrasi KB', //have own ``
+            'kartu_anc_registration'=>'Registrasi ANC', //from kir(kiId) ``
+            'kartu_anc_registration_oa'=>'Registrasi ANC', //have own ``
+            'kartu_anc_rencana_persalinan'=>'Rencana Persalinan', //from kar(motherId), kar(kiId) -> kir(kiId) ``
+            'kartu_anc_visit'=>'Kunjungan ANC', //form kir(kiId) ``
+            'kartu_pnc_regitration_oa'=>'Registrasi PNC', //have own  ``
+            'kartu_pnc_dokumentasi_persalinan'=>'Dokumentasi Persalinan', //from kar(motherId), kar(kiId) -> kir(kiId) ``
+            'kartu_pnc_visit'=>'Kunjungan PNC', //from kar_oa(motherId)
+            'kohort_bayi_registration'=>'Registrasi Anak', //form kir(kiId) ``
+            'kohort_bayi_registration_oa'=>'Registrasi Anak', //have won ``
+            'kohort_bayi_neonatal_period'=>'Kunjungan Neonatal', // from pnc_doc(childId), pnc_doc(motherId)->kar(motherId),kar(kiId) -> kir(kiId)
+            'kohort_bayi_kunjungan'=>'Kunjungan Bayi', // from kbr_oa(childId)
+            //'kartu_anc_visit_integrasi'=>'', 
+            'kartu_anc_visit_labtest'=>'', //from kar(motherId), kar(kiId)->kir(kiId)
+            'kohort_bayi_immunization'=>'', // from pnc_doc(childId), pnc_doc(motherId)->kar(motherId),kar(kiId) -> kir(kiId)
+            'kohort_kb_pelayanan'=>'', //from kir(kiId)
+            'kohort_kb_update'=>'']; //from kkr(kiId)
+        //retrieve the tables name
+        
+        $tables = array();
+        foreach ($query->result() as $table){
+            if(array_key_exists($table->Tables_in_analytics, $table_default)){
+                array_push($tables, $table->Tables_in_analytics);
+            }
+        }
+        
+        if($desa==""){
+            $username = $this->session->userdata('username');
+            $namadusun = $this->listdusun[$username];
+            $users = [$username=>$this->listdesa[$username]];
+        }else{
+            $username = array_search($desa,$this->listdesa);
+            $namadusun = $this->listdusun[$username];
+            $users = [$username=>$this->listdesa[$username]];
+        }
+        
+        //make result array from the tables name
+        $result_data = array();
+        $now    = date("Y-m-d");
+        foreach ($namadusun as $dusun=>$nama){
+            $data = array();
+            
+            if($mode=='Mingguan'){
+                $data['thisweek'] = array();
+                $data['lastweek'] = array();                       
+                $day_temp = array();
+                for($i=1;$i<=6;$i++){
+                    $days     = 6-$i;
+                    $date    = date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")."-".$days." days"));
+                    $day_temp[$date] = 0;
+                }
+                $data['thisweek'] = $day_temp;
+                $day_temp = array();
+                for($i=1;$i<=6;$i++){
+                    $days     = 6-$i;
+                    $date    = date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-".$days." days"));
+                    $day_temp[$date] = 0;
+                }
+                $data['lastweek'] = $day_temp;
+                
+            }elseif($mode=='Bulanan'){
+                $data['thisyear'] = array();
+                $data['lastyear'] = array();
+                $this_month = date("n");
+                $month  = array();
+                for($i=1;$i<=12;$i++){
+                    $date   = date("Y-m",strtotime("+".(-$this_month+$i)." months"));
+                    $month[$date]   =   0;
+                }
+                $data['thisyear'] = $month;
+                $month  = array();
+                for($i=1;$i<=12;$i++){
+                    $date   = date("Y-m",strtotime("+".(-$this_month+$i-12)." months"));
+                    $month[$date]   =   0;
+                }
+                $data['lastyear'] = $month;
+            }
+            $result_data[$nama] = $data;
+        }
+        
+        
+        //retrieve all the columns in the table
+        $columns = array();
+        foreach ($tables as $table){
+            $query = $analyticsDB->query("SHOW COLUMNS FROM ".$table);
+            foreach ($query->result() as $column){
+                array_push($columns, $column->Field);
+            }
+            
+            //query tha data
+            if($table=="kartu_ibu_registration"||$table=="kohort_kb_registration"||$table=="kartu_anc_registration_oa"||$table=="kartu_pnc_regitration_oa"||$table=="kohort_bayi_registration_oa"){
+                if($mode=='Mingguan'){
+                    $query = $analyticsDB->query("SELECT userid, submissiondate,dusun,count(*) as counts from ".$table." where (userid='$username') and (submissiondate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' and submissiondate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."') group by dusun, submissiondate");
+                }elseif($mode=='Bulanan'){
+                    $query = $analyticsDB->query("SELECT userid, submissiondate,dusun,count(*) as counts from ".$table." where (userid='$username') and (submissiondate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' and submissiondate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."') group by dusun, submissiondate");
+                }
+                foreach ($query->result() as $datas){
+                    if($mode=='Mingguan'){
+                        if(array_key_exists($datas->dusun, $namadusun)){
+                            $week   =   $result_data[$namadusun[$datas->dusun]];
+                            $thisweek   = $week['thisweek'];
+                            $lastweek   = $week['lastweek'];
+                            if(array_key_exists($datas->submissiondate, $thisweek)){
+                                $thisweek[$datas->submissiondate] +=$datas->counts;
+                            }
+                            if(array_key_exists($datas->submissiondate, $lastweek)){
+                                $lastweek[$datas->submissiondate] +=$datas->counts;
+                            }
+                            $week['thisweek'] = $thisweek;
+                            $week['lastweek'] = $lastweek;
+                            $result_data[$namadusun[$datas->dusun]] = $week;
+                        }else{
+                            $week   =   $result_data["Lainnya"];
+                            $thisweek   = $week['thisweek'];
+                            $lastweek   = $week['lastweek'];
+                            if(array_key_exists($datas->submissiondate, $thisweek)){
+                                $thisweek[$datas->submissiondate] +=$datas->counts;
+                            }
+                            if(array_key_exists($datas->submissiondate, $lastweek)){
+                                $lastweek[$datas->submissiondate] +=$datas->counts;
+                            }
+                            $week['thisweek'] = $thisweek;
+                            $week['lastweek'] = $lastweek;
+                            $result_data["Lainnya"] = $week;
+                        }
+                    }elseif($mode=='Bulanan'){
+                        if(array_key_exists($datas->dusun, $namadusun)){
+                            $month = $result_data[$namadusun[$datas->dusun]];
+                            $thisyear = $month['thisyear'];
+                            $lastyear = $month['lastyear'];
+                            $m = explode('-', $datas->submissiondate);
+                            array_pop($m);
+                            $datas->submissiondate = implode('-',$m);
+                            if(array_key_exists($datas->submissiondate, $thisyear)){
+                                $thisyear[$datas->submissiondate] +=$datas->counts;
+                            }
+                            if(array_key_exists($datas->submissiondate, $lastyear)){
+                                $lastyear[$datas->submissiondate] +=$datas->counts;
+                            }
+                            $month['thisyear'] = $thisyear;
+                            $month['lastyear'] = $lastyear;
+                            $result_data[$namadusun[$datas->dusun]] = $month;
+                        }else{
+                            $month = $result_data["Lainnya"];
+                            $thisyear = $month['thisyear'];
+                            $lastyear = $month['lastyear'];
+                            $m = explode('-', $datas->submissiondate);
+                            array_pop($m);
+                            $datas->submissiondate = implode('-',$m);
+                            if(array_key_exists($datas->submissiondate, $thisyear)){
+                                $thisyear[$datas->submissiondate] +=$datas->counts;
+                            }
+                            if(array_key_exists($datas->submissiondate, $lastyear)){
+                                $lastyear[$datas->submissiondate] +=$datas->counts;
+                            }
+                            $month['thisyear'] = $thisyear;
+                            $month['lastyear'] = $lastyear;
+                            $result_data["Lainnya"] = $month;
+                        }
+                    }
+                }
+            }elseif($table=="kartu_anc_registration"||$table=="kartu_anc_visit"||$table=="kohort_bayi_registration"||$table=="kohort_kb_pelayanan"){
+                if($mode=='Mingguan'){
+                    $query = $analyticsDB->query("SELECT userid, kiId, submissiondate from ".$table." where (userid='$username') and (submissiondate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' and submissiondate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."')");
+                }elseif($mode=='Bulanan'){
+                    $query = $analyticsDB->query("SELECT userid, kiId, submissiondate from ".$table." where (userid='$username') and (submissiondate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' and submissiondate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."')");
+                }
+                foreach ($query->result() as $c_data){
+                    $query2 = $analyticsDB->query("SELECT dusun FROM kartu_ibu_registration where kiId='$c_data->kiId'");
+                    foreach ($query2->result() as $c2_data){
+                        if($mode=='Mingguan'){
+                            if(array_key_exists($c2_data->dusun, $namadusun)){
+                                $week   =   $result_data[$namadusun[$datas->dusun]];
+                                $thisweek   = $week['thisweek'];
+                                $lastweek   = $week['lastweek'];
+                                if(array_key_exists($c_data->submissiondate, $thisweek)){
+                                    $thisweek[$c_data->submissiondate] +=1;
+                                }
+                                if(array_key_exists($datas->submissiondate, $lastweek)){
+                                    $lastweek[$c_data->submissiondate] +=1;
+                                }
+                                $week['thisweek'] = $thisweek;
+                                $week['lastweek'] = $lastweek;
+                                $result_data[$namadusun[$c2_data->dusun]] = $week;
+                            }else{
+                                $week   =   $result_data["Lainnya"];
+                                $thisweek   = $week['thisweek'];
+                                $lastweek   = $week['lastweek'];
+                                if(array_key_exists($c_data->submissiondate, $thisweek)){
+                                    $thisweek[$c_data->submissiondate] +=1;
+                                }
+                                if(array_key_exists($c_data->submissiondate, $lastweek)){
+                                    $lastweek[$c_data->submissiondate] +=1;
+                                }
+                                $week['thisweek'] = $thisweek;
+                                $week['lastweek'] = $lastweek;
+                                $result_data["Lainnya"] = $week;
+                            }
+                        }elseif($mode=='Bulanan'){
+                            if(array_key_exists($c2_data->dusun, $namadusun)){
+                                $month = $result_data[$namadusun[$c2_data->dusun]];
+                                $thisyear = $month['thisyear'];
+                                $lastyear = $month['lastyear'];
+                                $m = explode('-', $c_data->submissiondate);
+                                array_pop($m);
+                                $c_data->submissiondate = implode('-',$m);
+                                if(array_key_exists($c_data->submissiondate, $thisyear)){
+                                    $thisyear[$c_data->submissiondate] +=1;
+                                }
+                                if(array_key_exists($c_data->submissiondate, $lastyear)){
+                                    $lastyear[$c_data->submissiondate] +=1;
+                                }
+                                $month['thisyear'] = $thisyear;
+                                $month['lastyear'] = $lastyear;
+                                $result_data[$namadusun[$c2_data->dusun]] = $month;
+                            }else{
+                                $month = $result_data["Lainnya"];
+                                $thisyear = $month['thisyear'];
+                                $lastyear = $month['lastyear'];
+                                $m = explode('-', $c_data->submissiondate);
+                                array_pop($m);
+                                $c_data->submissiondate = implode('-',$m);
+                                if(array_key_exists($c_data->submissiondate, $thisyear)){
+                                    $thisyear[$c_data->submissiondate] +=1;
+                                }
+                                if(array_key_exists($c_data->submissiondate, $lastyear)){
+                                    $lastyear[$c_data->submissiondate] +=1;
+                                }
+                                $month['thisyear'] = $thisyear;
+                                $month['lastyear'] = $lastyear;
+                                $result_data["Lainnya"] = $month;
+                            }
+                        }
+                    }
+                }
+            }elseif($table=="kartu_anc_rencana_persalinan"||$table=="kartu_pnc_dokumentasi_persalinan"||$table=="kartu_anc_visit_labtest"){
+                if($mode=='Mingguan'){
+                    $query = $analyticsDB->query("SELECT userid, motherId, submissiondate from ".$table." where (userid='$username') and (submissiondate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' and submissiondate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."')");
+                }elseif($mode=='Bulanan'){
+                    $query = $analyticsDB->query("SELECT userid, motherId, submissiondate from ".$table." where (userid='$username') and (submissiondate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' and submissiondate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."')");
+                }
+                foreach ($query->result() as $c_data){
+                    $query2 = $analyticsDB->query("SELECT kiId FROM kartu_anc_registration where motherId='$c_data->motherId'");
+                    foreach ($query2->result() as $c2_data){
+                        $query3 = $analyticsDB->query("SELECT dusun FROM kartu_ibu_registration where kiId='$c2_data->kiId'");
+                        foreach ($query3->result() as $p_data){
+                            if($mode=='Mingguan'){
+                                if(array_key_exists($p_data->dusun, $namadusun)){
+                                    $week   =   $result_data[$namadusun[$p_data->dusun]];
+                                    $thisweek   = $week['thisweek'];
+                                    $lastweek   = $week['lastweek'];
+                                    if(array_key_exists($c_data->submissiondate, $thisweek)){
+                                        $thisweek[$c_data->submissiondate] +=1;
+                                    }
+                                    if(array_key_exists($c_data->submissiondate, $lastweek)){
+                                        $lastweek[$c_data->submissiondate] +=1;
+                                    }
+                                    $week['thisweek'] = $thisweek;
+                                    $week['lastweek'] = $lastweek;
+                                    $result_data[$namadusun[$p_data->dusun]] = $week;
+                                }else{
+                                    $week   =   $result_data["Lainnya"];
+                                    $thisweek   = $week['thisweek'];
+                                    $lastweek   = $week['lastweek'];
+                                    if(array_key_exists($c_data->submissiondate, $thisweek)){
+                                        $thisweek[$c_data->submissiondate] +=1;
+                                    }
+                                    if(array_key_exists($c_data->submissiondate, $lastweek)){
+                                        $lastweek[$c_data->submissiondate] +=1;
+                                    }
+                                    $week['thisweek'] = $thisweek;
+                                    $week['lastweek'] = $lastweek;
+                                    $result_data["Lainnya"] = $week;
+                                }
+                            }elseif($mode=='Bulanan'){
+                                if(array_key_exists($p_data->dusun, $namadusun)){
+                                    $month = $result_data[$namadusun[$p_data->dusun]];
+                                    $thisyear = $month['thisyear'];
+                                    $lastyear = $month['lastyear'];
+                                    $m = explode('-', $c_data->submissiondate);
+                                    array_pop($m);
+                                    $c_data->submissiondate = implode('-',$m);
+                                    if(array_key_exists($c_data->submissiondate, $thisyear)){
+                                        $thisyear[$c_data->submissiondate] +=1;
+                                    }
+                                    if(array_key_exists($c_data->submissiondate, $lastyear)){
+                                        $lastyear[$c_data->submissiondate] +=1;
+                                    }
+                                    $month['thisyear'] = $thisyear;
+                                    $month['lastyear'] = $lastyear;
+                                    $result_data[$namadusun[$p_data->dusun]] = $month;
+                                }else{
+                                    $month = $result_data["Lainnya"];
+                                    $thisyear = $month['thisyear'];
+                                    $lastyear = $month['lastyear'];
+                                    $m = explode('-', $c_data->submissiondate);
+                                    array_pop($m);
+                                    $c_data->submissiondate = implode('-',$m);
+                                    if(array_key_exists($c_data->submissiondate, $thisyear)){
+                                        $thisyear[$c_data->submissiondate] +=1;
+                                    }
+                                    if(array_key_exists($c_data->submissiondate, $lastyear)){
+                                        $lastyear[$c_data->submissiondate] +=1;
+                                    }
+                                    $month['thisyear'] = $thisyear;
+                                    $month['lastyear'] = $lastyear;
+                                    $result_data["Lainnya"] = $month;
+                                }
+                            }
+                        }
+                    }
+                }
+            }elseif($table=="kartu_pnc_visit"){
+                if($mode=='Mingguan'){
+                    $query = $analyticsDB->query("SELECT userid, motherId, submissiondate from ".$table." where (userid='$username') and (submissiondate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' and submissiondate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."')");
+                }elseif($mode=='Bulanan'){
+                    $query = $analyticsDB->query("SELECT userid, motherId, submissiondate from ".$table." where (userid='$username') and (submissiondate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' and submissiondate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."')");
+                }
+                foreach ($query->result() as $c_data){
+                    $query2 = $analyticsDB->query("SELECT dusun FROM kartu_anc_registration_oa where motherId='$c_data->motherId'");
+                    foreach ($query2->result() as $c2_data){
+                        if($mode=='Mingguan'){
+                            if(array_key_exists($c2_data->dusun, $namadusun)){
+                                $week   =   $result_data[$namadusun[$datas->dusun]];
+                                $thisweek   = $week['thisweek'];
+                                $lastweek   = $week['lastweek'];
+                                if(array_key_exists($c_data->submissiondate, $thisweek)){
+                                    $thisweek[$c_data->submissiondate] +=1;
+                                }
+                                if(array_key_exists($datas->submissiondate, $lastweek)){
+                                    $lastweek[$c_data->submissiondate] +=1;
+                                }
+                                $week['thisweek'] = $thisweek;
+                                $week['lastweek'] = $lastweek;
+                                $result_data[$namadusun[$c2_data->dusun]] = $week;
+                            }else{
+                                $week   =   $result_data["Lainnya"];
+                                $thisweek   = $week['thisweek'];
+                                $lastweek   = $week['lastweek'];
+                                if(array_key_exists($c_data->submissiondate, $thisweek)){
+                                    $thisweek[$c_data->submissiondate] +=1;
+                                }
+                                if(array_key_exists($c_data->submissiondate, $lastweek)){
+                                    $lastweek[$c_data->submissiondate] +=1;
+                                }
+                                $week['thisweek'] = $thisweek;
+                                $week['lastweek'] = $lastweek;
+                                $result_data["Lainnya"] = $week;
+                            }
+                        }elseif($mode=='Bulanan'){
+                            if(array_key_exists($c2_data->dusun, $namadusun)){
+                                $month = $result_data[$namadusun[$c2_data->dusun]];
+                                $thisyear = $month['thisyear'];
+                                $lastyear = $month['lastyear'];
+                                $m = explode('-', $c_data->submissiondate);
+                                array_pop($m);
+                                $c_data->submissiondate = implode('-',$m);
+                                if(array_key_exists($c_data->submissiondate, $thisyear)){
+                                    $thisyear[$c_data->submissiondate] +=1;
+                                }
+                                if(array_key_exists($c_data->submissiondate, $lastyear)){
+                                    $lastyear[$c_data->submissiondate] +=1;
+                                }
+                                $month['thisyear'] = $thisyear;
+                                $month['lastyear'] = $lastyear;
+                                $result_data[$namadusun[$c2_data->dusun]] = $month;
+                            }else{
+                                $month = $result_data["Lainnya"];
+                                $thisyear = $month['thisyear'];
+                                $lastyear = $month['lastyear'];
+                                $m = explode('-', $c_data->submissiondate);
+                                array_pop($m);
+                                $c_data->submissiondate = implode('-',$m);
+                                if(array_key_exists($c_data->submissiondate, $thisyear)){
+                                    $thisyear[$c_data->submissiondate] +=1;
+                                }
+                                if(array_key_exists($c_data->submissiondate, $lastyear)){
+                                    $lastyear[$c_data->submissiondate] +=1;
+                                }
+                                $month['thisyear'] = $thisyear;
+                                $month['lastyear'] = $lastyear;
+                                $result_data["Lainnya"] = $month;
+                            }
+                        }
+                    }
+                }
+            }elseif($table=="kohort_bayi_kunjungan"){
+                if($mode=='Mingguan'){
+                    $query = $analyticsDB->query("SELECT userid, childId, submissiondate from ".$table." where (userid='$username') and (submissiondate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' and submissiondate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."')");
+                }elseif($mode=='Bulanan'){
+                    $query = $analyticsDB->query("SELECT userid, childId, submissiondate from ".$table." where (userid='$username') and (submissiondate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' and submissiondate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."')");
+                }
+                foreach ($query->result() as $c_data){
+                    $query2 = $analyticsDB->query("SELECT dusun FROM kohort_bayi_registration_oa where childId='$c_data->childId'");
+                    foreach ($query2->result() as $c2_data){
+                        if($mode=='Mingguan'){
+                            if(array_key_exists($c2_data->dusun, $namadusun)){
+                                $week   =   $result_data[$namadusun[$datas->dusun]];
+                                $thisweek   = $week['thisweek'];
+                                $lastweek   = $week['lastweek'];
+                                if(array_key_exists($c_data->submissiondate, $thisweek)){
+                                    $thisweek[$c_data->submissiondate] +=1;
+                                }
+                                if(array_key_exists($datas->submissiondate, $lastweek)){
+                                    $lastweek[$c_data->submissiondate] +=1;
+                                }
+                                $week['thisweek'] = $thisweek;
+                                $week['lastweek'] = $lastweek;
+                                $result_data[$namadusun[$c2_data->dusun]] = $week;
+                            }else{
+                                $week   =   $result_data["Lainnya"];
+                                $thisweek   = $week['thisweek'];
+                                $lastweek   = $week['lastweek'];
+                                if(array_key_exists($c_data->submissiondate, $thisweek)){
+                                    $thisweek[$c_data->submissiondate] +=1;
+                                }
+                                if(array_key_exists($c_data->submissiondate, $lastweek)){
+                                    $lastweek[$c_data->submissiondate] +=1;
+                                }
+                                $week['thisweek'] = $thisweek;
+                                $week['lastweek'] = $lastweek;
+                                $result_data["Lainnya"] = $week;
+                            }
+                        }elseif($mode=='Bulanan'){
+                            if(array_key_exists($c2_data->dusun, $namadusun)){
+                                $month = $result_data[$namadusun[$c2_data->dusun]];
+                                $thisyear = $month['thisyear'];
+                                $lastyear = $month['lastyear'];
+                                $m = explode('-', $c_data->submissiondate);
+                                array_pop($m);
+                                $c_data->submissiondate = implode('-',$m);
+                                if(array_key_exists($c_data->submissiondate, $thisyear)){
+                                    $thisyear[$c_data->submissiondate] +=1;
+                                }
+                                if(array_key_exists($c_data->submissiondate, $lastyear)){
+                                    $lastyear[$c_data->submissiondate] +=1;
+                                }
+                                $month['thisyear'] = $thisyear;
+                                $month['lastyear'] = $lastyear;
+                                $result_data[$namadusun[$c2_data->dusun]] = $month;
+                            }else{
+                                $month = $result_data["Lainnya"];
+                                $thisyear = $month['thisyear'];
+                                $lastyear = $month['lastyear'];
+                                $m = explode('-', $c_data->submissiondate);
+                                array_pop($m);
+                                $c_data->submissiondate = implode('-',$m);
+                                if(array_key_exists($c_data->submissiondate, $thisyear)){
+                                    $thisyear[$c_data->submissiondate] +=1;
+                                }
+                                if(array_key_exists($c_data->submissiondate, $lastyear)){
+                                    $lastyear[$c_data->submissiondate] +=1;
+                                }
+                                $month['thisyear'] = $thisyear;
+                                $month['lastyear'] = $lastyear;
+                                $result_data["Lainnya"] = $month;
+                            }
+                        }
+                    }
+                }
+            }elseif($table=="kohort_bayi_neonatal_period"||$table=="kohort_bayi_immunization"){
+                if($mode=='Mingguan'){
+                    $query = $analyticsDB->query("SELECT userid, childId, submissiondate from ".$table." where (userid='$username') and (submissiondate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' and submissiondate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."')");
+                }elseif($mode=='Bulanan'){
+                    $query = $analyticsDB->query("SELECT userid, childId, submissiondate from ".$table." where (userid='$username') and (submissiondate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' and submissiondate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."')");
+                }
+                foreach ($query->result() as $c_data){
+                    $query2 = $analyticsDB->query("SELECT motherId FROM kartu_pnc_dokumentasi_persalinan where childId='$c_data->childId'");
+                    foreach ($query2->result() as $c2_data){
+                        $query3 = $analyticsDB->query("SELECT kiId FROM kartu_anc_registration where motherId='$c2_data->motherId'");
+                        foreach ($query3->result() as $c3_data){
+                            $query4 = $analyticsDB->query("SELECT dusun FROM kartu_ibu_registration where kiId='$c3_data->kiId'");
+                            foreach ($query4->result() as $p_data){
+                                if($mode=='Mingguan'){
+                                    if(array_key_exists($p_data->dusun, $namadusun)){
+                                        $week   =   $result_data[$namadusun[$p_data->dusun]];
+                                        $thisweek   = $week['thisweek'];
+                                        $lastweek   = $week['lastweek'];
+                                        if(array_key_exists($c_data->submissiondate, $thisweek)){
+                                            $thisweek[$c_data->submissiondate] +=1;
+                                        }
+                                        if(array_key_exists($c_data->submissiondate, $lastweek)){
+                                            $lastweek[$c_data->submissiondate] +=1;
+                                        }
+                                        $week['thisweek'] = $thisweek;
+                                        $week['lastweek'] = $lastweek;
+                                        $result_data[$namadusun[$p_data->dusun]] = $week;
+                                    }else{
+                                        $week   =   $result_data["Lainnya"];
+                                        $thisweek   = $week['thisweek'];
+                                        $lastweek   = $week['lastweek'];
+                                        if(array_key_exists($c_data->submissiondate, $thisweek)){
+                                            $thisweek[$c_data->submissiondate] +=1;
+                                        }
+                                        if(array_key_exists($c_data->submissiondate, $lastweek)){
+                                            $lastweek[$c_data->submissiondate] +=1;
+                                        }
+                                        $week['thisweek'] = $thisweek;
+                                        $week['lastweek'] = $lastweek;
+                                        $result_data["Lainnya"] = $week;
+                                    }
+                                }elseif($mode=='Bulanan'){
+                                    if(array_key_exists($p_data->dusun, $namadusun)){
+                                        $month = $result_data[$namadusun[$p_data->dusun]];
+                                        $thisyear = $month['thisyear'];
+                                        $lastyear = $month['lastyear'];
+                                        $m = explode('-', $c_data->submissiondate);
+                                        array_pop($m);
+                                        $c_data->submissiondate = implode('-',$m);
+                                        if(array_key_exists($c_data->submissiondate, $thisyear)){
+                                            $thisyear[$c_data->submissiondate] +=1;
+                                        }
+                                        if(array_key_exists($c_data->submissiondate, $lastyear)){
+                                            $lastyear[$c_data->submissiondate] +=1;
+                                        }
+                                        $month['thisyear'] = $thisyear;
+                                        $month['lastyear'] = $lastyear;
+                                        $result_data[$namadusun[$p_data->dusun]] = $month;
+                                    }else{
+                                        $month = $result_data["Lainnya"];
+                                        $thisyear = $month['thisyear'];
+                                        $lastyear = $month['lastyear'];
+                                        $m = explode('-', $c_data->submissiondate);
+                                        array_pop($m);
+                                        $c_data->submissiondate = implode('-',$m);
+                                        if(array_key_exists($c_data->submissiondate, $thisyear)){
+                                            $thisyear[$c_data->submissiondate] +=1;
+                                        }
+                                        if(array_key_exists($c_data->submissiondate, $lastyear)){
+                                            $lastyear[$c_data->submissiondate] +=1;
+                                        }
+                                        $month['thisyear'] = $thisyear;
+                                        $month['lastyear'] = $lastyear;
+                                        $result_data["Lainnya"] = $month;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }elseif($table=="kohort_kb_update"){
+                if($mode=='Mingguan'){
+                    $query = $analyticsDB->query("SELECT userid, kiId, submissiondate from ".$table." where (userid='$username') and (submissiondate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' and submissiondate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."')");
+                }elseif($mode=='Bulanan'){
+                    $query = $analyticsDB->query("SELECT userid, kiId, submissiondate from ".$table." where (userid='$username') and (submissiondate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' and submissiondate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."')");
+                }
+                foreach ($query->result() as $c_data){
+                    $query2 = $analyticsDB->query("SELECT dusun FROM kohort_kb_registration where kiId='$c_data->kiId'");
+                    foreach ($query2->result() as $c2_data){
+                        if($mode=='Mingguan'){
+                            if(array_key_exists($c2_data->dusun, $namadusun)){
+                                $week   =   $result_data[$namadusun[$datas->dusun]];
+                                $thisweek   = $week['thisweek'];
+                                $lastweek   = $week['lastweek'];
+                                if(array_key_exists($c_data->submissiondate, $thisweek)){
+                                    $thisweek[$c_data->submissiondate] +=1;
+                                }
+                                if(array_key_exists($datas->submissiondate, $lastweek)){
+                                    $lastweek[$c_data->submissiondate] +=1;
+                                }
+                                $week['thisweek'] = $thisweek;
+                                $week['lastweek'] = $lastweek;
+                                $result_data[$namadusun[$c2_data->dusun]] = $week;
+                            }else{
+                                $week   =   $result_data["Lainnya"];
+                                $thisweek   = $week['thisweek'];
+                                $lastweek   = $week['lastweek'];
+                                if(array_key_exists($c_data->submissiondate, $thisweek)){
+                                    $thisweek[$c_data->submissiondate] +=1;
+                                }
+                                if(array_key_exists($c_data->submissiondate, $lastweek)){
+                                    $lastweek[$c_data->submissiondate] +=1;
+                                }
+                                $week['thisweek'] = $thisweek;
+                                $week['lastweek'] = $lastweek;
+                                $result_data["Lainnya"] = $week;
+                            }
+                        }elseif($mode=='Bulanan'){
+                            if(array_key_exists($c2_data->dusun, $namadusun)){
+                                $month = $result_data[$namadusun[$c2_data->dusun]];
+                                $thisyear = $month['thisyear'];
+                                $lastyear = $month['lastyear'];
+                                $m = explode('-', $c_data->submissiondate);
+                                array_pop($m);
+                                $c_data->submissiondate = implode('-',$m);
+                                if(array_key_exists($c_data->submissiondate, $thisyear)){
+                                    $thisyear[$c_data->submissiondate] +=1;
+                                }
+                                if(array_key_exists($c_data->submissiondate, $lastyear)){
+                                    $lastyear[$c_data->submissiondate] +=1;
+                                }
+                                $month['thisyear'] = $thisyear;
+                                $month['lastyear'] = $lastyear;
+                                $result_data[$namadusun[$c2_data->dusun]] = $month;
+                            }else{
+                                $month = $result_data["Lainnya"];
+                                $thisyear = $month['thisyear'];
+                                $lastyear = $month['lastyear'];
+                                $m = explode('-', $c_data->submissiondate);
+                                array_pop($m);
+                                $c_data->submissiondate = implode('-',$m);
+                                if(array_key_exists($c_data->submissiondate, $thisyear)){
+                                    $thisyear[$c_data->submissiondate] +=1;
+                                }
+                                if(array_key_exists($c_data->submissiondate, $lastyear)){
+                                    $lastyear[$c_data->submissiondate] +=1;
+                                }
+                                $month['thisyear'] = $thisyear;
+                                $month['lastyear'] = $lastyear;
+                                $result_data["Lainnya"] = $month;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return $result_data;
+    }
 }

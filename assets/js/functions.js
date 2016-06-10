@@ -14,7 +14,7 @@ $.fn.showChartDataEntryTanggal = function(data){
             x.push(index);
             y.push(value);
         });
-        user = user.replace(" ","_");
+        user = user.replace(/ /g,"_");
         $('#'+user).highcharts({			
             chart: {
                 zoomType: 'xy',
@@ -94,7 +94,7 @@ $.fn.showChartDataEntryMinggu = function(data){
             }
             
         });
-        user = user.replace(" ","_");
+        user = user.replace(/ /g,"_");
         $('#'+user).highcharts({			
             chart: {
                 zoomType: 'xy',
@@ -186,7 +186,7 @@ $.fn.showChartDataEntryBulan = function(data){
             }
             
         });
-        user = user.replace(" ","_");
+        user = user.replace(/ /g,"_");
         $('#'+user).highcharts({			
             chart: {
                 zoomType: 'xy',
