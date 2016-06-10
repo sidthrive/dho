@@ -239,6 +239,10 @@ hr {
     font-weight: 400;
 }
 
+#sidebar1 .panel-heading:hover {
+    background-color: #A2A2A2;
+}
+
 .panel-collapse > .panel {
     margin-left: 30px;
 }

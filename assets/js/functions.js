@@ -265,7 +265,7 @@ $.fn.showChartDataEntryForm = function(data){
             x.push(index);
             y.push(value);
         });
-        user = user.replace(" ","_");
+        user = user.replace(/ /g,"_");
         $('#'+user).highcharts({			
             chart: {
                 zoomType: 'xy',

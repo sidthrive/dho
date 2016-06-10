@@ -10,10 +10,11 @@ class BeritaModel extends CI_Model{
     
     public function addPost($data){
         $BeritaDB = $this->load->database('dho_news', TRUE);
-        $judul  = $data['judul'];
-        $isi    = $data['isi'];
-        $guid   = "berita/show?p=".(self::getLastId()+1);
-        if($BeritaDB->query('INSERT INTO dho_post VALUES("","'.$this->session->userdata('id_user').'",NOW(),"'.$isi.'","'.$judul.'","'.$guid.'")')){
+        $judul  = $this->db->escape($data['judul']);
+        $isi    = $this->db->escape($data['isi']);
+        $jenis   = $data['jenis'];
+        $guid   = "berita/show?p=".(self::getLastId());
+        if($BeritaDB->query('INSERT INTO dho_post VALUES("","'.$this->session->userdata('id_user').'",NOW(),'.$isi.','.$judul.',"'.$jenis.'","'.$guid.'")')){
             return $guid;
         }
         else {
@@ -24,10 +25,10 @@ class BeritaModel extends CI_Model{
     public function editPost($data){
         $BeritaDB = $this->load->database('dho_news', TRUE);
         $id     = $data['id'];
-        $judul  = $data['judul'];
-        $isi    = $data['isi'];
+        $judul  = $this->db->escape($data['judul']);
+        $isi    = $this->db->escape($data['isi']);
         $guid   = "p=".$id;
-        if($BeritaDB->query("UPDATE dho_post SET post_content='".$isi."', post_title='".$judul."' WHERE id=".$id)){
+        if($BeritaDB->query("UPDATE dho_post SET post_content=".$isi.", post_title=".$judul." WHERE id=".$id)){
             return $guid;
         }
         else {
@@ -35,8 +36,9 @@ class BeritaModel extends CI_Model{
         }
     }
     
-    public function deletePost($data){
-        
+    public function deletePost($id){
+        $BeritaDB = $this->load->database('dho_news', TRUE);
+        $BeritaDB->query("DELETE FROM dho_post WHERE id=".$id);
     }
     
     public function getPost($id,$max=-1,$min=-1){
@@ -52,6 +54,14 @@ class BeritaModel extends CI_Model{
                 }
             }
             return $BeritaDB->query("SELECT * FROM dho_post WHERE ".$clause)->row();
+        }elseif($id=="berita"){
+            if($max>0&&$min>0) return $BeritaDB->query("SELECT * FROM dho_post WHERE post_type='berita' order by post_date desc LIMIT ".$max.", ".$min)->result();
+            elseif($max>0) return $BeritaDB->query("SELECT * FROM dho_post WHERE post_type='berita' order by post_date desc LIMIT ".$max)->result();
+            else return $BeritaDB->query("SELECT * FROM dho_post WHERE post_type='berita' order by post_date")->result();
+        }elseif($id=="artikel"){
+            if($max>0&&$min>0) return $BeritaDB->query("SELECT * FROM dho_post WHERE post_type='artikel' order by post_date desc LIMIT ".$max.", ".$min)->result();
+            elseif($max>0) return $BeritaDB->query("SELECT * FROM dho_post WHERE post_type='artikel' order by post_date desc LIMIT ".$max)->result();
+            else return $BeritaDB->query("SELECT * FROM dho_post WHERE post_type='artikel' order by post_date")->result();
         }elseif($id=="all"){
             if($max>0&&$min>0) return $BeritaDB->query("SELECT * FROM dho_post order by post_date desc LIMIT ".$max.", ".$min)->result();
             elseif($max>0) return $BeritaDB->query("SELECT * FROM dho_post order by post_date desc LIMIT ".$max)->result();
@@ -63,7 +73,7 @@ class BeritaModel extends CI_Model{
     
     public function getLastId(){
         $BeritaDB = $this->load->database('dho_news', TRUE);
-        $max_id = $BeritaDB->query("SELECT MAX(id) AS max_id FROM dho_post")->row()->max_id;
+        $max_id = $BeritaDB->query("SELECT AUTO_INCREMENT as max_id FROM information_schema.tables WHERE table_name = 'dho_post' AND table_schema = DATABASE()")->row()->max_id;
         return $max_id==null?0:$max_id;
     }
     

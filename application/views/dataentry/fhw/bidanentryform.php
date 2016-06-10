@@ -1,7 +1,7 @@
     <div id="content">
         <div id="text" style="text-align: center;">
             <h3>Total Entri tiap Form</h3>
-            <h3>Puskesmas <?=$kecamatan?></h3>
+            <h3>Desa <?=$desa?></h3>
         </div>
         <div id="container">
             <!--
@@ -10,9 +10,9 @@
             <?php foreach($data as $user => $form){
             ?>
             <br>
-            <div title="Desa <?=ucwords($user)?>">
+            <div title="Dusun <?=ucwords($user)?>">
                     <div id="">
-                        <center><span style="font-size:16px; font-family:'Droid Sans',Arial,Verdana,sans-serif;"><strong>Desa <?=ucwords($user)?></strong>
+                        <center><span style="font-size:16px; font-family:'Droid Sans',Arial,Verdana,sans-serif;"><strong>Dusun <?=ucwords($user)?></strong>
                         <!-- START Script Block for Chart -->
                         <div id="<?=str_replace(' ', '_', $user);?>" align="center">
                         </div>
