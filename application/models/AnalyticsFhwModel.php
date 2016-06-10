@@ -585,7 +585,7 @@ class AnalyticsFhwModel extends CI_Model{
                     foreach ($query2->result() as $c2_data){
                         if($mode=='Mingguan'){
                             if(array_key_exists($c2_data->dusun, $namadusun)){
-                                $week   =   $result_data[$namadusun[$datas->dusun]];
+                                $week   =   $result_data[$namadusun[$c2_data->dusun]];
                                 $thisweek   = $week['thisweek'];
                                 $lastweek   = $week['lastweek'];
                                 if(array_key_exists($c_data->submissiondate, $thisweek)){
@@ -736,7 +736,7 @@ class AnalyticsFhwModel extends CI_Model{
                     foreach ($query2->result() as $c2_data){
                         if($mode=='Mingguan'){
                             if(array_key_exists($c2_data->dusun, $namadusun)){
-                                $week   =   $result_data[$namadusun[$datas->dusun]];
+                                $week   =   $result_data[$namadusun[$c2_data->dusun]];
                                 $thisweek   = $week['thisweek'];
                                 $lastweek   = $week['lastweek'];
                                 if(array_key_exists($c_data->submissiondate, $thisweek)){
@@ -810,7 +810,7 @@ class AnalyticsFhwModel extends CI_Model{
                     foreach ($query2->result() as $c2_data){
                         if($mode=='Mingguan'){
                             if(array_key_exists($c2_data->dusun, $namadusun)){
-                                $week   =   $result_data[$namadusun[$datas->dusun]];
+                                $week   =   $result_data[$namadusun[$c2_data->dusun]];
                                 $thisweek   = $week['thisweek'];
                                 $lastweek   = $week['lastweek'];
                                 if(array_key_exists($c_data->submissiondate, $thisweek)){
@@ -964,7 +964,7 @@ class AnalyticsFhwModel extends CI_Model{
                     foreach ($query2->result() as $c2_data){
                         if($mode=='Mingguan'){
                             if(array_key_exists($c2_data->dusun, $namadusun)){
-                                $week   =   $result_data[$namadusun[$datas->dusun]];
+                                $week   =   $result_data[$namadusun[$c2_data->dusun]];
                                 $thisweek   = $week['thisweek'];
                                 $lastweek   = $week['lastweek'];
                                 if(array_key_exists($c_data->submissiondate, $thisweek)){
