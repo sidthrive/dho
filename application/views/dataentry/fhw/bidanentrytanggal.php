@@ -30,7 +30,7 @@
             <br>
             <div title="Desa <?=ucwords($user)?>">
                     <div id="">
-                        <center><span style="font-size:16px; font-family:'Droid Sans',Arial,Verdana,sans-serif;"><strong>Desa <?=ucwords($user)?></strong>
+                        <center><span style="font-size:16px; font-family:'Droid Sans',Arial,Verdana,sans-serif;"><strong>Dusun <?=ucwords($user)?></strong>
                         <!-- START Script Block for Chart -->
                         <div id="<?=str_replace(' ', '_', $user);?>" align="center">
                         </div>
@@ -70,7 +70,7 @@
                 }else if(newmode=="bln"){
                     modeurl = "/Bulanan";
                 }
-                window.location.href = "<?=base_url()."dataentry/bidanbytanggal/".$kecamatan?>"+modeurl;
+                window.location.href = "<?=base_url()."dataentry/bidanbytanggal/".$desa?>"+modeurl;
             }
             console.log($( "select option:selected" ).attr("id"));
         });    
