@@ -66,7 +66,7 @@ class DataEntry extends CI_Controller{
             $listdesa = ['user1'=>'Lekor','user2'=>'Saba','user3'=>'Pendem','user4'=>'Setuta','user5'=>'Jango','user6'=>'Janapria','user8'=>'Ketara','user9'=>'Sengkol','user10'=>'Sengkol','user11'=>'Kawo','user12'=>'Tanak Awu','user13'=>'Pengembur','user14'=>'Segala Anyar'];
             $data['desa']		= $listdesa[$this->session->userdata('username')];
             $data['mode']                   = $this->uri->segment(4);
-            $data['data']                   = $this->AnalyticsModel->getCountPerDay($data['desa'],$data['mode']);
+            $data['data']                   = array();//$this->AnalyticsModel->getCountPerDay($data['desa'],$data['mode']);
             $this->load->view("header");
             $this->load->view("dataentry/fhw/dataentrysidebar");
             $this->load->view("dataentry/fhw/bidanentrytanggal",$data);

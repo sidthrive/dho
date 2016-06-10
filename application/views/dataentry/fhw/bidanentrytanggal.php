@@ -19,7 +19,7 @@
         <br>
         <div id="text" style="text-align: center;">
             <h3>Total Entri tiap <?=$opt?></h3>
-            <h3>Puskesmas <?=$kecamatan?></h3>
+            <h3>Desa <?=$desa?></h3>
         </div>
         <div id="container">
             <!--
@@ -40,13 +40,6 @@
             <br><br>
             <?php
             }
-            ?>
-        </div>
-        <div>
-            <?php 
-                $json = file_get_contents(base_url()."assets/location.json");
-		$obj = json_decode($json);
-                var_dump($obj);
             ?>
         </div>
     </div>
