@@ -15,7 +15,7 @@ class DataEntry extends CI_Controller{
         if($this->session->userdata('level')=="fhw"){
             $this->load->view('header');
             $this->load->view('dataentry/fhw/dataentrysidebar');
-            $this->load->view('dataentry/fhw/dataentrymainpage');
+            $this->load->view('dataentry/dataentrymainpage');
             $this->load->view('footer');
         }else{
             $this->load->view('header');
