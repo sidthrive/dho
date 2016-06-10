@@ -1,7 +1,7 @@
 <?php
-    if($this->uri->segment(4)=="Mingguan"){
+    if($mode=="Mingguan"){
         $opt = "Minggu";
-    }elseif($this->uri->segment(4)=="Bulanan"){
+    }elseif($mode=="Bulanan"){
         $opt = "Bulan";
     }else{
         $opt = "Tanggal";

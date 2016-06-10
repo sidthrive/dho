@@ -1,7 +1,7 @@
 <?php
-    if($this->uri->segment(4)=="Mingguan"){
+    if($mode=="Mingguan"){
         $opt = "Minggu";
-    }elseif($this->uri->segment(4)=="Bulanan"){
+    }elseif($mode=="Bulanan"){
         $opt = "Bulan";
     }else{
         $opt = "Tanggal";
@@ -70,7 +70,11 @@
                 }else if(newmode=="bln"){
                     modeurl = "/Bulanan";
                 }
+                <?php if(isset($kecamatan)){ ?>
+                window.location.href = "<?=base_url()."dataentry/bidanbytanggal/".$kecamatan."/".$desa?>"+modeurl;                    
+                <?php }else{?>
                 window.location.href = "<?=base_url()."dataentry/bidanbytanggal/".$desa?>"+modeurl;
+                <?php }?>
             }
             console.log($( "select option:selected" ).attr("id"));
         });    
