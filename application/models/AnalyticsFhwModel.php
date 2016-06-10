@@ -591,7 +591,7 @@ class AnalyticsFhwModel extends CI_Model{
                                 if(array_key_exists($c_data->submissiondate, $thisweek)){
                                     $thisweek[$c_data->submissiondate] +=1;
                                 }
-                                if(array_key_exists($datas->submissiondate, $lastweek)){
+                                if(array_key_exists($c_data->submissiondate, $lastweek)){
                                     $lastweek[$c_data->submissiondate] +=1;
                                 }
                                 $week['thisweek'] = $thisweek;
@@ -742,7 +742,7 @@ class AnalyticsFhwModel extends CI_Model{
                                 if(array_key_exists($c_data->submissiondate, $thisweek)){
                                     $thisweek[$c_data->submissiondate] +=1;
                                 }
-                                if(array_key_exists($datas->submissiondate, $lastweek)){
+                                if(array_key_exists($c_data->submissiondate, $lastweek)){
                                     $lastweek[$c_data->submissiondate] +=1;
                                 }
                                 $week['thisweek'] = $thisweek;
@@ -816,7 +816,7 @@ class AnalyticsFhwModel extends CI_Model{
                                 if(array_key_exists($c_data->submissiondate, $thisweek)){
                                     $thisweek[$c_data->submissiondate] +=1;
                                 }
-                                if(array_key_exists($datas->submissiondate, $lastweek)){
+                                if(array_key_exists($c_data->submissiondate, $lastweek)){
                                     $lastweek[$c_data->submissiondate] +=1;
                                 }
                                 $week['thisweek'] = $thisweek;
@@ -970,7 +970,7 @@ class AnalyticsFhwModel extends CI_Model{
                                 if(array_key_exists($c_data->submissiondate, $thisweek)){
                                     $thisweek[$c_data->submissiondate] +=1;
                                 }
-                                if(array_key_exists($datas->submissiondate, $lastweek)){
+                                if(array_key_exists($c_data->submissiondate, $lastweek)){
                                     $lastweek[$c_data->submissiondate] +=1;
                                 }
                                 $week['thisweek'] = $thisweek;
