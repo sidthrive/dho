@@ -260,6 +260,34 @@ class Laporan extends CI_Controller{
             $this->PWSModel->bayi($kec, $year, $month, $form);
         }elseif(strpos($form,'balita')!==false){
             $this->PWSModel->balita($kec, $year, $month, $form);
+        }elseif($form=="neonatal1"){
+            $this->PWSModel->neonatal1($kec,$year,$month,$form);
+        }elseif($form=="neonatal2"){
+            $this->PWSModel->neonatal2($kec,$year,$month,$form);
+        }elseif($form=="neonatal3"){
+            $this->PWSModel->neonatal3($kec,$year,$month,$form);
+        }elseif($form=="neonatal4"){
+            $this->PWSModel->neonatal4($kec,$year,$month,$form);
+        }elseif($form=="neonatal5"){
+            $this->PWSModel->neonatal5($kec,$year,$month,$form);
+        }elseif($form=="kb1"){
+            $this->PWSModel->kb1($kec,$year,$month,$form);
+        }elseif($form=="kb2"){
+            $this->PWSModel->kb2($kec,$year,$month,$form);
+        }elseif($form=="kb3"){
+            $this->PWSModel->kb3($kec,$year,$month,$form);
+        }elseif($form=="kb4"){
+            $this->PWSModel->kb4($kec,$year,$month,$form);
+        }elseif($form=="kb5"){
+            $this->PWSModel->kb5($kec,$year,$month,$form);
+        }elseif($form=="amp"){
+            $this->PWSModel->maternal($kec,$year,$month,$form);
+        }elseif($form=="akb"){
+            $this->PWSModel->akb($kec,$year,$month,$form);
+        }elseif($form=="kih"){
+            $this->PWSModel->kih($kec,$year,$month,$form);
+        }elseif($form=="p4k"){
+            $this->PWSModel->p4k($kec,$year,$month,$form);
         }
     }
 }

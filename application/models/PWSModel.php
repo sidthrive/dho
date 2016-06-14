@@ -14,9 +14,15 @@ class PWSModel extends CI_Model{
         $namefile = "";
         if($kec=='janapria'){
             $user   =  ['Lekor','Saba','Pendem','Setuta','Jango','Janapria'];
+            $result['bumil']  =  [101,221,230,259,199,217];
+            $result['bulin']  =  [97,211,220,247,190,207];
+            $result['bufas']  =  [97,211,220,247,190,207];
             $namefile .= "_".$month."_".$kec.".xls";
         }else{
             $user   =  ['Ketara','Sengkol','Kawo','Tanak Awu','Pengembur','Segala Anyar'];
+            $result['bumil']  =  [224,72,81,85,169,199];
+            $result['bulin']  =  [214,69,78,81,161,190];
+            $result['bufas']  =  [214,69,78,81,161,190];
             $namefile .= "_".$month."_".$kec.".xls";
         }
         $result['form'] = array($form);
@@ -39,6 +45,9 @@ class PWSModel extends CI_Model{
         $result_index['cakupan_k4_bulan_ini']=['M11','M12','M13','M14','M15','M16'];
         $result_index['cakupan_resiko_bulan_lalu']=['Q11','Q12','Q13','Q14','Q15','Q16'];
         $result_index['cakupan_resiko_bulan_ini']=['R11','R12','R13','R14','R15','R16'];
+        $result_index['bumil'] = ['C11','C12','C13','C14','C15','C16'];
+        $result_index['bulin'] = ['D11','D12','D13','D14','D15','D16'];
+        $result_index['bufas'] = ['E11','E12','E13','E14','E15','E16'];
         
         try{
             $datak1 = $this->PHPExcelModel->getCellRange('download/kia1/cakupan_k1'.$namefile,'A2:E8');
@@ -70,7 +79,7 @@ class PWSModel extends CI_Model{
             //$this->session->set_flashdata('file', '<div class="alert alert-danger">Tidak ada data '.$form.' untuk bulan '.$month.'</div>');
             //redirect("laporan/downloadbidanpws");
         }
-        $this->PHPExcelModel->createPwsXLS("download/kia1/template_pws_ibu1.xlsx",$result,$result_index);
+        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_ibu1.xlsx",$result,$result_index);
     }
     
     public function kia2($kec,$year,$month,$form){
@@ -80,9 +89,15 @@ class PWSModel extends CI_Model{
         if($kec=='janapria'){
             $user   =  ['Lekor','Saba','Pendem','Setuta','Jango','Janapria'];
             $namefile .= "_".$month."_".$kec.".xls";
+            $result['bumil']  =  [101,221,230,259,199,217];
+            $result['bulin']  =  [97,211,220,247,190,207];
+            $result['bufas']  =  [97,211,220,247,190,207];
         }else{
             $user   =  ['Ketara','Sengkol','Kawo','Tanak Awu','Pengembur','Segala Anyar'];
             $namefile .= "_".$month."_".$kec.".xls";
+            $result['bumil']  =  [224,72,81,85,169,199];
+            $result['bulin']  =  [214,69,78,81,161,190];
+            $result['bufas']  =  [214,69,78,81,161,190];
         }
         $result['form'] = array($form);
         $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
@@ -96,6 +111,9 @@ class PWSModel extends CI_Model{
         $result_index['desa']=['B11','B12','B13','B14','B15','B16'];
         $result_index['komplikasi_bulan_lalu']=['G11','G12','G13','G14','G15','G16'];
         $result_index['komplikasi_bulan_ini']=['H11','H12','H13','H14','H15','H16'];
+        $result_index['bumil'] = ['C11','C12','C13','C14','C15','C16'];
+        $result_index['bulin'] = ['D11','D12','D13','D14','D15','D16'];
+        $result_index['bufas'] = ['E11','E12','E13','E14','E15','E16'];
         
         try {
             $datakomplikasi = $this->PHPExcelModel->getCellRange('download/kia2/cakupan_komplikasi'.$namefile,'A2:E8');
@@ -111,7 +129,7 @@ class PWSModel extends CI_Model{
             //$this->session->set_flashdata('file', '<div class="alert alert-danger">Tidak ada data '.$form.' untuk bulan '.$month.'</div>');
             //redirect("laporan/downloadbidanpws");
         }
-        $this->PHPExcelModel->createPwsXLS("download/kia2/template_pws_ibu2.xlsx",$result,$result_index);
+        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_ibu2.xlsx",$result,$result_index);
     }
     
     public function kia3($kec,$year,$month,$form){
@@ -121,9 +139,15 @@ class PWSModel extends CI_Model{
         if($kec=='janapria'){
             $user   =  ['Lekor','Saba','Pendem','Setuta','Jango','Janapria'];
             $namefile .= "_".$month."_".$kec.".xls";
+            $result['bumil']  =  [101,221,230,259,199,217];
+            $result['bulin']  =  [97,211,220,247,190,207];
+            $result['bufas']  =  [97,211,220,247,190,207];
         }else{
             $user   =  ['Ketara','Sengkol','Kawo','Tanak Awu','Pengembur','Segala Anyar'];
             $namefile .= "_".$month."_".$kec.".xls";
+            $result['bumil']  =  [224,72,81,85,169,199];
+            $result['bulin']  =  [214,69,78,81,161,190];
+            $result['bufas']  =  [214,69,78,81,161,190];
         }
         $result['form'] = array($form);
         $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
@@ -149,6 +173,9 @@ class PWSModel extends CI_Model{
         $result_index['nolinakes_P_bulan_lalu']=['Q11','Q12','Q13','Q14','Q15','Q16'];
         $result_index['nolinakes_L_bulan_ini']=['S11','S12','S13','S14','S15','S16'];
         $result_index['nolinakes_P_bulan_ini']=['T11','T12','T13','T14','T15','T16'];
+        $result_index['bumil'] = ['C11','C12','C13','C14','C15','C16'];
+        $result_index['bulin'] = ['D11','D12','D13','D14','D15','D16'];
+        $result_index['bufas'] = ['E11','E12','E13','E14','E15','E16'];
         
         try {
             $datalinakes = $this->PHPExcelModel->getCellRange('download/kia3/cakupan_linakes'.$namefile,'A2:G8');
@@ -176,7 +203,7 @@ class PWSModel extends CI_Model{
             //$this->session->set_flashdata('file', '<div class="alert alert-danger">Tidak ada data '.$form.' untuk bulan '.$month.'</div>');
             //redirect("laporan/downloadbidanpws");
         }
-        $this->PHPExcelModel->createPwsXLS("download/kia3/template_pws_ibu3.xlsx",$result,$result_index);
+        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_ibu3.xlsx",$result,$result_index);
     }
     
     public function kia4($kec,$year,$month,$form){
@@ -186,9 +213,15 @@ class PWSModel extends CI_Model{
         if($kec=='janapria'){
             $user   =  ['Lekor','Saba','Pendem','Setuta','Jango','Janapria'];
             $namefile .= "_".$month."_".$kec.".xls";
+            $result['bumil']  =  [101,221,230,259,199,217];
+            $result['bulin']  =  [97,211,220,247,190,207];
+            $result['bufas']  =  [97,211,220,247,190,207];
         }else{
             $user   =  ['Ketara','Sengkol','Kawo','Tanak Awu','Pengembur','Segala Anyar'];
             $namefile .= "_".$month."_".$kec.".xls";
+            $result['bumil']  =  [224,72,81,85,169,199];
+            $result['bulin']  =  [214,69,78,81,161,190];
+            $result['bufas']  =  [214,69,78,81,161,190];
         }
         $result['form'] = array($form);
         $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
@@ -206,6 +239,9 @@ class PWSModel extends CI_Model{
         $result_index['fasilitas_bulan_ini']=['H11','H12','H13','H14','H15','H16'];
         $result_index['k_nifas_bulan_lalu']=['L11','L12','L13','L14','L15','L16'];
         $result_index['k_nifas_bulan_ini']=['M11','M12','M13','M14','M15','M16'];
+        $result_index['bumil'] = ['C11','C12','C13','C14','C15','C16'];
+        $result_index['bulin'] = ['D11','D12','D13','D14','D15','D16'];
+        $result_index['bufas'] = ['E11','E12','E13','E14','E15','E16'];
         
         try{
             $datafasilitas = $this->PHPExcelModel->getCellRange('download/kia4/cakupan_fasilkes'.$namefile,'A2:E8');
@@ -229,7 +265,7 @@ class PWSModel extends CI_Model{
             //$this->session->set_flashdata('file', '<div class="alert alert-danger">Tidak ada data '.$form.' untuk bulan '.$month.'</div>');
             //redirect("laporan/downloadbidanpws");
         }
-        $this->PHPExcelModel->createPwsXLS("download/kia4/template_pws_ibu4.xlsx",$result,$result_index);
+        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_ibu4.xlsx",$result,$result_index);
     }
     
     public function kia5($kec,$year,$month,$form){
@@ -239,9 +275,15 @@ class PWSModel extends CI_Model{
         if($kec=='janapria'){
             $user   =  ['Lekor','Saba','Pendem','Setuta','Jango','Janapria'];
             $namefile .= "_".$month."_".$kec.".xls";
+            $result['bumil']  =  [101,221,230,259,199,217];
+            $result['bulin']  =  [97,211,220,247,190,207];
+            $result['bufas']  =  [97,211,220,247,190,207];
         }else{
             $user   =  ['Ketara','Sengkol','Kawo','Tanak Awu','Pengembur','Segala Anyar'];
             $namefile .= "_".$month."_".$kec.".xls";
+            $result['bumil']  =  [224,72,81,85,169,199];
+            $result['bulin']  =  [214,69,78,81,161,190];
+            $result['bufas']  =  [214,69,78,81,161,190];
         }
         $result['form'] = array($form);
         $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
@@ -259,6 +301,9 @@ class PWSModel extends CI_Model{
         $result_index['anemia_bulan_ini']=['H11','H12','H13','H14','H15','H16'];
         $result_index['kek_bulan_lalu']=['K11','K12','K13','K14','K15','K16'];
         $result_index['kek_bulan_ini']=['L11','L12','L13','L14','L15','L16'];
+        $result_index['bumil'] = ['C11','C12','C13','C14','C15','C16'];
+        $result_index['bulin'] = ['D11','D12','D13','D14','D15','D16'];
+        $result_index['bufas'] = ['E11','E12','E13','E14','E15','E16'];
         
         try{
             $dataanemia = $this->PHPExcelModel->getCellRange('download/kia5/cakupan_bumil_anemia'.$namefile,'A2:E8');
@@ -282,7 +327,7 @@ class PWSModel extends CI_Model{
             //$this->session->set_flashdata('file', '<div class="alert alert-danger">Tidak ada data '.$form.' untuk bulan '.$month.'</div>');
             //redirect("laporan/downloadbidanpws");
         }
-        $this->PHPExcelModel->createPwsXLS("download/kia5/template_pws_ibu5.xlsx",$result,$result_index);
+        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_ibu5.xlsx",$result,$result_index);
     }
     
     public function bayi($kec,$year,$month,$form){
@@ -361,7 +406,7 @@ class PWSModel extends CI_Model{
 //            //$this->session->set_flashdata('file', '<div class="alert alert-danger">Tidak ada data '.$form.' untuk bulan '.$month.'</div>');
 //            //redirect("laporan/downloadbidanpws");
 //        }
-        $this->PHPExcelModel->createPwsXLS("download/pws/template_pws_".$form.".xlsx",$result,$result_index);
+        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_".$form.".xlsx",$result,$result_index);
     }
     
     public function balita($kec,$year,$month,$form){
@@ -440,7 +485,7 @@ class PWSModel extends CI_Model{
 //            //$this->session->set_flashdata('file', '<div class="alert alert-danger">Tidak ada data '.$form.' untuk bulan '.$month.'</div>');
 //            //redirect("laporan/downloadbidanpws");
 //        }
-        $this->PHPExcelModel->createPwsXLS("download/pws/template_pws_".$form.".xlsx",$result,$result_index);
+        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_".$form.".xlsx",$result,$result_index);
     }
     
     public function maternal($kec,$year,$month,$form){
@@ -460,5 +505,280 @@ class PWSModel extends CI_Model{
         $result['desa'] = $user;
         $result_index['kecamatan'] = array("A2");
         $result_index['bulan'] = array("A5");
+        
+        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_amp.xlsx",$result,$result_index);
+    }
+    
+    public function neonatal1($kec,$year,$month,$form){
+        $user   = array();
+        $result = array();
+        $namefile = "";
+        if($kec=='janapria'){
+            $user   =  ['Lekor','Saba','Pendem','Setuta','Jango','Janapria'];
+            $namefile .= "_".$month."_".$kec.".xls";
+        }else{
+            $user   =  ['Ketara','Sengkol','Kawo','Tanak Awu','Pengembur','Segala Anyar'];
+            $namefile .= "_".$month."_".$kec.".xls";
+        }
+        $result['form'] = array($form);
+        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
+        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
+        $result['desa'] = $user;
+        $result_index['kecamatan'] = array("A2");
+        $result_index['bulan'] = array("A5");
+        
+        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_neonatal_1.xlsx",$result,$result_index);
+    }
+    
+    public function neonatal2($kec,$year,$month,$form){
+        $user   = array();
+        $result = array();
+        $namefile = "";
+        if($kec=='janapria'){
+            $user   =  ['Lekor','Saba','Pendem','Setuta','Jango','Janapria'];
+            $namefile .= "_".$month."_".$kec.".xls";
+        }else{
+            $user   =  ['Ketara','Sengkol','Kawo','Tanak Awu','Pengembur','Segala Anyar'];
+            $namefile .= "_".$month."_".$kec.".xls";
+        }
+        $result['form'] = array($form);
+        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
+        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
+        $result['desa'] = $user;
+        $result_index['kecamatan'] = array("A2");
+        $result_index['bulan'] = array("A5");
+        
+        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_neonatal_2.xlsx",$result,$result_index);
+    }
+    
+    public function neonatal3($kec,$year,$month,$form){
+        $user   = array();
+        $result = array();
+        $namefile = "";
+        if($kec=='janapria'){
+            $user   =  ['Lekor','Saba','Pendem','Setuta','Jango','Janapria'];
+            $namefile .= "_".$month."_".$kec.".xls";
+        }else{
+            $user   =  ['Ketara','Sengkol','Kawo','Tanak Awu','Pengembur','Segala Anyar'];
+            $namefile .= "_".$month."_".$kec.".xls";
+        }
+        $result['form'] = array($form);
+        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
+        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
+        $result['desa'] = $user;
+        $result_index['kecamatan'] = array("A2");
+        $result_index['bulan'] = array("A5");
+        
+        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_neonatal_3.xlsx",$result,$result_index);
+    }
+    
+    public function neonatal4($kec,$year,$month,$form){
+        $user   = array();
+        $result = array();
+        $namefile = "";
+        if($kec=='janapria'){
+            $user   =  ['Lekor','Saba','Pendem','Setuta','Jango','Janapria'];
+            $namefile .= "_".$month."_".$kec.".xls";
+        }else{
+            $user   =  ['Ketara','Sengkol','Kawo','Tanak Awu','Pengembur','Segala Anyar'];
+            $namefile .= "_".$month."_".$kec.".xls";
+        }
+        $result['form'] = array($form);
+        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
+        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
+        $result['desa'] = $user;
+        $result_index['kecamatan'] = array("A2");
+        $result_index['bulan'] = array("A5");
+        
+        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_neonatal_4.xlsx",$result,$result_index);
+    }
+    
+    public function neonatal5($kec,$year,$month,$form){
+        $user   = array();
+        $result = array();
+        $namefile = "";
+        if($kec=='janapria'){
+            $user   =  ['Lekor','Saba','Pendem','Setuta','Jango','Janapria'];
+            $namefile .= "_".$month."_".$kec.".xls";
+        }else{
+            $user   =  ['Ketara','Sengkol','Kawo','Tanak Awu','Pengembur','Segala Anyar'];
+            $namefile .= "_".$month."_".$kec.".xls";
+        }
+        $result['form'] = array($form);
+        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
+        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
+        $result['desa'] = $user;
+        $result_index['kecamatan'] = array("A2");
+        $result_index['bulan'] = array("A5");
+        
+        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_neonatal_5.xlsx",$result,$result_index);
+    }
+    
+    public function kb1($kec,$year,$month,$form){
+        $user   = array();
+        $result = array();
+        $namefile = "";
+        if($kec=='janapria'){
+            $user   =  ['Lekor','Saba','Pendem','Setuta','Jango','Janapria'];
+            $namefile .= "_".$month."_".$kec.".xls";
+        }else{
+            $user   =  ['Ketara','Sengkol','Kawo','Tanak Awu','Pengembur','Segala Anyar'];
+            $namefile .= "_".$month."_".$kec.".xls";
+        }
+        $result['form'] = array($form);
+        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
+        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
+        $result['desa'] = $user;
+        $result_index['kecamatan'] = array("A2");
+        $result_index['bulan'] = array("A5");
+        
+        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_kb_1.xlsx",$result,$result_index);
+    }
+    
+    public function kb2($kec,$year,$month,$form){
+        $user   = array();
+        $result = array();
+        $namefile = "";
+        if($kec=='janapria'){
+            $user   =  ['Lekor','Saba','Pendem','Setuta','Jango','Janapria'];
+            $namefile .= "_".$month."_".$kec.".xls";
+        }else{
+            $user   =  ['Ketara','Sengkol','Kawo','Tanak Awu','Pengembur','Segala Anyar'];
+            $namefile .= "_".$month."_".$kec.".xls";
+        }
+        $result['form'] = array($form);
+        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
+        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
+        $result['desa'] = $user;
+        $result_index['kecamatan'] = array("A2");
+        $result_index['bulan'] = array("A5");
+        
+        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_kb_2.xlsx",$result,$result_index);
+    }
+    
+    public function kb3($kec,$year,$month,$form){
+        $user   = array();
+        $result = array();
+        $namefile = "";
+        if($kec=='janapria'){
+            $user   =  ['Lekor','Saba','Pendem','Setuta','Jango','Janapria'];
+            $namefile .= "_".$month."_".$kec.".xls";
+        }else{
+            $user   =  ['Ketara','Sengkol','Kawo','Tanak Awu','Pengembur','Segala Anyar'];
+            $namefile .= "_".$month."_".$kec.".xls";
+        }
+        $result['form'] = array($form);
+        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
+        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
+        $result['desa'] = $user;
+        $result_index['kecamatan'] = array("A2");
+        $result_index['bulan'] = array("A5");
+        
+        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_kb_3.xlsx",$result,$result_index);
+    }
+    
+    public function kb4($kec,$year,$month,$form){
+        $user   = array();
+        $result = array();
+        $namefile = "";
+        if($kec=='janapria'){
+            $user   =  ['Lekor','Saba','Pendem','Setuta','Jango','Janapria'];
+            $namefile .= "_".$month."_".$kec.".xls";
+        }else{
+            $user   =  ['Ketara','Sengkol','Kawo','Tanak Awu','Pengembur','Segala Anyar'];
+            $namefile .= "_".$month."_".$kec.".xls";
+        }
+        $result['form'] = array($form);
+        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
+        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
+        $result['desa'] = $user;
+        $result_index['kecamatan'] = array("A2");
+        $result_index['bulan'] = array("A5");
+        
+        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_kb_4.xlsx",$result,$result_index);
+    }
+    
+    public function kb5($kec,$year,$month,$form){
+        $user   = array();
+        $result = array();
+        $namefile = "";
+        if($kec=='janapria'){
+            $user   =  ['Lekor','Saba','Pendem','Setuta','Jango','Janapria'];
+            $namefile .= "_".$month."_".$kec.".xls";
+        }else{
+            $user   =  ['Ketara','Sengkol','Kawo','Tanak Awu','Pengembur','Segala Anyar'];
+            $namefile .= "_".$month."_".$kec.".xls";
+        }
+        $result['form'] = array($form);
+        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
+        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
+        $result['desa'] = $user;
+        $result_index['kecamatan'] = array("A2");
+        $result_index['bulan'] = array("A5");
+        
+        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_kb_5.xlsx",$result,$result_index);
+    }
+    
+    public function akb($kec,$year,$month,$form){
+        $user   = array();
+        $result = array();
+        $namefile = "";
+        if($kec=='janapria'){
+            $user   =  ['Lekor','Saba','Pendem','Setuta','Jango','Janapria'];
+            $namefile .= "_".$month."_".$kec.".xls";
+        }else{
+            $user   =  ['Ketara','Sengkol','Kawo','Tanak Awu','Pengembur','Segala Anyar'];
+            $namefile .= "_".$month."_".$kec.".xls";
+        }
+        $result['form'] = array($form);
+        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
+        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
+        $result['desa'] = $user;
+        $result_index['kecamatan'] = array("A2");
+        $result_index['bulan'] = array("A5");
+        
+        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_akb.xlsx",$result,$result_index);
+    }
+    
+    public function kih($kec,$year,$month,$form){
+        $user   = array();
+        $result = array();
+        $namefile = "";
+        if($kec=='janapria'){
+            $user   =  ['Lekor','Saba','Pendem','Setuta','Jango','Janapria'];
+            $namefile .= "_".$month."_".$kec.".xls";
+        }else{
+            $user   =  ['Ketara','Sengkol','Kawo','Tanak Awu','Pengembur','Segala Anyar'];
+            $namefile .= "_".$month."_".$kec.".xls";
+        }
+        $result['form'] = array($form);
+        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
+        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
+        $result['desa'] = $user;
+        $result_index['kecamatan'] = array("A2");
+        $result_index['bulan'] = array("A5");
+        
+        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_kih.xlsx",$result,$result_index);
+    }
+    
+    public function p4k($kec,$year,$month,$form){
+        $user   = array();
+        $result = array();
+        $namefile = "";
+        if($kec=='janapria'){
+            $user   =  ['Lekor','Saba','Pendem','Setuta','Jango','Janapria'];
+            $namefile .= "_".$month."_".$kec.".xls";
+        }else{
+            $user   =  ['Ketara','Sengkol','Kawo','Tanak Awu','Pengembur','Segala Anyar'];
+            $namefile .= "_".$month."_".$kec.".xls";
+        }
+        $result['form'] = array($form);
+        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
+        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
+        $result['desa'] = $user;
+        $result_index['kecamatan'] = array("A2");
+        $result_index['bulan'] = array("A5");
+        
+        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_p4k.xlsx",$result,$result_index);
     }
 }

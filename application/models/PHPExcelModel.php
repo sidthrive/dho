@@ -39,7 +39,7 @@ class PHPExcelModel extends CI_Model{
         foreach ($data as $key1=>$cell){
             foreach ($cell as $key2=>$value){
                 if(isset($index[$key1][$key2]))
-                    $fileObject->getActiveSheet()->setCellValue($index[$key1][$key2], $value);
+                    if($value!=0||is_string($value)) $fileObject->getActiveSheet()->setCellValue($index[$key1][$key2], $value);
             }
         }
         $kec = explode(" ",$data['kecamatan'][0]);
