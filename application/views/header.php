@@ -5,7 +5,7 @@
 <title>DHO REPORT - <?=strtoupper($this->uri->segment(1))?></title>
 <meta name="keywords" content="" />
 <meta name="description" content="" />
-<link href="<?php echo base_url() ?>assets/fonts/fonts.css" rel="stylesheet" />
+<link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet" />
 <link rel="icon" href="<?=base_url()?>favicon.png" type="image/png"/>
 <!--
 additional bootstrap import for sidebar collapse style
@@ -13,9 +13,9 @@ additional bootstrap import for sidebar collapse style
 -->
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href='<?php echo base_url() ?>assets/bootstrap/css/bootstrap.min.css' />
-<script src="<?php echo base_url() ?>assets/js/jquery-1.12.3.min.js"></script>
-<script src='<?php echo base_url() ?>assets/bootstrap/js/bootstrap.min.js'></script>
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script src="<?php echo base_url() ?>assets/js/jquery-ui/jquery-ui.min.js"></script>
 <link rel="stylesheet" href='<?php echo base_url() ?>assets/js/jquery-ui/jquery-ui.css' />
 <link href="<?php echo base_url() ?>assets/default.css" rel="stylesheet" type="text/css"/>
