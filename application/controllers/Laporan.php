@@ -212,7 +212,12 @@ class Laporan extends CI_Controller{
     public function downloadBidanPWS(){
         $this->load->view("header");
         $this->load->view("laporan/laporansidebar");
-        $this->load->view("laporan/downloadpwsbidan");
+        if($this->session->userdata('level')=="fhw"){
+            $this->load->view("laporan/fhw/downloadpwsbidan");
+        }else{
+            $this->load->view("laporan/downloadpwsbidan");
+        }
+        
         $this->load->view("footer");
     }
     
@@ -238,56 +243,112 @@ class Laporan extends CI_Controller{
     }
     
     public function download(){
+        if($this->session->userdata('level')=="fhw"){
+            $year   = $this->input->post('year');
+            $month  = $this->input->post('month');
+            $form   = $this->input->post('formtype');
+            $this->download_fhw($year,$month,$form);
+        }else{
+            $this->load->model('PHPExcelModel');
+            $this->load->model('PWSModel');
+
+            $kec    = $this->input->post('kecamatan');
+            $year   = $this->input->post('year');
+            $month  = $this->input->post('month');
+            $form   = $this->input->post('formtype');
+
+            if($form=="KIA1"){
+                $this->PWSModel->kia1($kec,$year,$month,$form);
+            }elseif($form=="KIA2"){
+                $this->PWSModel->kia2($kec,$year,$month,$form);
+            }elseif($form=="KIA3"){
+                $this->PWSModel->kia3($kec,$year,$month,$form);
+            }elseif($form=="KIA4"){
+                $this->PWSModel->kia4($kec,$year,$month,$form);
+            }elseif($form=="KIA5"){
+                $this->PWSModel->kia5($kec,$year,$month,$form);
+            }elseif(strpos($form,'bayi')!==false){
+                $this->PWSModel->bayi($kec, $year, $month, $form);
+            }elseif(strpos($form,'balita')!==false){
+                $this->PWSModel->balita($kec, $year, $month, $form);
+            }elseif($form=="neonatal1"){
+                $this->PWSModel->neonatal1($kec,$year,$month,$form);
+            }elseif($form=="neonatal2"){
+                $this->PWSModel->neonatal2($kec,$year,$month,$form);
+            }elseif($form=="neonatal3"){
+                $this->PWSModel->neonatal3($kec,$year,$month,$form);
+            }elseif($form=="neonatal4"){
+                $this->PWSModel->neonatal4($kec,$year,$month,$form);
+            }elseif($form=="neonatal5"){
+                $this->PWSModel->neonatal5($kec,$year,$month,$form);
+            }elseif($form=="kb1"){
+                $this->PWSModel->kb1($kec,$year,$month,$form);
+            }elseif($form=="kb2"){
+                $this->PWSModel->kb2($kec,$year,$month,$form);
+            }elseif($form=="kb3"){
+                $this->PWSModel->kb3($kec,$year,$month,$form);
+            }elseif($form=="kb4"){
+                $this->PWSModel->kb4($kec,$year,$month,$form);
+            }elseif($form=="kb5"){
+                $this->PWSModel->kb5($kec,$year,$month,$form);
+            }elseif($form=="amp"){
+                $this->PWSModel->maternal($kec,$year,$month,$form);
+            }elseif($form=="akb"){
+                $this->PWSModel->akb($kec,$year,$month,$form);
+            }elseif($form=="kih"){
+                $this->PWSModel->kih($kec,$year,$month,$form);
+            }elseif($form=="p4k"){
+                $this->PWSModel->p4k($kec,$year,$month,$form);
+            }
+        }
+    }
+    
+    private function download_fhw($year,$month,$form){
+        $user = $this->session->userdata('username');
         $this->load->model('PHPExcelModel');
-        $this->load->model('PWSModel');
-        
-        $kec    = $this->input->post('kecamatan');
-        $year   = $this->input->post('year');
-        $month  = $this->input->post('month');
-        $form   = $this->input->post('formtype');
-        
+        $this->load->model('PWSFhwModel');
         if($form=="KIA1"){
-            $this->PWSModel->kia1($kec,$year,$month,$form);
+            $this->PWSFhwModel->kia1($user,$year,$month,$form);
         }elseif($form=="KIA2"){
-            $this->PWSModel->kia2($kec,$year,$month,$form);
+            $this->PWSFhwModel->kia2($user,$year,$month,$form);
         }elseif($form=="KIA3"){
-            $this->PWSModel->kia3($kec,$year,$month,$form);
+            $this->PWSFhwModel->kia3($user,$year,$month,$form);
         }elseif($form=="KIA4"){
-            $this->PWSModel->kia4($kec,$year,$month,$form);
+            $this->PWSFhwModel->kia4($user,$year,$month,$form);
         }elseif($form=="KIA5"){
-            $this->PWSModel->kia5($kec,$year,$month,$form);
+            $this->PWSFhwModel->kia5($user,$year,$month,$form);
         }elseif(strpos($form,'bayi')!==false){
-            $this->PWSModel->bayi($kec, $year, $month, $form);
+            $this->PWSFhwModel->bayi($user, $year, $month, $form);
         }elseif(strpos($form,'balita')!==false){
-            $this->PWSModel->balita($kec, $year, $month, $form);
+            $this->PWSFhwModel->balita($user, $year, $month, $form);
         }elseif($form=="neonatal1"){
-            $this->PWSModel->neonatal1($kec,$year,$month,$form);
+            $this->PWSFhwModel->neonatal1($user,$year,$month,$form);
         }elseif($form=="neonatal2"){
-            $this->PWSModel->neonatal2($kec,$year,$month,$form);
+            $this->PWSFhwModel->neonatal2($user,$year,$month,$form);
         }elseif($form=="neonatal3"){
-            $this->PWSModel->neonatal3($kec,$year,$month,$form);
+            $this->PWSFhwModel->neonatal3($user,$year,$month,$form);
         }elseif($form=="neonatal4"){
-            $this->PWSModel->neonatal4($kec,$year,$month,$form);
+            $this->PWSFhwModel->neonatal4($user,$year,$month,$form);
         }elseif($form=="neonatal5"){
-            $this->PWSModel->neonatal5($kec,$year,$month,$form);
+            $this->PWSFhwModel->neonatal5($user,$year,$month,$form);
         }elseif($form=="kb1"){
-            $this->PWSModel->kb1($kec,$year,$month,$form);
+            $this->PWSFhwModel->kb1($user,$year,$month,$form);
         }elseif($form=="kb2"){
-            $this->PWSModel->kb2($kec,$year,$month,$form);
+            $this->PWSFhwModel->kb2($user,$year,$month,$form);
         }elseif($form=="kb3"){
-            $this->PWSModel->kb3($kec,$year,$month,$form);
+            $this->PWSFhwModel->kb3($user,$year,$month,$form);
         }elseif($form=="kb4"){
-            $this->PWSModel->kb4($kec,$year,$month,$form);
+            $this->PWSFhwModel->kb4($user,$year,$month,$form);
         }elseif($form=="kb5"){
-            $this->PWSModel->kb5($kec,$year,$month,$form);
+            $this->PWSFhwModel->kb5($user,$year,$month,$form);
         }elseif($form=="amp"){
-            $this->PWSModel->maternal($kec,$year,$month,$form);
+            $this->PWSFhwModel->maternal($user,$year,$month,$form);
         }elseif($form=="akb"){
-            $this->PWSModel->akb($kec,$year,$month,$form);
+            $this->PWSFhwModel->akb($user,$year,$month,$form);
         }elseif($form=="kih"){
-            $this->PWSModel->kih($kec,$year,$month,$form);
+            $this->PWSFhwModel->kih($user,$year,$month,$form);
         }elseif($form=="p4k"){
-            $this->PWSModel->p4k($kec,$year,$month,$form);
+            $this->PWSFhwModel->p4k($user,$year,$month,$form);
         }
     }
 }
