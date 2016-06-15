@@ -5,7 +5,11 @@
     <br><br>
     <div>
         <ul class="nav navbar-nav navbar-right">
+            <?php if($this->uri->segment(1)=='ujian'){ ?>
             <form class="navbar-form navbar-left" method="get" action="<?=base_URL()?>ujian/hasil/cari">
+            <?php }elseif($this->uri->segment(1)=='hhhscore'){ ?>
+            <form class="navbar-form navbar-left" method="get" action="<?=base_URL()?>hhhscore/headscore/cari">
+            <?php } ?>
                 <input type="text" class="form-control" name="q" style="width: 200px" placeholder="Masukkan Kata Kunci..." required>
                 <button type="submit" class="btn btn-primary"><i class="icon-search icon-white"> </i> Cari</button>
             </form>
@@ -34,6 +38,7 @@
                 } else {
                     $no = 1;
                     foreach ($hasil as $p) {
+                        if($p->aktif=='yes')continue;
                 ?>
                 <tr class="data">
                     <td><?=$no?></td>

@@ -52,10 +52,8 @@ class Ujian extends CI_Controller{
     }
     
     public function setUser(){
-        if($this->session->userdata('level')!="super") {
-            $this->load->view('header');
-            $this->load->view('errors/error_privilege');
-            $this->load->view('footer');
+        if($this->session->userdata('admin_valid') == FALSE) {
+            redirect('login');
         }else{
             $data['mode'] = $this->input->post('mode');
             $data['id'] = $this->input->post('id');
@@ -311,6 +309,9 @@ class Ujian extends CI_Controller{
                     foreach($tes_id as $t){
                         array_push($id, $t->id);
                     }
+                }
+                if(empty($id)){
+                    $id = -1;
                 }
                 $data['hasil'] = $this->UjianModel->getHasil($id);
                 $this->load->view('ujian/hasillist',$data);
