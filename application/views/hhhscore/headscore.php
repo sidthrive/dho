@@ -12,6 +12,8 @@
                 meng-klik link berikut : <a href="<?=base_url()."sertifikasi/do_ujian/".$token."/pre-test"?>" style="color: blue">Ambil Pre-test</a></li>
             <li>Jika sudah yakin untuk mengambil ujian, silahkan klik link berikut : 
                 <a href="<?=base_url()."sertifikasi/do_ujian/".$token."/do"?>" style="color: blue">Ambil Ujian Standarisasi</a></li>
+            <li>Untuk melihat hasil ujian anda, silahkan klik link berikut : 
+                <a href="<?=base_url()."hhhscore/headscore/hasil"?>" style="color: blue">Hasil Ujian</a></li>
         </ul>
         <p style="color: red; padding-left: 25px;">
             Catatan : Setelah link ujian diklik, waktu secara otomatis akan berjalan dan tidak bisa dihentikan.

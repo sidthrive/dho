@@ -20,23 +20,40 @@ class HHHScore extends CI_Controller{
     public function headscore(){
         $UjianDB = $this->load->database('ujian', TRUE);
         if($this->session->userdata('level')=="fhw"){
-            $data['id_user'] = $UjianDB->query("SELECT id FROM user WHERE username='".$this->session->userdata('username')."'")->row()->id;
-            $data['jadwal'] = $UjianDB->query("SELECT * FROM tes WHERE id_user='".$data['id_user']."' AND id_jenis=3 AND aktif='yes'")->row();
-            if(empty($data['jadwal'])){
-                $data['token'] = $this->UjianModel->setJadwalTesBidan();
-            }else{
-                $data['on_going'] = $this->UjianModel->getOnGoing($data['jadwal']->id,true);
-                if(empty($data['on_going'])){
-                    $data['token'] = $data['jadwal']->token;
-                }else{
-                    $data['jadwal'] = $this->UjianModel->getJadwal($data['on_going']->id_tes);
-                    $data['token'] = $data['jadwal']->token;
+            $data['mode']  = $this->uri->segment(3);
+            if($data['mode']=='hasil'){
+                $this->load->view('header');
+                $this->load->view('hhhscore/hhhsidebar');
+                $user = $UjianDB->query("SELECT * FROM user WHERE username='".$this->session->userdata('username')."'")->result();
+                $id = array();
+                foreach($user as $u){
+                    $tes_id = $UjianDB->query("SELECT * FROM tes WHERE id_user=$u->id")->result();
+                    foreach($tes_id as $t){
+                        array_push($id, $t->id);
+                    }
                 }
+                $data['hasil'] = $this->UjianModel->getHasil($id);
+                $this->load->view('ujian/hasillist',$data);
+                $this->load->view('footer');
+            }else{
+                $data['id_user'] = $UjianDB->query("SELECT id FROM user WHERE username='".$this->session->userdata('username')."'")->row()->id;
+                $data['jadwal'] = $UjianDB->query("SELECT * FROM tes WHERE id_user='".$data['id_user']."' AND id_jenis=3 AND aktif='yes'")->row();
+                if(empty($data['jadwal'])){
+                    $data['token'] = $this->UjianModel->setJadwalTesBidan();
+                }else{
+                    $data['on_going'] = $this->UjianModel->getOnGoing($data['jadwal']->id,true);
+                    if(empty($data['on_going'])){
+                        $data['token'] = $data['jadwal']->token;
+                    }else{
+                        $data['jadwal'] = $this->UjianModel->getJadwal($data['on_going']->id_tes);
+                        $data['token'] = $data['jadwal']->token;
+                    }
+                }
+                $this->load->view('header');
+                $this->load->view('hhhscore/hhhsidebar');
+                $this->load->view('hhhscore/headscore',$data);
+                $this->load->view('footer');
             }
-            $this->load->view('header');
-            $this->load->view('hhhscore/hhhsidebar');
-            $this->load->view('hhhscore/headscore',$data);
-            $this->load->view('footer');
         }else{
             $this->load->model('UjianModel');
             $this->load->view('header');
@@ -55,6 +72,9 @@ class HHHScore extends CI_Controller{
                     foreach($tes_id as $t){
                         array_push($id, $t->id);
                     }
+                }
+                if(empty($id)){
+                    $id = -1;
                 }
                 $data['hasil'] = $this->UjianModel->getHasil($id);
                 $this->load->view('ujian/hasillist',$data);
