@@ -321,6 +321,8 @@ class Laporan extends CI_Controller{
             $this->PWSFhwModel->bayi($user, $year, $month, $form);
         }elseif(strpos($form,'balita')!==false){
             $this->PWSFhwModel->balita($user, $year, $month, $form);
+        }elseif(strpos($form,'anak')!==false){
+            $this->PWSFhwModel->anak($user, $year, $month, $form);
         }elseif($form=="neonatal1"){
             $this->PWSFhwModel->neonatal1($user,$year,$month,$form);
         }elseif($form=="neonatal2"){
