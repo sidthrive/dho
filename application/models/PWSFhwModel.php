@@ -31,6 +31,8 @@ class PWSFhwModel extends CI_Model{
                         ,'user13'=>array("Pengembur III","Pelangi","Rajan","Melati","Tamping","Mawar","Bunga Seroja","Sepit","Penyampi","Siwang","Perigi","Keramat","Tawah","Pengembur II","Sinah","Pengembur I","Batu Belek")
                         ,'user14'=>array("Anak Anjan","Penupi","Kadik I","Karang Baru","Tenang","Lamben","Tuban","Segale","Tenang Baru","Kadik II","Dasan Duah")];
     private $listdesa = ['user1'=>'Lekor','user2'=>'Saba','user3'=>'Pendem','user4'=>'Setuta','user5'=>'Jango','user6'=>'Janapria','user8'=>'Ketara','user9'=>'Sengkol','user10'=>'Sengkol','user11'=>'Kawo','user12'=>'Tanak Awu','user13'=>'Pengembur','user14'=>'Segala Anyar'];
+    private $bulan = 0;
+    private $tahun = 0;
     
     function __construct() {
         parent::__construct();
@@ -39,6 +41,7 @@ class PWSFhwModel extends CI_Model{
         return $this->listdusun;
     }
     public function kia1($user,$year,$month,$form){
+        $this->readDate($year, $month);
         $namefile = "_".$month."_".$this->listdesa[$user].".xls";
         $result['form'] = array($form);
         $result['kecamatan'] = array("DESA    :  ".strtoupper($this->listdesa[$user]));
@@ -78,9 +81,9 @@ class PWSFhwModel extends CI_Model{
         }
         
         try {
-            $datak1 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_ibu1_k1.xlsx','A2:E112');
-            $datak4 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_ibu1_k4.xlsx','A2:E112');
-            $dataresiko = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_ibu1_resiko.xlsx','A2:E112');
+            $datak1 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_ibu1_k1_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112');
+            $datak4 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_ibu1_k4_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112');
+            $dataresiko = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_ibu1_resiko_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112');
             //$datak1 = $this->PHPExcelModel->showEntireData('download/pws_source_dusun/pws_ibu1_k1.xlsx');
             //var_dump($dataresiko);
             foreach ($datak1 as $k1){
@@ -116,6 +119,7 @@ class PWSFhwModel extends CI_Model{
     }
     
     public function kia2($user,$year,$month,$form){
+        $this->readDate($year, $month);
         $namefile = "_".$month."_".$this->listdesa[$user].".xls";
         $result['form'] = array($form);
         $result['kecamatan'] = array("DESA    :  ".strtoupper($this->listdesa[$user]));
@@ -143,7 +147,7 @@ class PWSFhwModel extends CI_Model{
         }
         
         try {
-            $datakomp = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_ibu2_komplikasi.xlsx','A2:E112');
+            $datakomp = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_ibu2_komplikasi_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112');
             
             foreach ($datakomp as $komp){
                 if($komp['A']==null) continue;
@@ -162,6 +166,7 @@ class PWSFhwModel extends CI_Model{
     }
     
     public function kia3($user,$year,$month,$form){
+        $this->readDate($year, $month);
         $namefile = "_".$month."_".$this->listdesa[$user].".xls";
         $result['form'] = array($form);
         $result['kecamatan'] = array("DESA    :  ".strtoupper($this->listdesa[$user]));
@@ -207,8 +212,8 @@ class PWSFhwModel extends CI_Model{
         }
         
         try {
-            $datalinakes = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_ibu2_linakes.xlsx','A2:E112');
-            $datanolinakes = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_ibu3_lin_non_nakes.xlsx','A2:E112');
+            $datalinakes = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_ibu2_linakes_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112');
+            $datanolinakes = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_ibu3_lin_non_nakes_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112');
             
             foreach ($datalinakes as $lin){
                 if($lin['A']==null) continue;
@@ -238,6 +243,7 @@ class PWSFhwModel extends CI_Model{
     }
     
     public function kia4($user,$year,$month,$form){
+        $this->readDate($year, $month);
         $namefile = "_".$month."_".$this->listdesa[$user].".xls";
         $result['form'] = array($form);
         $result['kecamatan'] = array("DESA    :  ".strtoupper($this->listdesa[$user]));
@@ -271,8 +277,8 @@ class PWSFhwModel extends CI_Model{
         }
         
         try {
-            $datafasilitas = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_ibu3_lin_faskes.xlsx','A2:E112');
-            $datanifas = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_ibu4_kunjungan_nifas.xlsx','A2:E112');
+            $datafasilitas = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_ibu3_lin_faskes_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112');
+            $datanifas = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_ibu4_kunjungan_nifas_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112');
             
             foreach ($datafasilitas as $temp){
                 if($temp['A']==null) continue;
@@ -298,6 +304,7 @@ class PWSFhwModel extends CI_Model{
     }
     
     public function kia5($user,$year,$month,$form){
+        $this->readDate($year, $month);
         $namefile = "_".$month."_".$this->listdesa[$user].".xls";
         $result['form'] = array($form);
         $result['kecamatan'] = array("DESA    :  ".strtoupper($this->listdesa[$user]));
@@ -331,8 +338,8 @@ class PWSFhwModel extends CI_Model{
         }
         
         try {
-            $dataanemia = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_ibu5_bumil_anemia.xlsx','A2:E112');
-            $datakek = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_ibu5_bumil_kek.xlsx','A2:E112');
+            $dataanemia = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_ibu5_bumil_anemia_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112');
+            $datakek = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_ibu5_bumil_kek_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112');
             
             foreach ($dataanemia as $temp){
                 if($temp['A']==null) continue;
@@ -358,6 +365,7 @@ class PWSFhwModel extends CI_Model{
     }
     
     public function bayi($user,$year,$month,$form){
+        $this->readDate($year, $month);
         $namefile = "_".$month."_".$this->listdesa[$user].".xls";
         $result['form'] = array($form);
         $result['kecamatan'] = array("DESA    :  ".strtoupper($this->listdesa[$user]));
@@ -433,16 +441,16 @@ class PWSFhwModel extends CI_Model{
         
         try {
             if($form=='bayi_1'){
-                $data1 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/bayi1_ispa.xlsx','A2:E112');
-                $data2 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/bayi1_diare.xlsx','A2:E112');    
+                $data1 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/bayi1_ispa_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112');
+                $data2 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/bayi1_diare_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112');    
             }elseif($form=='bayi_2'){
-                $data1 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/bayi2_campak.xlsx','A2:E112');
+                $data1 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/bayi2_campak_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112');
                 $data2 = array();
             }elseif($form=='bayi_3'){
                 $data1 = array();
-                $data2 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/bayi3_gizi_buruk.xlsx','A2:E112'); 
+                $data2 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/bayi3_gizi_buruk_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112'); 
             }elseif($form=='bayi_4'){
-                $data1 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/bayi4_lain_lain.xlsx','A2:E112');
+                $data1 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/bayi4_lain_lain_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112');
                 $data2 = array(); 
             }
             
@@ -483,6 +491,7 @@ class PWSFhwModel extends CI_Model{
     }
     
     public function balita($user,$year,$month,$form){
+        $this->readDate($year, $month);
         $namefile = "_".$month."_".$this->listdesa[$user].".xls";
         $result['form'] = array($form);
         $result['kecamatan'] = array("DESA    :  ".strtoupper($this->listdesa[$user]));
@@ -558,15 +567,15 @@ class PWSFhwModel extends CI_Model{
         try {
             if($form=='balita_1'){
                 $data1 = array();
-                $data2 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/balita1_diare.xlsx','A2:E112');    
+                $data2 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/balita1_diare_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112');    
             }elseif($form=='balita_2'){
-                $data1 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/balita2_campak.xlsx','A2:E112');
+                $data1 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/balita2_campak_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112');
                 $data2 = array();
             }elseif($form=='balita_3'){
                 $data1 = array();
-                $data2 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/balita3_gizi_buruk.xlsx','A2:E112'); 
+                $data2 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/balita3_gizi_buruk_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112'); 
             }elseif($form=='balita_4'){
-                $data1 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/balita4_lain_lain.xlsx','A2:E112');
+                $data1 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/balita4_lain_lain_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112');
                 $data2 = array(); 
             }
             
@@ -607,6 +616,7 @@ class PWSFhwModel extends CI_Model{
     }
     
     public function maternal($user,$year,$month,$form){
+        $this->readDate($year, $month);
         $namefile = "_".$month."_".$this->listdesa[$user].".xls";
         $result['form'] = array($form);
         $result['kecamatan'] = array("DESA    :  ".strtoupper($this->listdesa[$user]));
@@ -682,10 +692,10 @@ class PWSFhwModel extends CI_Model{
         }
         
         try {
-            $dataphm = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/amp_perdarahan_hamil_muda.xlsx','A2:E112'); 
-            $datapendarahan = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/amp_perdarahan.xlsx','A2:E112'); 
-            $datainfeksi = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/amp_infeksi.xlsx','A2:E112'); 
-            $datahdk = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/amp_hdk.xlsx','A2:E112'); 
+            $dataphm = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/amp_perdarahan_hamil_muda_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112'); 
+            $datapendarahan = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/amp_perdarahan_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112'); 
+            $datainfeksi = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/amp_infeksi_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112'); 
+            $datahdk = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/amp_hdk_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112'); 
             
             foreach ($dataphm as $temp){
                 if($temp['A']==null) continue;
@@ -736,6 +746,7 @@ class PWSFhwModel extends CI_Model{
     }
     
     public function neonatal1($user,$year,$month,$form){
+        $this->readDate($year, $month);
         $namefile = "_".$month."_".$this->listdesa[$user].".xls";
         $result['form'] = array($form);
         $result['kecamatan'] = array("DESA    :  ".strtoupper($this->listdesa[$user]));
@@ -836,8 +847,8 @@ class PWSFhwModel extends CI_Model{
         }
         
         try {
-            $databblr = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/neonatal1_bblr.xlsx','A2:E112'); 
-            $dataasfiksia = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/neonatal1_asfiksia.xlsx','A2:E112'); 
+            $databblr = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/neonatal1_bblr_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112'); 
+            $dataasfiksia = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/neonatal1_asfiksia_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112'); 
             
             foreach ($databblr as $temp){
                 if($temp['A']==null) continue;
@@ -897,6 +908,7 @@ class PWSFhwModel extends CI_Model{
     }
     
     public function neonatal2($user,$year,$month,$form){
+        $this->readDate($year, $month);
         $namefile = "_".$month."_".$this->listdesa[$user].".xls";
         $result['form'] = array($form);
         $result['kecamatan'] = array("DESA    :  ".strtoupper($this->listdesa[$user]));
@@ -998,7 +1010,7 @@ class PWSFhwModel extends CI_Model{
         
         try {
             $datatetanus = array();
-            $datasepsis = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/neonatal2_sepsis.xlsx','A2:E112'); 
+            $datasepsis = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/neonatal2_sepsis_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112'); 
             
             foreach ($datatetanus as $temp){
                 if($temp['A']==null) continue;
@@ -1058,6 +1070,7 @@ class PWSFhwModel extends CI_Model{
     }
     
     public function neonatal3($user,$year,$month,$form){
+        $this->readDate($year, $month);
         $namefile = "_".$month."_".$this->listdesa[$user].".xls";
         $result['form'] = array($form);
         $result['kecamatan'] = array("DESA    :  ".strtoupper($this->listdesa[$user]));
@@ -1158,7 +1171,7 @@ class PWSFhwModel extends CI_Model{
         }
         
         try {
-            $datakongenital = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/neonatal3_kelainan_kongenital.xlsx','A2:E112'); 
+            $datakongenital = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/neonatal3_kelainan_kongenital_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112'); 
             $dataikterus = array();
             
             foreach ($datakongenital as $temp){
@@ -1219,6 +1232,7 @@ class PWSFhwModel extends CI_Model{
     }
     
     public function neonatal4($user,$year,$month,$form){
+        $this->readDate($year, $month);
         $namefile = "_".$month."_".$this->listdesa[$user].".xls";
         $result['form'] = array($form);
         $result['kecamatan'] = array("DESA    :  ".strtoupper($this->listdesa[$user]));
@@ -1319,7 +1333,7 @@ class PWSFhwModel extends CI_Model{
         }
         
         try {
-            $datalain = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/neonatal4_kasus_lain.xlsx','A2:E112'); 
+            $datalain = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/neonatal4_kasus_lain_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112'); 
             $datatotal = array();
             
             foreach ($datalain as $temp){
@@ -1380,6 +1394,7 @@ class PWSFhwModel extends CI_Model{
     }
     
     public function neonatal5($user,$year,$month,$form){
+        $this->readDate($year, $month);
         $namefile = "_".$month."_".$this->listdesa[$user].".xls";
         $result['form'] = array($form);
         $result['kecamatan'] = array("DESA    :  ".strtoupper($this->listdesa[$user]));
@@ -1403,6 +1418,7 @@ class PWSFhwModel extends CI_Model{
     }
     
     public function kb1($user,$year,$month,$form){
+        $this->readDate($year, $month);
         $namefile = "_".$month."_".$this->listdesa[$user].".xls";
         $result['form'] = array($form);
         $result['kecamatan'] = array("DESA    :  ".strtoupper($this->listdesa[$user]));
@@ -1439,9 +1455,9 @@ class PWSFhwModel extends CI_Model{
         }
         
         try {
-            $data1 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_kb1_peserta_kb_lama_baru.xlsx','A2:E112'); 
-            $data2 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_kb1_dropout.xlsx','A2:E112'); 
-            $data3 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_kb1_kb_aktif.xlsx','A2:E112'); 
+            $data1 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_kb1_peserta_kb_lama_baru_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112'); 
+            $data2 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_kb1_dropout_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112'); 
+            $data3 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_kb1_kb_aktif_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112'); 
             
             foreach ($data1 as $temp){
                 if($temp['A']==null) continue;
@@ -1475,6 +1491,7 @@ class PWSFhwModel extends CI_Model{
     }
     
     public function kb2($user,$year,$month,$form){
+        $this->readDate($year, $month);
         $namefile = "_".$month."_".$this->listdesa[$user].".xls";
         $result['form'] = array($form);
         $result['kecamatan'] = array("DESA    :  ".strtoupper($this->listdesa[$user]));
@@ -1511,9 +1528,9 @@ class PWSFhwModel extends CI_Model{
         }
         
         try {
-            $data1 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_kb2_peserta_kb_gakin_lama_baru.xlsx','A2:E112'); 
-            $data2 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_kb2_dropout.xlsx','A2:E112'); 
-            $data3 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_kb2_kb_aktif_gakin.xlsx','A2:E112'); 
+            $data1 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_kb2_peserta_kb_gakin_lama_baru_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112'); 
+            $data2 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_kb2_dropout_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112'); 
+            $data3 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_kb2_kb_aktif_gakin_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112'); 
             
             foreach ($data1 as $temp){
                 if($temp['A']==null) continue;
@@ -1547,6 +1564,7 @@ class PWSFhwModel extends CI_Model{
     }
     
     public function kb3($user,$year,$month,$form){
+        $this->readDate($year, $month);
         $namefile = "_".$month."_".$this->listdesa[$user].".xls";
         $result['form'] = array($form);
         $result['kecamatan'] = array("DESA    :  ".strtoupper($this->listdesa[$user]));
@@ -1583,9 +1601,9 @@ class PWSFhwModel extends CI_Model{
         }
         
         try {
-            $data1 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_kb3_peserta_kb_4T_lama_baru.xlsx','A2:E112'); 
-            $data2 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_kb3_dropout.xlsx','A2:E112'); 
-            $data3 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_kb3_kb_aktif_4T.xlsx','A2:E112'); 
+            $data1 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_kb3_peserta_kb_4T_lama_baru_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112'); 
+            $data2 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_kb3_dropout_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112'); 
+            $data3 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_kb3_kb_aktif_4T_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112'); 
             
             foreach ($data1 as $temp){
                 if($temp['A']==null) continue;
@@ -1619,6 +1637,7 @@ class PWSFhwModel extends CI_Model{
     }
     
     public function kb4($user,$year,$month,$form){
+        $this->readDate($year, $month);
         $namefile = "_".$month."_".$this->listdesa[$user].".xls";
         $result['form'] = array($form);
         $result['kecamatan'] = array("DESA    :  ".strtoupper($this->listdesa[$user]));
@@ -1655,9 +1674,9 @@ class PWSFhwModel extends CI_Model{
         }
         
         try {
-            $data1 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_kb4_peserta_kb_kronis_lama_baru.xlsx','A2:E112'); 
-            $data2 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_kb4_dropout.xlsx','A2:E112'); 
-            $data3 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_kb4_kb_aktif_kronis.xlsx','A2:E112'); 
+            $data1 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_kb4_peserta_kb_kronis_lama_baru_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112'); 
+            $data2 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_kb4_dropout_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112'); 
+            $data3 = $this->PHPExcelModel->getCellRange('download/pws_source_dusun/pws_kb4_kb_aktif_kronis_'.$this->bulan.'_'.$this->tahun.'.xlsx','A2:E112'); 
             
             foreach ($data1 as $temp){
                 if($temp['A']==null) continue;
@@ -1691,6 +1710,7 @@ class PWSFhwModel extends CI_Model{
     }
     
     public function kb5($user,$year,$month,$form){
+        $this->readDate($year, $month);
         $namefile = "_".$month."_".$this->listdesa[$user].".xls";
         $result['form'] = array($form);
         $result['kecamatan'] = array("DESA    :  ".strtoupper($this->listdesa[$user]));
@@ -1763,6 +1783,7 @@ class PWSFhwModel extends CI_Model{
     }
     
     public function akb($user,$year,$month,$form){
+        $this->readDate($year, $month);
         $namefile = "_".$month."_".$this->listdesa[$user].".xls";
         $result['form'] = array($form);
         $result['kecamatan'] = array("DESA    :  ".strtoupper($this->listdesa[$user]));
@@ -1779,6 +1800,7 @@ class PWSFhwModel extends CI_Model{
     }
     
     public function kih($user,$year,$month,$form){
+        $this->readDate($year, $month);
         $namefile = "_".$month."_".$this->listdesa[$user].".xls";
         $result['form'] = array($form);
         $result['kecamatan'] = array("DESA    :  ".strtoupper($this->listdesa[$user]));
@@ -1802,6 +1824,7 @@ class PWSFhwModel extends CI_Model{
     }
     
     public function p4k($user,$year,$month,$form){
+        $this->readDate($year, $month);
         $namefile = "_".$month."_".$this->listdesa[$user].".xls";
         $result['form'] = array($form);
         $result['kecamatan'] = array("DESA    :  ".strtoupper($this->listdesa[$user]));
@@ -1825,6 +1848,7 @@ class PWSFhwModel extends CI_Model{
     }
     
     public function anak($user,$year,$month,$form){
+        $this->readDate($year, $month);
         $namefile = "_".$month."_".$this->listdesa[$user].".xls";
         $result['form'] = array($form);
         $result['kecamatan'] = array("DESA    :  ".strtoupper($this->listdesa[$user]));
@@ -1845,5 +1869,34 @@ class PWSFhwModel extends CI_Model{
         }
         
         $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_".$form.".xlsx",$result,$result_index);
+    }
+    
+    private function readDate($year,$month){
+        $this->tahun = $year;
+        if(strtoupper($month)=="JANUARI"){
+            $this->bulan = 1;
+        }elseif(strtoupper($month)=="FEBRUARI"){
+            $this->bulan = 2;
+        }elseif(strtoupper($month)=="MARET"){
+            $this->bulan = 3;
+        }elseif(strtoupper($month)=="APRIL"){
+            $this->bulan = 4;
+        }elseif(strtoupper($month)=="MEI"){
+            $this->bulan = 5;
+        }elseif(strtoupper($month)=="JUNI"){
+            $this->bulan = 6;
+        }elseif(strtoupper($month)=="JULI"){
+            $this->bulan = 7;
+        }elseif(strtoupper($month)=="AGUSTUS"){
+            $this->bulan = 8;
+        }elseif(strtoupper($month)=="SEPTEMBER"){
+            $this->bulan = 9;
+        }elseif(strtoupper($month)=="OKTOBER"){
+            $this->bulan = 10;
+        }elseif(strtoupper($month)=="NOVEMBER"){
+            $this->bulan = 11;
+        }elseif(strtoupper($month)=="DESEMBER"){
+            $this->bulan = 12;
+        }
     }
 }
