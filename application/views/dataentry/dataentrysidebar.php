@@ -130,19 +130,19 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Jurim</a>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Vaksinator</a>
                     </h4>
                 </div>
-                <div id="collapse3" class="panel-collapse collapse<?=$this->uri->segment(2)=='jurim'?' in':''?>">
+                <div id="collapse3" class="panel-collapse collapse<?=$this->uri->segment(2)=='vaksinator'?' in':''?>">
                     <div class="panel panel-default">
-                        <div class="panel-heading"<?=($this->uri->segment(2)=='jurim'&&$this->uri->segment(3)=='Sengkol')?' style="background-color:#909090"':''?>>
+                        <div class="panel-heading"<?=($this->uri->segment(2)=='vaksinator'&&$this->uri->segment(3)=='Sengkol')?' style="background-color:#909090"':''?>>
                             <h4 class="panel-title">
-                                <a href="<?php echo site_url() ."dataentry/Jurim/Sengkol"?>">Kecamatan Sengkol</a>
+                                <a href="<?php echo site_url() ."dataentry/vaksinator/Sengkol"?>">Kecamatan Sengkol</a>
                             </h4>
                         </div>
-                        <div class="panel-heading"<?=($this->uri->segment(2)=='jurim'&&$this->uri->segment(3)=='Janapria')?' style="background-color:#909090"':''?>>
+                        <div class="panel-heading"<?=($this->uri->segment(2)=='vaksinator'&&$this->uri->segment(3)=='Janapria')?' style="background-color:#909090"':''?>>
                             <h4 class="panel-title">
-                                <a href="<?php echo site_url() ."dataentry/Jurim/Janapria"?>">Kecamatan Janapria</a>
+                                <a href="<?php echo site_url() ."dataentry/vaksinator/Janapria"?>">Kecamatan Janapria</a>
                             </h4>
                         </div>
                     </div>

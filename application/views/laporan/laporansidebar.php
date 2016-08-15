@@ -48,14 +48,14 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Jurim</a>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Vaksinator</a>
                     </h4>
                 </div>
-                <div id="collapse3" class="panel-collapse collapse<?=$this->uri->segment(2)=='downloadjurimpws'?' in':''?>">
+                <div id="collapse3" class="panel-collapse collapse<?=$this->uri->segment(2)=='downloadvaksinatorpws'?' in':''?>">
                     <div class="panel panel-default">
-                        <div class="panel-heading"<?=($this->uri->segment(2)=='downloadjurimpws')?' style="background-color:#909090"':''?>>
+                        <div class="panel-heading"<?=($this->uri->segment(2)=='downloadvaksinatorpws')?' style="background-color:#909090"':''?>>
                             <h4 class="panel-title">
-                                <a href="<?php echo site_url() ."laporan/downloadjurimpws"?>">Download PWS</a>
+                                <a href="<?php echo site_url() ."laporan/downloadvaksinatorpws"?>">Download PWS</a>
                             </h4>
                         </div>
                     </div>

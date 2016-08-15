@@ -235,7 +235,7 @@ class Laporan extends CI_Controller{
         $this->load->view("footer");
     }
     
-    public function downloadJurimPWS(){
+    public function downloadvaksinatorPWS(){
         $this->load->view("header");
         $this->load->view("laporan/laporansidebar");
         $this->load->view("laporan/downloadpwsjurim");

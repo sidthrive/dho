@@ -94,7 +94,7 @@ class DataEntry extends CI_Controller{
         $this->load->view("footer");
     }
     
-    public function jurim(){
+    public function vaksinator(){
         $data['kecamatan']		= $this->uri->segment(3);
         $this->load->view("header");
         $this->load->view("dataentry/dataentrysidebar");
