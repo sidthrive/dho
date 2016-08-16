@@ -9,6 +9,10 @@ class DataEntry extends CI_Controller{
         }
         $this->load->model('AnalyticsFhwModel');
         $this->load->model('AnalyticsModel');
+        $this->load->model('GiziModel');
+        $this->load->model('GiziFhwModel');
+        $this->load->model('VaksinatorFhwModel');
+        $this->load->model('VaksinatorModel');
     }
     
     public function index(){
@@ -94,11 +98,133 @@ class DataEntry extends CI_Controller{
         $this->load->view("footer");
     }
     
+    public function giziByForm(){
+        if($this->session->userdata('level')=="fhw"){
+            $listdesa = ['gizi1'=>'Lekor','gizi2'=>'Saba','gizi3'=>'Pendem','gizi4'=>'Setuta','gizi5'=>'Jango','gizi6'=>'Janapria','gizi8'=>'Ketara','gizi9'=>'Sengkol','gizi10'=>'Sengkol','gizi11'=>'Kawo','gizi12'=>'Tanak Awu','gizi13'=>'Pengembur','gizi14'=>'Segala Anyar'];
+            $data['desa']		= $listdesa[$this->session->userdata('username')];
+            $data['data']                   = $this->GiziFhwModel->getCountPerForm();
+            $this->load->view("header");
+            $this->load->view("dataentry/fhw/dataentrysidebar");
+            $this->load->view("dataentry/fhw/gizientryform",$data);
+            $this->load->view("footer");
+        }else{
+            $data['desa']		= str_replace('%20', ' ', $this->uri->segment(4));
+            $data['kecamatan']		= $this->uri->segment(3);
+            $data['data']               = $this->GiziModel->getCountPerForm($data['kecamatan']);
+            $this->load->view("header");
+            $this->load->view("dataentry/dataentrysidebar",$data);
+            if($data['desa']==""){
+                $this->load->view("dataentry/gizientryform",$data);
+                
+            }else{
+                $data['data']           = $this->GiziFhwModel->getCountPerForm($data['desa']);
+                $this->load->view("dataentry/fhw/gizientryform",$data);
+            }
+            $this->load->view("footer");
+            
+        }
+        
+    }
+    
+    public function giziByTanggal(){
+        if($this->session->userdata('level')=="fhw"){
+            $listdesa = ['gizi1'=>'Lekor','gizi2'=>'Saba','gizi3'=>'Pendem','gizi4'=>'Setuta','gizi5'=>'Jango','gizi6'=>'Janapria','gizi8'=>'Ketara','gizi9'=>'Sengkol','gizi10'=>'Sengkol','gizi11'=>'Kawo','gizi12'=>'Tanak Awu','gizi13'=>'Pengembur','gizi14'=>'Segala Anyar'];
+            $data['desa']		= $listdesa[$this->session->userdata('username')];
+            $data['mode']                   = $this->uri->segment(4);
+            $data['data']                   = $this->GiziFhwModel->getCountPerDay($data['desa'],$data['mode']);
+            $this->load->view("header");
+            $this->load->view("dataentry/fhw/dataentrysidebar");
+            $this->load->view("dataentry/fhw/gizientrytanggal",$data);
+            $this->load->view("footer");
+        }else{
+            $data['kecamatan']		= $this->uri->segment(3);
+            $data['mode']                   = $this->uri->segment(4);
+            if($data['mode']!="Bulanan"&&$data['mode']!="Mingguan"){
+                $data['desa']		= str_replace('%20', ' ', $this->uri->segment(4));
+                $data['mode']                   = $this->uri->segment(5);
+            }else{
+                $data['desa']		= "";
+            }
+            $data['data']                   = $this->GiziModel->getCountPerDay($data['kecamatan'],$data['mode']);
+            $this->load->view("header");
+            $this->load->view("dataentry/dataentrysidebar",$data);
+            if($data['desa']==""){
+                $this->load->view("dataentry/gizientrytanggal",$data);
+                
+            }else{
+                $data['data']           = $this->GiziFhwModel->getCountPerDay($data['desa'],$data['mode']);
+                $this->load->view("dataentry/fhw/gizientrytanggal",$data);
+            }
+            $this->load->view("footer");
+        }
+    }
+    
     public function vaksinator(){
         $data['kecamatan']		= $this->uri->segment(3);
         $this->load->view("header");
         $this->load->view("dataentry/dataentrysidebar");
         $this->load->view("dataentry/jurim",$data);
         $this->load->view("footer");
+    }
+    
+    public function vaksinatorByForm(){
+        if($this->session->userdata('level')=="fhw"){
+            $listdesa = ['vaksinator1'=>'Lekor','vaksinator2'=>'Saba','vaksinator3'=>'Pendem','vaksinator4'=>'Setuta','vaksinator5'=>'Jango','vaksinator6'=>'Janapria','vaksinator8'=>'Ketara','vaksinator9'=>'Sengkol','vaksinator10'=>'Sengkol','vaksinator11'=>'Kawo','vaksinator12'=>'Tanak Awu','vaksinator13'=>'Pengembur','vaksinator14'=>'Segala Anyar'];
+            $data['desa']		= $listdesa[$this->session->userdata('username')];
+            $data['data']                   = $this->VaksinatorFhwModel->getCountPerForm();
+            $this->load->view("header");
+            $this->load->view("dataentry/fhw/dataentrysidebar");
+            $this->load->view("dataentry/fhw/bidanentryform",$data);
+            $this->load->view("footer");
+        }else{
+            $data['desa']		= str_replace('%20', ' ', $this->uri->segment(4));
+            $data['kecamatan']		= $this->uri->segment(3);
+            $data['data']               = $this->VaksinatorModel->getCountPerForm($data['kecamatan']);
+            $this->load->view("header");
+            $this->load->view("dataentry/dataentrysidebar",$data);
+            if($data['desa']==""){
+                $this->load->view("dataentry/bidanentryform",$data);
+                
+            }else{
+                $data['data']           = $this->VaksinatorFhwModel->getCountPerForm($data['desa']);
+                $this->load->view("dataentry/fhw/bidanentryform",$data);
+            }
+            $this->load->view("footer");
+            
+        }
+        
+    }
+    
+    public function vaksinatorByTanggal(){
+        if($this->session->userdata('level')=="fhw"){
+            $listdesa = ['vaksinator1'=>'Lekor','vaksinator2'=>'Saba','vaksinator3'=>'Pendem','vaksinator4'=>'Setuta','vaksinator5'=>'Jango','vaksinator6'=>'Janapria','vaksinator8'=>'Ketara','vaksinator9'=>'Sengkol','vaksinator10'=>'Sengkol','vaksinator11'=>'Kawo','vaksinator12'=>'Tanak Awu','vaksinator13'=>'Pengembur','vaksinator14'=>'Segala Anyar'];
+            $data['desa']		= $listdesa[$this->session->userdata('username')];
+            $data['mode']                   = $this->uri->segment(4);
+            $data['data']                   = $this->VaksinatorFhwModel->getCountPerDay($data['desa'],$data['mode']);
+            $this->load->view("header");
+            $this->load->view("dataentry/fhw/dataentrysidebar");
+            $this->load->view("dataentry/fhw/vaksinatorentrytanggal",$data);
+            $this->load->view("footer");
+        }else{
+            $data['kecamatan']		= $this->uri->segment(3);
+            $data['mode']                   = $this->uri->segment(4);
+            if($data['mode']!="Bulanan"&&$data['mode']!="Mingguan"){
+                $data['desa']		= str_replace('%20', ' ', $this->uri->segment(4));
+                $data['mode']                   = $this->uri->segment(5);
+            }else{
+                $data['desa']		= "";
+            }
+            $data['data']                   = $this->VaksinatorModel->getCountPerDay($data['kecamatan'],$data['mode']);
+            $this->load->view("header");
+            $this->load->view("dataentry/dataentrysidebar",$data);
+            if($data['desa']==""){
+                $this->load->view("dataentry/vaksinatorentrytanggal",$data);
+                
+            }else{
+                $data['data']           = $this->VaksinatorFhwModel->getCountPerDay($data['desa'],$data['mode']);
+                $this->load->view("dataentry/fhw/vaksinatorentrytanggal",$data);
+            }
+            $this->load->view("footer");
+        }
     }
 }
