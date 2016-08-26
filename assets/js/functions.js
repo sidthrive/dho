@@ -389,3 +389,148 @@ $.fn.showChart = function(data){
         });
     });
 };
+
+$.fn.showChartStack = function(data){
+    $.each(data,function(index1,data1){
+        var id = data1['page'];
+        var x = [];
+        var y1 = [];
+        var y2 = [];
+        $.each(data1['form'],function(index2,data2){
+            x.push(index2);
+            y1.push(data2['l']);
+            y2.push(data2['p']);
+        });
+        Highcharts.setOptions({
+            lang: {
+                decimalPoint: ',',
+                thousandsSep: '.'
+            }
+        });
+
+        $('#'+id).highcharts({			
+            chart: {
+                zoomType: 'xy',
+                height: 400
+            },
+            title: {
+                text: ''
+            },
+            xAxis: [{
+                    categories: x
+                }],
+            legend: {
+                enabled : false
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    stacking: 'normal',
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            tooltip: {
+                formatter: function () {
+                    return '<b>' + this.x + '</b><br/>' +
+                        this.series.name + ': ' + this.y + '<br/>' +
+                        'Total: ' + this.point.stackTotal;
+                }
+            },  
+            series: [{
+                    name: data1['series_name'][0],
+                    type: 'column',
+                    data: y1,
+                    color: 'blue'
+                },{
+                    name: data1['series_name'][1],
+                    type: 'column',
+                    data: y2,
+                    color: 'red'
+                }]
+        });
+    });
+};
+
+$.fn.showChartStackDouble = function(data){
+    $.each(data,function(index1,data1){
+        var id = data1['page'];
+        var x = [];
+        var y1bl = [];
+        var y2bl = [];
+        var y1bi = [];
+        var y2bi = [];
+        $.each(data1['form'],function(index2,data2){
+            x.push(index2);
+            y1bl.push(data2['lbl']);
+            y2bl.push(data2['pbl']);
+            y1bi.push(data2['lbi']);
+            y2bi.push(data2['pbi']);
+        });
+        Highcharts.setOptions({
+            lang: {
+                decimalPoint: ',',
+                thousandsSep: '.'
+            }
+        });
+
+        $('#'+id).highcharts({			
+            chart: {
+                zoomType: 'xy',
+                height: 400
+            },
+            title: {
+                text: ''
+            },
+            xAxis: [{
+                    categories: x
+                }],
+            legend: {
+                enabled : false
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    stacking: 'normal',
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            tooltip: {
+                formatter: function () {
+                    return '<b>' + this.series.options.stack + '</b><br/>' +
+                            '<b>' + this.x + '</b><br/>' +
+                        this.series.name + ': ' + this.y + '<br/>' +
+                        'Total: ' + this.point.stackTotal;
+                }
+            },
+            series: [{
+                    name: data1['series_name'][0],
+                    type: 'column',
+                    data: y1bl,
+                    color: 'green',
+                    stack: data1['series_stack_name'][0]
+                },{
+                    name: data1['series_name'][1],
+                    type: 'column',
+                    data: y2bl,
+                    color: 'yellow',
+                    stack: data1['series_stack_name'][0]
+                },{
+                    name: data1['series_name'][0],
+                    type: 'column',
+                    data: y1bi,
+                    color: 'blue',
+                    stack: data1['series_stack_name'][1]
+                },{
+                    name: data1['series_name'][1],
+                    type: 'column',
+                    data: y2bi,
+                    color: 'red',
+                    stack: data1['series_stack_name'][1]
+                }]
+        });
+    });
+};
