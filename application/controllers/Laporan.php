@@ -235,6 +235,33 @@ class Laporan extends CI_Controller{
         $this->load->view("footer");
     }
     
+    public function cakupanpwsvaksinator(){
+        $this->load->model('VaksinatorCakupanModel');
+        $xlsForm = [];
+        $mode = $this->uri->segment(3);
+        $header = "";
+        if($mode=="bulanini"){
+            $header = "Bulan Ini";
+            $xlsForm = $this->VaksinatorCakupanModel->cakupanBulanIni();
+        }elseif($mode=="akumulatifbulanini"){
+            $header = "Akumulasi Sampai Bulan Ini";
+            $xlsForm = $this->VaksinatorCakupanModel->akumulasiBulanIni();
+        }elseif($mode=="bulaninivsbulanlalu"){
+            $header = "Bulan Ini vs Bulan Lalu";
+            $xlsForm = $this->VaksinatorCakupanModel->bulanIniVsBulanLalu();
+        }elseif($mode=="tahuninivstahunlalu"){
+            $header = "Tahun Ini vs Tahun Lalu";
+            $bulan = $this->uri->segment(4);
+            $xlsForm = $this->VaksinatorCakupanModel->tahunIniVsTahunLalu($bulan);
+        }
+        $dataXLS['xlsForm']=$xlsForm;
+        $dataXLS['header']=$header;
+        $this->load->view("header");
+        $this->load->view("laporan/laporansidebar");
+        $this->load->view("laporan/cakupanpwsvaksinator",$dataXLS, false);
+        $this->load->view("footer");
+    }
+    
     public function downloadvaksinatorPWS(){
         $this->load->view("header");
         $this->load->view("laporan/laporansidebar");
