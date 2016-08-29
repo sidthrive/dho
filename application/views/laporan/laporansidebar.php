@@ -29,13 +29,24 @@
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Gizi</a>
                     </h4>
                 </div>
-                <div id="collapse2" class="panel-collapse collapse<?=($this->uri->segment(2)=='statusgizi'||$this->uri->segment(2)=='downloadgizipws')?' in':''?>">
+                <div id="collapse2" class="panel-collapse collapse<?=($this->uri->segment(2)=='cakupangizi'||$this->uri->segment(2)=='downloadgizipws')?' in':''?>">
                     <div class="panel panel-default">
-                        <div class="panel-heading"<?=($this->uri->segment(2)=='statusgizi')?' style="background-color:#909090"':''?>>
+                        <div class="panel-heading">
                             <h4 class="panel-title">
-                                <a href="<?php echo site_url() ."laporan/statusgizi"?>">Status Gizi</a>
+                                <a data-toggle="collapse" data-parent="#collapse2" href="#gizi_cov">Cakupan Gizi</a>
                             </h4>
                         </div>
+                        <div id="gizi_cov" class="panel-collapse collapse<?=$this->uri->segment(2)=='cakupangizi'?' in':''?>">
+                            <div class="panel panel-default">
+                                <div class="panel-heading" <?=($this->uri->segment(2)=='cakupangizi')?' style="background-color:#909090"':''?>>
+                                    <h4 class="panel-title">
+                                        <a href="<?php echo site_url() ."laporan/cakupangizi"?>">Bulan ini</a>
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
                         <div class="panel-heading"<?=($this->uri->segment(2)=='downloadgizipws')?' style="background-color:#909090"':''?>>
                             <h4 class="panel-title">
                                 <a href="<?php echo site_url() ."laporan/downloadgizipws"?>">Download PWS</a>
