@@ -69,6 +69,106 @@ $.fn.showChartDataEntryTanggal = function(data){
     
 };
 
+$.fn.showChartDataEntryTanggalDrill = function(data,url){
+    var chart_data = data;
+    Highcharts.setOptions({
+        lang: {
+            decimalPoint: ',',
+            thousandsSep: '.'
+        }
+    });
+    
+    $.each(chart_data,function(user,form){
+        var x = [];
+        var y = [];
+        var drill = [];
+        var a = 0;
+        $.each(form,function(index,value){
+            x.push(index);
+            y.push({"name":index,"y":value,"drilldown":index});
+        });
+        //console.log(drill);
+        user = user.replace(/ /g,"_");
+        $('#'+user).highcharts({			
+            chart: {
+                type: 'column',
+                zoomType: 'xy',
+                height: 400,
+                events: {
+                    drilldown: function (e) {
+                        if (!e.seriesOptions) {
+                            
+                            var chart = this,
+                                drilldowns = [],
+                                series = [];
+                            $.get(url+"dataentry/getbidanByForm/"+user+"/"+e.point.name,function(data){
+                                drilldowns = jQuery.parseJSON(data);
+                                series = drilldowns[e.point.name];
+                                chart.hideLoading();
+                                chart.addSeriesAsDrilldown(e.point, series);
+                            }).fail(function(jqxhr, textStatus, error ) {
+                               var err = textStatus + ", " + error;
+                                console.log( "Request Failed: " + err );
+                            });
+                            // Show the loading label
+                            chart.showLoading('Mengambil data ...');
+                        }
+
+                    }
+                }
+            },
+            title: {
+                text: ''
+            },
+            xAxis: {
+                type: 'category'
+            },
+            yAxis: [{min:0,startOnTick: false},{min:0,startOnTick: false,opposite: true},{ // Primary yAxis
+                labels: {
+                    format: '{value}',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                        }
+                    },
+                    title: {
+                        text: 'Jumlah Entry',
+                        style: {
+                            color: Highcharts.getOptions().colors[1]
+                        }
+                    }
+                }],
+            tooltip: {
+                shared: true
+            },
+            legend: {
+                enabled : false
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.y}'
+                    }
+                }
+            },
+            series: [{
+                    name: 'Jumlah Entry',
+                    type: 'column',
+                    data: y,
+                    color: '#73c1f7',
+                    tooltip: {
+                        valueSuffix: ''
+                    }
+                }],
+            drilldown: {
+                series: []
+            }
+        });
+    });
+    
+};
+
 $.fn.showChartDataEntryMinggu = function(data){
     var chart_data = data;
     Highcharts.setOptions({
