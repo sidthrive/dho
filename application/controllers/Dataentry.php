@@ -76,7 +76,7 @@ class DataEntry extends CI_Controller{
             }else{
                 $data['desa']		= "";
             }
-            $data['data']                   = $this->AnalyticsModel->getCountPerDay($data['kecamatan'],$data['mode']);
+            $data['data']                   = $this->AnalyticsModel->getCountPerDayDrill($data['kecamatan'],$data['mode']);
             $this->load->view("header");
             $this->load->view("dataentry/dataentrysidebar",$data);
             if($data['desa']==""){
@@ -88,6 +88,11 @@ class DataEntry extends CI_Controller{
             }
             $this->load->view("footer");
         }
+    }
+    
+    public function getbidanByForm($desa,$date){
+        $data = $this->AnalyticsModel->getCountPerFormForDrill($desa,$date);
+        echo json_encode($data);
     }
     
     public function gizi(){
