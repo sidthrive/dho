@@ -140,6 +140,18 @@
         </div>
         <br/>
         <br/>
+        <div title="BOOSTER CAMPAK">
+            <div id="">
+                <!-- START Script Block for Chart -->
+                <h3>BOOSTER CAMPAK</h3>
+                <div id="booster_campak" align="center">
+                </div>
+
+                <!-- END Script Block for Chart -->                
+            </div>
+        </div>
+        <br/>
+        <br/>
         <div title="TT1">
             <div id="">
                 <!-- START Script Block for Chart -->
