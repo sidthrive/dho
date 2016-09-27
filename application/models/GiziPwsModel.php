@@ -20,6 +20,7 @@ class GiziPwsModel extends CI_Model{
     }
     
     public function pwsBulanIni($bulan,$tahun,$kecamatan){
+        $bulan_map = ['januari'=>1,'februari'=>2,'maret'=>3,'april'=>4,'mei'=>5,'juni'=>6,'juli'=>7,'agustus'=>8,'september'=>9,'oktober'=>10,'november'=>11,'desember'=>12];
         if($kecamatan=='sengkol'){
             $result   =  ['Ketara'=>array(),'Sengkol'=>array(),'Kawo'=>array(),'Tanak Awu'=>array(),'Pengembur'=>array(),'Segala Anyar'=>array()];
             $result_row = ['Ketara'=>19,'Sengkol'=>20,'Kawo'=>21,'Tanak Awu'=>22,'Pengembur'=>23,'Segala Anyar'=>24];
@@ -32,162 +33,64 @@ class GiziPwsModel extends CI_Model{
             $user_village = ['gizi1'=>'Lekor','gizi2'=>'Saba','gizi3'=>'Pendem','gizi4'=>'Setuta','gizi5'=>'Jango','gizi6'=>'Janapria'];
         }
         
-//        foreach ($user_village as $x=>$uv){
-//            $result[$uv] = array(
-//                'month'=>array(
-//                    0=>array('m'=>': '.strtoupper($bulan).' '.$tahun)
-//                ),
-//                'S'=>array(
-//                    0=>array('L'=>0,'P'=>0),
-//                    1=>array('L'=>0,'P'=>0),
-//                    2=>array('L'=>0,'P'=>0),
-//                    3=>array('L'=>0,'P'=>0)
-//                ),
-//                'K'=>array(
-//                    0=>array('L'=>0,'P'=>0),
-//                    1=>array('L'=>0,'P'=>0),
-//                    2=>array('L'=>0,'P'=>0),
-//                    3=>array('L'=>0,'P'=>0)
-//                ),
-//                'N'=>array(
-//                    0=>array('L'=>0,'P'=>0),
-//                    1=>array('L'=>0,'P'=>0),
-//                    2=>array('L'=>0,'P'=>0),
-//                    3=>array('L'=>0,'P'=>0)
-//                ),
-//                'T'=>array(
-//                    0=>array('L'=>0,'P'=>0),
-//                    1=>array('L'=>0,'P'=>0),
-//                    2=>array('L'=>0,'P'=>0),
-//                    3=>array('L'=>0,'P'=>0)
-//                ),
-//                'O'=>array(
-//                    0=>array('L'=>0,'P'=>0),
-//                    1=>array('L'=>0,'P'=>0),
-//                    2=>array('L'=>0,'P'=>0),
-//                    3=>array('L'=>0,'P'=>0)
-//                ),
-//                'B'=>array(
-//                    0=>array('L'=>0,'P'=>0),
-//                    1=>array('L'=>0,'P'=>0),
-//                    2=>array('L'=>0,'P'=>0),
-//                    3=>array('L'=>0,'P'=>0)
-//                ),
-//                'D'=>array(
-//                    0=>array('L'=>0,'P'=>0),
-//                    1=>array('L'=>0,'P'=>0),
-//                    2=>array('L'=>0,'P'=>0),
-//                    3=>array('L'=>0,'P'=>0)
-//                ),
-//                '-'=>array(
-//                    0=>array('L'=>0,'P'=>0),
-//                    1=>array('L'=>0,'P'=>0),
-//                    2=>array('L'=>0,'P'=>0),
-//                    3=>array('L'=>0,'P'=>0)
-//                ),
-//                '2T'=>array(
-//                    0=>array('L'=>0,'P'=>0),
-//                    1=>array('L'=>0,'P'=>0),
-//                    2=>array('L'=>0,'P'=>0),
-//                    3=>array('L'=>0,'P'=>0)
-//                ),
-//                'V'=>array(
-//                    0=>array('L'=>0,'P'=>0),
-//                    1=>array('L'=>0,'P'=>0),
-//                    2=>array('L'=>0,'P'=>0),
-//                    3=>array('L'=>0,'P'=>0)
-//                ),
-//                'MP1'=>array(
-//                    0=>array('L'=>0,'P'=>0)
-//                ),
-//                'MP2'=>array(
-//                    0=>array('L'=>0,'P'=>0)
-//                ),
-//                'BBLR'=>array(
-//                    0=>array('L'=>0,'P'=>0)
-//                ),
-//                'GK'=>array(
-//                    0=>array('L'=>0,'P'=>0)
-//                )
-//            );
-//        }
-        
         foreach ($user_village as $x=>$uv){
             $result[$uv] = array(
                 'month'=>array(
                     0=>array('m'=>': '.strtoupper($bulan).' '.$tahun)
                 ),
                 'S'=>array(
-                    0=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    1=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    2=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    3=>array('L'=>rand(20,90),'P'=>rand(20,90))
-                ),
-                'K'=>array(
-                    0=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    1=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    2=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    3=>array('L'=>rand(20,90),'P'=>rand(20,90))
+                    0=>array('L'=>0,'P'=>0),
+                    1=>array('L'=>0,'P'=>0),
+                    2=>array('L'=>0,'P'=>0),
+                    3=>array('L'=>0,'P'=>0)
                 ),
                 'N'=>array(
-                    0=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    1=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    2=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    3=>array('L'=>rand(20,90),'P'=>rand(20,90))
+                    0=>array('L'=>0,'P'=>0),
+                    1=>array('L'=>0,'P'=>0),
+                    2=>array('L'=>0,'P'=>0),
+                    3=>array('L'=>0,'P'=>0)
                 ),
                 'T'=>array(
-                    0=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    1=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    2=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    3=>array('L'=>rand(20,90),'P'=>rand(20,90))
+                    0=>array('L'=>0,'P'=>0),
+                    1=>array('L'=>0,'P'=>0),
+                    2=>array('L'=>0,'P'=>0),
+                    3=>array('L'=>0,'P'=>0)
                 ),
                 'O'=>array(
-                    0=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    1=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    2=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    3=>array('L'=>rand(20,90),'P'=>rand(20,90))
+                    0=>array('L'=>0,'P'=>0),
+                    1=>array('L'=>0,'P'=>0),
+                    2=>array('L'=>0,'P'=>0),
+                    3=>array('L'=>0,'P'=>0)
                 ),
                 'B'=>array(
-                    0=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    1=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    2=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    3=>array('L'=>rand(20,90),'P'=>rand(20,90))
-                ),
-                'D'=>array(
-                    0=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    1=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    2=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    3=>array('L'=>rand(20,90),'P'=>rand(20,90))
-                ),
-                '-'=>array(
-                    0=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    1=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    2=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    3=>array('L'=>rand(20,90),'P'=>rand(20,90))
+                    0=>array('L'=>0,'P'=>0),
+                    1=>array('L'=>0,'P'=>0),
+                    2=>array('L'=>0,'P'=>0),
+                    3=>array('L'=>0,'P'=>0)
                 ),
                 '2T'=>array(
-                    0=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    1=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    2=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    3=>array('L'=>rand(20,90),'P'=>rand(20,90))
+                    0=>array('L'=>0,'P'=>0),
+                    1=>array('L'=>0,'P'=>0),
+                    2=>array('L'=>0,'P'=>0),
+                    3=>array('L'=>0,'P'=>0)
                 ),
                 'V'=>array(
-                    0=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    1=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    2=>array('L'=>rand(20,90),'P'=>rand(20,90)),
-                    3=>array('L'=>rand(20,90),'P'=>rand(20,90))
+                    0=>array('L'=>0,'P'=>0),
+                    1=>array('L'=>0,'P'=>0),
+                    2=>array('L'=>0,'P'=>0),
+                    3=>array('L'=>0,'P'=>0)
                 ),
                 'MP1'=>array(
-                    0=>array('L'=>rand(20,90),'P'=>rand(20,90))
+                    0=>array('L'=>0,'P'=>0)
                 ),
                 'MP2'=>array(
-                    0=>array('L'=>rand(20,90),'P'=>rand(20,90))
+                    0=>array('L'=>0,'P'=>0)
                 ),
                 'BBLR'=>array(
-                    0=>array('L'=>rand(20,90),'P'=>rand(20,90))
+                    0=>array('L'=>0,'P'=>0)
                 ),
                 'GK'=>array(
-                    0=>array('L'=>rand(20,90),'P'=>rand(20,90))
+                    0=>array('L'=>0,'P'=>0)
                 )
             );
         }
@@ -202,12 +105,6 @@ class GiziPwsModel extends CI_Model{
                     1=>array('L'=>'Q'.$result_row[$uv],'P'=>'R'.$result_row[$uv]),
                     2=>array('L'=>'S'.$result_row[$uv],'P'=>'T'.$result_row[$uv]),
                     3=>array('L'=>'U'.$result_row[$uv],'P'=>'V'.$result_row[$uv])
-                ),
-                'K'=>array(
-                    0=>array('L'=>'Y'.$result_row[$uv],'P'=>'Z'.$result_row[$uv]),
-                    1=>array('L'=>'AA'.$result_row[$uv],'P'=>'AB'.$result_row[$uv]),
-                    2=>array('L'=>'AC'.$result_row[$uv],'P'=>'AD'.$result_row[$uv]),
-                    3=>array('L'=>'AE'.$result_row[$uv],'P'=>'AF'.$result_row[$uv])
                 ),
                 'N'=>array(
                     0=>array('L'=>'AI'.$result_row[$uv],'P'=>'AJ'.$result_row[$uv]),
@@ -232,18 +129,6 @@ class GiziPwsModel extends CI_Model{
                     1=>array('L'=>'BO'.$result_row[$uv],'P'=>'BP'.$result_row[$uv]),
                     2=>array('L'=>'BQ'.$result_row[$uv],'P'=>'BR'.$result_row[$uv]),
                     3=>array('L'=>'BS'.$result_row[$uv],'P'=>'BT'.$result_row[$uv])
-                ),
-                'D'=>array(
-                    0=>array('L'=>'BW'.$result_row[$uv],'P'=>'BX'.$result_row[$uv]),
-                    1=>array('L'=>'BY'.$result_row[$uv],'P'=>'BZ'.$result_row[$uv]),
-                    2=>array('L'=>'CA'.$result_row[$uv],'P'=>'CB'.$result_row[$uv]),
-                    3=>array('L'=>'CC'.$result_row[$uv],'P'=>'CD'.$result_row[$uv])
-                ),
-                '-'=>array(
-                    0=>array('L'=>'CG'.$result_row[$uv],'P'=>'CH'.$result_row[$uv]),
-                    1=>array('L'=>'CI'.$result_row[$uv],'P'=>'CJ'.$result_row[$uv]),
-                    2=>array('L'=>'CK'.$result_row[$uv],'P'=>'CL'.$result_row[$uv]),
-                    3=>array('L'=>'CM'.$result_row[$uv],'P'=>'CN'.$result_row[$uv])
                 ),
                 '2T'=>array(
                     0=>array('L'=>'CQ'.$result_row[$uv],'P'=>'CR'.$result_row[$uv]),
@@ -272,50 +157,207 @@ class GiziPwsModel extends CI_Model{
             );
         }
                 
-        $startdate = date("Y-m");
-        $enddate = date("Y-m", strtotime("+1 months"));
+        $startdate = date("Y-m",  strtotime($tahun.'-'.$bulan_map[$bulan]));
+        $enddate = date("Y-m", strtotime($startdate." +1 months"));
         
-        $dataS = $this->getDataKunjungan("(umur <= 59) AND (tanggalPenimbangan > '2016-02' AND tanggalPenimbangan < '2016-03')");
+        $dataS = $this->getDataKunjungan("(umur <= 59) AND (tanggalPenimbangan > '$startdate' AND tanggalPenimbangan < '$enddate')");
         
         foreach ($dataS as $dds){
             if(array_key_exists($dds->userID, $user_village)){
-                $temp = $result[$user_village[$dds->userID]]['S'];
                 if($dds->umur<=5){
-                    $jk = $this->db->query("SELECT jenisKelamin as jk FROM registrasi_gizi WHERE childId = '".$dds->childId."'")->row()->jk;
+                    $child = $this->db->query("SELECT jenisKelamin as jk FROM registrasi_gizi WHERE childId = '".$dds->childId."'");
+                    if($child->num_rows()<1){
+                        continue;
+                    }
+                    $jk = $child->row()->jk;
                     if($jk=='male'||$jk=='Laki-laki'){
-                        $temp[0]['L'] += 1; 
+                        $result[$user_village[$dds->userID]]['S'][0]['L'] += 1;
+                        if(strtolower($dds->nutrition_status)=="n"){
+                            $result[$user_village[$dds->userID]]['N'][0]['L'] += 1;
+                        }elseif(strtolower($dds->nutrition_status)=="t"){
+                            $result[$user_village[$dds->userID]]['T'][0]['L'] += 1;
+                        }elseif(strtolower($dds->nutrition_status)=="o"){
+                            $result[$user_village[$dds->userID]]['O'][0]['L'] += 1;
+                        }elseif(strtolower($dds->nutrition_status)=="b"){
+                            $result[$user_village[$dds->userID]]['B'][0]['L'] += 1;
+                        }
+                        if(strtolower($dds->dua_t)=="ya"||strtolower($dds->dua_t)=="yes"){
+                            $result[$user_village[$dds->userID]]['2T'][0]['L'] += 1;
+                        }
+                        if(strtolower($dds->bgm)=="ya"||strtolower($dds->bgm)=="yes"){
+                            $result[$user_village[$dds->userID]]['V'][0]['L'] += 1;
+                        }
                     }elseif($jk=='female'||$jk=='Perempuan'){
-                        $temp[0]['P'] += 1; 
+                        $result[$user_village[$dds->userID]]['S'][0]['P'] += 1;
+                        if(strtolower($dds->nutrition_status)=="n"){
+                            $result[$user_village[$dds->userID]]['N'][0]['P'] += 1;
+                        }elseif(strtolower($dds->nutrition_status)=="t"){
+                            $result[$user_village[$dds->userID]]['T'][0]['P'] += 1;
+                        }elseif(strtolower($dds->nutrition_status)=="o"){
+                            $result[$user_village[$dds->userID]]['O'][0]['P'] += 1;
+                        }elseif(strtolower($dds->nutrition_status)=="b"){
+                            $result[$user_village[$dds->userID]]['B'][0]['P'] += 1;
+                        }
+                        if(strtolower($dds->dua_t)=="ya"||strtolower($dds->dua_t)=="yes"){
+                            $result[$user_village[$dds->userID]]['2T'][0]['P'] += 1;
+                        }
+                        if(strtolower($dds->bgm)=="ya"||strtolower($dds->bgm)=="yes"){
+                            $result[$user_village[$dds->userID]]['V'][0]['P'] += 1;
+                        }
                     }
                 }elseif($dds->umur>5&&$dds->umur<=11){
-                    $jk = $this->db->query("SELECT jenisKelamin as jk FROM registrasi_gizi WHERE childId = '".$dds->childId."'")->row()->jk;
+                    $child = $this->db->query("SELECT jenisKelamin as jk FROM registrasi_gizi WHERE childId = '".$dds->childId."'");
+                    if($child->num_rows()<1){
+                        continue;
+                    }
+                    $jk = $child->row()->jk;
                     if($jk=='male'||$jk=='Laki-laki'){
-                        $temp[1]['L'] += 1; 
+                        $result[$user_village[$dds->userID]]['S'][1]['L'] += 1;
+                        if(strtolower($dds->nutrition_status)=="n"){
+                            $result[$user_village[$dds->userID]]['N'][1]['L'] += 1;
+                        }elseif(strtolower($dds->nutrition_status)=="t"){
+                            $result[$user_village[$dds->userID]]['T'][1]['L'] += 1;
+                        }elseif(strtolower($dds->nutrition_status)=="o"){
+                            $result[$user_village[$dds->userID]]['O'][1]['L'] += 1;
+                        }elseif(strtolower($dds->nutrition_status)=="b"){
+                            $result[$user_village[$dds->userID]]['B'][1]['L'] += 1;
+                        }
+                        if(strtolower($dds->dua_t)=="ya"||strtolower($dds->dua_t)=="yes"){
+                            $result[$user_village[$dds->userID]]['2T'][1]['L'] += 1;
+                        }
+                        if(strtolower($dds->bgm)=="ya"||strtolower($dds->bgm)=="yes"){
+                            $result[$user_village[$dds->userID]]['V'][1]['L'] += 1;
+                        }
+                        if(strtolower($dds->mp_asi)=="ya"||strtolower($dds->mp_asi)=="yes"){
+                            $result[$user_village[$dds->userID]]['MP1'][1]['L'] += 1;
+                        }
                     }elseif($jk=='female'||$jk=='Perempuan'){
-                        $temp[1]['P'] += 1; 
+                        $result[$user_village[$dds->userID]]['S'][1]['P'] += 1;
+                        if(strtolower($dds->nutrition_status)=="n"){
+                            $result[$user_village[$dds->userID]]['N'][1]['P'] += 1;
+                        }elseif(strtolower($dds->nutrition_status)=="t"){
+                            $result[$user_village[$dds->userID]]['T'][1]['P'] += 1;
+                        }elseif(strtolower($dds->nutrition_status)=="o"){
+                            $result[$user_village[$dds->userID]]['O'][1]['P'] += 1;
+                        }elseif(strtolower($dds->nutrition_status)=="b"){
+                            $result[$user_village[$dds->userID]]['B'][1]['P'] += 1;
+                        }
+                        if(strtolower($dds->dua_t)=="ya"||strtolower($dds->dua_t)=="yes"){
+                            $result[$user_village[$dds->userID]]['2T'][1]['P'] += 1;
+                        }
+                        if(strtolower($dds->bgm)=="ya"||strtolower($dds->bgm)=="yes"){
+                            $result[$user_village[$dds->userID]]['V'][1]['P'] += 1;
+                        }
+                        if(strtolower($dds->mp_asi)=="ya"||strtolower($dds->mp_asi)=="yes"){
+                            $result[$user_village[$dds->userID]]['MP1'][1]['P'] += 1;
+                        }
                     }
                 }elseif($dds->umur>11&&$dds->umur<=23){
-                    $jk = $this->db->query("SELECT jenisKelamin as jk FROM registrasi_gizi WHERE childId = '".$dds->childId."'")->row()->jk;
+                    $child = $this->db->query("SELECT jenisKelamin as jk FROM registrasi_gizi WHERE childId = '".$dds->childId."'");
+                    if($child->num_rows()<1){
+                        continue;
+                    }
+                    $jk = $child->row()->jk;
                     if($jk=='male'||$jk=='Laki-laki'){
-                        $temp[2]['L'] += 1; 
+                        $result[$user_village[$dds->userID]]['S'][2]['L'] += 1;
+                        if(strtolower($dds->nutrition_status)=="n"){
+                            $result[$user_village[$dds->userID]]['N'][2]['L'] += 1;
+                        }elseif(strtolower($dds->nutrition_status)=="t"){
+                            $result[$user_village[$dds->userID]]['T'][2]['L'] += 1;
+                        }elseif(strtolower($dds->nutrition_status)=="o"){
+                            $result[$user_village[$dds->userID]]['O'][2]['L'] += 1;
+                        }elseif(strtolower($dds->nutrition_status)=="b"){
+                            $result[$user_village[$dds->userID]]['B'][2]['L'] += 1;
+                        }
+                        if(strtolower($dds->dua_t)=="ya"||strtolower($dds->dua_t)=="yes"){
+                            $result[$user_village[$dds->userID]]['2T'][2]['L'] += 1;
+                        }
+                        if(strtolower($dds->bgm)=="ya"||strtolower($dds->bgm)=="yes"){
+                            $result[$user_village[$dds->userID]]['V'][2]['L'] += 1;
+                        }
+                        if(strtolower($dds->mp_asi)=="ya"||strtolower($dds->mp_asi)=="yes"){
+                            $result[$user_village[$dds->userID]]['MP2'][2]['L'] += 1;
+                        }
                     }elseif($jk=='female'||$jk=='Perempuan'){
-                        $temp[2]['P'] += 1; 
+                        $result[$user_village[$dds->userID]]['S'][2]['P'] += 1;
+                        if(strtolower($dds->nutrition_status)=="n"){
+                            $result[$user_village[$dds->userID]]['N'][2]['P'] += 1;
+                        }elseif(strtolower($dds->nutrition_status)=="t"){
+                            $result[$user_village[$dds->userID]]['T'][2]['P'] += 1;
+                        }elseif(strtolower($dds->nutrition_status)=="o"){
+                            $result[$user_village[$dds->userID]]['O'][2]['P'] += 1;
+                        }elseif(strtolower($dds->nutrition_status)=="b"){
+                            $result[$user_village[$dds->userID]]['B'][2]['P'] += 1;
+                        }
+                        if(strtolower($dds->dua_t)=="ya"||strtolower($dds->dua_t)=="yes"){
+                            $result[$user_village[$dds->userID]]['2T'][2]['P'] += 1;
+                        }
+                        if(strtolower($dds->bgm)=="ya"||strtolower($dds->bgm)=="yes"){
+                            $result[$user_village[$dds->userID]]['V'][2]['P'] += 1;
+                        }
+                        if(strtolower($dds->mp_asi)=="ya"||strtolower($dds->mp_asi)=="yes"){
+                            $result[$user_village[$dds->userID]]['MP2'][2]['P'] += 1;
+                        }
                     }
                 }elseif($dds->umur>23&&$dds->umur<=59){
-                    $jk = $this->db->query("SELECT jenisKelamin as jk FROM registrasi_gizi WHERE childId = '".$dds->childId."'")->row()->jk;
+                    $child = $this->db->query("SELECT jenisKelamin as jk FROM registrasi_gizi WHERE childId = '".$dds->childId."'");
+                    if($child->num_rows()<1){
+                        continue;
+                    }
+                    $jk = $child->row()->jk;
                     if($jk=='male'||$jk=='Laki-laki'){
-                        $temp[3]['L'] += 1; 
+                        $result[$user_village[$dds->userID]]['S'][3]['L'] += 1; 
+                        if(strtolower($dds->nutrition_status)=="n"){
+                            $result[$user_village[$dds->userID]]['N'][3]['L'] += 1;
+                        }elseif(strtolower($dds->nutrition_status)=="t"){
+                            $result[$user_village[$dds->userID]]['T'][3]['L'] += 1;
+                        }elseif(strtolower($dds->nutrition_status)=="o"){
+                            $result[$user_village[$dds->userID]]['O'][3]['L'] += 1;
+                        }elseif(strtolower($dds->nutrition_status)=="b"){
+                            $result[$user_village[$dds->userID]]['B'][3]['L'] += 1;
+                        }
+                        if(strtolower($dds->dua_t)=="ya"||strtolower($dds->dua_t)=="yes"){
+                            $result[$user_village[$dds->userID]]['2T'][3]['L'] += 1;
+                        }
+                        if(strtolower($dds->bgm)=="ya"||strtolower($dds->bgm)=="yes"){
+                            $result[$user_village[$dds->userID]]['V'][3]['L'] += 1;
+                        }
                     }elseif($jk=='female'||$jk=='Perempuan'){
-                        $temp[3]['P'] += 1; 
+                        $result[$user_village[$dds->userID]]['S'][3]['P'] += 1; 
+                        if(strtolower($dds->nutrition_status)=="n"){
+                            $result[$user_village[$dds->userID]]['N'][3]['P'] += 1;
+                        }elseif(strtolower($dds->nutrition_status)=="t"){
+                            $result[$user_village[$dds->userID]]['T'][3]['P'] += 1;
+                        }elseif(strtolower($dds->nutrition_status)=="o"){
+                            $result[$user_village[$dds->userID]]['O'][3]['P'] += 1;
+                        }elseif(strtolower($dds->nutrition_status)=="b"){
+                            $result[$user_village[$dds->userID]]['B'][3]['P'] += 1;
+                        }
+                        if(strtolower($dds->dua_t)=="ya"||strtolower($dds->dua_t)=="yes"){
+                            $result[$user_village[$dds->userID]]['2T'][3]['P'] += 1;
+                        }
+                        if(strtolower($dds->bgm)=="ya"||strtolower($dds->bgm)=="yes"){
+                            $result[$user_village[$dds->userID]]['V'][3]['P'] += 1;
+                        }
                     }
                 }
-                $result[$user_village[$dds->userID]]['S'] = $temp;
             }
         }
         
-        $dataS = $this->getDataKunjungan("(umur <= 59) AND (tanggalPenimbangan > '2016-02' AND tanggalPenimbangan < '2016-03')");
+        $dataBBLR = $this->getDataRegistrasi("tanggalLahir > '$startdate' AND tanggalLahir < '$enddate'");
         
-        //NOT YET FINISHED!!!!!!!
+        foreach ($dataBBLR as $dds){
+            if(array_key_exists($dds->userID, $user_village)){
+                if($dds->beratLahir<2500&&$dds->beratLahir!='-'){
+                    $jk = $dds->jenisKelamin;
+                    if($jk=='male'||$jk=='Laki-laki'){
+                        $result[$user_village[$dds->userID]]['BBLR'][0]['L'] += 1;
+                    }elseif($jk=='female'||$jk=='Perempuan'){
+                        $result[$user_village[$dds->userID]]['BBLR'][0]['P'] += 1;
+                    }
+                }
+            }
+        }
         
         $file = APPPATH."download/gizi/pws/template_$kecamatan.xlsx";
         $this->load->library('PHPExcell');
