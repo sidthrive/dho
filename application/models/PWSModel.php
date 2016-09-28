@@ -187,7 +187,7 @@ class PWSModel extends CI_Model{
                     $result['linakes_L_bulan_lalu'][$key] += (int)$linakes['B'];
                     $result['linakes_P_bulan_lalu'][$key] += (int)$linakes['F'];
                     $result['linakes_L_bulan_ini'][$key] += (int)$linakes['E'];
-                    $result['linakes_L_bulan_ini'][$key] += (int)$linakes['G'];
+                    $result['linakes_P_bulan_ini'][$key] += (int)$linakes['G'];
                 }
             }
             foreach ($datanolinakes as $nolinakes){
@@ -196,7 +196,7 @@ class PWSModel extends CI_Model{
                     $result['nolinakes_L_bulan_lalu'][$key] += (int)$nolinakes['B'];
                     $result['nolinakes_P_bulan_lalu'][$key] += (int)$nolinakes['F'];
                     $result['nolinakes_L_bulan_ini'][$key] += (int)$nolinakes['E'];
-                    $result['nolinakes_L_bulan_ini'][$key] += (int)$nolinakes['G'];
+                    $result['nolinakes_P_bulan_ini'][$key] += (int)$nolinakes['G'];
                 }
             }
         } catch (Exception $ex) {

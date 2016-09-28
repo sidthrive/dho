@@ -76,6 +76,74 @@ class AnalyticsModel extends CI_Model{
         return $result_data;
     }
     
+    public function getCountPerDayDrill($kecamatan="",$mode=""){
+        if($mode!=""){
+            return self::getCountPerMode($kecamatan,$mode);
+        }
+        date_default_timezone_set("Asia/Makassar"); 
+        $analyticsDB = $this->load->database('analytics', TRUE);
+        $query  = $analyticsDB->query("SHOW TABLES FROM analytics");
+        
+        //retrieve the tables name
+        $tables = array();
+        foreach ($query->result() as $table){
+            array_push($tables, $table->Tables_in_analytics);
+        }
+        
+       if($kecamatan=='Sengkol'){
+            $users = ['user8'=>'Ketara','user9'=>'Sengkol','user10'=>'Sengkol','user11'=>'Kawo','user12'=>'Tanak Awu','user13'=>'Pengembur','user14'=>'Segala Anyar'];
+        }elseif($kecamatan=='Janapria'){
+            $users = ['user1'=>'Lekor','user2'=>'Saba','user3'=>'Pendem','user4'=>'Setuta','user5'=>'Jango','user6'=>'Janapria'];
+        }else{
+            return;
+        }
+        
+        //make result array from the tables name
+        $result_data = array();
+        foreach ($users as $user=>$desa){
+            $data = array();
+            for($i=1;$i<=30;$i++){
+                $day     = 30-$i;
+                $date    = date("Y-m-d",  strtotime("-".$day." days"));
+                $data[$date] = 0;
+            }
+//            var_dump($data);
+            $result_data[$desa] = $data;
+        }
+        
+        //retrieve all the columns in the table
+        $columns = array();
+        foreach ($tables as $table){
+            $query = $analyticsDB->query("SHOW COLUMNS FROM ".$table);
+            foreach ($query->result() as $column){
+                array_push($columns, $column->Field);
+            }
+            
+            //query tha data
+            if($kecamatan=='Sengkol'){
+                $query = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." where (userid='user8' or userid='user9' or userid='user10' or userid='user11' or userid='user12' or userid='user13' or userid='user14') and (submissiondate >= '".date("Y-m-d",strtotime("-30 days"))."' and submissiondate <= '".date("Y-m-d")."') group by userid, submissiondate");
+            }
+            elseif($kecamatan=='Janapria'){
+                $query = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." where (userid='user1' or userid='user2' or userid='user3' or userid='user4' or userid='user5' or userid='user6') and (submissiondate >= '".date("Y-m-d",strtotime("-30 days"))."' and submissiondate <= '".date("Y-m-d")."') group by userid, submissiondate");
+            }
+            else{
+                $query = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." where (submissiondate >= '2015-06-24' and submissiondate <= '2015-07-24') group by userid, submissiondate");
+            }
+            foreach ($query->result() as $datas){
+                if(array_key_exists($datas->userid, $users)){
+                    $data_count                  = $result_data[$users[$datas->userid]];
+                    if(array_key_exists($datas->submissiondate, $data_count)){
+                        $data_count[$datas->submissiondate] +=$datas->counts;
+                    }
+                    $result_data[$users[$datas->userid]] = $data_count;
+                }
+                
+            }
+        }
+//        var_dump($result_data);
+        return $result_data;
+    }
+    
     public function getCountPerMode($kecamatan="",$mode="Mingguan"){
         date_default_timezone_set("Asia/Makassar"); 
         $analyticsDB = $this->load->database('analytics', TRUE);
@@ -274,6 +342,114 @@ class AnalyticsModel extends CI_Model{
             }
         }
         
+        return $result_data;
+    }
+    
+    public function getCountPerFormForDrill($desa="",$date=""){
+        $analyticsDB = $this->load->database('analytics', TRUE);
+        $query  = $analyticsDB->query("SHOW TABLES FROM analytics");
+        $table_default = [
+            'kartu_ibu_registration'=>'Registrasi Ibu',
+            'kohort_kb_registration'=>'Registrasi KB',
+            'kartu_anc_registration'=>'Registrasi ANC',
+            'kartu_anc_registration_oa'=>'Registrasi ANC',
+            'kartu_anc_rencana_persalinan'=>'Rencana Persalinan',
+            'kartu_anc_visit'=>'Kunjungan ANC',
+            'kartu_pnc_regitration_oa'=>'Registrasi PNC',
+            'kartu_pnc_dokumentasi_persalinan'=>'Dokumentasi Persalinan',
+            'kartu_pnc_visit'=>'Kunjungan PNC',
+            'kohort_bayi_registration'=>'Registrasi Anak',
+            'kohort_bayi_registration_oa'=>'Registrasi Anak',
+            'kohort_bayi_neonatal_period'=>'Kunjungan Neonatal',
+            'kohort_bayi_kunjungan'=>'Kunjungan Bayi',
+            'lain_lain'=>'Lain-Lain'];
+        $tabindex = [
+            'kartu_ibu_registration'=>0,
+            'kohort_kb_registration'=>1,
+            'kartu_anc_registration'=>2,
+            'kartu_anc_registration_oa'=>3,
+            'kartu_anc_rencana_persalinan'=>4,
+            'kartu_anc_visit'=>5,
+            'kartu_pnc_regitration_oa'=>6,
+            'kartu_pnc_dokumentasi_persalinan'=>7,
+            'kartu_pnc_visit'=>8,
+            'kohort_bayi_registration'=>9,
+            'kohort_bayi_registration_oa'=>10,
+            'kohort_bayi_neonatal_period'=>11,
+            'kohort_bayi_kunjungan'=>12,
+            'lain_lain'=>13];
+        //retrieve the tables name
+        $tables = array();
+        foreach ($query->result() as $table){
+            if(array_key_exists($table->Tables_in_analytics, $table_default)){
+                $tables[$table->Tables_in_analytics]=$table_default[$table->Tables_in_analytics];
+            }
+        }
+        if($desa=="Lekor"){
+            $users = ['user1'=>'Lekor'];
+        }elseif($desa=="Saba"){
+            $users = ['user2'=>'Saba'];
+        }elseif($desa=="Pendem"){
+            $users = ['user3'=>'Pendem'];
+        }elseif($desa=="Setuta"){
+            $users = ['user4'=>'Setuta'];
+        }elseif($desa=="Jango"){
+            $users = ['user5'=>'Jango'];
+        }elseif($desa=="Janapria"){
+            $users = ['user6'=>'Janapria'];
+        }elseif($desa=="Ketara"){
+            $users = ['user8'=>'Ketara'];
+        }elseif($desa=="Sengkol"){
+            $users = ['user9'=>'Sengkol','user10'=>'Sengkol'];
+        }elseif($desa=="Kawo"){
+            $users = ['user11'=>'Kawo'];
+        }elseif($desa=="Tanak_Awu"){
+            $users = ['user12'=>'Tanak Awu'];
+        }elseif($desa=="Pengembur"){
+            $users = ['user13'=>'Pengembur'];
+        }elseif($desa=="Segala_Anyar"){
+            $users = ['user14'=>'Segala Anyar'];
+        }
+        //make result array from the tables name
+        $result_data = array();
+        foreach ($users as $user=>$desa){
+            $data = array();
+            $data[$date] = array();
+            foreach ($table_default as $table=>$table_name){
+                $data[$date]["name"] = $date;
+                $data[$date]["id"] = $date;
+                $data[$date]["data"] = array();
+                foreach ($table_default as $td=>$td_name){
+                    array_push($data[$date]["data"], array($td_name,0));
+                }
+            }
+            $result_data = $data;
+        }
+        //var_dump($result_data);
+        //retrieve all the columns in the table
+        $columns = array();
+        foreach ($query->result() as $table){
+            $query2 = $analyticsDB->query("SHOW COLUMNS FROM ".$table->Tables_in_analytics);
+            foreach ($query2->result() as $column){
+                array_push($columns, $column->Field);
+            }
+            
+            //query tha data
+            reset($users);
+            $query3 = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table->Tables_in_analytics." where (userid='".key($users)."') and submissiondate='".$date."' group by userid, submissiondate");
+            foreach ($query3->result() as $datas){
+                if(array_key_exists($datas->userid, $users)){
+                    $data_count                  = $result_data[$date];
+                    if(array_key_exists($table->Tables_in_analytics, $table_default)){
+                        $data_count["data"][$tabindex[$table->Tables_in_analytics]][1]         += $datas->counts;
+                    }else{
+                        $data_count["data"][13][1]         += $datas->counts;
+                    }
+                    
+                    $result_data[$date] = $data_count;
+                }
+            }
+        }
         return $result_data;
     }
 }

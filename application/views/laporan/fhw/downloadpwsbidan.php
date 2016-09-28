@@ -37,6 +37,10 @@
                     <option value="balita_2">Balita 2</option>
                     <option value="balita_3">Balita 3</option>
                     <option value="balita_4">Balita 4</option>
+                    <option value="anak_1">Anak 1</option>
+                    <option value="anak_2">Anak 2</option>
+                    <option value="anak_3">Anak 3</option>
+                    <option value="anak_4">Anak 4</option>
                     <option value="neonatal1">Neonatal 1</option>
                     <option value="neonatal2">Neonatal 2</option>
                     <option value="neonatal3">Neonatal 3</option>
