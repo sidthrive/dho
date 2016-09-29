@@ -300,9 +300,9 @@ class VaksinatorCakupanModel extends CI_Model{
                 $jk = $d->jenis_kelamin;
                 if($this->cekImunisasiLengkap($d->childId)){
                     if($jk=="laki-laki"||$jk=="male"){
-                        $uci[$this->user_village[$dvisit->userID]]['l'] +=1;   
+                        $uci[$this->user_village[$d->userID]]['l'] +=1;   
                     }elseif($jk=="perempuan"||$jk=="female"){
-                        $uci[$this->user_village[$dvisit->userID]]['p'] +=1; 
+                        $uci[$this->user_village[$d->userID]]['p'] +=1; 
                     }
                }
             }
@@ -579,9 +579,9 @@ class VaksinatorCakupanModel extends CI_Model{
                 $jk = $d->jenis_kelamin;
                 if($this->cekImunisasiLengkap($d->childId)){
                     if($jk=="laki-laki"||$jk=="male"){
-                        $uci[$this->user_village[$dvisit->userID]]['l'] +=1;   
+                        $uci[$this->user_village[$d->userID]]['l'] +=1;   
                     }elseif($jk=="perempuan"||$jk=="female"){
-                        $uci[$this->user_village[$dvisit->userID]]['p'] +=1; 
+                        $uci[$this->user_village[$d->userID]]['p'] +=1; 
                     }
                }
             }
@@ -1013,9 +1013,9 @@ class VaksinatorCakupanModel extends CI_Model{
                 $jk = $d->jenis_kelamin;
                 if($this->cekImunisasiLengkap($d->childId)){
                     if($jk=="laki-laki"||$jk=="male"){
-                        $uci[$this->user_village[$dvisit->userID]]['lbl'] +=1;   
+                        $uci[$this->user_village[$d->userID]]['lbl'] +=1;   
                     }elseif($jk=="perempuan"||$jk=="female"){
-                        $uci[$this->user_village[$dvisit->userID]]['pbl'] +=1; 
+                        $uci[$this->user_village[$d->userID]]['pbl'] +=1; 
                     }
                }
             }
@@ -1028,9 +1028,9 @@ class VaksinatorCakupanModel extends CI_Model{
                 $jk = $d->jenis_kelamin;
                 if($this->cekImunisasiLengkap($d->childId)){
                     if($jk=="laki-laki"||$jk=="male"){
-                        $uci[$this->user_village[$dvisit->userID]]['lbi'] +=1;   
+                        $uci[$this->user_village[$d->userID]]['lbi'] +=1;   
                     }elseif($jk=="perempuan"||$jk=="female"){
-                        $uci[$this->user_village[$dvisit->userID]]['pbi'] +=1; 
+                        $uci[$this->user_village[$d->userID]]['pbi'] +=1; 
                     }
                }
             }
@@ -1466,9 +1466,9 @@ class VaksinatorCakupanModel extends CI_Model{
                 $jk = $d->jenis_kelamin;
                 if($this->cekImunisasiLengkap($d->childId)){
                     if($jk=="laki-laki"||$jk=="male"){
-                        $uci[$this->user_village[$dvisit->userID]]['lbl'] +=1;   
+                        $uci[$this->user_village[$d->userID]]['lbl'] +=1;   
                     }elseif($jk=="perempuan"||$jk=="female"){
-                        $uci[$this->user_village[$dvisit->userID]]['pbl'] +=1; 
+                        $uci[$this->user_village[$d->userID]]['pbl'] +=1; 
                     }
                }
             }
@@ -1481,9 +1481,9 @@ class VaksinatorCakupanModel extends CI_Model{
                 $jk = $d->jenis_kelamin;
                 if($this->cekImunisasiLengkap($d->childId)){
                     if($jk=="laki-laki"||$jk=="male"){
-                        $uci[$this->user_village[$dvisit->userID]]['lbi'] +=1;   
+                        $uci[$this->user_village[$d->userID]]['lbi'] +=1;   
                     }elseif($jk=="perempuan"||$jk=="female"){
-                        $uci[$this->user_village[$dvisit->userID]]['pbi'] +=1; 
+                        $uci[$this->user_village[$d->userID]]['pbi'] +=1; 
                     }
                }
             }
