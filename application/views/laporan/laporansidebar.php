@@ -2,6 +2,7 @@
     <div id="sidebar1">
         <h2>Menu Laporan</h2>
         <div class="panel-group" id="accordion">
+            <?php if($this->session->userdata('tipe')=="bidan"||$this->session->userdata('tipe')=="all"){ ?>
             <div class="panel panel-default" id="bidans">
                 <div class="panel-heading">
                     <h4 class="panel-title">
@@ -25,6 +26,8 @@
                     </div>
                 </div>
             </div>
+            <?php } ?>
+            <?php if($this->session->userdata('tipe')=="gizi"||$this->session->userdata('tipe')=="all"){ ?>
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
@@ -49,6 +52,8 @@
                 </div>
                     
             </div>
+            <?php } ?>
+            <?php if($this->session->userdata('tipe')=="vaksinator"||$this->session->userdata('tipe')=="all"){ ?>
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
@@ -166,5 +171,6 @@
                     </div>
                 </div>
             </div>
+            <?php } ?>
         </div>
     </div>
