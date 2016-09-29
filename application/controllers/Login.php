@@ -23,6 +23,7 @@ class Login extends CI_Controller
                     'id_user' => $result->id_user,
                     'username' => $result->username,
                     'level' => $result->level,
+                    'tipe' => $result->tipe,
                     'last_login' => $result->last_login,
                     'admin_valid' => true
                 ];
