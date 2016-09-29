@@ -13,7 +13,7 @@
             <li>Status Gizi: berisi status anak yaitu underweight, stunting dan wasting</li>
             <li>Download PWS: berisi laporan PWS bulanan yang bisa diunduh oleh supervisor gizi</li>
         </ul>
-        <li>pada menu jurim terdapat pilihan untuk mengunduh laporan PWS yang bisa diunduh oleh supervisor jurim </li>
+        <li>pada menu Vaksinator terdapat pilihan untuk mengunduh laporan PWS yang bisa diunduh oleh supervisor Vaksinator </li>
     </ul>
 </div>
 </div>
