@@ -5,6 +5,32 @@
     </div>
     <br/>
     <br/>
+    <div>
+        <form class="form" action="<?php echo site_url()."hhhscore/bidantrimester2"?>" method="get">
+            <label class="col-sm-2 control-label">Periode: </label>
+            <select name="b" class="form-control-static">
+                <option value="januari" <?=$bulan=="januari"?"selected":""?>>Januari</option>
+                <option value="februari" <?=$bulan=="februari"?"selected":""?>>Februari</option>
+                <option value="maret" <?=$bulan=="maret"?"selected":""?>>Maret</option>
+                <option value="april" <?=$bulan=="april"?"selected":""?>>April</option>
+                <option value="mei" <?=$bulan=="mei"?"selected":""?>>Mei</option>
+                <option value="juni" <?=$bulan=="juni"?"selected":""?>>Juni</option>
+                <option value="juli" <?=$bulan=="juli"?"selected":""?>>Juli</option>
+                <option value="agustus" <?=$bulan=="agustus"?"selected":""?>>Agustus</option>
+                <option value="september" <?=$bulan=="september"?"selected":""?>>September</option>
+                <option value="oktober" <?=$bulan=="oktober"?"selected":""?>>Oktober</option>
+                <option value="november" <?=$bulan=="november"?"selected":""?>>November</option>
+                <option value="desember" <?=$bulan=="desember"?"selected":""?>>Desember</option>
+            </select>
+            <select name="t" class="form-control-static">
+                <option>2016</option>
+                <option>2015</option>
+            </select>
+            <button class="form-control-static">GO</button>
+        </form>
+    </div>
+    <br/>
+    <br/>
 
     <div id="container" style="text-align: center;">
         <div title="tekanan darah trimester 2">
@@ -49,7 +75,7 @@
         <div title="Pres Janin trimester 2">
             <div id="">
                 <!-- START Script Block for Chart -->
-                <h3>Pemeriksaan Persentas Janin</h3>
+                <h3>Pemeriksaan Persentase Janin</h3>
                 <div id="PJT2" align="center">
                 </div>
 
