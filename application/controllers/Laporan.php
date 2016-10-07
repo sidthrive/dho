@@ -18,7 +18,10 @@ class Laporan extends CI_Controller{
     
     public function cakupanIndikatorPWS(){
         if($this->input->get('b')==null){
-            redirect("laporan/cakupanindikatorpws?b=januari&t=2016");
+            $bulan_map = [1=>'januari',2=>'februari',3=>'maret',4=>'april',5=>'mei',6=>'juni',7=>'juli',8=>'agustus',9=>'september',10=>'oktober',11=>'november',12=>'desember'];
+            $b = date("m");
+            $t = date("Y");
+            redirect("laporan/cakupanindikatorpws?b=$bulan_map[$b]&t=$t");
         }else{
             $dataXLS['bulan'] = $this->input->get('b');
             $dataXLS['tahun'] = $this->input->get('t');
@@ -48,7 +51,10 @@ class Laporan extends CI_Controller{
     public function cakupanGizi(){
         $this->load->model('GiziCakupanModel');
         if($this->input->get('b')==null){
-            redirect("laporan/cakupangizi?b=januari&t=2016");
+            $bulan_map = [1=>'januari',2=>'februari',3=>'maret',4=>'april',5=>'mei',6=>'juni',7=>'juli',8=>'agustus',9=>'september',10=>'oktober',11=>'november',12=>'desember'];
+            $b = date("m");
+            $t = date("Y");
+            redirect("laporan/cakupangizi?b=$bulan_map[$b]&t=$t");
         }else{
             $dataXLS['bulan'] = $this->input->get('b');
             $dataXLS['tahun'] = $this->input->get('t');
