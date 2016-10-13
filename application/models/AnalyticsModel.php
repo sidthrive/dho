@@ -19,7 +19,9 @@ class AnalyticsModel extends CI_Model{
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
-            array_push($tables, $table->Tables_in_analytics);
+            if($table->Tables_in_analytics[0]=='v'){
+                continue;
+            }else array_push($tables, $table->Tables_in_analytics);
         }
         
        if($kecamatan=='Sengkol'){
@@ -87,7 +89,9 @@ class AnalyticsModel extends CI_Model{
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
-            array_push($tables, $table->Tables_in_analytics);
+            if($table->Tables_in_analytics[0]=='v'){
+                continue;
+            }else array_push($tables, $table->Tables_in_analytics);
         }
         
        if($kecamatan=='Sengkol'){
@@ -152,7 +156,9 @@ class AnalyticsModel extends CI_Model{
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
-            array_push($tables, $table->Tables_in_analytics);
+            if($table->Tables_in_analytics[0]=='v'){
+                continue;
+            }else array_push($tables, $table->Tables_in_analytics);
         }
         
         if($kecamatan=='Sengkol'){
@@ -362,7 +368,22 @@ class AnalyticsModel extends CI_Model{
             'kohort_bayi_registration_oa'=>'Registrasi Anak',
             'kohort_bayi_neonatal_period'=>'Kunjungan Neonatal',
             'kohort_bayi_kunjungan'=>'Kunjungan Bayi',
-            'lain_lain'=>'Lain-Lain'];
+            'kartu_anc_close'=>'kartu_anc_close',
+            'kartu_anc_edit'=>'kartu_anc_edit',
+            'kartu_anc_visit_edit'=>'kartu_anc_visit_edit',
+            'kartu_anc_visit_integrasi'=>'kartu_anc_visit_integrasi',
+            'kartu_anc_visit_labtest'=>'kartu_anc_visit_labtest',
+            'kartu_ibu_close'=>'kartu_ibu_close',
+            'kartu_ibu_edit'=>'kartu_ibu_edit',
+            'kartu_pnc_close'=>'kartu_pnc_close',
+            'kartu_pnc_edit'=>'kartu_pnc_edit',
+            'kohort_anak_tutup'=>'kohort_anak_tutup',
+            'kohort_bayi_edit'=>'kohort_bayi_edit',
+            'kohort_bayi_immunization'=>'kohort_bayi_immunization',
+            'kohort_kb_close'=>'kohort_kb_close',
+            'kohort_kb_edit'=>'kohort_kb_edit',
+            'kohort_kb_pelayanan'=>'kohort_kb_pelayanan',
+            'kohort_kb_update'=>'kohort_kb_update'];
         $tabindex = [
             'kartu_ibu_registration'=>0,
             'kohort_kb_registration'=>1,
@@ -377,7 +398,22 @@ class AnalyticsModel extends CI_Model{
             'kohort_bayi_registration_oa'=>10,
             'kohort_bayi_neonatal_period'=>11,
             'kohort_bayi_kunjungan'=>12,
-            'lain_lain'=>13];
+            'kartu_anc_close'=>13,
+            'kartu_anc_edit'=>14,
+            'kartu_anc_visit_edit'=>15,
+            'kartu_anc_visit_integrasi'=>16,
+            'kartu_anc_visit_labtest'=>17,
+            'kartu_ibu_close'=>18,
+            'kartu_ibu_edit'=>19,
+            'kartu_pnc_close'=>20,
+            'kartu_pnc_edit'=>21,
+            'kohort_anak_tutup'=>22,
+            'kohort_bayi_edit'=>23,
+            'kohort_bayi_immunization'=>24,
+            'kohort_kb_close'=>25,
+            'kohort_kb_edit'=>26,
+            'kohort_kb_pelayanan'=>27,
+            'kohort_kb_update'=>28];
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
@@ -428,22 +464,20 @@ class AnalyticsModel extends CI_Model{
         //var_dump($result_data);
         //retrieve all the columns in the table
         $columns = array();
-        foreach ($query->result() as $table){
-            $query2 = $analyticsDB->query("SHOW COLUMNS FROM ".$table->Tables_in_analytics);
+        foreach ($tables as $table=>$legend){
+            $query2 = $analyticsDB->query("SHOW COLUMNS FROM ".$table);
             foreach ($query2->result() as $column){
                 array_push($columns, $column->Field);
             }
             
             //query tha data
             reset($users);
-            $query3 = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table->Tables_in_analytics." where (userid='".key($users)."') and submissiondate='".$date."' group by userid, submissiondate");
+            $query3 = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." where (userid='".key($users)."') and submissiondate='".$date."' group by userid, submissiondate");
             foreach ($query3->result() as $datas){
                 if(array_key_exists($datas->userid, $users)){
                     $data_count                  = $result_data[$date];
-                    if(array_key_exists($table->Tables_in_analytics, $table_default)){
-                        $data_count["data"][$tabindex[$table->Tables_in_analytics]][1]         += $datas->counts;
-                    }else{
-                        $data_count["data"][13][1]         += $datas->counts;
+                    if(array_key_exists($table, $table_default)){
+                        $data_count["data"][$tabindex[$table]][1]         += $datas->counts;
                     }
                     
                     $result_data[$date] = $data_count;

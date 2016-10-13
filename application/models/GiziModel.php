@@ -15,11 +15,16 @@ class GiziModel extends CI_Model{
         date_default_timezone_set("Asia/Makassar"); 
         $giziDB = $this->load->database('gizi', TRUE);
         $query  = $giziDB->query("SHOW TABLES FROM opensrp_gizi");
-        
+        $table_default = [
+            'registrasi_gizi'=>'Registrasi Gizi',
+            'kunjungan_gizi'=>'Kunjungan Gizi',
+            'close_form'=>'Close Form'];
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
-            array_push($tables, $table->Tables_in_opensrp_gizi);
+            if(array_key_exists($table->Tables_in_opensrp_gizi, $table_default)){
+                $tables[$table->Tables_in_opensrp_gizi]=$table_default[$table->Tables_in_opensrp_gizi];
+            }
         }
         
        if($kecamatan=='Sengkol'){
@@ -45,7 +50,7 @@ class GiziModel extends CI_Model{
         
         //retrieve all the columns in the table
         $columns = array();
-        foreach ($tables as $table){
+        foreach ($tables as $table=>$legend){
             $query = $giziDB->query("SHOW COLUMNS FROM ".$table);
             foreach ($query->result() as $column){
                 array_push($columns, $column->Field);
@@ -210,8 +215,9 @@ class GiziModel extends CI_Model{
         $giziDB = $this->load->database('gizi', TRUE);
         $query  = $giziDB->query("SHOW TABLES FROM opensrp_gizi");
         $table_default = [
+            'registrasi_gizi'=>'Registrasi Gizi',
             'kunjungan_gizi'=>'Kunjungan Gizi',
-            'registrasi_gizi'=>'Registrasi Gizi'];
+            'close_form'=>'Close Form'];
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
@@ -259,6 +265,93 @@ class GiziModel extends CI_Model{
                     $data_count                  = $result_data[$users[$datas->userid]];
                     $data_count[$legend]         += $datas->counts;
                     $result_data[$users[$datas->userid]] = $data_count;
+                }
+            }
+        }
+        
+        return $result_data;
+    }
+    
+    public function getCountPerFormForDrill($desa="",$date=""){
+        $giziDB = $this->load->database('gizi', TRUE);
+        $query  = $giziDB->query("SHOW TABLES FROM opensrp_gizi");
+        $table_default = [
+            'registrasi_gizi'=>'Registrasi Gizi',
+            'kunjungan_gizi'=>'Kunjungan Gizi',
+            'close_form'=>'Close Form'];
+        $tabindex = [
+            'registrasi_gizi'=>0,
+            'kunjungan_gizi'=>1,
+            'close_form'=>2];
+        //retrieve the tables name
+        $tables = array();
+        foreach ($query->result() as $table){
+            if(array_key_exists($table->Tables_in_opensrp_gizi, $table_default)){
+                $tables[$table->Tables_in_opensrp_gizi]=$table_default[$table->Tables_in_opensrp_gizi];
+            }
+        }
+        
+        if($desa=="Lekor"){
+            $users = ['gizi1'=>'Lekor'];
+        }elseif($desa=="Saba"){
+            $users = ['gizi2'=>'Saba'];
+        }elseif($desa=="Pendem"){
+            $users = ['gizi3'=>'Pendem'];
+        }elseif($desa=="Setuta"){
+            $users = ['gizi4'=>'Setuta'];
+        }elseif($desa=="Jango"){
+            $users = ['gizi5'=>'Jango'];
+        }elseif($desa=="Janapria"){
+            $users = ['gizi6'=>'Janapria'];
+        }elseif($desa=="Ketara"){
+            $users = ['gizi8'=>'Ketara'];
+        }elseif($desa=="Sengkol"){
+            $users = ['gizi9'=>'Sengkol','gizi10'=>'Sengkol'];
+        }elseif($desa=="Kawo"){
+            $users = ['gizi11'=>'Kawo'];
+        }elseif($desa=="Tanak_Awu"){
+            $users = ['gizi12'=>'Tanak Awu'];
+        }elseif($desa=="Pengembur"){
+            $users = ['gizi13'=>'Pengembur'];
+        }elseif($desa=="Segala_Anyar"){
+            $users = ['gizi14'=>'Segala Anyar'];
+        }
+        
+        //make result array from the tables name
+        $result_data = array();
+        foreach ($users as $user=>$desa){
+            $data = array();
+            $data[$date] = array();
+            foreach ($table_default as $table=>$table_name){
+                $data[$date]["name"] = $date;
+                $data[$date]["id"] = $date;
+                $data[$date]["data"] = array();
+                foreach ($table_default as $td=>$td_name){
+                    array_push($data[$date]["data"], array($td_name,0));
+                }
+            }
+            $result_data = $data;
+        }
+        
+        //retrieve all the columns in the table
+        $columns = array();
+        foreach ($tables as $table=>$legend){
+            $query2 = $giziDB->query("SHOW COLUMNS FROM ".$table);
+            foreach ($query2->result() as $column){
+                array_push($columns, $column->Field);
+            }
+            
+            //query tha data
+            reset($users);
+            $query3 = $giziDB->query("SELECT userid, DATE(clientversionsubmissiondate) as submissiondate,count(*) as counts from ".$table." where (userid='".key($users)."') and DATE(clientversionsubmissiondate)='".$date."' group by userid, DATE(clientversionsubmissiondate)");
+            foreach ($query3->result() as $datas){
+                if(array_key_exists($datas->userid, $users)){
+                    $data_count                  = $result_data[$date];
+                    if(array_key_exists($table, $table_default)){
+                        $data_count["data"][$tabindex[$table]][1]         += $datas->counts;
+                    }
+                    
+                    $result_data[$date] = $data_count;
                 }
             }
         }
