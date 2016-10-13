@@ -45,9 +45,12 @@
     </div>
 
 <script src="<?=base_url()?>assets/js/highcharts.js"></script>
+<script src="<?=base_url()?>assets/js/modules/data.js"></script>
+<script src="<?=base_url()?>assets/js/modules/drilldown.js"></script>
 <script src="<?=base_url()?>assets/js/modules/exporting.js"></script>
 <script src="<?=base_url()?>assets/js/functions.js"></script>
 <script>
+    var url = "<?=base_url()?>dataentry/getbidanByForm/";
     var json = <?=json_encode($data)?>;
     <?php 
     if(isset($mode)){
@@ -57,7 +60,7 @@
             echo '$.fn.showChartDataEntryBulan(json);';
         }
     }else{
-        echo '$.fn.showChartDataEntryTanggal(json);';
+        echo '$.fn.showChartDataEntryTanggalDrill(json,url);';
     } ?> 
     var mode = $( "select option:selected" ).attr("id");
     $( "select" ).change(function() {
