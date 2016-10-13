@@ -100,6 +100,88 @@ class GiziFhwModel extends CI_Model{
         return $result_data;
     }
     
+    public function getCountPerFormForDrill($dusun="",$date=""){
+        $dusun = implode(" ", explode('_', $dusun));
+        $giziDB = $this->load->database('gizi', TRUE);
+        $query  = $giziDB->query("SHOW TABLES FROM opensrp_gizi");
+        $table_default = [
+            'registrasi_gizi'=>'Registrasi Gizi',
+            'kunjungan_gizi'=>'Kunjungan Gizi',
+            'close_form'=>'Close Form'];
+        $tabindex = [
+            'registrasi_gizi'=>0,
+            'kunjungan_gizi'=>1,
+            'close_form'=>2];
+        //retrieve the tables name
+        $tables = array();
+        foreach ($query->result() as $table){
+            if(array_key_exists($table->Tables_in_opensrp_gizi, $table_default)){
+                $tables[$table->Tables_in_opensrp_gizi]=$table_default[$table->Tables_in_opensrp_gizi];
+            }
+        }
+        $username = $this->session->userdata('username');
+        $listdusun = $this->listdusun[$username];
+        $namadusun = array();
+        foreach ($listdusun as $x=>$n){
+            if($n==$dusun){
+                $namadusun[$x]=$dusun;
+            }
+        }
+        
+        
+        //make result array from the tables name
+        $result_data = array();
+        $data = array();
+        $data[$date] = array();
+        foreach ($table_default as $table=>$table_name){
+            $data[$date]["name"] = $date;
+            $data[$date]["id"] = $date;
+            $data[$date]["data"] = array();
+            foreach ($table_default as $td=>$td_name){
+                array_push($data[$date]["data"], array($td_name,0));
+            }
+        }
+        $result_data = $data;
+        
+        //retrieve all the columns in the table
+        $columns = array();
+        foreach ($tables as $table=>$legend){
+            $query = $giziDB->query("SHOW COLUMNS FROM ".$table);
+            foreach ($query->result() as $column){
+                array_push($columns, $column->Field);
+            }
+            
+            if($table=="registrasi_gizi"){
+                $query = $giziDB->query("SELECT userid, DATE(clientversionsubmissiondate) as submissiondate,dusun,count(*) as counts from ".$table." where (userid='$username') and DATE(clientversionsubmissiondate)='".$date."' group by dusun");
+                foreach ($query->result() as $datas){
+                    if(array_key_exists($datas->dusun, $namadusun)){
+                        $data_count                  = $result_data[$date];
+                        if(array_key_exists($table, $table_default)){
+                            $data_count["data"][$tabindex[$table]][1]         += $datas->counts;
+                        }
+                        $result_data[$date] = $data_count;
+                    }
+                }
+            }elseif($table=="kunjungan_gizi"||$table=="close_form"){
+                $query = $giziDB->query("SELECT userid, childId, DATE(clientversionsubmissiondate) as submissiondate from ".$table." where (userid='$username') and DATE(clientversionsubmissiondate)='".$date."'");
+                foreach ($query->result() as $c_data){
+                    $query2 = $giziDB->query("SELECT dusun FROM registrasi_gizi where childId='$c_data->childId'");
+                    foreach ($query2->result() as $c2_data){
+                        if(array_key_exists($c2_data->dusun, $namadusun)){
+                            $data_count                  = $result_data[$date];
+                            if(array_key_exists($table, $table_default)){
+                                $data_count["data"][$tabindex[$table]][1]         += 1;
+                            }
+                            $result_data[$date] = $data_count;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return $result_data;
+    }
+    
     public function getCountPerDay($desa="",$mode=""){
         if($mode!=""){
             return self::getCountPerMode($desa,$mode);
@@ -110,7 +192,8 @@ class GiziFhwModel extends CI_Model{
         
         $table_default = [
             'kunjungan_gizi'=>'Kunjungan Gizi',
-            'registrasi_gizi'=>'Registrasi Gizi'];
+            'registrasi_gizi'=>'Registrasi Gizi',
+            'close_form'=>'Close Form'];
         //retrieve the tables name
         
         $tables = array();
@@ -168,7 +251,7 @@ class GiziFhwModel extends CI_Model{
                         $result_data["Lainnya"] = $data_count;
                     }
                 }
-            }elseif($table=="kunjungan_gizi"){
+            }elseif($table=="kunjungan_gizi"||$table=="close_form"){
                 $query = $giziDB->query("SELECT userid, childId, DATE(clientversionsubmissiondate) as submissiondate from ".$table." where (userid='$username')");
                 foreach ($query->result() as $c_data){
                     $query2 = $giziDB->query("SELECT dusun FROM registrasi_gizi where childId='$c_data->childId'");
@@ -201,7 +284,8 @@ class GiziFhwModel extends CI_Model{
         
         $table_default = [
             'kunjungan_gizi'=>'Kunjungan Gizi',
-            'registrasi_gizi'=>'Registrasi Gizi'];
+            'registrasi_gizi'=>'Registrasi Gizi',
+            'close_form'=>'Close Form'];
         //retrieve the tables name
         
         $tables = array();
@@ -346,7 +430,7 @@ class GiziFhwModel extends CI_Model{
                         }
                     }
                 }
-            }elseif($table=="kunjungan_gizi"){
+            }elseif($table=="kunjungan_gizi"||$table=="close_form"){
                 if($mode=='Mingguan'){
                     $query = $giziDB->query("SELECT userid, childId, DATE(clientversionsubmissiondate) as submissiondate from ".$table." where (userid='$username') and (DATE(clientversionsubmissiondate) >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' and DATE(clientversionsubmissiondate) <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."')");
                 }elseif($mode=='Bulanan'){

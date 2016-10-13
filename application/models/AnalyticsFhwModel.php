@@ -187,6 +187,224 @@ class AnalyticsFhwModel extends CI_Model{
         return $result_data;
     }
     
+    public function getCountPerFormForDrill($dusun="",$date=""){
+        $dusun = implode(" ", explode('_', $dusun));
+        $analyticsDB = $this->load->database('analytics', TRUE);
+        $query  = $analyticsDB->query("SHOW TABLES FROM analytics");
+        $table_default = [
+            'kartu_ibu_registration'=>'Registrasi Ibu',
+            'kohort_kb_registration'=>'Registrasi KB',
+            'kartu_anc_registration'=>'Registrasi ANC',
+            'kartu_anc_registration_oa'=>'Registrasi ANC',
+            'kartu_anc_rencana_persalinan'=>'Rencana Persalinan',
+            'kartu_anc_visit'=>'Kunjungan ANC',
+            'kartu_pnc_regitration_oa'=>'Registrasi PNC',
+            'kartu_pnc_dokumentasi_persalinan'=>'Dokumentasi Persalinan',
+            'kartu_pnc_visit'=>'Kunjungan PNC',
+            'kohort_bayi_registration'=>'Registrasi Anak',
+            'kohort_bayi_registration_oa'=>'Registrasi Anak',
+            'kohort_bayi_neonatal_period'=>'Kunjungan Neonatal',
+            'kohort_bayi_kunjungan'=>'Kunjungan Bayi',
+            'kartu_anc_close'=>'kartu_anc_close',
+            'kartu_anc_edit'=>'kartu_anc_edit',
+            'kartu_anc_visit_edit'=>'kartu_anc_visit_edit',
+            'kartu_anc_visit_integrasi'=>'kartu_anc_visit_integrasi',
+            'kartu_anc_visit_labtest'=>'kartu_anc_visit_labtest',
+            'kartu_ibu_close'=>'kartu_ibu_close',
+            'kartu_ibu_edit'=>'kartu_ibu_edit',
+            'kartu_pnc_close'=>'kartu_pnc_close',
+            'kartu_pnc_edit'=>'kartu_pnc_edit',
+            'kohort_anak_tutup'=>'kohort_anak_tutup',
+            'kohort_bayi_edit'=>'kohort_bayi_edit',
+            'kohort_bayi_immunization'=>'kohort_bayi_immunization',
+            'kohort_kb_close'=>'kohort_kb_close',
+            'kohort_kb_edit'=>'kohort_kb_edit',
+            'kohort_kb_pelayanan'=>'kohort_kb_pelayanan',
+            'kohort_kb_update'=>'kohort_kb_update'];
+        $tabindex = [
+            'kartu_ibu_registration'=>0,
+            'kohort_kb_registration'=>1,
+            'kartu_anc_registration'=>2,
+            'kartu_anc_registration_oa'=>3,
+            'kartu_anc_rencana_persalinan'=>4,
+            'kartu_anc_visit'=>5,
+            'kartu_pnc_regitration_oa'=>6,
+            'kartu_pnc_dokumentasi_persalinan'=>7,
+            'kartu_pnc_visit'=>8,
+            'kohort_bayi_registration'=>9,
+            'kohort_bayi_registration_oa'=>10,
+            'kohort_bayi_neonatal_period'=>11,
+            'kohort_bayi_kunjungan'=>12,
+            'kartu_anc_close'=>13,
+            'kartu_anc_edit'=>14,
+            'kartu_anc_visit_edit'=>15,
+            'kartu_anc_visit_integrasi'=>16,
+            'kartu_anc_visit_labtest'=>17,
+            'kartu_ibu_close'=>18,
+            'kartu_ibu_edit'=>19,
+            'kartu_pnc_close'=>20,
+            'kartu_pnc_edit'=>21,
+            'kohort_anak_tutup'=>22,
+            'kohort_bayi_edit'=>23,
+            'kohort_bayi_immunization'=>24,
+            'kohort_kb_close'=>25,
+            'kohort_kb_edit'=>26,
+            'kohort_kb_pelayanan'=>27,
+            'kohort_kb_update'=>28];
+        //retrieve the tables name
+        $tables = array();
+        foreach ($query->result() as $table){
+            if(array_key_exists($table->Tables_in_analytics, $table_default)){
+                $tables[$table->Tables_in_analytics]=$table_default[$table->Tables_in_analytics];
+            }
+        }
+        
+        $username = $this->session->userdata('username');
+        $listdusun = $this->listdusun[$username];
+        $namadusun = array();
+        foreach ($listdusun as $x=>$n){
+            if($n==$dusun){
+                $namadusun[$x]=$dusun;
+            }
+        }
+        
+        
+        
+        //make result array from the tables name
+        $result_data = array();
+        $data = array();
+        $data[$date] = array();
+        foreach ($table_default as $table=>$table_name){
+            $data[$date]["name"] = $date;
+            $data[$date]["id"] = $date;
+            $data[$date]["data"] = array();
+            foreach ($table_default as $td=>$td_name){
+                array_push($data[$date]["data"], array($td_name,0));
+            }
+        }
+        $result_data = $data;
+        
+        
+        //retrieve all the columns in the table
+        $columns = array();
+        foreach ($tables as $table=>$legend){
+            $query2 = $analyticsDB->query("SHOW COLUMNS FROM ".$table);
+            foreach ($query2->result() as $column){
+                array_push($columns, $column->Field);
+            }
+            if($table=="kartu_ibu_registration"||$table=="kohort_kb_registration"||$table=="kartu_anc_registration_oa"||$table=="kartu_pnc_regitration_oa"||$table=="kohort_bayi_registration_oa"||$table="kartu_ibu_edit"){
+                $query = $analyticsDB->query("SELECT userid, submissiondate,dusun,count(*) as counts from ".$table." where (userid='$username') and submissiondate='".$date."' group by dusun");
+                foreach ($query->result() as $datas){
+                    if(array_key_exists($datas->dusun, $namadusun)){
+                        $data_count                  = $result_data[$date];
+                        if(array_key_exists($table, $table_default)){
+                            $data_count["data"][$tabindex[$table]][1]         += $datas->counts;
+                        }
+                        $result_data[$date] = $data_count;
+                    }
+                }
+            }elseif($table=="kartu_anc_registration"||$table=="kartu_anc_visit"||$table=="kohort_bayi_registration"||$table=="kartu_anc_close"||$table=="kartu_anc_edit"||$table=="kartu_anc_visit_edit"||$table=="kartu_anc_visit_integrasi"||$table=="kartu_anc_visit_labtest"||$table="kartu_ibu_close"||$table="kartu_pnc_close"){
+                $query = $analyticsDB->query("SELECT userid, kiId, submissiondate from ".$table." where (userid='$username') and submissiondate='".$date."'");
+                foreach ($query->result() as $c_data){
+                    $query2 = $analyticsDB->query("SELECT dusun FROM kartu_ibu_registration where kiId='$c_data->kiId'");
+                    foreach ($query2->result() as $c2_data){
+                        if(array_key_exists($c2_data->dusun, $namadusun)){
+                            $data_count                  = $result_data[$date];
+                            if(array_key_exists($table, $table_default)){
+                                $data_count["data"][$tabindex[$table]][1]         += 1;
+                            }
+                            $result_data[$date] = $data_count;
+                        }
+                    }
+                }
+            }elseif($table=="kartu_anc_rencana_persalinan"||$table=="kartu_pnc_dokumentasi_persalinan"||$table="kartu_pnc_edit"||$table="kohort_bayi_edit"){
+                $query = $analyticsDB->query("SELECT userid, motherId, submissiondate from ".$table." where (userid='$username') and submissiondate='".$date."'");
+                foreach ($query->result() as $c_data){
+                    $query2 = $analyticsDB->query("SELECT kiId FROM kartu_anc_registration where motherId='$c_data->motherId'");
+                    foreach ($query2->result() as $c2_data){
+                        $query3 = $analyticsDB->query("SELECT dusun FROM kartu_ibu_registration where kiId='$c2_data->kiId'");
+                        foreach ($query3->result() as $p_data){
+                            if(array_key_exists($p_data->dusun, $namadusun)){
+                                $data_count                  = $result_data[$date];
+                                if(array_key_exists($table, $table_default)){
+                                    $data_count["data"][$tabindex[$table]][1]         += 1;
+                                }
+                                $result_data[$date] = $data_count;
+                            }
+                        }
+                    }
+                }
+            }elseif($table=="kartu_pnc_visit"){
+                $query = $analyticsDB->query("SELECT userid, motherId, submissiondate from ".$table." where (userid='$username') and submissiondate='".$date."'");
+                foreach ($query->result() as $c_data){
+                    $query2 = $analyticsDB->query("SELECT dusun FROM kartu_anc_registration_oa where motherId='$c_data->motherId'");
+                    foreach ($query2->result() as $c2_data){
+                        if(array_key_exists($c2_data->dusun, $namadusun)){
+                            $data_count                  = $result_data[$date];
+                            if(array_key_exists($table, $table_default)){
+                                $data_count["data"][$tabindex[$table]][1]         += 1;
+                            }
+                            $result_data[$date] = $data_count;
+                        }
+                    }
+                }
+            }elseif($table=="kohort_bayi_kunjungan"){
+                $query = $analyticsDB->query("SELECT userid, childId, submissiondate from ".$table." where (userid='$username') and submissiondate='".$date."'");
+                foreach ($query->result() as $c_data){
+                    $query2 = $analyticsDB->query("SELECT dusun FROM kohort_bayi_registration_oa where childId='$c_data->childId'");
+                    foreach ($query2->result() as $c2_data){
+                        if(array_key_exists($c2_data->dusun, $namadusun)){
+                            $data_count                  = $result_data[$date];
+                            if(array_key_exists($table, $table_default)){
+                                $data_count["data"][$tabindex[$table]][1]         += 1;
+                            }
+                            $result_data[$date] = $data_count;
+                        }
+                    }
+                }
+            }elseif($table=="kohort_bayi_neonatal_period"||$table="kohort_anak_tutup"||$table="kohort_bayi_immunization"){
+                $query = $analyticsDB->query("SELECT userid, childId, submissiondate from ".$table." where (userid='$username') and submissiondate='".$date."'");
+                foreach ($query->result() as $c_data){
+                    $query2 = $analyticsDB->query("SELECT motherId FROM kartu_pnc_dokumentasi_persalinan where childId='$c_data->childId'");
+                    foreach ($query2->result() as $c2_data){
+                        $query3 = $analyticsDB->query("SELECT kiId FROM kartu_anc_registration where motherId='$c2_data->motherId'");
+                        foreach ($query3->result() as $c3_data){
+                            $query4 = $analyticsDB->query("SELECT dusun FROM kartu_ibu_registration where kiId='$c3_data->kiId'");
+                            foreach ($query4->result() as $p_data){
+                                if(array_key_exists($p_data->dusun, $namadusun)){
+                                    $data_count                  = $result_data[$date];
+                                    if(array_key_exists($table, $table_default)){
+                                        $data_count["data"][$tabindex[$table]][1]         += 1;
+                                    }
+                                    $result_data[$date] = $data_count;
+                                }
+                            }
+                        }
+                    }
+                }
+            }elseif($table=="kohort_kb_update"||$table="kohort_kb_close"||$table="kohort_kb_edit"||$table="kohort_kb_pelayanan"){
+                $query = $analyticsDB->query("SELECT userid, kiId, submissiondate from ".$table." where (userid='$username')");
+                foreach ($query->result() as $c_data){
+                    $query2 = $analyticsDB->query("SELECT dusun FROM kohort_kb_registration where kiId='$c_data->kiId'");
+                    foreach ($query2->result() as $c2_data){
+                        if(array_key_exists($c2_data->dusun, $namadusun)){
+                            $data_count                  = $result_data[$date];
+                            if(array_key_exists($table, $table_default)){
+                                $data_count["data"][$tabindex[$table]][1]         += 1;
+                            }
+                            $result_data[$date] = $data_count;
+                        }
+                    }
+                }
+            }
+            
+            
+            
+        }
+        
+        return $result_data;
+    }
+    
     public function getCountPerDay($desa="",$mode=""){
         if($mode!=""){
             return self::getCountPerMode($desa,$mode);
@@ -196,24 +414,35 @@ class AnalyticsFhwModel extends CI_Model{
         $query  = $analyticsDB->query("SHOW TABLES FROM analytics");
         
         $table_default = [
-            'kartu_ibu_registration'=>'Registrasi Ibu', //have own ``
-            'kohort_kb_registration'=>'Registrasi KB', //have own ``
-            'kartu_anc_registration'=>'Registrasi ANC', //from kir(kiId) ``
-            'kartu_anc_registration_oa'=>'Registrasi ANC', //have own ``
-            'kartu_anc_rencana_persalinan'=>'Rencana Persalinan', //from kar(motherId), kar(kiId) -> kir(kiId) ``
-            'kartu_anc_visit'=>'Kunjungan ANC', //form kir(kiId) ``
-            'kartu_pnc_regitration_oa'=>'Registrasi PNC', //have own  ``
-            'kartu_pnc_dokumentasi_persalinan'=>'Dokumentasi Persalinan', //from kar(motherId), kar(kiId) -> kir(kiId) ``
-            'kartu_pnc_visit'=>'Kunjungan PNC', //from kar_oa(motherId)
-            'kohort_bayi_registration'=>'Registrasi Anak', //form kir(kiId) ``
-            'kohort_bayi_registration_oa'=>'Registrasi Anak', //have won ``
-            'kohort_bayi_neonatal_period'=>'Kunjungan Neonatal', // from pnc_doc(childId), pnc_doc(motherId)->kar(motherId),kar(kiId) -> kir(kiId)
-            'kohort_bayi_kunjungan'=>'Kunjungan Bayi', // from kbr_oa(childId)
-            //'kartu_anc_visit_integrasi'=>'', 
-            'kartu_anc_visit_labtest'=>'', //from kar(motherId), kar(kiId)->kir(kiId)
-            'kohort_bayi_immunization'=>'', // from pnc_doc(childId), pnc_doc(motherId)->kar(motherId),kar(kiId) -> kir(kiId)
-            'kohort_kb_pelayanan'=>'', //from kir(kiId)
-            'kohort_kb_update'=>'']; //from kkr(kiId)
+            'kartu_ibu_registration'=>'Registrasi Ibu',
+            'kohort_kb_registration'=>'Registrasi KB',
+            'kartu_anc_registration'=>'Registrasi ANC',
+            'kartu_anc_registration_oa'=>'Registrasi ANC',
+            'kartu_anc_rencana_persalinan'=>'Rencana Persalinan',
+            'kartu_anc_visit'=>'Kunjungan ANC',
+            'kartu_pnc_regitration_oa'=>'Registrasi PNC',
+            'kartu_pnc_dokumentasi_persalinan'=>'Dokumentasi Persalinan',
+            'kartu_pnc_visit'=>'Kunjungan PNC',
+            'kohort_bayi_registration'=>'Registrasi Anak',
+            'kohort_bayi_registration_oa'=>'Registrasi Anak',
+            'kohort_bayi_neonatal_period'=>'Kunjungan Neonatal',
+            'kohort_bayi_kunjungan'=>'Kunjungan Bayi',
+            'kartu_anc_close'=>'kartu_anc_close',
+            'kartu_anc_edit'=>'kartu_anc_edit',
+            'kartu_anc_visit_edit'=>'kartu_anc_visit_edit',
+            'kartu_anc_visit_integrasi'=>'kartu_anc_visit_integrasi',
+            'kartu_anc_visit_labtest'=>'kartu_anc_visit_labtest',
+            'kartu_ibu_close'=>'kartu_ibu_close',
+            'kartu_ibu_edit'=>'kartu_ibu_edit',
+            'kartu_pnc_close'=>'kartu_pnc_close',
+            'kartu_pnc_edit'=>'kartu_pnc_edit',
+            'kohort_anak_tutup'=>'kohort_anak_tutup',
+            'kohort_bayi_edit'=>'kohort_bayi_edit',
+            'kohort_bayi_immunization'=>'kohort_bayi_immunization',
+            'kohort_kb_close'=>'kohort_kb_close',
+            'kohort_kb_edit'=>'kohort_kb_edit',
+            'kohort_kb_pelayanan'=>'kohort_kb_pelayanan',
+            'kohort_kb_update'=>'kohort_kb_update'];
         //retrieve the tables name
         
         $tables = array();
@@ -254,7 +483,7 @@ class AnalyticsFhwModel extends CI_Model{
                 array_push($columns, $column->Field);
             }
             
-            if($table=="kartu_ibu_registration"||$table=="kohort_kb_registration"||$table=="kartu_anc_registration_oa"||$table=="kartu_pnc_regitration_oa"||$table=="kohort_bayi_registration_oa"){
+            if($table=="kartu_ibu_registration"||$table=="kohort_kb_registration"||$table=="kartu_anc_registration_oa"||$table=="kartu_pnc_regitration_oa"||$table=="kohort_bayi_registration_oa"||$table="kartu_ibu_edit"){
                 $query = $analyticsDB->query("SELECT userid, submissiondate,dusun,count(*) as counts from ".$table." where (userid='$username') group by dusun,submissiondate");
                 foreach ($query->result() as $datas){
                     if(array_key_exists($datas->dusun, $namadusun)){
@@ -271,7 +500,7 @@ class AnalyticsFhwModel extends CI_Model{
                         $result_data["Lainnya"] = $data_count;
                     }
                 }
-            }elseif($table=="kartu_anc_registration"||$table=="kartu_anc_visit"||$table=="kohort_bayi_registration"||$table=="kohort_kb_pelayanan"){
+            }elseif($table=="kartu_anc_registration"||$table=="kartu_anc_visit"||$table=="kohort_bayi_registration"||$table=="kartu_anc_close"||$table=="kartu_anc_edit"||$table=="kartu_anc_visit_edit"||$table=="kartu_anc_visit_integrasi"||$table=="kartu_anc_visit_labtest"||$table="kartu_ibu_close"||$table="kartu_pnc_close"||$table="kohort_kb_close"||$table="kohort_kb_edit"||$table="kohort_kb_pelayanan"){
                 $query = $analyticsDB->query("SELECT userid, kiId, submissiondate from ".$table." where (userid='$username')");
                 foreach ($query->result() as $c_data){
                     $query2 = $analyticsDB->query("SELECT dusun FROM kartu_ibu_registration where kiId='$c_data->kiId'");
@@ -291,7 +520,7 @@ class AnalyticsFhwModel extends CI_Model{
                         }
                     }
                 }
-            }elseif($table=="kartu_anc_rencana_persalinan"||$table=="kartu_pnc_dokumentasi_persalinan"||$table=="kartu_anc_visit_labtest"){
+            }elseif($table=="kartu_anc_rencana_persalinan"||$table=="kartu_pnc_dokumentasi_persalinan"||$table="kartu_pnc_edit"||$table="kohort_bayi_edit"){
                 $query = $analyticsDB->query("SELECT userid, motherId, submissiondate from ".$table." where (userid='$username')");
                 foreach ($query->result() as $c_data){
                     $query2 = $analyticsDB->query("SELECT kiId FROM kartu_anc_registration where motherId='$c_data->motherId'");
@@ -354,7 +583,7 @@ class AnalyticsFhwModel extends CI_Model{
                         }
                     }
                 }
-            }elseif($table=="kohort_bayi_neonatal_period"||$table=="kohort_bayi_immunization"){
+            }elseif($table=="kohort_bayi_neonatal_period"||$table="kohort_anak_tutup"||$table="kohort_bayi_immunization"){
                 $query = $analyticsDB->query("SELECT userid, childId, submissiondate from ".$table." where (userid='$username')");
                 foreach ($query->result() as $c_data){
                     $query2 = $analyticsDB->query("SELECT motherId FROM kartu_pnc_dokumentasi_persalinan where childId='$c_data->childId'");
@@ -380,7 +609,7 @@ class AnalyticsFhwModel extends CI_Model{
                         }
                     }
                 }
-            }elseif($table=="kohort_kb_update"){
+            }elseif($table=="kohort_kb_update"||$table="kohort_kb_close"||$table="kohort_kb_edit"||$table="kohort_kb_pelayanan"){
                 $query = $analyticsDB->query("SELECT userid, kiId, submissiondate from ".$table." where (userid='$username')");
                 foreach ($query->result() as $c_data){
                     $query2 = $analyticsDB->query("SELECT dusun FROM kohort_kb_registration where kiId='$c_data->kiId'");

@@ -117,6 +117,115 @@ class VaksinatorFhwModel extends CI_Model{
         return $result_data;
     }
     
+    public function getCountPerFormForDrill($dusun="",$date=""){
+        $dusun = implode(" ", explode('_', $dusun));
+        $vaksinatorDB = $this->load->database('vaksinator', TRUE);
+        $query  = $vaksinatorDB->query("SHOW TABLES FROM opensrp_jurim");
+        $table_default = [
+            'registrasi_jurim'=>'Registrasi Vaksinator',
+            'bcg_visit'=>'Vaksinasi BCG',
+            'hb0_visit'=>'Vaksinasi HB0',
+            'hb1_visit'=>'Vaksinasi HB1',
+            'dpt_hb2_visit'=>'Vaksinasi HB2',
+            'hb3_visit'=>'Vaksinasi HB3',
+            'polio1_visit'=>'Vaksinasi POLIO 1',
+            'polio2_visit'=>'Vaksinasi POLIO 2',
+            'polio3_visit'=>'Vaksinasi POLIO 3',
+            'polio4_visit'=>'Vaksinasi POLIO 4',
+            'campak_visit'=>'Vaksinasi CAMPAK',
+            'campak_lanjutan_visit'=>'Vaksinasi CAMPAK BOOSTER',
+            'ipv_visit'=>'Vaksinasi IPV',
+            'vaksinator_edit'=>'Edit Form'];
+        $tabindex = [
+            'registrasi_jurim'=>0,
+            'bcg_visit'=>1,
+            'hb0_visit'=>2,
+            'hb1_visit'=>3,
+            'dpt_hb2_visit'=>4,
+            'hb3_visit'=>5,
+            'polio1_visit'=>6,
+            'polio2_visit'=>7,
+            'polio3_visit'=>8,
+            'polio4_visit'=>9,
+            'campak_visit'=>10,
+            'campak_lanjutan_visit'=>11,
+            'ipv_visit'=>12,
+            'vaksinator_edit'=>13];
+        //retrieve the tables name
+        $tables = array();
+        foreach ($query->result() as $table){
+            if(array_key_exists($table->Tables_in_opensrp_jurim, $table_default)){
+                $tables[$table->Tables_in_opensrp_jurim]=$table_default[$table->Tables_in_opensrp_jurim];
+            }
+        }
+        $username = $this->session->userdata('username');
+        $listdusun = $this->listdusun[$username];
+        $namadusun = array();
+        foreach ($listdusun as $x=>$n){
+            if($n==$dusun){
+                $namadusun[$x]=$dusun;
+            }
+        }
+        
+        
+        //make result array from the tables name
+        $result_data = array();
+        $data = array();
+        $data[$date] = array();
+        foreach ($table_default as $table=>$table_name){
+            $data[$date]["name"] = $date;
+            $data[$date]["id"] = $date;
+            $data[$date]["data"] = array();
+            foreach ($table_default as $td=>$td_name){
+                array_push($data[$date]["data"], array($td_name,0));
+            }
+        }
+        $result_data = $data;
+        
+        //retrieve all the columns in the table
+        $columns = array();
+        foreach ($tables as $table=>$legend){
+            $query = $vaksinatorDB->query("SHOW COLUMNS FROM ".$table);
+            foreach ($query->result() as $column){
+                array_push($columns, $column->Field);
+            }
+            
+            if($table=="registrasi_jurim"||$table=="vaksinator_edit"){
+                if($table=="registrasi_jurim") $query = $vaksinatorDB->query("SELECT userid, DATE(clientversionsubmissiondate) as submissiondate,village,dusun,count(*) as counts from ".$table." where (userid='$username') group by dusun,village");
+                else $query = $vaksinatorDB->query("SELECT userid, DATE(clientversionsubmissiondate) as submissiondate,dusun,count(*) as counts from ".$table." where (userid='$username') group by dusun");
+                foreach ($query->result() as $datas){
+                    if($datas->dusun=='-'||$datas->dusun=='') $dusun_name = $datas->village;
+                    else $dusun_name = $datas->dusun;
+                    if(array_key_exists($dusun_name, $namadusun)){
+                        $data_count                  = $result_data[$date];
+                        if(array_key_exists($table, $table_default)){
+                            $data_count["data"][$tabindex[$table]][1]         += $datas->counts;
+                        }
+                        $result_data[$date] = $data_count;
+                    }
+                }
+            }elseif($table!="registrasi_jurim"&&$table!="vaksinator_edit"){
+                $query = $vaksinatorDB->query("SELECT userid, childId, DATE(clientversionsubmissiondate) as submissiondate from ".$table." where (userid='$username')");
+                foreach ($query->result() as $c_data){
+                    $query2 = $vaksinatorDB->query("SELECT village,dusun FROM registrasi_jurim where childId='$c_data->childId'");
+                    foreach ($query2->result() as $c2_data){
+                        if($c2_data->dusun=='-'||$c2_data->dusun=='') $dusun_name = $c2_data->village;
+                        else $dusun_name = $c2_data->dusun;
+                        if(array_key_exists($dusun_name, $namadusun)){
+                            $data_count                  = $result_data[$date];
+                            if(array_key_exists($table, $table_default)){
+                                $data_count["data"][$tabindex[$table]][1]         += 1;
+                            }
+                            $result_data[$date] = $data_count;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return $result_data;
+    }
+    
     public function getCountPerDay($desa="",$mode=""){
         if($mode!=""){
             return self::getCountPerMode($desa,$mode);
