@@ -101,7 +101,7 @@ $.fn.showChartDataEntryTanggalDrill = function(data,url){
                             var chart = this,
                                 drilldowns = [],
                                 series = [];
-                            $.get(url+"dataentry/getbidanByForm/"+user+"/"+e.point.name,function(data){
+                            $.get(url+user+"/"+e.point.name,function(data){
                                 drilldowns = jQuery.parseJSON(data);
                                 series = drilldowns[e.point.name];
                                 chart.hideLoading();
@@ -109,6 +109,7 @@ $.fn.showChartDataEntryTanggalDrill = function(data,url){
                             }).fail(function(jqxhr, textStatus, error ) {
                                var err = textStatus + ", " + error;
                                 console.log( "Request Failed: " + err );
+                                console.log( "User failed: " + user + ", "+e.point.name );
                             });
                             // Show the loading label
                             chart.showLoading('Mengambil data ...');
