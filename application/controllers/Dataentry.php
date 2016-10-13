@@ -91,7 +91,12 @@ class DataEntry extends CI_Controller{
     }
     
     public function getbidanByForm($desa,$date){
-        $data = $this->AnalyticsModel->getCountPerFormForDrill($desa,$date);
+        if($this->session->userdata('level')=="fhw"){
+            $data = $this->AnalyticsFhwModel->getCountPerFormForDrill($desa,$date);
+        }else{
+            $data = $this->AnalyticsModel->getCountPerFormForDrill($desa,$date);
+        }
+        
         echo json_encode($data);
     }
     
@@ -165,7 +170,12 @@ class DataEntry extends CI_Controller{
     }
     
     public function getGiziByForm($desa,$date){
-        $data = $this->GiziModel->getCountPerFormForDrill($desa,$date);
+        if($this->session->userdata('level')=="fhw"){
+            $data = $this->GiziFhwModel->getCountPerFormForDrill($desa,$date);
+        }else{
+            $data = $this->GiziModel->getCountPerFormForDrill($desa,$date);
+        }
+        
         echo json_encode($data);
     }
     
@@ -239,7 +249,12 @@ class DataEntry extends CI_Controller{
     }
     
     public function getVaksinatorByForm($desa,$date){
-        $data = $this->VaksinatorModel->getCountPerFormForDrill($desa,$date);
+        if($this->session->userdata('level')=="fhw"){
+            $data = $this->VaksinatorFhwModel->getCountPerFormForDrill($desa,$date);
+        }else{
+            $data = $this->VaksinatorModel->getCountPerFormForDrill($desa,$date);
+        }
+        
         echo json_encode($data);
     }
 }
