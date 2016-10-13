@@ -164,6 +164,11 @@ class DataEntry extends CI_Controller{
         }
     }
     
+    public function getGiziByForm($desa,$date){
+        $data = $this->GiziModel->getCountPerFormForDrill($desa,$date);
+        echo json_encode($data);
+    }
+    
     public function vaksinator(){
         $data['kecamatan']		= $this->uri->segment(3);
         $this->load->view("header");
@@ -231,5 +236,10 @@ class DataEntry extends CI_Controller{
             }
             $this->load->view("footer");
         }
+    }
+    
+    public function getVaksinatorByForm($desa,$date){
+        $data = $this->VaksinatorModel->getCountPerFormForDrill($desa,$date);
+        echo json_encode($data);
     }
 }
