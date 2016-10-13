@@ -113,7 +113,7 @@
 </div>
 
 <script src="<?=base_url()?>assets/js/highcharts.js"></script>
-<script src="<?=base_url()?>assets/js/exporting.js"></script>
+<script src="<?=base_url()?>assets/js/modules/exporting.js"></script>
 <script src="<?=base_url()?>assets/js/functions.js"></script>
 <script>
     

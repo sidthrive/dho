@@ -50,7 +50,7 @@
 <script src="<?=base_url()?>assets/js/modules/exporting.js"></script>
 <script src="<?=base_url()?>assets/js/functions.js"></script>
 <script>
-    var url = "<?=base_url()?>";
+    var url = "<?=base_url()?>dataentry/getbidanByForm/";
     var json = <?=json_encode($data)?>;
     <?php 
     if(isset($mode)){
