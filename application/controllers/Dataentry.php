@@ -99,6 +99,11 @@ class DataEntry extends CI_Controller{
         
         echo json_encode($data);
     }
+    public function getfhwbidanByForm($desa,$date){
+        $listdesa = ['user1'=>'Lekor','user2'=>'Saba','user3'=>'Pendem','user4'=>'Setuta','user5'=>'Jango','user6'=>'Janapria','user8'=>'Ketara','user9'=>'Sengkol','user10'=>'Sengkol','user11'=>'Kawo','user12'=>'Tanak Awu','user13'=>'Pengembur','user14'=>'Segala Anyar'];
+        $data = $this->AnalyticsFhwModel->getCountPerFormForDrill($desa,$date);
+        echo json_encode($data);
+    }
     
     public function gizi(){
         $data['kecamatan']		= $this->uri->segment(3);
@@ -178,6 +183,11 @@ class DataEntry extends CI_Controller{
         
         echo json_encode($data);
     }
+    public function getFhwGiziByForm($desa,$date){
+        $listdesa = ['gizi1'=>'Lekor','gizi2'=>'Saba','gizi3'=>'Pendem','gizi4'=>'Setuta','gizi5'=>'Jango','gizi6'=>'Janapria','gizi8'=>'Ketara','gizi9'=>'Sengkol','gizi10'=>'Sengkol','gizi11'=>'Kawo','gizi12'=>'Tanak Awu','gizi13'=>'Pengembur','gizi14'=>'Segala Anyar'];
+        $data = $this->GiziFhwModel->getCountPerFormForDrill($desa,$date);
+        echo json_encode($data);
+    }
     
     public function vaksinator(){
         $data['kecamatan']		= $this->uri->segment(3);
@@ -255,6 +265,12 @@ class DataEntry extends CI_Controller{
             $data = $this->VaksinatorModel->getCountPerFormForDrill($desa,$date);
         }
         
+        echo json_encode($data);
+    }
+    
+    public function getFhwVaksinatorByForm($desa,$date){
+        $listdesa = ['vaksinator1'=>'Lekor','vaksinator2'=>'Saba','vaksinator3'=>'Pendem','vaksinator4'=>'Setuta','vaksinator5'=>'Jango','vaksinator6'=>'Janapria','vaksinator8'=>'Ketara','vaksinator9'=>'Sengkol','vaksinator10'=>'Sengkol','vaksinator11'=>'Kawo','vaksinator12'=>'Tanak Awu','vaksinator13'=>'Pengembur','vaksinator14'=>'Segala Anyar'];
+        $data = $this->VaksinatorFhwModel->getCountPerFormForDrill($desa,$date);
         echo json_encode($data);
     }
 }
