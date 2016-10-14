@@ -6,7 +6,13 @@
     }else{
         $opt = "Tanggal";
     }
-    
+    $a = $this->uri->segment(4);
+    if($a!="Mingguan"&&$a!="Bulanan"&&$a!=null){
+        $url = "dataentry/getFhwGiziByForm/";
+    }
+    else {
+        $url = "dataentry/getGiziByForm/";
+    }
 ?>    
     <div id="content">
         <div id="text">
@@ -50,7 +56,7 @@
 <script src="<?=base_url()?>assets/js/modules/exporting.js"></script>
 <script src="<?=base_url()?>assets/js/functions.js"></script>
 <script>
-    var url = "<?=base_url()?>dataentry/getGiziByForm/";
+    var url = "<?=base_url().$url?>";
     var json = <?=json_encode($data)?>;
     <?php 
     if(isset($mode)){

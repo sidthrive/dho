@@ -6,6 +6,13 @@
     }else{
         $opt = "Tanggal";
     }
+    $a = $this->uri->segment(4);
+    if($a!="Mingguan"&&$a!="Bulanan"&&$a!=null){
+        $url = "dataentry/getFhwVaksinatorByForm/";
+    }
+    else {
+        $url = "dataentry/getVaksinatorByForm/";
+    }
     
 ?>    
     <div id="content">
@@ -50,7 +57,7 @@
 <script src="<?=base_url()?>assets/js/modules/exporting.js"></script>
 <script src="<?=base_url()?>assets/js/functions.js"></script>
 <script>
-    var url = "<?=base_url()?>dataentry/getVaksinatorByForm/";
+    var url = "<?=base_url().$url?>";
     var json = <?=json_encode($data)?>;
     <?php 
     if(isset($mode)){
