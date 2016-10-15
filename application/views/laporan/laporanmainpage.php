@@ -1,4 +1,5 @@
-<div id="container" style="padding-left: 280px;line-height: 28px;">
+<div id="content">
+<div id="container">
     <h1>LAPORAN</h1>
     <br/>
     <ul>

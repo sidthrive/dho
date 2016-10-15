@@ -9,7 +9,7 @@
         ?>
         <h1><?=$p->post_title?></h1>
         <br><br>
-        <div id="content">
+        <div>
             <?=$p->post_content?>
         </div>
         <br><br>
@@ -17,4 +17,5 @@
         }?>
     </div>
     <center><ul class="pagination"><?php echo $pagi; ?></ul></center>
+</div>
 </div>

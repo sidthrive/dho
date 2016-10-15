@@ -19,6 +19,8 @@ additional bootstrap import for sidebar collapse style
 <script src="<?php echo base_url() ?>assets/js/jquery-ui/jquery-ui.min.js"></script>
 <link rel="stylesheet" href='<?php echo base_url() ?>assets/js/jquery-ui/jquery-ui.css' />
 <link href="<?php echo base_url() ?>assets/default.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" href="<?php echo base_url() ?>assets/css/mobile.css" media="only screen and (max-device-width:1024px)"/>
+<script src="<?php echo base_url() ?>assets/js/mobile.js"></script>
 
 </head>
 <body>
@@ -26,7 +28,7 @@ additional bootstrap import for sidebar collapse style
     <div id="header-wrapper">
         <div id="header" class="container">
             <div id="log_stat">
-                <p style="font-size: 10px;text-align: right;">| <?php echo $_SESSION['username'];?> | <a href="<?= site_url('welcome/logout') ?>" rel="nofollow">Logout</a> |</p>
+                <p style="text-align: right;">| <?php echo $_SESSION['username'];?> | <a href="<?= site_url('welcome/logout') ?>" rel="nofollow">Logout</a> |</p>
             </div>
             <div id="logo">
                 <img src="<?php echo base_url() ?>assets/images/logo_loteng.gif" alt="" align="left" style="padding-right: 10px;"/>

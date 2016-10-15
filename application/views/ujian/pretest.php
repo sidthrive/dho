@@ -14,7 +14,7 @@
                 </tr>
                 <tr>
                     <td></td>
-                    <td style="width: 60px"><input value="a" type="radio" name="<?=$s->id?>"/> &nbsp;A. </td>
+                    <td style="width: 80px"><input value="a" type="radio" name="<?=$s->id?>"/> <span>&nbsp;A.</span></td>
                     <td><?=$s->pilihan_a?></td>
                 </tr>
                 <tr>

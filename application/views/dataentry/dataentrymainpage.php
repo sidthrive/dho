@@ -1,4 +1,5 @@
-<div id="container" style="padding-left:280px;">
+<div id="content">
+    <div id="container">
     <h1>DATA ENTRY</h1>
     <br/>
     <br/>

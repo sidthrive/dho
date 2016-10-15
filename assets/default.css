@@ -138,6 +138,7 @@ hr {
 #log_stat {
     padding: 20px 0px 0px 0px;
     float: right;
+    font-size: 12pt;
 }
 
 #log_stat p {
@@ -222,10 +223,18 @@ hr {
 
 /** SIDEBAR 1 */
 
+#mini-submenu {
+    display: none;
+}
+
 #sidebar1 {
     float: left;
     width: 250px;
     margin-right: 50px;
+}
+
+#sidebar1 span i{
+    display: none;
 }
 
 #sidebar1 #box1 {

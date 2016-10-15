@@ -1,6 +1,13 @@
 <div id="page" class="container">
+    <div id="mini-submenu">
+        <div>
+            <i class="glyphicon glyphicon-play"></i>
+        </div>
+    </div>
     <div id="sidebar1">
-        <h2>Menu Laporan</h2>
+        <h2>Menu Laporan<span class="pull-right" id="slide-submenu">
+                <i class="glyphicon glyphicon-remove-sign"></i>
+            </span></h2>
         <div class="panel-group" id="accordion">
             <?php if($this->session->userdata('tipe')=="bidan"||$this->session->userdata('tipe')=="all"){ ?>
             <div class="panel panel-default" id="bidans">
