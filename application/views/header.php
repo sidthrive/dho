@@ -20,6 +20,7 @@ additional bootstrap import for sidebar collapse style
 <link rel="stylesheet" href='<?php echo base_url() ?>assets/js/jquery-ui/jquery-ui.css' />
 <link href="<?php echo base_url() ?>assets/default.css" rel="stylesheet" type="text/css"/>
 <link rel="stylesheet" href="<?php echo base_url() ?>assets/css/mobile.css" media="only screen and (max-device-width:1024px)"/>
+<link rel="stylesheet" href="<?php echo base_url() ?>assets/css/m640.css" media="only screen and (max-device-width:640px)"/>
 <script src="<?php echo base_url() ?>assets/js/mobile.js"></script>
 
 </head>
@@ -43,7 +44,7 @@ additional bootstrap import for sidebar collapse style
         </div>
         <div id="menu" class="container">
             <nav>
-                <ul class="nav nav-justified">
+                <ul id="dekstop" class="nav nav-justified">
                     <li<?=$this->uri->segment(1)=='welcome'?' class="current_page_item"':''?>><a href="<?php echo site_url() ?>welcome" accesskey="1" title="">Homepage</a></li>
                     <?php if($this->session->userdata('level')=="master"||$this->session->userdata('level')=="super"){?>
                     <li<?=$this->uri->segment(1)=='berita'?' class="current_page_item"':''?>><a href="<?php echo site_url() ?>berita/post" accesskey="5" title="">Berita</a></li>
@@ -51,6 +52,16 @@ additional bootstrap import for sidebar collapse style
                     <li<?=$this->uri->segment(1)=='dataentry'?' class="current_page_item"':''?>><a href="<?php echo site_url() ?>dataentry" accesskey="5" title="">Rekapitulasi Data Entry</a></li>
                     <li<?=$this->uri->segment(1)=='laporan'?' class="current_page_item"':''?>><a href="<?php echo site_url() ?>laporan" accesskey="5" title="">Laporan</a></li>
                     <li<?=$this->uri->segment(1)=='hhhscore'?' class="current_page_item"':''?>><a href="<?php echo site_url() ?>hhhscore" accesskey="5" title="">HHH Score</a></li>
+                    <?php }?>
+                </ul>
+                <ul id="m640" class="navi">
+                    <li<?=$this->uri->segment(1)=='welcome'?' class="current_page_item"':''?>><a href="<?php echo site_url() ?>welcome" accesskey="1" title=""><i class="glyphicon glyphicon-home"></i></a></li>
+                    <?php if($this->session->userdata('level')=="master"||$this->session->userdata('level')=="super"){?>
+                    <li<?=$this->uri->segment(1)=='berita'?' class="current_page_item"':''?>><a href="<?php echo site_url() ?>berita/post" accesskey="5" title="">Berita</a></li>
+                    <?php }if($this->session->userdata('level')!="master"){?>
+                    <li<?=$this->uri->segment(1)=='dataentry'?' class="current_page_item"':''?>><a href="<?php echo site_url() ?>dataentry" accesskey="5" title=""><i class="glyphicon glyphicon-signal"></i></a></li>
+                    <li<?=$this->uri->segment(1)=='laporan'?' class="current_page_item"':''?>><a href="<?php echo site_url() ?>laporan" accesskey="5" title=""><i class="glyphicon glyphicon-file"></i></a></li>
+                    <li<?=$this->uri->segment(1)=='hhhscore'?' class="current_page_item"':''?>><a href="<?php echo site_url() ?>hhhscore" accesskey="5" title=""><i class="glyphicon glyphicon-list-alt"></i></a></li>
                     <?php }?>
                 </ul>
             </nav>

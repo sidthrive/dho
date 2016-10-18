@@ -91,6 +91,10 @@ hr {
     height: auto;
 }
 
+#m640 {
+    display: none;
+}
+
 /** LOGO */
 
 #logo {
