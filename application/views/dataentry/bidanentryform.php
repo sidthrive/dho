@@ -2,7 +2,21 @@
         <div id="text" style="text-align: center;">
             <h3>Total Entri tiap Form</h3>
             <h3>Puskesmas <?=$kecamatan?></h3>
-        </div>
+        </div><br><br>
+        <div>
+            <form class="form" action="<?php echo site_url()."dataentry/bidanbyform/".$kecamatan?>" method="get">
+                <label class="col-sm-2 control-label">Periode: </label>
+                <input type="date" name="start" class="form-control-static" value="<?=$start?>"/>
+                <input type="date" name="end" class="form-control-static" value="<?=$end?>"/>
+                <button class="form-control-static">GO</button>
+            </form>
+            <form class="form" action="<?php echo site_url()."dataentry/downloadbidanbyform/".$kecamatan?>" method="post">
+                <input type="hidden" name="start" class="form-control-static" value="<?=$start?>"/>
+                <input type="hidden" name="end" class="form-control-static" value="<?=$end?>"/>
+                <input type="hidden" name="old" class="form-control-static" value="<?=$this->input->get('old')==null?"no":"yes"?>"/>
+                <button class="form-control-static" style="float: right">DOWNLOAD</button>
+            </form>
+        </div><br><br>
         <div id="container">
             <!--
                 graphic container
