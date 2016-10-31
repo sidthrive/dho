@@ -25,6 +25,7 @@ class Welcome extends CI_Controller {
  
             if(empty($this->session->userdata('id_user'))&&$this->session->userdata('admin_valid') == FALSE) {
                 $this->session->set_flashdata('flash_data', 'You don\'t have access!');
+                $this->session->set_flashdata('url', $this->uri->uri_string);
                 redirect('login');
             }
             

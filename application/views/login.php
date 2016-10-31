@@ -120,6 +120,7 @@
         <input type="text" name="username" />
         <label for="password">Password</label>
         <input type="password" name="password" />
+        <input type="hidden" name="url" value="<?=$this->session->flashdata('url')?>"/>
         <button type="submit">Login</button>
     </form>
     </div>
