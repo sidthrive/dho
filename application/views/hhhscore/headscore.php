@@ -6,18 +6,11 @@
     </div>
     <div id="isi" style="text-align:justified; width:91%; line-height: 30px;">
         <ul>
-            <li>Ujian Standarisasi Bidan ini akan dilakukan dengan pengulangan sebanyak 1 kali.</li>
-            <li>Setiap Ujian terdiri dari 30 soal dengan waktu 30 menit.</li>
-            <li>Sebelum mengambil ujian, disaarankan untuk melaksanakan pre-test terlebih dahulu dengan 
-                meng-klik link berikut : <a href="<?=base_url()."sertifikasi/do_ujian/".$token."/pre-test"?>" style="color: blue">Ambil Pre-test</a></li>
-            <li>Jika sudah yakin untuk mengambil ujian, silahkan klik link berikut : 
-                <a href="<?=base_url()."sertifikasi/do_ujian/".$token."/do"?>" style="color: blue">Ambil Ujian Standarisasi</a></li>
+            <li>Untuk mengambil ujian, anda dapat mengklik link dibawah ini (Jika link tidak muncul, harap menghubungi admin)</li>
+            <li>Link Ujian : <?=empty($jadwal)?"<span style='color:red'>Tidak ada jadwal ujian</span>":"<a href='".base_url()."hhhscore/headscore/do/".$jadwal->token."' style='color: blue'>Ambil Ujian</a>"?></li>
             <li>Untuk melihat hasil ujian anda, silahkan klik link berikut : 
                 <a href="<?=base_url()."hhhscore/headscore/hasil"?>" style="color: blue">Hasil Ujian</a></li>
         </ul>
-        <p style="color: red; padding-left: 25px;">
-            Catatan : Setelah link ujian diklik, waktu secara otomatis akan berjalan dan tidak bisa dihentikan.
-            Maka pastikan Anda menyediakan waktu khusus sekitar 30 Menit untuk mengambil ujian standarisasi ini.</p>
     </div>
     <br/>
     <br/>

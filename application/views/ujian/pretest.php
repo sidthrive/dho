@@ -14,28 +14,30 @@
                 </tr>
                 <tr>
                     <td></td>
-                    <td style="width: 80px"><input value="a" type="radio" name="<?=$s->id?>"/> <span>&nbsp;A.</span></td>
+                    <td style="width: 80px"><input value="a" type="radio" name="<?=$s->id?>" <?=($s->jawaban=='a')?'class="jawaban"':""?>/> <span>&nbsp;A.</span></td>
                     <td><?=$s->pilihan_a?></td>
                 </tr>
                 <tr>
                     <td></td>
-                    <td><input value="b" type="radio" name="<?=$s->id?>"/>&nbsp; B. </td>
+                    <td><input value="b" type="radio" name="<?=$s->id?>" <?=($s->jawaban=='b')?'class="jawaban"':""?>/>&nbsp; B. </td>
                     <td><?=$s->pilihan_b?></td>
                 </tr>
+                <?php if($s->pilihan_c!=""){ ?>
                 <tr>
                     <td></td>
-                    <td><input value="c" type="radio" name="<?=$s->id?>"/>&nbsp; C. </td>
+                    <td><input value="c" type="radio" name="<?=$s->id?>" <?=($s->jawaban=='c')?'class="jawaban"':""?>/>&nbsp; C. </td>
                     <td><?=$s->pilihan_c?></td>
                 </tr>
+                <?php } if($s->pilihan_d!=""){ ?>
                 <tr>
                     <td></td>
-                    <td><input value="d" type="radio" name="<?=$s->id?>"/>&nbsp; D. </td>
+                    <td><input value="d" type="radio" name="<?=$s->id?>" <?=($s->jawaban=='d')?'class="jawaban"':""?>/>&nbsp; D. </td>
                     <td><?=$s->pilihan_d?></td>
                 </tr>
-                <?php if($s->pilihan_e!=""){ ?>
+                <?php } if($s->pilihan_e!=""){ ?>
                 <tr>
                     <td></td>
-                    <td><input value="e" type="radio" name="<?=$s->id?>"/>&nbsp; E. </td>
+                    <td><input value="e" type="radio" name="<?=$s->id?>" <?=($s->jawaban=='e')?'class="jawaban"':""?>/>&nbsp; E. </td>
                     <td><?=$s->pilihan_e?></td>
                 </tr>
                 <?php } ?>
@@ -51,11 +53,22 @@
 </div>
 
 <script>
-$('#timer').countdown(moment().add(10, 'minutes').format("YYYY/MM/DD HH:mm:ss"))
+var no = <?=$no_soal-1?>;
+$('#timer').countdown(moment().add(3, 'minutes').format("YYYY/MM/DD HH:mm:ss"))
   .on('update.countdown', function(event) {
     var format = '%H:%M:%S';
    $(this).html(event.strftime(format));
  })
  .on('finish.countdown', function(event) {
+     alert("Waktu anda habis!");
+     var salah = no-$(".jawaban:checked").length;
+     if(salah!=0) alert(salah+" jawaban masih salah");
+     else $("form")[0].submit();
+ });
+ $("form").submit(function(event){
+     event.preventDefault();
+     var salah = no-$(".jawaban:checked").length;
+     if(salah!=0) alert(salah+" jawaban masih salah");
+     else $("form")[0].submit();
  });
 </script>
