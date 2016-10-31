@@ -47,6 +47,7 @@ additional bootstrap import for sidebar collapse style
                 <ul id="dekstop" class="nav nav-justified">
                     <li<?=$this->uri->segment(1)=='welcome'?' class="current_page_item"':''?>><a href="<?php echo site_url() ?>welcome" accesskey="1" title="">Homepage</a></li>
                     <?php if($this->session->userdata('level')=="master"||$this->session->userdata('level')=="super"){?>
+                    <li<?=$this->uri->segment(1)=='ujian'?' class="current_page_item"':''?>><a href="<?php echo site_url() ?>ujian" accesskey="5" title="">Ujian</a></li>
                     <li<?=$this->uri->segment(1)=='berita'?' class="current_page_item"':''?>><a href="<?php echo site_url() ?>berita/post" accesskey="5" title="">Berita</a></li>
                     <?php }if($this->session->userdata('level')!="master"){?>
                     <li<?=$this->uri->segment(1)=='dataentry'?' class="current_page_item"':''?>><a href="<?php echo site_url() ?>dataentry" accesskey="5" title="">Rekapitulasi Data Entry</a></li>
