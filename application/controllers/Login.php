@@ -29,7 +29,8 @@ class Login extends CI_Controller
                 ];
  
                 $this->session->set_userdata($data);
-                $this->db->query("UPDATE users SET last_login=current_timestamp WHERE username = '".$result->id_user."'");
+                $this->db->query("UPDATE users SET last_login=current_timestamp WHERE id_user = '".$result->id_user."'");
+                $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
                 redirect('welcome');
             } else {
                 $this->session->set_flashdata('flash_data', 'Username or password is wrong!');

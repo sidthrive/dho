@@ -39,6 +39,7 @@ class Welcome extends CI_Controller {
         
         public function logout() {
             $this->session->sess_destroy();
+            $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
             redirect('login');
         }
         
@@ -86,5 +87,6 @@ class Welcome extends CI_Controller {
             $this->load->view('welcome_message');
             $this->load->view('berita/newslist',$data);
             $this->load->view('footer');
+            $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
         }
 }

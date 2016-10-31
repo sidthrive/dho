@@ -14,6 +14,7 @@ class Laporan extends CI_Controller{
         $this->load->view('laporan/laporansidebar');
         $this->load->view('laporan/laporanmainpage');
         $this->load->view('footer');
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function cakupanIndikatorPWS(){
@@ -39,6 +40,7 @@ class Laporan extends CI_Controller{
         $this->load->view("laporan/laporansidebar");
         $this->load->view("laporan/pws",$dataXLS,false);
         $this->load->view("footer");
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function downloadBidanPWS(){
@@ -51,6 +53,7 @@ class Laporan extends CI_Controller{
         }
         
         $this->load->view("footer");
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function cakupanGizi(){
@@ -69,6 +72,7 @@ class Laporan extends CI_Controller{
         $this->load->view("laporan/laporansidebar");
         $this->load->view("laporan/statusgizi",$dataXLS, false);
         $this->load->view("footer");
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function downloadGiziPWS(){
@@ -76,6 +80,7 @@ class Laporan extends CI_Controller{
         $this->load->view("laporan/laporansidebar");
         $this->load->view("laporan/downloadpwsgizi");
         $this->load->view("footer");
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function downloadpwsgizi(){
@@ -84,6 +89,7 @@ class Laporan extends CI_Controller{
         $month  = $this->input->post('month');
         $this->load->model('GiziPwsModel');
         $this->GiziPwsModel->pwsBulanIni($month,$year,$kecamatan);
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function cakupanpwsvaksinator(){
@@ -111,6 +117,7 @@ class Laporan extends CI_Controller{
         $this->load->view("laporan/laporansidebar");
         $this->load->view("laporan/cakupanpwsvaksinator",$dataXLS, false);
         $this->load->view("footer");
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function downloadvaksinatorPWS(){
@@ -118,6 +125,7 @@ class Laporan extends CI_Controller{
         $this->load->view("laporan/laporansidebar");
         $this->load->view("laporan/downloadpwsjurim");
         $this->load->view("footer");
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function downloadpwsvaksinator(){
@@ -127,6 +135,7 @@ class Laporan extends CI_Controller{
         $form  = $this->input->post('form');
         $this->load->model('VaksinatorPwsModel');
         $this->VaksinatorPwsModel->pwsBulanIni($month,$year,$kecamatan,$form);
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function download(){
@@ -188,6 +197,7 @@ class Laporan extends CI_Controller{
                 $this->BidanPwsModel->p4k($kec,$year,$month,$form);
             }
         }
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     private function download_fhw($year,$month,$form){
@@ -239,5 +249,6 @@ class Laporan extends CI_Controller{
         }elseif($form=="p4k"){
             $this->PWSFhwModel->p4k($user,$year,$month,$form);
         }
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
 }

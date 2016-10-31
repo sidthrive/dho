@@ -18,6 +18,7 @@ class Berita extends CI_Controller{
         }else{
             redirect("berita/post");
         } 
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function post($mode="",$id="",$jenis=""){
@@ -48,6 +49,7 @@ class Berita extends CI_Controller{
             }
             $this->load->view('footer');
         } 
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function setPost(){
@@ -75,6 +77,7 @@ class Berita extends CI_Controller{
                 redirect('berita/post');
             }
         }
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function show(){
@@ -84,5 +87,6 @@ class Berita extends CI_Controller{
         $this->load->view('sidebar_lounge');
         $this->load->view('berita/newsview',$data);
         $this->load->view('footer');
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
      }
 }

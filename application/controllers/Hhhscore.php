@@ -16,6 +16,7 @@ class HHHScore extends CI_Controller{
         $this->load->view('hhhscore/hhhsidebar');
         $this->load->view('hhhscore/standarisasimainpage');
         $this->load->view('footer');
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     public function headscore(){
         $UjianDB = $this->load->database('ujian', TRUE);
@@ -35,7 +36,7 @@ class HHHScore extends CI_Controller{
                 $data['hasil'] = $this->UjianModel->getHasil($id);
                 $this->load->view('ujian/hasillist',$data);
                 $this->load->view('footer');
-            }else{
+            }elseif($data['mode']=='do'){
                 $data['id_user'] = $UjianDB->query("SELECT id FROM user WHERE username='".$this->session->userdata('username')."'")->row()->id;
                 $data['jadwal'] = $UjianDB->query("SELECT * FROM tes WHERE id_user='".$data['id_user']."' AND id_jenis=3 AND aktif='yes'")->row();
                 if(empty($data['jadwal'])){
@@ -49,6 +50,13 @@ class HHHScore extends CI_Controller{
                         $data['token'] = $data['jadwal']->token;
                     }
                 }
+                $this->load->view('header');
+                $this->load->view('hhhscore/hhhsidebar');
+                $this->load->view('hhhscore/do_headscore',$data);
+                $this->load->view('footer');
+            }else{
+                $data['id_user'] = $UjianDB->query("SELECT id FROM user WHERE username='".$this->session->userdata('username')."'")->row()->id;
+                $data['jadwal'] = $UjianDB->query("SELECT * FROM tes WHERE id_user='".$data['id_user']."' AND id_jenis=3 AND aktif='yes'")->row();
                 $this->load->view('header');
                 $this->load->view('hhhscore/hhhsidebar');
                 $this->load->view('hhhscore/headscore',$data);
@@ -84,7 +92,7 @@ class HHHScore extends CI_Controller{
             }
             $this->load->view('footer');
         }
-        
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     public function bidanTrimester1(){
         if($this->input->get('b')==null){
@@ -104,6 +112,7 @@ class HHHScore extends CI_Controller{
         $this->load->view("hhhscore/hhhsidebar");
         $this->load->view("hhhscore/trimester1",$dataXLS,false);
         $this->load->view("footer");
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     public function bidanTrimester2(){
         if($this->input->get('b')==null){
@@ -123,6 +132,7 @@ class HHHScore extends CI_Controller{
         $this->load->view("hhhscore/hhhsidebar");
         $this->load->view("hhhscore/trimester2",$dataXLS,false);
         $this->load->view("footer");
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     public function bidanTrimester3(){
         if($this->input->get('b')==null){
@@ -142,6 +152,7 @@ class HHHScore extends CI_Controller{
         $this->load->view("hhhscore/hhhsidebar");
         $this->load->view("hhhscore/trimester3",$dataXLS,false);
         $this->load->view("footer");
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     public function standar(){
         if($this->input->get('b')==null){
@@ -161,6 +172,7 @@ class HHHScore extends CI_Controller{
         $this->load->view('hhhscore/hhhsidebar');
         $this->load->view('hhhscore/standar',$dataXLS);
         $this->load->view('footer');
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     public function heartscore(){
         if($this->input->get('b')==null){
@@ -180,6 +192,7 @@ class HHHScore extends CI_Controller{
         $this->load->view('hhhscore/hhhsidebar');
         $this->load->view('hhhscore/heartscore',$dataXLS);
         $this->load->view('footer');
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
 }

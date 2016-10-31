@@ -27,6 +27,7 @@ class DataEntry extends CI_Controller{
             $this->load->view('dataentry/dataentrymainpage');
             $this->load->view('footer');
         }
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function bidanByForm(){
@@ -39,9 +40,17 @@ class DataEntry extends CI_Controller{
             $this->load->view("dataentry/fhw/bidanentryform",$data);
             $this->load->view("footer");
         }else{
-            $data['desa']		= str_replace('%20', ' ', $this->uri->segment(4));
             $data['kecamatan']		= $this->uri->segment(3);
-            $data['data']               = $this->AnalyticsModel->getCountPerForm($data['kecamatan']);
+            $data['desa']		= str_replace('%20', ' ', $this->uri->segment(4));
+            if($this->input->get('start')==null&&$data['desa']==""){
+                $now = date("Y-m-d");
+                redirect("dataentry/bidanbyform/".$data['kecamatan']."?start=2015-05-01&end=$now");
+            }else{
+                $data['start'] = $this->input->get('start');
+                $data['end'] = $this->input->get('end');
+                $old_data = $this->input->get('old');
+            }
+            $data['data']               = $this->AnalyticsModel->getCountPerForm($data['kecamatan'],$data['start'],$data['end'],$old_data);
             $this->load->view("header");
             $this->load->view("dataentry/dataentrysidebar",$data);
             if($data['desa']==""){
@@ -54,7 +63,27 @@ class DataEntry extends CI_Controller{
             $this->load->view("footer");
             
         }
-        
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
+    }
+    
+    public function downloadbidanByForm(){
+        if($this->session->userdata('level')=="fhw"){
+            $listdesa = ['user1'=>'Lekor','user2'=>'Saba','user3'=>'Pendem','user4'=>'Setuta','user5'=>'Jango','user6'=>'Janapria','user8'=>'Ketara','user9'=>'Sengkol','user10'=>'Sengkol','user11'=>'Kawo','user12'=>'Tanak Awu','user13'=>'Pengembur','user14'=>'Segala Anyar'];
+            $data['desa']		= $listdesa[$this->session->userdata('username')];
+            $data['data']                   = $this->AnalyticsFhwModel->getCountPerForm();
+            $this->load->view("header");
+            $this->load->view("dataentry/fhw/dataentrysidebar");
+            $this->load->view("dataentry/fhw/bidanentryform",$data);
+            $this->load->view("footer");
+        }else{
+            $data['start'] = $this->input->post('start');
+            $data['end'] = $this->input->post('end');
+            $old_data = $this->input->post('old');
+            $data['kecamatan']		= $this->uri->segment(3);
+            $data['desa']		= str_replace('%20', ' ', $this->uri->segment(4));
+            $data['data']               = $this->AnalyticsModel->downloadCountPerForm($data['kecamatan'],$data['start'],$data['end'],$old_data);
+        }
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function bidanByTanggal(){
@@ -88,6 +117,7 @@ class DataEntry extends CI_Controller{
             }
             $this->load->view("footer");
         }
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function getbidanByForm($desa,$date){
@@ -111,6 +141,7 @@ class DataEntry extends CI_Controller{
         $this->load->view("dataentry/dataentrysidebar");
         $this->load->view("dataentry/gizi",$data);
         $this->load->view("footer");
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function giziByForm(){
@@ -123,9 +154,16 @@ class DataEntry extends CI_Controller{
             $this->load->view("dataentry/fhw/gizientryform",$data);
             $this->load->view("footer");
         }else{
-            $data['desa']		= str_replace('%20', ' ', $this->uri->segment(4));
             $data['kecamatan']		= $this->uri->segment(3);
-            $data['data']               = $this->GiziModel->getCountPerForm($data['kecamatan']);
+            $data['desa']		= str_replace('%20', ' ', $this->uri->segment(4));
+            if($this->input->get('start')==null&&$data['desa']==""){
+                $now = date("Y-m-d");
+                redirect("dataentry/gizibyform/".$data['kecamatan']."?start=2016-06-01&end=$now");
+            }else{
+                $data['start'] = $this->input->get('start');
+                $data['end'] = $this->input->get('end');
+            }
+            $data['data']               = $this->GiziModel->getCountPerForm($data['kecamatan'],$data['start'],$data['end']);
             $this->load->view("header");
             $this->load->view("dataentry/dataentrysidebar",$data);
             if($data['desa']==""){
@@ -138,7 +176,7 @@ class DataEntry extends CI_Controller{
             $this->load->view("footer");
             
         }
-        
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function giziByTanggal(){
@@ -172,6 +210,7 @@ class DataEntry extends CI_Controller{
             }
             $this->load->view("footer");
         }
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function getGiziByForm($desa,$date){
@@ -195,6 +234,7 @@ class DataEntry extends CI_Controller{
         $this->load->view("dataentry/dataentrysidebar");
         $this->load->view("dataentry/jurim",$data);
         $this->load->view("footer");
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function vaksinatorByForm(){
@@ -207,21 +247,29 @@ class DataEntry extends CI_Controller{
             $this->load->view("dataentry/fhw/bidanentryform",$data);
             $this->load->view("footer");
         }else{
-            $data['desa']		= str_replace('%20', ' ', $this->uri->segment(4));
             $data['kecamatan']		= $this->uri->segment(3);
-            $data['data']               = $this->VaksinatorModel->getCountPerForm($data['kecamatan']);
+            $data['desa']		= str_replace('%20', ' ', $this->uri->segment(4));
+            if($this->input->get('start')==null&&$data['desa']==""){
+                $now = date("Y-m-d");
+                redirect("dataentry/vaksinatorbyform/".$data['kecamatan']."?start=2016-06-01&end=$now");
+            }else{
+                $data['start'] = $this->input->get('start');
+                $data['end'] = $this->input->get('end');
+            }
+            $data['data']               = $this->VaksinatorModel->getCountPerForm($data['kecamatan'],$data['start'],$data['end']);
             $this->load->view("header");
             $this->load->view("dataentry/dataentrysidebar",$data);
             if($data['desa']==""){
-                $this->load->view("dataentry/bidanentryform",$data);
+                $this->load->view("dataentry/vaksinatorentryform",$data);
                 
             }else{
                 $data['data']           = $this->VaksinatorFhwModel->getCountPerForm($data['desa']);
-                $this->load->view("dataentry/fhw/bidanentryform",$data);
+                $this->load->view("dataentry/fhw/vaksinatorentryform",$data);
             }
             $this->load->view("footer");
             
         }
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
         
     }
     
@@ -256,6 +304,7 @@ class DataEntry extends CI_Controller{
             }
             $this->load->view("footer");
         }
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function getVaksinatorByForm($desa,$date){
