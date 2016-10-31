@@ -223,7 +223,8 @@ class VaksinatorModel extends CI_Model{
         return $result_data;
     }
     
-    public function getCountPerForm($kecamatan=""){
+    public function getCountPerForm($kecamatan="",$start,$end){
+        $end = date("Y-m-d",  strtotime($end." +1 day"));
         $vaksinatorDB = $this->load->database('vaksinator', TRUE);
         $query  = $vaksinatorDB->query("SHOW TABLES FROM opensrp_vaksinator");
         $table_default = [
@@ -270,7 +271,7 @@ class VaksinatorModel extends CI_Model{
         
         //retrieve all the columns in the table
         $columns = array();
-        foreach ($tables as $table=>$legend){
+        foreach ($table_default as $table=>$legend){
             $query = $vaksinatorDB->query("SHOW COLUMNS FROM ".$table);
             foreach ($query->result() as $column){
                 array_push($columns, $column->Field);
@@ -278,10 +279,10 @@ class VaksinatorModel extends CI_Model{
             
             //query tha data
             if($kecamatan=='Sengkol'){
-                $query = $vaksinatorDB->query("SELECT userid, DATE(clientversionsubmissiondate) as submissiondate,count(*) as counts from ".$table." where (userid='vaksinator8' or userid='vaksinator9' or userid='vaksinator10' or userid='vaksinator11' or userid='vaksinator12' or userid='vaksinator13' or userid='vaksinator14') group by userid, DATE(clientversionsubmissiondate)");
+                $query = $vaksinatorDB->query("SELECT userid, DATE(clientversionsubmissiondate) as submissiondate,count(*) as counts from ".$table." where (userid='vaksinator8' or userid='vaksinator9' or userid='vaksinator10' or userid='vaksinator11' or userid='vaksinator12' or userid='vaksinator13' or userid='vaksinator14') AND clientversionsubmissiondate > '$start' AND clientversionsubmissiondate <= '$end'  group by userid, DATE(clientversionsubmissiondate)");
             }
             elseif($kecamatan=='Janapria'){
-                $query = $vaksinatorDB->query("SELECT userid, DATE(clientversionsubmissiondate) as submissiondate,count(*) as counts from ".$table." where (userid='vaksinator1' or userid='vaksinator2' or userid='vaksinator3' or userid='vaksinator4' or userid='vaksinator5' or userid='vaksinator6') group by userid, DATE(clientversionsubmissiondate)");
+                $query = $vaksinatorDB->query("SELECT userid, DATE(clientversionsubmissiondate) as submissiondate,count(*) as counts from ".$table." where (userid='vaksinator1' or userid='vaksinator2' or userid='vaksinator3' or userid='vaksinator4' or userid='vaksinator5' or userid='vaksinator6') AND clientversionsubmissiondate > '$start' AND clientversionsubmissiondate <= '$end'  group by userid, DATE(clientversionsubmissiondate)");
             }
             foreach ($query->result() as $datas){
                 if(array_key_exists($datas->userid, $users)){

@@ -229,7 +229,7 @@ class GiziPwsModel extends CI_Model{
                             $result[$user_village[$dds->userID]]['V'][1]['L'] += 1;
                         }
                         if(strtolower($dds->mp_asi)=="ya"||strtolower($dds->mp_asi)=="yes"){
-                            $result[$user_village[$dds->userID]]['MP1'][1]['L'] += 1;
+                            $result[$user_village[$dds->userID]]['MP1'][0]['L'] += 1;
                         }
                     }elseif($jk=='female'||$jk=='Perempuan'){
                         $result[$user_village[$dds->userID]]['S'][1]['P'] += 1;
@@ -249,7 +249,7 @@ class GiziPwsModel extends CI_Model{
                             $result[$user_village[$dds->userID]]['V'][1]['P'] += 1;
                         }
                         if(strtolower($dds->mp_asi)=="ya"||strtolower($dds->mp_asi)=="yes"){
-                            $result[$user_village[$dds->userID]]['MP1'][1]['P'] += 1;
+                            $result[$user_village[$dds->userID]]['MP1'][0]['P'] += 1;
                         }
                     }
                 }elseif($dds->umur>11&&$dds->umur<=23){
@@ -276,7 +276,7 @@ class GiziPwsModel extends CI_Model{
                             $result[$user_village[$dds->userID]]['V'][2]['L'] += 1;
                         }
                         if(strtolower($dds->mp_asi)=="ya"||strtolower($dds->mp_asi)=="yes"){
-                            $result[$user_village[$dds->userID]]['MP2'][2]['L'] += 1;
+                            $result[$user_village[$dds->userID]]['MP2'][0]['L'] += 1;
                         }
                     }elseif($jk=='female'||$jk=='Perempuan'){
                         $result[$user_village[$dds->userID]]['S'][2]['P'] += 1;
@@ -296,7 +296,7 @@ class GiziPwsModel extends CI_Model{
                             $result[$user_village[$dds->userID]]['V'][2]['P'] += 1;
                         }
                         if(strtolower($dds->mp_asi)=="ya"||strtolower($dds->mp_asi)=="yes"){
-                            $result[$user_village[$dds->userID]]['MP2'][2]['P'] += 1;
+                            $result[$user_village[$dds->userID]]['MP2'][0]['P'] += 1;
                         }
                     }
                 }elseif($dds->umur>23&&$dds->umur<=59){

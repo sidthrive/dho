@@ -211,7 +211,8 @@ class GiziModel extends CI_Model{
         return $result_data;
     }
     
-    public function getCountPerForm($kecamatan=""){
+    public function getCountPerForm($kecamatan="",$start,$end){
+        $end = date("Y-m-d",  strtotime($end." +1 day"));
         $giziDB = $this->load->database('gizi', TRUE);
         $query  = $giziDB->query("SHOW TABLES FROM opensrp_gizi");
         $table_default = [
@@ -247,7 +248,7 @@ class GiziModel extends CI_Model{
         
         //retrieve all the columns in the table
         $columns = array();
-        foreach ($tables as $table=>$legend){
+        foreach ($table_default as $table=>$legend){
             $query = $giziDB->query("SHOW COLUMNS FROM ".$table);
             foreach ($query->result() as $column){
                 array_push($columns, $column->Field);
@@ -255,10 +256,10 @@ class GiziModel extends CI_Model{
             
             //query tha data
             if($kecamatan=='Sengkol'){
-                $query = $giziDB->query("SELECT userid, DATE(clientversionsubmissiondate) as submissiondate,count(*) as counts from ".$table." where (userid='gizi8' or userid='gizi9' or userid='gizi10' or userid='gizi11' or userid='gizi12' or userid='gizi13' or userid='gizi14') group by userid, DATE(clientversionsubmissiondate)");
+                $query = $giziDB->query("SELECT userid, DATE(clientversionsubmissiondate) as submissiondate,count(*) as counts from ".$table." where (userid='gizi8' or userid='gizi9' or userid='gizi10' or userid='gizi11' or userid='gizi12' or userid='gizi13' or userid='gizi14') AND clientversionsubmissiondate > '$start' AND clientversionsubmissiondate <= '$end'  group by userid, DATE(clientversionsubmissiondate)");
             }
             elseif($kecamatan=='Janapria'){
-                $query = $giziDB->query("SELECT userid, DATE(clientversionsubmissiondate) as submissiondate,count(*) as counts from ".$table." where (userid='gizi1' or userid='gizi2' or userid='gizi3' or userid='gizi4' or userid='gizi5' or userid='gizi6') group by userid, DATE(clientversionsubmissiondate)");
+                $query = $giziDB->query("SELECT userid, DATE(clientversionsubmissiondate) as submissiondate,count(*) as counts from ".$table." where (userid='gizi1' or userid='gizi2' or userid='gizi3' or userid='gizi4' or userid='gizi5' or userid='gizi6') AND clientversionsubmissiondate > '$start' AND clientversionsubmissiondate <= '$end'  group by userid, DATE(clientversionsubmissiondate)");
             }
             foreach ($query->result() as $datas){
                 if(array_key_exists($datas->userid, $users)){
