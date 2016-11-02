@@ -98,7 +98,7 @@ class SiteAnalyticsModel extends CI_Model{
         if(isset($params['level']))$level = "AND level='".$params['level']."'";else $level="";
         if(isset($params['tipe']))$tipe = "AND tipe='".$params['tipe']."'";else $tipe="";
         if(isset($params['date']))$date = "AND DATE(timestamp)='".$params['date']."'";else $date="";
-        if(isset($params['date_range']))$date = "AND DATE(timestamp)>='".$params['date_range'][0]."' AND DATE(timestamp)<='".$params['date_range'][1]."'";else $date="";
+        if(isset($params['date_range'])&&$date=="")$date = "AND DATE(timestamp)>='".$params['date_range'][0]."' AND DATE(timestamp)<='".$params['date_range'][1]."'";
         return $sitedb->query("SELECT *,DATE(timestamp) as date FROM page_views WHERE 1 $user$level$tipe$date")->result();
     }
     
