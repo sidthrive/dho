@@ -8,7 +8,7 @@ class GiziModel extends CI_Model{
         parent::__construct();
     }
     
-    public function getCountPerDay($kecamatan="",$mode=""){
+    public function getCountPerDay($kecamatan="",$mode="",$range=""){
         if($mode!=""){
             return self::getCountPerMode($kecamatan,$mode);
         }
@@ -36,15 +36,27 @@ class GiziModel extends CI_Model{
         }
         
         //make result array from the tables name
-        $result_data = array();
-        foreach ($users as $user=>$desa){
-            $data = array();
-            for($i=1;$i<=30;$i++){
-                $day     = 30-$i;
-                $date    = date("Y-m-d",  strtotime("-".$day." days"));
-                $data[$date] = 0;
+        if($range!=""){
+            foreach ($users as $user=>$desa){
+                $begin = new DateTime($range[0]);
+                $end = new DateTime($range[1]);
+                $data = array();
+                for($i=$begin;$begin<=$end;$i->modify('+1 day')){
+                    $date    = $i->format("Y-m-d");
+                    $data[$date] = 0;
+                }
+                $result_data[$desa] = $data;
             }
-            $result_data[$desa] = $data;
+        }else{
+            foreach ($users as $user=>$desa){
+                $data = array();
+                for($i=1;$i<=30;$i++){
+                    $day     = 30-$i;
+                    $date    = date("Y-m-d",  strtotime("-".$day." days"));
+                    $data[$date] = 0;
+                }
+                $result_data[$desa] = $data;
+            }
         }
         
         
@@ -57,15 +69,22 @@ class GiziModel extends CI_Model{
             }
             
             //query tha data
-            if($kecamatan=='Sengkol'){
-                $query = $giziDB->query("SELECT userid, DATE(clientversionsubmissiondate) as submissiondate,count(*) as counts from ".$table." where (userid='gizi8' or userid='gizi9' or userid='gizi10' or userid='gizi11' or userid='gizi12' or userid='gizi13' or userid='gizi14') and (DATE(clientversionsubmissiondate) >= '".date("Y-m-d",strtotime("-30 days"))."' and DATE(clientversionsubmissiondate) <= '".date("Y-m-d")."') group by userid, DATE(clientversionsubmissiondate)");
+            if($range!=""){
+                if($kecamatan=='Sengkol'){
+                    $query = $giziDB->query("SELECT userid, DATE(clientversionsubmissiondate) as submissiondate,count(*) as counts from ".$table." where (userid='gizi8' or userid='gizi9' or userid='gizi10' or userid='gizi11' or userid='gizi12' or userid='gizi13' or userid='gizi14') and (DATE(clientversionsubmissiondate) >= '".$range[0]."' and DATE(clientversionsubmissiondate) <= '".$range[1]."') group by userid, DATE(clientversionsubmissiondate)");
+                }
+                elseif($kecamatan=='Janapria'){
+                    $query = $giziDB->query("SELECT userid, DATE(clientversionsubmissiondate) as submissiondate,count(*) as counts from ".$table." where (userid='gizi1' or userid='gizi2' or userid='gizi3' or userid='gizi4' or userid='gizi5' or userid='gizi6') and (DATE(clientversionsubmissiondate) >= '".$range[0]."' and DATE(clientversionsubmissiondate) <= '".$range[1]."') group by userid, DATE(clientversionsubmissiondate)");
+                }
+            }else{
+                if($kecamatan=='Sengkol'){
+                    $query = $giziDB->query("SELECT userid, DATE(clientversionsubmissiondate) as submissiondate,count(*) as counts from ".$table." where (userid='gizi8' or userid='gizi9' or userid='gizi10' or userid='gizi11' or userid='gizi12' or userid='gizi13' or userid='gizi14') and (DATE(clientversionsubmissiondate) >= '".date("Y-m-d",strtotime("-30 days"))."' and DATE(clientversionsubmissiondate) <= '".date("Y-m-d")."') group by userid, DATE(clientversionsubmissiondate)");
+                }
+                elseif($kecamatan=='Janapria'){
+                    $query = $giziDB->query("SELECT userid, DATE(clientversionsubmissiondate) as submissiondate,count(*) as counts from ".$table." where (userid='gizi1' or userid='gizi2' or userid='gizi3' or userid='gizi4' or userid='gizi5' or userid='gizi6') and (DATE(clientversionsubmissiondate) >= '".date("Y-m-d",strtotime("-30 days"))."' and DATE(clientversionsubmissiondate) <= '".date("Y-m-d")."') group by userid, DATE(clientversionsubmissiondate)");
+                }
             }
-            elseif($kecamatan=='Janapria'){
-                $query = $giziDB->query("SELECT userid, DATE(clientversionsubmissiondate) as submissiondate,count(*) as counts from ".$table." where (userid='gizi1' or userid='gizi2' or userid='gizi3' or userid='gizi4' or userid='gizi5' or userid='gizi6') and (DATE(clientversionsubmissiondate) >= '".date("Y-m-d",strtotime("-30 days"))."' and DATE(clientversionsubmissiondate) <= '".date("Y-m-d")."') group by userid, DATE(clientversionsubmissiondate)");
-            }
-            else{
-                $query = $giziDB->query("SELECT userid, DATE(clientversionsubmissiondate) as submissiondate,count(*) as counts from ".$table." where (DATE(clientversionsubmissiondate) >= '2015-06-24' and DATE(clientversionsubmissiondate) <= '2015-07-24') group by userid, DATE(clientversionsubmissiondate)");
-            }
+            
             foreach ($query->result() as $datas){
                 if(array_key_exists($datas->userid, $users)){
                     $data_count                  = $result_data[$users[$datas->userid]];

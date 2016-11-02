@@ -425,7 +425,7 @@ class AnalyticsFhwModel extends CI_Model{
         return $result_data;
     }
     
-    public function getCountPerDay($desa="",$mode=""){
+    public function getCountPerDay($desa="",$mode="",$range=""){
         if($mode!=""){
             return self::getCountPerMode($desa,$mode);
         }
@@ -484,16 +484,28 @@ class AnalyticsFhwModel extends CI_Model{
         
         //make result array from the tables name
         $result_data = array();
-        foreach ($namadusun as $dusun=>$nama){
-            $data = array();
-            for($i=1;$i<=30;$i++){
-                $day     = 30-$i;
-                $date    = date("Y-m-d",  strtotime("-".$day." days"));
-                $data[$date] = 0;
+        if($range!=""){
+            foreach ($namadusun as $dusun=>$nama){
+                $begin = new DateTime($range[0]);
+                $end = new DateTime($range[1]);
+                $data = array();
+                for($i=$begin;$begin<=$end;$i->modify('+1 day')){
+                    $date    = $i->format("Y-m-d");
+                    $data[$date] = 0;
+                }
+                $result_data[$nama] = $data;
             }
-            $result_data[$nama] = $data;
+        }else{
+            foreach ($namadusun as $dusun=>$nama){
+                $data = array();
+                for($i=1;$i<=30;$i++){
+                    $day     = 30-$i;
+                    $date    = date("Y-m-d",  strtotime("-".$day." days"));
+                    $data[$date] = 0;
+                }
+                $result_data[$nama] = $data;
+            }
         }
-        
         
         foreach ($tables as $table){
             if($table=="kartu_ibu_registration"||$table=="kohort_kb_registration"||$table=="kartu_anc_registration_oa"||$table=="kartu_pnc_regitration_oa"||$table=="kohort_bayi_registration_oa"||$table=="kartu_ibu_edit"){

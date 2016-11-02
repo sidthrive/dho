@@ -78,7 +78,7 @@ class AnalyticsModel extends CI_Model{
         return $result_data;
     }
     
-    public function getCountPerDayDrill($kecamatan="",$mode=""){
+    public function getCountPerDayDrill($kecamatan="",$mode="",$range=""){
         if($mode!=""){
             return self::getCountPerMode($kecamatan,$mode);
         }
@@ -104,16 +104,29 @@ class AnalyticsModel extends CI_Model{
         
         //make result array from the tables name
         $result_data = array();
-        foreach ($users as $user=>$desa){
-            $data = array();
-            for($i=1;$i<=30;$i++){
-                $day     = 30-$i;
-                $date    = date("Y-m-d",  strtotime("-".$day." days"));
-                $data[$date] = 0;
+        if($range!=""){
+            foreach ($users as $user=>$desa){
+                $begin = new DateTime($range[0]);
+                $end = new DateTime($range[1]);
+                $data = array();
+                for($i=$begin;$begin<=$end;$i->modify('+1 day')){
+                    $date    = $i->format("Y-m-d");
+                    $data[$date] = 0;
+                }
+                $result_data[$desa] = $data;
             }
-//            var_dump($data);
-            $result_data[$desa] = $data;
+        }else{
+            foreach ($users as $user=>$desa){
+                $data = array();
+                for($i=1;$i<=30;$i++){
+                    $day     = 30-$i;
+                    $date    = date("Y-m-d",  strtotime("-".$day." days"));
+                    $data[$date] = 0;
+                }
+                $result_data[$desa] = $data;
+            }
         }
+        
         
         //retrieve all the columns in the table
         $columns = array();
@@ -124,15 +137,22 @@ class AnalyticsModel extends CI_Model{
             }
             
             //query tha data
-            if($kecamatan=='Sengkol'){
-                $query = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." where (userid='user8' or userid='user9' or userid='user10' or userid='user11' or userid='user12' or userid='user13' or userid='user14') and (submissiondate >= '".date("Y-m-d",strtotime("-30 days"))."' and submissiondate <= '".date("Y-m-d")."') group by userid, submissiondate");
+            if($range!=""){
+                if($kecamatan=='Sengkol'){
+                    $query = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." where (userid='user8' or userid='user9' or userid='user10' or userid='user11' or userid='user12' or userid='user13' or userid='user14') and (submissiondate >= '".$range[0]."' and submissiondate <= '".$range[1]."') group by userid, submissiondate");
+                }
+                elseif($kecamatan=='Janapria'){
+                    $query = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." where (userid='user1' or userid='user2' or userid='user3' or userid='user4' or userid='user5' or userid='user6') and (submissiondate >= '".$range[0]."' and submissiondate <= '".$range[1]."') group by userid, submissiondate");
+                }
+            }else{
+                if($kecamatan=='Sengkol'){
+                    $query = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." where (userid='user8' or userid='user9' or userid='user10' or userid='user11' or userid='user12' or userid='user13' or userid='user14') and (submissiondate >= '".date("Y-m-d",strtotime("-30 days"))."' and submissiondate <= '".date("Y-m-d")."') group by userid, submissiondate");
+                }
+                elseif($kecamatan=='Janapria'){
+                    $query = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." where (userid='user1' or userid='user2' or userid='user3' or userid='user4' or userid='user5' or userid='user6') and (submissiondate >= '".date("Y-m-d",strtotime("-30 days"))."' and submissiondate <= '".date("Y-m-d")."') group by userid, submissiondate");
+                }
             }
-            elseif($kecamatan=='Janapria'){
-                $query = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." where (userid='user1' or userid='user2' or userid='user3' or userid='user4' or userid='user5' or userid='user6') and (submissiondate >= '".date("Y-m-d",strtotime("-30 days"))."' and submissiondate <= '".date("Y-m-d")."') group by userid, submissiondate");
-            }
-            else{
-                $query = $analyticsDB->query("SELECT userid, submissiondate,count(*) as counts from ".$table." where (submissiondate >= '2015-06-24' and submissiondate <= '2015-07-24') group by userid, submissiondate");
-            }
+            
             foreach ($query->result() as $datas){
                 if(array_key_exists($datas->userid, $users)){
                     $data_count                  = $result_data[$users[$datas->userid]];

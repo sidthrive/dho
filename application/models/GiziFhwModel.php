@@ -237,16 +237,28 @@ class GiziFhwModel extends CI_Model{
         
         //make result array from the tables name
         $result_data = array();
-        foreach ($namadusun as $dusun=>$nama){
-            $data = array();
-            for($i=1;$i<=30;$i++){
-                $day     = 30-$i;
-                $date    = date("Y-m-d",  strtotime("-".$day." days"));
-                $data[$date] = 0;
+        if($range!=""){
+            foreach ($namadusun as $dusun=>$nama){
+                $begin = new DateTime($range[0]);
+                $end = new DateTime($range[1]);
+                $data = array();
+                for($i=$begin;$begin<=$end;$i->modify('+1 day')){
+                    $date    = $i->format("Y-m-d");
+                    $data[$date] = 0;
+                }
+                $result_data[$nama] = $data;
             }
-            $result_data[$nama] = $data;
-        }
-        
+        }else{
+            foreach ($namadusun as $dusun=>$nama){
+                $data = array();
+                for($i=1;$i<=30;$i++){
+                    $day     = 30-$i;
+                    $date    = date("Y-m-d",  strtotime("-".$day." days"));
+                    $data[$date] = 0;
+                }
+                $result_data[$nama] = $data;
+            }
+        }        
         
         //retrieve all the columns in the table
         $columns = array();
