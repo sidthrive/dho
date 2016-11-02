@@ -92,7 +92,15 @@ class DataEntry extends CI_Controller{
             $listdesa = ['user1'=>'Lekor','user2'=>'Saba','user3'=>'Pendem','user4'=>'Setuta','user5'=>'Jango','user6'=>'Janapria','user8'=>'Ketara','user9'=>'Sengkol','user10'=>'Sengkol','user11'=>'Kawo','user12'=>'Tanak Awu','user13'=>'Pengembur','user14'=>'Segala Anyar'];
             $data['desa']		= $listdesa[$this->session->userdata('username')];
             $data['mode']                   = $this->uri->segment(4);
-            $data['data']                   = $this->AnalyticsFhwModel->getCountPerDay($data['desa'],$data['mode']);
+            if($this->input->get('start')==null&&$data['mode']==''){
+                $now = date("Y-m-d");
+                $start = date("Y-m-d",  strtotime($now."-29 days"));
+                redirect("dataentry/bidanbytanggal/?start=$start&end=$now");
+            }else{
+                $data['start'] = $this->input->get('start');
+                $data['end'] = $this->input->get('end');
+            }
+            $data['data']                   = $this->AnalyticsFhwModel->getCountPerDay($data['desa'],$data['mode'],array($data['start'],$data['end']));
             $this->load->view("header");
             $this->load->view("dataentry/fhw/dataentrysidebar");
             $this->load->view("dataentry/fhw/bidanentrytanggal",$data);
@@ -106,14 +114,30 @@ class DataEntry extends CI_Controller{
             }else{
                 $data['desa']		= "";
             }
-            $data['data']                   = $this->AnalyticsModel->getCountPerDayDrill($data['kecamatan'],$data['mode']);
+            if($this->input->get('start')==null&&$data['desa']==""&&$data['mode']==''){
+                $now = date("Y-m-d");
+                $start = date("Y-m-d",  strtotime($now."-29 days"));
+                redirect("dataentry/bidanbytanggal/".$data['kecamatan']."?start=$start&end=$now");
+            }else{
+                $data['start'] = $this->input->get('start');
+                $data['end'] = $this->input->get('end');
+            }
+            $data['data']                   = $this->AnalyticsModel->getCountPerDayDrill($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
             $this->load->view("header");
             $this->load->view("dataentry/dataentrysidebar",$data);
             if($data['desa']==""){
                 $this->load->view("dataentry/bidanentrytanggal",$data);
                 
             }else{
-                $data['data']           = $this->AnalyticsFhwModel->getCountPerDay($data['desa'],$data['mode']);
+                if($this->input->get('start')==null&&$data['mode']==''){
+                    $now = date("Y-m-d");
+                    $start = date("Y-m-d",  strtotime($now."-29 days"));
+                    redirect("dataentry/bidanbytanggal/".$data['kecamatan']."/".$data['desa']."?start=$start&end=$now");
+                }else{
+                    $data['start'] = $this->input->get('start');
+                    $data['end'] = $this->input->get('end');
+                }
+                $data['data']           = $this->AnalyticsFhwModel->getCountPerDay($data['desa'],$data['mode'],array($data['start'],$data['end']));
                 $this->load->view("dataentry/fhw/bidanentrytanggal",$data);
             }
             $this->load->view("footer");
@@ -184,8 +208,16 @@ class DataEntry extends CI_Controller{
         if($this->session->userdata('level')=="fhw"){
             $listdesa = ['gizi1'=>'Lekor','gizi2'=>'Saba','gizi3'=>'Pendem','gizi4'=>'Setuta','gizi5'=>'Jango','gizi6'=>'Janapria','gizi8'=>'Ketara','gizi9'=>'Sengkol','gizi10'=>'Sengkol','gizi11'=>'Kawo','gizi12'=>'Tanak Awu','gizi13'=>'Pengembur','gizi14'=>'Segala Anyar'];
             $data['desa']		= $listdesa[$this->session->userdata('username')];
+            if($this->input->get('start')==null&&$data['mode']==''){
+                $now = date("Y-m-d");
+                $start = date("Y-m-d",  strtotime($now."-29 days"));
+                redirect("dataentry/gizibytanggal/?start=$start&end=$now");
+            }else{
+                $data['start'] = $this->input->get('start');
+                $data['end'] = $this->input->get('end');
+            }
             $data['mode']                   = $this->uri->segment(4);
-            $data['data']                   = $this->GiziFhwModel->getCountPerDay($data['desa'],$data['mode']);
+            $data['data']                   = $this->GiziFhwModel->getCountPerDay($data['desa'],$data['mode'],array($data['start'],$data['end']));
             $this->load->view("header");
             $this->load->view("dataentry/fhw/dataentrysidebar");
             $this->load->view("dataentry/fhw/gizientrytanggal",$data);
@@ -199,14 +231,30 @@ class DataEntry extends CI_Controller{
             }else{
                 $data['desa']		= "";
             }
-            $data['data']                   = $this->GiziModel->getCountPerDay($data['kecamatan'],$data['mode']);
+            if($this->input->get('start')==null&&$data['desa']==""&&$data['mode']==''){
+                $now = date("Y-m-d");
+                $start = date("Y-m-d",  strtotime($now."-29 days"));
+                redirect("dataentry/gizibytanggal/".$data['kecamatan']."?start=$start&end=$now");
+            }else{
+                $data['start'] = $this->input->get('start');
+                $data['end'] = $this->input->get('end');
+            }
+            $data['data']                   = $this->GiziModel->getCountPerDay($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
             $this->load->view("header");
             $this->load->view("dataentry/dataentrysidebar",$data);
             if($data['desa']==""){
                 $this->load->view("dataentry/gizientrytanggal",$data);
                 
             }else{
-                $data['data']           = $this->GiziFhwModel->getCountPerDay($data['desa'],$data['mode']);
+                if($this->input->get('start')==null&&$data['mode']==''){
+                    $now = date("Y-m-d");
+                    $start = date("Y-m-d",  strtotime($now."-29 days"));
+                    redirect("dataentry/gizibytanggal/".$data['kecamatan']."/".$data['desa']."?start=$start&end=$now");
+                }else{
+                    $data['start'] = $this->input->get('start');
+                    $data['end'] = $this->input->get('end');
+                }
+                $data['data']           = $this->GiziFhwModel->getCountPerDay($data['desa'],$data['mode'],array($data['start'],$data['end']));
                 $this->load->view("dataentry/fhw/gizientrytanggal",$data);
             }
             $this->load->view("footer");
@@ -278,8 +326,16 @@ class DataEntry extends CI_Controller{
         if($this->session->userdata('level')=="fhw"){
             $listdesa = ['vaksinator1'=>'Lekor','vaksinator2'=>'Saba','vaksinator3'=>'Pendem','vaksinator4'=>'Setuta','vaksinator5'=>'Jango','vaksinator6'=>'Janapria','vaksinator8'=>'Ketara','vaksinator9'=>'Sengkol','vaksinator10'=>'Sengkol','vaksinator11'=>'Kawo','vaksinator12'=>'Tanak Awu','vaksinator13'=>'Pengembur','vaksinator14'=>'Segala Anyar'];
             $data['desa']		= $listdesa[$this->session->userdata('username')];
+            if($this->input->get('start')==null&&$data['mode']==''){
+                $now = date("Y-m-d");
+                $start = date("Y-m-d",  strtotime($now."-29 days"));
+                redirect("dataentry/vaksinatorbytanggal/?start=$start&end=$now");
+            }else{
+                $data['start'] = $this->input->get('start');
+                $data['end'] = $this->input->get('end');
+            }
             $data['mode']                   = $this->uri->segment(4);
-            $data['data']                   = $this->VaksinatorFhwModel->getCountPerDay($data['desa'],$data['mode']);
+            $data['data']                   = $this->VaksinatorFhwModel->getCountPerDay($data['desa'],$data['mode'],array($data['start'],$data['end']));
             $this->load->view("header");
             $this->load->view("dataentry/fhw/dataentrysidebar");
             $this->load->view("dataentry/fhw/vaksinatorentrytanggal",$data);
@@ -293,14 +349,30 @@ class DataEntry extends CI_Controller{
             }else{
                 $data['desa']		= "";
             }
-            $data['data']                   = $this->VaksinatorModel->getCountPerDay($data['kecamatan'],$data['mode']);
+            if($this->input->get('start')==null&&$data['desa']==""&&$data['mode']==''){
+                $now = date("Y-m-d");
+                $start = date("Y-m-d",  strtotime($now."-29 days"));
+                redirect("dataentry/vaksinatorbytanggal/".$data['kecamatan']."?start=$start&end=$now");
+            }else{
+                $data['start'] = $this->input->get('start');
+                $data['end'] = $this->input->get('end');
+            }
+            $data['data']                   = $this->VaksinatorModel->getCountPerDay($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
             $this->load->view("header");
             $this->load->view("dataentry/dataentrysidebar",$data);
             if($data['desa']==""){
                 $this->load->view("dataentry/vaksinatorentrytanggal",$data);
                 
             }else{
-                $data['data']           = $this->VaksinatorFhwModel->getCountPerDay($data['desa'],$data['mode']);
+                if($this->input->get('start')==null&&$data['mode']==''){
+                    $now = date("Y-m-d");
+                    $start = date("Y-m-d",  strtotime($now."-29 days"));
+                    redirect("dataentry/bidanbytanggal/".$data['kecamatan']."/".$data['desa']."?start=$start&end=$now");
+                }else{
+                    $data['start'] = $this->input->get('start');
+                    $data['end'] = $this->input->get('end');
+                }
+                $data['data']           = $this->VaksinatorFhwModel->getCountPerDay($data['desa'],$data['mode'],array($data['start'],$data['end']));
                 $this->load->view("dataentry/fhw/vaksinatorentrytanggal",$data);
             }
             $this->load->view("footer");
