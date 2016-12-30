@@ -69,15 +69,16 @@ class GiziCakupanModel extends CI_Model{
     public function cakupanBulanIni($bulan,$tahun){
         $bulan_map = ['januari'=>1,'februari'=>2,'maret'=>3,'april'=>4,'mei'=>5,'juni'=>6,'juli'=>7,'agustus'=>8,'september'=>9,'oktober'=>10,'november'=>11,'desember'=>12];
         $xlsForm = [];
+        $startyear = date("Y-m",  strtotime($tahun.'-1'));
         $startdate = date("Y-m",  strtotime($tahun.'-'.$bulan_map[$bulan]));
         $enddate = date("Y-m", strtotime($startdate." +1 months"));
         
-        $target_bulin   =  ['Lekor'=>220,'Saba'=>190,'Pendem'=>161,'Setuta'=>81,'Jango'=>78,'Janapria'=>190,'Ketara'=>97,'Sengkol'=>247,'Kawo'=>214,'Tanak Awu'=>207,'Pengembur'=>211,'Segala Anyar'=>69];
-        $target_bumil   =  ['Lekor'=>230,'Saba'=>199,'Pendem'=>163,'Setuta'=>85,'Jango'=>81,'Janapria'=>199,'Ketara'=>101,'Sengkol'=>259,'Kawo'=>224,'Tanak Awu'=>217,'Pengembur'=>221,'Segala Anyar'=>72];
-        $sasaran = ['Lekor'=>1060,'Saba'=>916,'Pendem'=>779,'Setuta'=>390,'Jango'=>375,'Janapria'=>919,'Ketara'=>468,'Sengkol'=>1195,'Kawo'=>1034,'Tanak Awu'=>1002,'Pengembur'=>1019,'Segala Anyar'=>334];
-        $user   =  ['Lekor'=>0,'Saba'=>0,'Pendem'=>0,'Setuta'=>0,'Jango'=>0,'Janapria'=>0,'Ketara'=>0,'Sengkol'=>0,'Kawo'=>0,'Tanak Awu'=>0,'Pengembur'=>0,'Segala Anyar'=>0];
-        $user_village = ['gizi1'=>'Lekor','gizi2'=>'Saba','gizi3'=>'Pendem','gizi4'=>'Setuta','gizi5'=>'Jango','gizi6'=>'Janapria','gizi8'=>'Ketara','gizi9'=>'Sengkol','gizi10'=>'Sengkol','gizi11'=>'Kawo','gizi12'=>'Tanak Awu','gizi13'=>'Pengembur','gizi14'=>'Segala Anyar'];
-        $bidan_village = ['user1'=>'Lekor','user2'=>'Saba','user3'=>'Pendem','user4'=>'Setuta','user5'=>'Jango','user6'=>'Janapria','user8'=>'Ketara','user9'=>'Sengkol','user10'=>'Sengkol','user11'=>'Kawo','user12'=>'Tanak Awu','user13'=>'Pengembur','user14'=>'Segala Anyar'];
+        $target_bulin   =  ['Saba'=>190,'Tanak Awu'=>207];
+        $target_bumil   =  ['Saba'=>199,'Tanak Awu'=>217];
+        $sasaran = ['Saba'=>916,'Tanak Awu'=>1002];
+        $user   =  ['Saba'=>0,'Tanak Awu'=>0];
+        $user_village = ['gizi2'=>'Saba','gizi12'=>'Tanak Awu'];
+        $bidan_village = ['user2'=>'Saba','user12'=>'Tanak Awu'];
         
         $datads = $this->getDataKunjungan("(umur <= 59) AND (tanggalPenimbangan > '$startdate' AND tanggalPenimbangan < '$enddate')");
         $balita = $user;
@@ -146,8 +147,6 @@ class GiziCakupanModel extends CI_Model{
         
         $series1['page']='nd';
         $series1['form']=$nd;
-        $series1['y_label']='persentase';
-        $series1['series_name']='persentase';
         array_push($xlsForm, $series1);
         
         $series1['page']='bgmd';
@@ -156,29 +155,44 @@ class GiziCakupanModel extends CI_Model{
         
         $bidanDB = $this->load->database('analytics', TRUE);
         $vitfe = $vitA = $user;
-        $datavisit= $bidanDB->query("SELECT * FROM kartu_pnc_visit WHERE referenceDate > '$startdate' AND referenceDate < '$enddate'")->result();
+        $vitfe_ = $vitA_ = [];
+        $datavisit= $bidanDB->query("SELECT * FROM kartu_pnc_visit WHERE referenceDate > '$startyear' AND referenceDate < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $bidan_village)){
-                if($dvisit->vitaminA2jamPP!="None"||$dvisit->vitaminA2jamPP!=""){
-                    if($dvisit->vitaminA24jamPP!="None"||$dvisit->vitaminA24jamPP!=""){
-                        $vitA[$bidan_village[$dvisit->userID]] += 1;
+                if($dvisit->vitaminA2jamPP!="None"&&$dvisit->vitaminA2jamPP!=""){
+                    if($dvisit->vitaminA24jamPP!="None"&&$dvisit->vitaminA24jamPP!=""){
+                        if(!array_key_exists($dvisit->motherId, $vitA_)){
+                            $vitA[$bidan_village[$dvisit->userID]] += 1;
+                            $vitA_[$dvisit->motherId] = TRUE;
+                        }
                     }
                 }
-                if($dvisit->pelayananfe!="None"||$dvisit->pelayananfe!=""){
-                    $vitfe[$bidan_village[$dvisit->userID]] += 1;
+                if($dvisit->pelayananfe!="None"&&$dvisit->pelayananfe!=""&&$dvisit->pelayananfe!="Tidak"){
+                    if(!array_key_exists($dvisit->motherId, $vitfe_)){
+                        $vitfe[$bidan_village[$dvisit->userID]] += 1;
+                        $vitfe_[$dvisit->motherId] = TRUE;
+                    }
                 }
             }
         }
+        $series1['page']='vitA';
+        $series1['form']=$vitA;
+        array_push($xlsForm, $series1);
+        
         $series1['page']='vitfe';
         $series1['form']=$vitfe;
         array_push($xlsForm, $series1);
         
         $anemia = $user;
-        $datavisit= $bidanDB->query("SELECT * FROM kartu_anc_visit_labTest WHERE referenceDate > '$startdate' AND referenceDate < '$enddate'")->result();
+        $anemia_ = [];
+        $datavisit= $bidanDB->query("SELECT * FROM kartu_anc_visit_labTest WHERE referenceDate > '$startyear' AND referenceDate < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $bidan_village)){
                 if($dvisit->laboratoriumPeriksaHbAnemia='positif'){
-                    $anemia[$bidan_village[$dvisit->userID]] += 1;
+                    if(!array_key_exists($dvisit->motherId, $anemia_)){
+                        $anemia[$bidan_village[$dvisit->userID]] += 1;
+                        $anemia_[$dvisit->motherId] = TRUE;
+                    }
                 }
             }
         }
@@ -192,18 +206,28 @@ class GiziCakupanModel extends CI_Model{
         $series1['form']=$anemia;
         array_push($xlsForm, $series1);
         
-        $fe13 = $kek = $user;
-        $datavisit= $bidanDB->query("SELECT * FROM kartu_anc_visit WHERE ancDate > '$startdate' AND ancDate < '$enddate'")->result();
+        $fe1 = $fe3 = $kek = $user;
+        $fe1_ = $fe3_ = $kek_ = [];
+        $datavisit= $bidanDB->query("SELECT * FROM kartu_anc_visit WHERE ancDate > '$startyear' AND ancDate < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $bidan_village)){
                 if($dvisit->pelayananfe0=="Ya"&&$dvisit->ancKe==1){
-                    $fe13[$bidan_village[$dvisit->userID]] += 1;
+                    if(!array_key_exists($dvisit->motherId, $fe1_)){
+                        $fe1[$bidan_village[$dvisit->userID]] += 1;
+                        $fe1_[$dvisit->motherId] = TRUE;
+                    }
                 }
                 if($dvisit->pelayananfe0=="Ya"&&$dvisit->ancKe==4){
-                    $fe13[$bidan_village[$dvisit->userID]] += 1;
+                    if(!array_key_exists($dvisit->motherId, $fe3_)){
+                        $fe3[$bidan_village[$dvisit->userID]] += 1;
+                        $fe3_[$dvisit->motherId] = TRUE;
+                    }
                 }
                 if($dvisit->highRiskPregnancyProteinEnergyMalnutrition='yes'){
-                    $kek[$bidan_village[$dvisit->userID]] += 1;
+                    if(!array_key_exists($dvisit->motherId, $kek_)){
+                        $kek[$bidan_village[$dvisit->userID]] += 1;
+                        $kek_[$dvisit->motherId] = TRUE;
+                    }
                 }
             }
         }
@@ -213,11 +237,17 @@ class GiziCakupanModel extends CI_Model{
             $n = $n*100/$target_bumil[$x];
             $kek[$x] = $n;
         }
-        foreach ($fe13 as $x=>$n){
+        foreach ($fe1 as $x=>$n){
             if($target_bulin[$x]==0)
                 continue;
             $n = $n*100/$target_bulin[$x];
-            $fe13[$x] = $n;
+            $fe1[$x] = $n;
+        }
+        foreach ($fe3 as $x=>$n){
+            if($target_bulin[$x]==0)
+                continue;
+            $n = $n*100/$target_bulin[$x];
+            $fe3[$x] = $n;
         }
         
         $series1['page']='kek';
@@ -228,8 +258,12 @@ class GiziCakupanModel extends CI_Model{
         $series1['form']=$bgm;
         array_push($xlsForm, $series1);
         
-        $series1['page']='fe13';
-        $series1['form']=$fe13;
+        $series1['page']='fe1';
+        $series1['form']=$fe1;
+        array_push($xlsForm, $series1);
+        
+        $series1['page']='fe3';
+        $series1['form']=$fe3;
         array_push($xlsForm, $series1);
         
         $series1['page']='asi';
@@ -256,6 +290,8 @@ class GiziCakupanModel extends CI_Model{
         
         $series1['page']='bblr';
         $series1['form']=$bblr;
+        $series1['y_label']='Jumlah';
+        $series1['series_name']='Jumlah';
         array_push($xlsForm, $series1);
         
         return $xlsForm;
