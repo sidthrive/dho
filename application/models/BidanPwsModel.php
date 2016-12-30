@@ -24,41 +24,48 @@ class BidanPwsModel extends CI_Model{
         }else return false;
     }
     
-    private function isHRP($bumil){
-        $ancvisit = $this->db->query("SELECT * FROM kartu_anc_visit WHERE motherId='$bumil->motherId' AND ancDate < '$bumil->ancDate' ORDER BY ancDate")->result();
+    private function isHRP($bumil,$resiko,$bumildata){
         $no = 0;
-        foreach ($ancvisit as $visit){
-            if($visit->highRiskPregnancyProteinEnergyMalnutrition=="yes"
-                    ||$visit->highRiskPregnancyPIH=="yes"
-                    ||$visit->highRisklabourFetusNumber=="yes"
-                    ||$visit->highRiskLabourFetusSize=="yes"
-                    ||$visit->highRiskLabourFetusMalpresentation=="yes"){
-                return true;
+        if(array_key_exists($bumil->motherId, $resiko)){
+            foreach ($resiko[$bumil->motherId] as $visit){
+                $thisanc = date("Y-m-d", strtotime($visit->ancDate));
+                $bumilanc = date("Y-m-d", strtotime($bumil->ancDate));
+                if($thisanc<$bumilanc){
+                    if($visit->highRiskPregnancyProteinEnergyMalnutrition=="yes"
+                            ||$visit->highRiskPregnancyPIH=="yes"
+                            ||$visit->highRisklabourFetusNumber=="yes"
+                            ||$visit->highRiskLabourFetusSize=="yes"
+                            ||$visit->highRiskLabourFetusMalpresentation=="yes"){
+                        return true;
+                    }
+                    $no++;
+                }
             }
-            $no++;
         }
+        
         if($no>0){
-            $bumildata = $this->db->query("SELECT * FROM kartu_anc_registration WHERE motherId='$bumil->motherId'")->result();
-            foreach ($bumildata as $bum){
-                if($bum->highRiskPregnancyProteinEnergyMalnutrition=="yes"
-                    ||$bum->malariaRisk=="yes"
-                    ||$bum->highRiskLabourTBRisk=="yes"
-                    ||$bum->HighRiskPregnancyTooManyChildren=="yes"
-                    ||$bum->HighRiskPregnancyAbortus=="yes"
-                    ||$bum->HighRiskLabourSectionCesareaRecord=="yes"
-                    ||$bum->highRiskSTIBBVs=="yes"
-                    ||$bum->highRiskEctopicPregnancy=="yes"
-                    ||$bum->otherRiskMolaHidatidosa=="yes"
-                    ||$bum->otherRiskCongenitalAbnormality=="yes"
-                    ||$bum->otherRiskEarlyWaterbreak=="yes"
-                    ||$bum->highRiskCardiovascularDiseaseRecord=="yes"
-                    ||$bum->highRiskDidneyDisorder=="yes"
-                    ||$bum->highRiskHeartDisorder=="yes"
-                    ||$bum->highRiskAsthma=="yes"
-                    ||$bum->highRiskTuberculosis=="yes"
-                    ||$bum->highRiskMalaria=="yes"
-                    ||$bum->highRiskHIVAIDS=="yes"){
-                    return true;
+            if(array_key_exists($bumil->motherId, $bumildata)){
+                foreach ($bumildata[$bumil->motherId] as $bum){
+                    if($bum->highRiskPregnancyProteinEnergyMalnutrition=="yes"
+                        ||$bum->malariaRisk=="yes"
+                        ||$bum->highRiskLabourTBRisk=="yes"
+                        ||$bum->HighRiskPregnancyTooManyChildren=="yes"
+                        ||$bum->HighRiskPregnancyAbortus=="yes"
+                        ||$bum->HighRiskLabourSectionCesareaRecord=="yes"
+                        ||$bum->highRiskSTIBBVs=="yes"
+                        ||$bum->highRiskEctopicPregnancy=="yes"
+                        ||$bum->otherRiskMolaHidatidosa=="yes"
+                        ||$bum->otherRiskCongenitalAbnormality=="yes"
+                        ||$bum->otherRiskEarlyWaterbreak=="yes"
+                        ||$bum->highRiskCardiovascularDiseaseRecord=="yes"
+                        ||$bum->highRiskDidneyDisorder=="yes"
+                        ||$bum->highRiskHeartDisorder=="yes"
+                        ||$bum->highRiskAsthma=="yes"
+                        ||$bum->highRiskTuberculosis=="yes"
+                        ||$bum->highRiskMalaria=="yes"
+                        ||$bum->highRiskHIVAIDS=="yes"){
+                        return true;
+                    }
                 }
             }
         }
@@ -112,8 +119,8 @@ class BidanPwsModel extends CI_Model{
         $result_index['bulin'] = ['D11','D12','D13','D14','D15','D16'];
         $result_index['bufas'] = ['E11','E12','E13','E14','E15','E16'];
         
-        $datak1 = $this->db->query("SELECT * FROM kartu_anc_visit WHERE (ancDate > '$startyear' AND ancDate < '$startdate') AND (ancKe=1 AND kunjunganKe=1) group by motherId")->result();
-        foreach ($datak1 as $k1){
+        $query = $this->db->query("SELECT userID,motherId,ancDate FROM kartu_anc_visit WHERE (ancDate > '$startyear' AND ancDate < '$startdate') AND (ancKe=1 AND kunjunganKe=1) group by motherId")->result();
+        foreach ($query as $k1){
             if(array_key_exists($k1->userID, $user_index)){
                 if(!$this->isHaveDoneAnc1($k1)){
                     $key=array_search($user_index[$k1->userID],$result['desa']);
@@ -122,8 +129,8 @@ class BidanPwsModel extends CI_Model{
             }
         }
         
-        $datak1 = $this->db->query("SELECT * FROM kartu_anc_visit WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND (ancKe=1 AND kunjunganKe=1) group by motherId")->result();
-        foreach ($datak1 as $k1){
+        $query = $this->db->query("SELECT userID,motherId,ancDate FROM kartu_anc_visit WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND (ancKe=1 AND kunjunganKe=1) group by motherId")->result();
+        foreach ($query as $k1){
             if(array_key_exists($k1->userID, $user_index)){
                 if(!$this->isHaveDoneAnc1($k1)){
                     $key=array_search($user_index[$k1->userID],$result['desa']);
@@ -132,8 +139,8 @@ class BidanPwsModel extends CI_Model{
             }
         }
         
-        $datak4 = $this->db->query("SELECT * FROM kartu_anc_visit WHERE (ancDate > '$startyear' AND ancDate < '$startdate') AND ancKe=4 group by motherId")->result();
-        foreach ($datak4 as $k4){
+        $query = $this->db->query("SELECT userID,motherId,ancDate FROM kartu_anc_visit WHERE (ancDate > '$startyear' AND ancDate < '$startdate') AND ancKe=4 group by motherId")->result();
+        foreach ($query as $k4){
             if(array_key_exists($k4->userID, $user_index)){
                 if(!$this->isHaveDoneAnc4($k4)){
                     $key=array_search($user_index[$k4->userID],$result['desa']);
@@ -141,8 +148,8 @@ class BidanPwsModel extends CI_Model{
                 }
             }
         }
-        $datak4 = $this->db->query("SELECT * FROM kartu_anc_visit WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND ancKe=4 group by motherId")->result();
-        foreach ($datak4 as $k4){
+        $query = $this->db->query("SELECT userID,motherId,ancDate FROM kartu_anc_visit WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND ancKe=4 group by motherId")->result();
+        foreach ($query as $k4){
             if(array_key_exists($k4->userID, $user_index)){
                 if(!$this->isHaveDoneAnc4($k4)){
                     $key=array_search($user_index[$k4->userID],$result['desa']);
@@ -151,80 +158,127 @@ class BidanPwsModel extends CI_Model{
             }
         }
         
-        $datakresiko = $this->db->query("SELECT * FROM kartu_anc_visit WHERE (ancDate > '$startyear' AND ancDate < '$startdate')")->result();
-        foreach ($datakresiko as $resiko){
+        $query = $this->db->query("SELECT userID,motherId,ancDate,highRiskPregnancyProteinEnergyMalnutrition,highRiskPregnancyPIH,highRisklabourFetusNumber,highRiskLabourFetusSize,highRiskLabourFetusMalpresentation FROM kartu_anc_visit WHERE (ancDate > '$startyear' AND ancDate < '$startdate')")->result();
+        $query2 = $this->db->query("SELECT userID,motherId,ancDate,highRiskPregnancyProteinEnergyMalnutrition,highRiskPregnancyPIH,highRisklabourFetusNumber,highRiskLabourFetusSize,highRiskLabourFetusMalpresentation FROM kartu_anc_visit ORDER BY ancDate")->result();
+        $resikos = [];
+        foreach ($query2 as $q){
+            if(!array_key_exists($q->motherId, $resikos)){
+                $resikos[$q->motherId] = [];
+                array_push($resikos[$q->motherId], $q);
+            }else{
+                array_push($resikos[$q->motherId], $q);
+            }
+        }
+        $query2 = $this->db->query("SELECT motherId,"
+                . "highRiskPregnancyProteinEnergyMalnutrition,"
+                . "malariaRisk,"
+                . "highRiskLabourTBRisk,"
+                . "HighRiskPregnancyTooManyChildren,"
+                . "HighRiskPregnancyAbortus,"
+                . "HighRiskLabourSectionCesareaRecord,"
+                . "highRiskSTIBBVs,"
+                . "highRiskEctopicPregnancy,"
+                . "otherRiskMolaHidatidosa,"
+                . "otherRiskCongenitalAbnormality,"
+                . "otherRiskEarlyWaterbreak,"
+                . "highRiskCardiovascularDiseaseRecord,"
+                . "highRiskDidneyDisorder,"
+                . "highRiskHeartDisorder,"
+                . "highRiskAsthma,"
+                . "highRiskTuberculosis,"
+                . "highRiskMalaria,"
+                . "highRiskHIVAIDS FROM kartu_anc_registration")->result();
+        $bumildata = [];
+        foreach ($query2 as $q){
+            if(!array_key_exists($q->motherId, $bumildata)){
+                $bumildata[$q->motherId] = [];
+                array_push($bumildata[$q->motherId], $q);
+            }
+        }
+        $bumil = [];
+        foreach ($query as $resiko){
             if(array_key_exists($resiko->userID, $user_index)){
-                if(!$this->isHRP($resiko)){
-                    if($resiko->highRiskPregnancyProteinEnergyMalnutrition=="yes"
-                    ||$resiko->highRiskPregnancyPIH=="yes"
-                    ||$resiko->highRisklabourFetusNumber=="yes"
-                    ||$resiko->highRiskLabourFetusSize=="yes"
-                    ||$resiko->highRiskLabourFetusMalpresentation=="yes"){
-                        $key=array_search($user_index[$resiko->userID],$result['desa']);
-                        $result['cakupan_resiko_bulan_lalu'][$key] += 1;
-                    }else{
-                        $bumildata = $this->db->query("SELECT * FROM kartu_anc_registration WHERE motherId='$resiko->motherId'")->result();
-                        foreach ($bumildata as $bum){
-                            if($bum->highRiskPregnancyProteinEnergyMalnutrition=="yes"
-                                ||$bum->malariaRisk=="yes"
-                                ||$bum->highRiskLabourTBRisk=="yes"
-                                ||$bum->HighRiskPregnancyTooManyChildren=="yes"
-                                ||$bum->HighRiskPregnancyAbortus=="yes"
-                                ||$bum->HighRiskLabourSectionCesareaRecord=="yes"
-                                ||$bum->highRiskSTIBBVs=="yes"
-                                ||$bum->highRiskEctopicPregnancy=="yes"
-                                ||$bum->otherRiskMolaHidatidosa=="yes"
-                                ||$bum->otherRiskCongenitalAbnormality=="yes"
-                                ||$bum->otherRiskEarlyWaterbreak=="yes"
-                                ||$bum->highRiskCardiovascularDiseaseRecord=="yes"
-                                ||$bum->highRiskDidneyDisorder=="yes"
-                                ||$bum->highRiskHeartDisorder=="yes"
-                                ||$bum->highRiskAsthma=="yes"
-                                ||$bum->highRiskTuberculosis=="yes"
-                                ||$bum->highRiskMalaria=="yes"
-                                ||$bum->highRiskHIVAIDS=="yes"){
-                                $key=array_search($user_index[$resiko->userID],$result['desa']);
-                                $result['cakupan_resiko_bulan_lalu'][$key] += 1;
+                if(!array_key_exists($resiko->motherId, $bumil)){
+                    if(!$this->isHRP($resiko,$resikos,$bumildata)){
+                        if($resiko->highRiskPregnancyProteinEnergyMalnutrition=="yes"
+                        ||$resiko->highRiskPregnancyPIH=="yes"
+                        ||$resiko->highRisklabourFetusNumber=="yes"
+                        ||$resiko->highRiskLabourFetusSize=="yes"
+                        ||$resiko->highRiskLabourFetusMalpresentation=="yes"){
+                            $key=array_search($user_index[$resiko->userID],$result['desa']);
+                            $result['cakupan_resiko_bulan_lalu'][$key] += 1;
+                            $bumil[$resiko->motherId] = 'yes';
+                        }else{
+                            if(array_key_exists($resiko->motherId, $bumildata)){
+                                foreach ($bumildata[$resiko->motherId] as $bum){
+                                    if($bum->highRiskPregnancyProteinEnergyMalnutrition=="yes"
+                                        ||$bum->malariaRisk=="yes"
+                                        ||$bum->highRiskLabourTBRisk=="yes"
+                                        ||$bum->HighRiskPregnancyTooManyChildren=="yes"
+                                        ||$bum->HighRiskPregnancyAbortus=="yes"
+                                        ||$bum->HighRiskLabourSectionCesareaRecord=="yes"
+                                        ||$bum->highRiskSTIBBVs=="yes"
+                                        ||$bum->highRiskEctopicPregnancy=="yes"
+                                        ||$bum->otherRiskMolaHidatidosa=="yes"
+                                        ||$bum->otherRiskCongenitalAbnormality=="yes"
+                                        ||$bum->otherRiskEarlyWaterbreak=="yes"
+                                        ||$bum->highRiskCardiovascularDiseaseRecord=="yes"
+                                        ||$bum->highRiskDidneyDisorder=="yes"
+                                        ||$bum->highRiskHeartDisorder=="yes"
+                                        ||$bum->highRiskAsthma=="yes"
+                                        ||$bum->highRiskTuberculosis=="yes"
+                                        ||$bum->highRiskMalaria=="yes"
+                                        ||$bum->highRiskHIVAIDS=="yes"){
+                                        $key=array_search($user_index[$resiko->userID],$result['desa']);
+                                        $result['cakupan_resiko_bulan_lalu'][$key] += 1;
+                                        $bumil[$resiko->motherId] = 'yes';
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
         }
-        $datakresiko = $this->db->query("SELECT * FROM kartu_anc_visit WHERE (ancDate > '$startdate' AND ancDate < '$enddate')")->result();
-        foreach ($datakresiko as $resiko){
+        $query = $this->db->query("SELECT userID,motherId,ancDate,highRiskPregnancyProteinEnergyMalnutrition,highRiskPregnancyPIH,highRisklabourFetusNumber,highRiskLabourFetusSize,highRiskLabourFetusMalpresentation FROM kartu_anc_visit WHERE (ancDate > '$startdate' AND ancDate < '$enddate')")->result();
+        foreach ($query as $resiko){
             if(array_key_exists($resiko->userID, $user_index)){
-                if(!$this->isHRP($resiko)){
-                    if($resiko->highRiskPregnancyProteinEnergyMalnutrition=="yes"
-                    ||$resiko->highRiskPregnancyPIH=="yes"
-                    ||$resiko->highRisklabourFetusNumber=="yes"
-                    ||$resiko->highRiskLabourFetusSize=="yes"
-                    ||$resiko->highRiskLabourFetusMalpresentation=="yes"){
-                        $key=array_search($user_index[$resiko->userID],$result['desa']);
-                        $result['cakupan_resiko_bulan_ini'][$key] += 1;
-                    }else{
-                        $bumildata = $this->db->query("SELECT * FROM kartu_anc_registration WHERE motherId='$resiko->motherId'")->result();
-                        foreach ($bumildata as $bum){
-                            if($bum->highRiskPregnancyProteinEnergyMalnutrition=="yes"
-                                ||$bum->malariaRisk=="yes"
-                                ||$bum->highRiskLabourTBRisk=="yes"
-                                ||$bum->HighRiskPregnancyTooManyChildren=="yes"
-                                ||$bum->HighRiskPregnancyAbortus=="yes"
-                                ||$bum->HighRiskLabourSectionCesareaRecord=="yes"
-                                ||$bum->highRiskSTIBBVs=="yes"
-                                ||$bum->highRiskEctopicPregnancy=="yes"
-                                ||$bum->otherRiskMolaHidatidosa=="yes"
-                                ||$bum->otherRiskCongenitalAbnormality=="yes"
-                                ||$bum->otherRiskEarlyWaterbreak=="yes"
-                                ||$bum->highRiskCardiovascularDiseaseRecord=="yes"
-                                ||$bum->highRiskDidneyDisorder=="yes"
-                                ||$bum->highRiskHeartDisorder=="yes"
-                                ||$bum->highRiskAsthma=="yes"
-                                ||$bum->highRiskTuberculosis=="yes"
-                                ||$bum->highRiskMalaria=="yes"
-                                ||$bum->highRiskHIVAIDS=="yes"){
-                                $key=array_search($user_index[$resiko->userID],$result['desa']);
-                                $result['cakupan_resiko_bulan_ini'][$key] += 1;
+                if(!array_key_exists($resiko->motherId, $bumil)){
+                    if(!$this->isHRP($resiko,$resikos,$bumildata)){
+                        if($resiko->highRiskPregnancyProteinEnergyMalnutrition=="yes"
+                        ||$resiko->highRiskPregnancyPIH=="yes"
+                        ||$resiko->highRisklabourFetusNumber=="yes"
+                        ||$resiko->highRiskLabourFetusSize=="yes"
+                        ||$resiko->highRiskLabourFetusMalpresentation=="yes"){
+                            $key=array_search($user_index[$resiko->userID],$result['desa']);
+                            $result['cakupan_resiko_bulan_ini'][$key] += 1;
+                            $bumil[$resiko->motherId] = 'yes';
+                        }else{
+                            if(array_key_exists($resiko->motherId, $bumildata)){
+                                foreach ($bumildata[$resiko->motherId] as $bum){
+                                    if($bum->highRiskPregnancyProteinEnergyMalnutrition=="yes"
+                                        ||$bum->malariaRisk=="yes"
+                                        ||$bum->highRiskLabourTBRisk=="yes"
+                                        ||$bum->HighRiskPregnancyTooManyChildren=="yes"
+                                        ||$bum->HighRiskPregnancyAbortus=="yes"
+                                        ||$bum->HighRiskLabourSectionCesareaRecord=="yes"
+                                        ||$bum->highRiskSTIBBVs=="yes"
+                                        ||$bum->highRiskEctopicPregnancy=="yes"
+                                        ||$bum->otherRiskMolaHidatidosa=="yes"
+                                        ||$bum->otherRiskCongenitalAbnormality=="yes"
+                                        ||$bum->otherRiskEarlyWaterbreak=="yes"
+                                        ||$bum->highRiskCardiovascularDiseaseRecord=="yes"
+                                        ||$bum->highRiskDidneyDisorder=="yes"
+                                        ||$bum->highRiskHeartDisorder=="yes"
+                                        ||$bum->highRiskAsthma=="yes"
+                                        ||$bum->highRiskTuberculosis=="yes"
+                                        ||$bum->highRiskMalaria=="yes"
+                                        ||$bum->highRiskHIVAIDS=="yes"){
+                                        $key=array_search($user_index[$resiko->userID],$result['desa']);
+                                        $result['cakupan_resiko_bulan_ini'][$key] += 1;
+                                        $bumil[$resiko->motherId] = 'yes';
+                                    }
+                                }
                             }
                         }
                     }
@@ -235,11 +289,16 @@ class BidanPwsModel extends CI_Model{
         $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_ibu1.xlsx",$result,$result_index);
     }
     
-    private function isHaveKomplikasiBefore($bumil){
-        $ancvisit = $this->db->query("SELECT * FROM kartu_anc_visit WHERE motherId='$bumil->motherId' AND ancDate < '$bumil->ancDate' ORDER BY ancDate")->result();
-        foreach ($ancvisit as $visit){
-            if($visit->komplikasidalamKehamilan!=''&&$visit->komplikasidalamKehamilan!='None'&&$visit->komplikasidalamKehamilan!='tidak_ada_komplikasi'){
-                return true;
+    private function isHaveKomplikasiBefore($bumil,$komplikasi){
+        if(array_key_exists($bumil->motherId, $komplikasi)){
+            foreach ($komplikasi[$bumil->motherId] as $visit){
+                $thisanc = date("Y-m-d", strtotime($visit->ancDate));
+                $bumilanc = date("Y-m-d", strtotime($bumil->ancDate));
+                if($thisanc<$bumilanc){
+                    if($visit->komplikasidalamKehamilan!=''&&$visit->komplikasidalamKehamilan!='None'&&$visit->komplikasidalamKehamilan!='tidak_ada_komplikasi'){
+                        return true;
+                    }
+                }
             }
         }
         return false;
@@ -284,10 +343,21 @@ class BidanPwsModel extends CI_Model{
         $result_index['bulin'] = ['D11','D12','D13','D14','D15','D16'];
         $result_index['bufas'] = ['E11','E12','E13','E14','E15','E16'];
         
-        $datakomplikasi = $this->db->query("SELECT * FROM kartu_anc_visit WHERE (ancDate > '$startyear' AND ancDate < '$startdate')")->result();
-        foreach ($datakomplikasi as $k1){
+        $query2 = $this->db->query("SELECT motherId,ancDate,komplikasidalamKehamilan FROM kartu_anc_visit ORDER BY ancDate")->result();
+        $komplikasi = [];
+        foreach ($query2 as $q){
+            if(!array_key_exists($q->motherId, $komplikasi)){
+                $komplikasi[$q->motherId] = [];
+                array_push($komplikasi[$q->motherId], $q);
+            }else{
+                array_push($komplikasi[$q->motherId], $q);
+            }
+        }
+        
+        $query = $this->db->query("SELECT userID,motherId,ancDate,komplikasidalamKehamilan FROM kartu_anc_visit WHERE (ancDate > '$startyear' AND ancDate < '$startdate')")->result();
+        foreach ($query as $k1){
             if(array_key_exists($k1->userID, $user_index)){
-                if(!$this->isHaveKomplikasiBefore($k1)){
+                if(!$this->isHaveKomplikasiBefore($k1,$komplikasi)){
                     if($k1->komplikasidalamKehamilan!=''&&$k1->komplikasidalamKehamilan!='None'&&$k1->komplikasidalamKehamilan!='tidak_ada_komplikasi'){
                         $key=array_search($user_index[$k1->userID],$result['desa']);
                         $result['komplikasi_bulan_lalu'][$key] += 1;
@@ -296,10 +366,10 @@ class BidanPwsModel extends CI_Model{
             }
         }
         
-        $datakomplikasi = $this->db->query("SELECT * FROM kartu_anc_visit WHERE (ancDate > '$startdate' AND ancDate < '$enddate')")->result();
-        foreach ($datakomplikasi as $k1){
+        $query = $this->db->query("SELECT userID,motherId,ancDate,komplikasidalamKehamilan FROM kartu_anc_visit WHERE (ancDate > '$startdate' AND ancDate < '$enddate')")->result();
+        foreach ($query as $k1){
             if(array_key_exists($k1->userID, $user_index)){
-                if(!$this->isHaveKomplikasiBefore($k1)){
+                if(!$this->isHaveKomplikasiBefore($k1,$komplikasi)){
                     if($k1->komplikasidalamKehamilan!=''&&$k1->komplikasidalamKehamilan!='None'&&$k1->komplikasidalamKehamilan!='tidak_ada_komplikasi'){
                         $key=array_search($user_index[$k1->userID],$result['desa']);
                         $result['komplikasi_bulan_ini'][$key] += 1;
@@ -544,11 +614,12 @@ class BidanPwsModel extends CI_Model{
         $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_ibu4.xlsx",$result,$result_index);
     }
     
-    private function isAnemia($bumil){
-        $datalab = $this->db->query("SELECT * FROM kartu_anc_visit_labTest WHERE motherId='$bumil->motherId'")->result();
-        foreach ($datalab as $data){
-            if($data->laboratoriumPeriksaHbAnemia=='positif'||$data->highRiskPregnancyAnemia=='yes'){
-                return true;
+    private function isAnemia($bumil,$datalabs){
+        if(array_key_exists($bumil->motherId, $datalabs)){
+            foreach ($datalabs[$bumil->motherId] as $data){
+                if($data->laboratoriumPeriksaHbAnemia=='positif'||$data->highRiskPregnancyAnemia=='yes'){
+                    return true;
+                }
             }
         }
         return false;
@@ -597,11 +668,22 @@ class BidanPwsModel extends CI_Model{
         $result_index['bulin'] = ['D11','D12','D13','D14','D15','D16'];
         $result_index['bufas'] = ['E11','E12','E13','E14','E15','E16'];
         
+        $query2 = $this->db->query("SELECT motherId,laboratoriumPeriksaHbAnemia,highRiskPregnancyAnemia FROM kartu_anc_visit_labTest")->result();
+        $datalabs = [];
+        foreach ($query2 as $q){
+            if(!array_key_exists($q->motherId, $datalabs)){
+                $datalabs[$q->motherId] = [];
+                array_push($datalabs[$q->motherId], $q);
+            }else{
+                array_push($datalabs[$q->motherId], $q);
+            }
+        }
+        
         $dataibu = $this->db->query("SELECT * FROM kartu_anc_registration WHERE (referenceDate > '$startyear' AND referenceDate < '$startdate')")->result();
         foreach ($dataibu as $ibu){
             if(array_key_exists($ibu->userID, $user_index)){
                 $key=array_search($user_index[$ibu->userID],$result['desa']);
-                if($this->isAnemia($ibu)){
+                if($this->isAnemia($ibu,$datalabs)){
                     $result['anemia_bulan_lalu'][$key] += 1;
                 }
                 if($ibu->highRiskPregnancyProteinEnergyMalnutrition=="yes"){
@@ -614,7 +696,7 @@ class BidanPwsModel extends CI_Model{
         foreach ($dataibu as $ibu){
             if(array_key_exists($ibu->userID, $user_index)){
                 $key=array_search($user_index[$ibu->userID],$result['desa']);
-                if($this->isAnemia($ibu)){
+                if($this->isAnemia($ibu,$datalabs)){
                     $result['anemia_bulan_ini'][$key] += 1;
                 }
                 if($ibu->highRiskPregnancyProteinEnergyMalnutrition=="yes"){
