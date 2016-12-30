@@ -2,8 +2,26 @@
     <div id="text" style="text-align: center;">
         <h3>Cakupan Imunisasi</h3>
         <h3><?=$header?></h3>
-        <?=$this->uri->segment(3)=="tahuninivstahunlalu"?"<h3>".$this->uri->segment(4)."</h3>":""?>
     </div>
+    <?php if($this->uri->segment(3)=="tahuninivstahunlalu"){ ?>
+    <div>
+        <label class="col-sm-2 control-label">Periode: </label>
+        <select id="aaa" name="b" class="form-control-static">
+            <option value="januari" <?=$this->uri->segment(4)=="januari"?"selected":""?>>Januari</option>
+            <option value="februari" <?=$this->uri->segment(4)=="februari"?"selected":""?>>Februari</option>
+            <option value="maret" <?=$this->uri->segment(4)=="maret"?"selected":""?>>Maret</option>
+            <option value="april" <?=$this->uri->segment(4)=="april"?"selected":""?>>April</option>
+            <option value="mei" <?=$this->uri->segment(4)=="mei"?"selected":""?>>Mei</option>
+            <option value="juni" <?=$this->uri->segment(4)=="juni"?"selected":""?>>Juni</option>
+            <option value="juli" <?=$this->uri->segment(4)=="juli"?"selected":""?>>Juli</option>
+            <option value="agustus" <?=$this->uri->segment(4)=="agustus"?"selected":""?>>Agustus</option>
+            <option value="september" <?=$this->uri->segment(4)=="september"?"selected":""?>>September</option>
+            <option value="oktober" <?=$this->uri->segment(4)=="oktober"?"selected":""?>>Oktober</option>
+            <option value="november" <?=$this->uri->segment(4)=="november"?"selected":""?>>November</option>
+            <option value="desember" <?=$this->uri->segment(4)=="desember"?"selected":""?>>Desember</option>
+        </select>
+    </div>
+    <?php } ?>
     <br/>
     <br/>
     <br/>
@@ -235,4 +253,16 @@
     <?php }else{ ?>
     $.fn.showChartStack(json);    
     <?php } ?>
+    <?php if($this->uri->segment(3)=="tahuninivstahunlalu"){ ?>
+    var datemode = $( "#aaa option:selected" ).attr("value");
+    console.log(datemode);
+    $( "#aaa" ).change(function() {
+        $( "#aaa option:selected" ).each(function() {
+            var newmode = $( "#aaa option:selected" ).attr("value");
+            if(datemode!=newmode){
+                window.location.href = "<?=base_url()."laporan/cakupanpwsvaksinator/tahuninivstahunlalu/"?>"+newmode;
+            }
+        });    
+    }).trigger( "change" );
+    <?php }?>
 </script>
