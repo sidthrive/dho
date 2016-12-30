@@ -55,6 +55,14 @@ class HHHScore extends CI_Controller{
                 $this->load->view('hhhscore/hhhsidebar');
                 $this->load->view('hhhscore/do_headscore',$data);
                 $this->load->view('footer');
+            }elseif($data['mode']=='lihat'){
+                $id = $this->uri->segment(4);
+                $data['hasil'] = $this->UjianModel->getReport($id);
+                
+                $this->load->view('header');
+                $this->load->view('hhhscore/hhhsidebar');
+                $this->load->view('ujian/hasil',$data);
+                $this->load->view('footer');
             }else{
                 $data['id_user'] = $UjianDB->query("SELECT id FROM user WHERE username='".$this->session->userdata('username')."'")->row()->id;
                 $data['jadwal'] = $UjianDB->query("SELECT * FROM tes WHERE id_user='".$data['id_user']."' AND id_jenis=3 AND aktif='yes'")->row();
