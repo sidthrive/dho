@@ -67,10 +67,22 @@
         </div>
         <br/>
         <br/>
-        <div title="Cakupan Vit/Fe Nifas">
+        <div title="Cakupan Vit A Nifas">
             <div id="">
                 <!-- START Script Block for Chart -->
-                <h3>Cakupan Vit/Fe Nifas </h3>
+                <h3>Cakupan Vit A Nifas Kumulatif</h3>
+                <div id="vitA" align="center">
+                </div>
+
+                <!-- END Script Block for Chart -->                
+            </div>
+        </div>
+        <br/>
+        <br/>
+        <div title="Cakupan Fe Nifas">
+            <div id="">
+                <!-- START Script Block for Chart -->
+                <h3>Cakupan Fe Nifas Kumulatif</h3>
                 <div id="vitfe" align="center">
                 </div>
 
@@ -82,7 +94,7 @@
         <div title="Cakupan Anemia Bumil">
             <div id="">
                 <!-- START Script Block for Chart -->
-                <h3>Cakupan Anemia Bumil</h3>
+                <h3>Cakupan Anemia Bumil Kumulatif</h3>
                 <div id="anemia" align="center">
                 </div>
 
@@ -94,7 +106,7 @@
         <div title="Cakupan Bumil KEK">
             <div id="">
                 <!-- START Script Block for Chart -->
-                <h3>Cakupan Bumil KEK</h3>
+                <h3>Cakupan Bumil KEK Kumulatif</h3>
                 <div id="kek" align="center">
                 </div>
 
@@ -106,7 +118,7 @@
         <div title="Cakupan Kasus Gizi Buruk">
             <div id="">
                 <!-- START Script Block for Chart -->
-                <h3>Cakupan Kasus Gizi Buruk</h3>
+                <h3>Cakupan Kasus Gizi Buruk (BB/U)</h3>
                 <div id="gibur" align="center">
                 </div>
 
@@ -115,11 +127,23 @@
         </div>
         <br/>
         <br/>
-        <div title="Cakupan Fe 1 & Fe 3">
+        <div title="Cakupan Fe 1">
             <div id="">
                 <!-- START Script Block for Chart -->
-                <h3>Cakupan Fe 1 & Fe 3</h3>
-                <div id="fe13" align="center">
+                <h3>Cakupan Fe 1 Kumulatif</h3>
+                <div id="fe1" align="center">
+                </div>
+
+                <!-- END Script Block for Chart -->                
+            </div>
+        </div>
+        <br/>
+        <br/>
+        <div title="Cakupan Fe 3">
+            <div id="">
+                <!-- START Script Block for Chart -->
+                <h3>Cakupan Fe 3 Kumulatif</h3>
+                <div id="fe3" align="center">
                 </div>
 
                 <!-- END Script Block for Chart -->                
@@ -139,10 +163,10 @@
         </div>
         <br/>
         <br/>
-        <div title="Persentase BBLR">
+        <div title="Jumlah BBLR">
             <div id="">
                 <!-- START Script Block for Chart -->
-                <h3>Persentase BBLR</h3>
+                <h3>Jumlah BBLR</h3>
                 <div id="bblr" align="center">
                 </div>
 
