@@ -6,9 +6,9 @@ class VaksinatorCakupanModel extends CI_Model{
 
     private $db;
     private $xlsForm = [];
-    private $user   =  ['Lekor'=>array('l'=>0,'p'=>0),'Saba'=>array('l'=>0,'p'=>0),'Pendem'=>array('l'=>0,'p'=>0),'Setuta'=>array('l'=>0,'p'=>0),'Jango'=>array('l'=>0,'p'=>0),'Janapria'=>array('l'=>0,'p'=>0),'Ketara'=>array('l'=>0,'p'=>0),'Sengkol'=>array('l'=>0,'p'=>0),'Kawo'=>array('l'=>0,'p'=>0),'Tanak Awu'=>array('l'=>0,'p'=>0),'Pengembur'=>array('l'=>0,'p'=>0),'Segala Anyar'=>array('l'=>0,'p'=>0)];
-    private $user_village = ['vaksinator1'=>'Lekor','vaksinator2'=>'Saba','vaksinator3'=>'Pendem','vaksinator4'=>'Setuta','vaksinator5'=>'Jango','vaksinator6'=>'Janapria','vaksinator8'=>'Ketara','vaksinator9'=>'Sengkol','vaksinator10'=>'Sengkol','vaksinator11'=>'Kawo','vaksinator12'=>'Tanak Awu','vaksinator13'=>'Pengembur','vaksinator14'=>'Segala Anyar'];
-    private $bidan_village = ['user1'=>'Lekor','user2'=>'Saba','user3'=>'Pendem','user4'=>'Setuta','user5'=>'Jango','user6'=>'Janapria','user8'=>'Ketara','user9'=>'Sengkol','user10'=>'Sengkol','user11'=>'Kawo','user12'=>'Tanak Awu','user13'=>'Pengembur','user14'=>'Segala Anyar'];
+    private $user   =  ['Saba'=>array('l'=>0,'p'=>0),'Tanak Awu'=>array('l'=>0,'p'=>0)];
+    private $user_village = ['vaksinator2'=>'Saba','vaksinator12'=>'Tanak Awu'];
+    private $bidan_village = ['user2'=>'Saba','user12'=>'Tanak Awu'];
             
     function __construct() {
         parent::__construct();
@@ -47,7 +47,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM hb0_visit WHERE hb0 > '$startdate' AND hb0 < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $hb0[$this->user_village[$dvisit->userID]]['l'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -65,7 +65,10 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM bcg_visit WHERE bcg > '$startdate' AND bcg < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");
+                if($jk->num_rows()>0){
+                    $jk = $jk->row()->jk;
+                }else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $bcg[$this->user_village[$dvisit->userID]]['l'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -81,7 +84,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM polio1_visit WHERE polio1 > '$startdate' AND polio1 < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $polio1[$this->user_village[$dvisit->userID]]['l'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -97,7 +100,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM hb1_visit WHERE dpt_hb1 > '$startdate' AND dpt_hb1 < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $dpthb1[$this->user_village[$dvisit->userID]]['l'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -113,7 +116,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM polio2_visit WHERE polio2 > '$startdate' AND polio2 < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $polio2[$this->user_village[$dvisit->userID]]['l'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -130,7 +133,7 @@ class VaksinatorCakupanModel extends CI_Model{
        $datavisit = $this->db->query("SELECT * FROM dpt_hb2_visit WHERE dpt_hb2 > '$startdate' AND dpt_hb2 < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $dpthb2[$this->user_village[$dvisit->userID]]['l'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -147,7 +150,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM polio3_visit WHERE polio3 > '$startdate' AND polio3 < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $polio3[$this->user_village[$dvisit->userID]]['l'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -164,7 +167,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM hb3_visit WHERE dpt_hb3 > '$startdate' AND dpt_hb3 < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $dpthb3[$this->user_village[$dvisit->userID]]['l'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -181,7 +184,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM polio4_visit WHERE polio4 > '$startdate' AND polio4 < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $polio4[$this->user_village[$dvisit->userID]]['l'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -198,7 +201,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM campak_visit WHERE imunisasi_campak > '$startdate' AND imunisasi_campak < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $campak[$this->user_village[$dvisit->userID]]['l'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -236,7 +239,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM campak_lanjutan_visit WHERE campak_lanjutan > '$startdate' AND campak_lanjutan < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $campak_lanjutan[$this->user_village[$dvisit->userID]]['l'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -327,7 +330,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM hb0_visit WHERE hb0 > '$startyear' AND hb0 < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $hb0[$this->user_village[$dvisit->userID]]['l'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -345,7 +348,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM bcg_visit WHERE bcg > '$startyear' AND bcg < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $bcg[$this->user_village[$dvisit->userID]]['l'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -361,7 +364,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM polio1_visit WHERE polio1 > '$startyear' AND polio1 < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $polio1[$this->user_village[$dvisit->userID]]['l'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -377,7 +380,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM hb1_visit WHERE dpt_hb1 > '$startyear' AND dpt_hb1 < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $dpthb1[$this->user_village[$dvisit->userID]]['l'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -393,7 +396,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM polio2_visit WHERE polio2 > '$startyear' AND polio2 < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $polio2[$this->user_village[$dvisit->userID]]['l'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -410,7 +413,7 @@ class VaksinatorCakupanModel extends CI_Model{
        $datavisit = $this->db->query("SELECT * FROM dpt_hb2_visit WHERE dpt_hb2 > '$startyear' AND dpt_hb2 < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $dpthb2[$this->user_village[$dvisit->userID]]['l'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -427,7 +430,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM polio3_visit WHERE polio3 > '$startyear' AND polio3 < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $polio3[$this->user_village[$dvisit->userID]]['l'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -444,7 +447,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM hb3_visit WHERE dpt_hb3 > '$startyear' AND dpt_hb3 < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $dpthb3[$this->user_village[$dvisit->userID]]['l'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -461,7 +464,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM polio4_visit WHERE polio4 > '$startyear' AND polio4 < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $polio4[$this->user_village[$dvisit->userID]]['l'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -478,7 +481,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM campak_visit WHERE imunisasi_campak > '$startyear' AND imunisasi_campak < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $campak[$this->user_village[$dvisit->userID]]['l'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -516,7 +519,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM campak_lanjutan_visit WHERE campak_lanjutan > '$startyear' AND campak_lanjutan < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $campak_lanjutan[$this->user_village[$dvisit->userID]]['l'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -601,13 +604,13 @@ class VaksinatorCakupanModel extends CI_Model{
         
 //        $datavisit = $this->getDataVisit("clientVersionSubmissionDate > '".$startdate."' AND clientVersionSubmissionDate < '".$enddate."'");
 //        $datareg = $this->getDataRegistrasi("clientVersionSubmissionDate > '".$startdate."' AND clientVersionSubmissionDate < '".$enddate."'");
-        $user   =  ['Lekor'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0),'Saba'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0),'Pendem'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0),'Setuta'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0),'Jango'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0),'Janapria'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0),'Ketara'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0),'Sengkol'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0),'Kawo'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0),'Tanak Awu'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0),'Pengembur'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0),'Segala Anyar'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0)];
+        $user   =  ['Saba'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0),'Tanak Awu'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0)];
         $hb0 = $bcg = $polio1 = $dpthb1 = $polio2 = $dpthb2 = $polio3 = $dpthb3 = $polio4 = $campak = $imunisasi = $campak_lanjutan = $tt1 = $tt2 = $tt3 = $tt4 = $tt5 = $uci = $user; 
         
         $datavisit = $this->db->query("SELECT * FROM hb0_visit WHERE hb0 > '$lastmonth' AND hb0 < '$startdate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $hb0[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -618,7 +621,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM hb0_visit WHERE hb0 > '$startdate' AND hb0 < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $hb0[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -637,7 +640,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM bcg_visit WHERE bcg > '$lastmonth' AND bcg < '$startdate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $bcg[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -648,7 +651,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM bcg_visit WHERE bcg > '$startdate' AND bcg < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $bcg[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -664,7 +667,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM polio1_visit WHERE polio1 > '$lastmonth' AND polio1 < '$startdate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $polio1[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -675,7 +678,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM polio1_visit WHERE polio1 > '$startdate' AND polio1 < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $polio1[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -692,7 +695,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM hb1_visit WHERE dpt_hb1 > '$lastmonth' AND dpt_hb1 < '$startdate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $dpthb1[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -703,7 +706,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM hb1_visit WHERE dpt_hb1 > '$startdate' AND dpt_hb1 < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $dpthb1[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -720,7 +723,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM polio2_visit WHERE polio2 > '$lastmonth' AND polio2 < '$startdate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $polio2[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -731,7 +734,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM polio2_visit WHERE polio2 > '$startdate' AND polio2 < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $polio2[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -748,7 +751,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM dpt_hb2_visit WHERE dpt_hb2 > '$lastmonth' AND dpt_hb2 < '$startdate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $dpthb2[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -759,7 +762,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM dpt_hb2_visit WHERE dpt_hb2 > '$startdate' AND dpt_hb2 < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $dpthb2[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -776,7 +779,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM polio3_visit WHERE polio3 > '$lastmonth' AND polio3 < '$startdate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $polio3[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -787,7 +790,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM polio3_visit WHERE polio3 > '$startdate' AND polio3 < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $polio3[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -804,7 +807,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM hb3_visit WHERE dpt_hb3 > '$lastmonth' AND dpt_hb3 < '$startdate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $dpthb3[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -815,7 +818,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM hb3_visit WHERE dpt_hb3 > '$startdate' AND dpt_hb3 < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $dpthb3[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -832,7 +835,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM polio4_visit WHERE polio4 > '$lastmonth' AND polio4 < '$startdate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $polio4[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -843,7 +846,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM polio4_visit WHERE polio4 > '$startdate' AND polio4 < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $polio4[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -860,7 +863,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM campak_visit WHERE imunisasi_campak > '$lastmonth' AND imunisasi_campak < '$startdate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $campak[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -871,7 +874,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM campak_visit WHERE imunisasi_campak > '$startdate' AND imunisasi_campak < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $campak[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -922,7 +925,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM campak_lanjutan_visit WHERE campak_lanjutan > '$lastmonth' AND campak_lanjutan < '$startdate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $campak_lanjutan[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -933,7 +936,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM campak_lanjutan_visit WHERE campak_lanjutan > '$startdate' AND campak_lanjutan < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $campak_lanjutan[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -1053,7 +1056,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $enddate2 = date("Y-m",  strtotime($startdate2." +1 month"));
 //        $datavisit = $this->getDataVisit("clientVersionSubmissionDate > '".$startdate."' AND clientVersionSubmissionDate < '".$enddate."'");
 //        $datareg = $this->getDataRegistrasi("clientVersionSubmissionDate > '".$startdate."' AND clientVersionSubmissionDate < '".$enddate."'");
-        $user   =  ['Lekor'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0),'Saba'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0),'Pendem'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0),'Setuta'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0),'Jango'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0),'Janapria'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0),'Ketara'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0),'Sengkol'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0),'Kawo'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0),'Tanak Awu'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0),'Pengembur'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0),'Segala Anyar'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0)];
+        $user   =  ['Saba'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0),'Tanak Awu'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0)];
         $hb0 = $bcg = $polio1 = $dpthb1 = $polio2 = $dpthb2 = $polio3 = $dpthb3 = $polio4 = $campak = $imunisasi = $campak_lanjutan = $tt1 = $tt2 = $tt3 = $tt4 = $tt5 = $uci = $user; 
         
         $series1['y_label']='Persentase';
@@ -1063,7 +1066,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM hb0_visit WHERE hb0 > '$startdate1' AND hb0 < '$enddate1'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $hb0[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -1074,7 +1077,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM hb0_visit WHERE hb0 > '$startdate2' AND hb0 < '$enddate2'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $hb0[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -1090,7 +1093,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM bcg_visit WHERE bcg > '$startdate1' AND bcg < '$enddate1'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $bcg[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -1101,7 +1104,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM bcg_visit WHERE bcg > '$startdate2' AND bcg < '$enddate2'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $bcg[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -1117,7 +1120,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM polio1_visit WHERE polio1 > '$startdate1' AND polio1 < '$enddate1'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $polio1[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -1128,7 +1131,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM polio1_visit WHERE polio1 > '$startdate2' AND polio1 < '$enddate2'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $polio1[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -1145,7 +1148,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM hb1_visit WHERE dpt_hb1 > '$startdate1' AND dpt_hb1 < '$enddate1'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $dpthb1[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -1156,7 +1159,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM hb1_visit WHERE dpt_hb1 > '$startdate2' AND dpt_hb1 < '$enddate2'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $dpthb1[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -1173,7 +1176,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM polio2_visit WHERE polio2 > '$startdate1' AND polio2 < '$enddate1'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $polio2[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -1184,7 +1187,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM polio2_visit WHERE polio2 > '$startdate2' AND polio2 < '$enddate2'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $polio2[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -1201,7 +1204,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM dpt_hb2_visit WHERE dpt_hb2 > '$startdate1' AND dpt_hb2 < '$enddate1'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $dpthb2[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -1212,7 +1215,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM dpt_hb2_visit WHERE dpt_hb2 > '$startdate2' AND dpt_hb2 < '$enddate2'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $dpthb2[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -1229,7 +1232,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM polio3_visit WHERE polio3 > '$startdate1' AND polio3 < '$enddate1'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $polio3[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -1240,7 +1243,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM polio3_visit WHERE polio3 > '$startdate2' AND polio3 < '$enddate2'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $polio3[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -1257,7 +1260,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM hb3_visit WHERE dpt_hb3 > '$startdate1' AND dpt_hb3 < '$enddate1'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $dpthb3[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -1268,7 +1271,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM hb3_visit WHERE dpt_hb3 > '$startdate2' AND dpt_hb3 < '$enddate2'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $dpthb3[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -1285,7 +1288,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM polio4_visit WHERE polio4 > '$startdate1' AND polio4 < '$enddate1'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $polio4[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -1296,7 +1299,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM polio4_visit WHERE polio4 > '$startdate2' AND polio4 < '$enddate2'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $polio4[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -1313,7 +1316,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM campak_visit WHERE imunisasi_campak > '$startdate1' AND imunisasi_campak < '$enddate1'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $campak[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -1324,7 +1327,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM campak_visit WHERE imunisasi_campak > '$startdate2' AND imunisasi_campak < '$enddate2'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $campak[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -1375,7 +1378,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM campak_lanjutan_visit WHERE campak_lanjutan > '$startdate1' AND campak_lanjutan < '$enddate1'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $campak_lanjutan[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
@@ -1386,7 +1389,7 @@ class VaksinatorCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM campak_lanjutan_visit WHERE campak_lanjutan > '$startdate2' AND campak_lanjutan < '$enddate2'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $this->user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'")->row()->jk;
+                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
                 if($jk=="laki-laki"||$jk=="male"){
                     $campak_lanjutan[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
                 }elseif($jk=="perempuan"||$jk=="female"){
