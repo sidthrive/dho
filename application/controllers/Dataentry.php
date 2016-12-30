@@ -44,14 +44,17 @@ class DataEntry extends CI_Controller{
             $data['kecamatan']		= $this->uri->segment(3);
             $data['desa']		= str_replace('%20', ' ', $this->uri->segment(4));
             if($this->input->get('start')==null&&$data['desa']==""){
+                if($this->input->get('by')==null)$by = "subdate";else $by = $this->input->get('by');
                 $now = date("Y-m-d");
-                redirect("dataentry/bidanbyform/".$data['kecamatan']."?start=2015-05-01&end=$now");
+                redirect("dataentry/bidanbyform/".$data['kecamatan']."?start=2015-05-01&end=$now&by=$by");
             }else{
+                $by = $this->input->get('by');
                 $data['start'] = $this->input->get('start');
                 $data['end'] = $this->input->get('end');
                 $old_data = $this->input->get('old');
-            }
-            $data['data']               = $this->AnalyticsModel->getCountPerForm($data['kecamatan'],$data['start'],$data['end'],$old_data);
+            }$data['datemode'] = $by;
+            if($by=="subdate") $data['data'] = $this->AnalyticsModel->getCountPerForm($data['kecamatan'],$data['start'],$data['end'],$old_data);
+            else $data['data'] = $this->AnalyticsModel->getCountPerFormByVisitDate($data['kecamatan'],$data['start'],$data['end'],$old_data);
             $this->load->view("header");
             $this->load->view("dataentry/dataentrysidebar",$data);
             if($data['desa']==""){
@@ -80,9 +83,11 @@ class DataEntry extends CI_Controller{
             $data['start'] = $this->input->post('start');
             $data['end'] = $this->input->post('end');
             $old_data = $this->input->post('old');
+            $by = $this->input->post('by');
             $data['kecamatan']		= $this->uri->segment(3);
             $data['desa']		= str_replace('%20', ' ', $this->uri->segment(4));
-            $data['data']               = $this->AnalyticsModel->downloadCountPerForm($data['kecamatan'],$data['start'],$data['end'],$old_data);
+            if($by=="subdate") $data['data'] = $this->AnalyticsModel->downloadCountPerForm($data['kecamatan'],$data['start'],$data['end'],$old_data);
+            else $data['data'] = $this->AnalyticsModel->downloadCountPerFormByVisitDate($data['kecamatan'],$data['start'],$data['end'],$old_data);
         }
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
@@ -115,14 +120,18 @@ class DataEntry extends CI_Controller{
                 $data['desa']		= "";
             }
             if($this->input->get('start')==null&&$data['desa']==""&&$data['mode']==''){
+                if($this->input->get('by')==null)$by = "subdate";else $by = $this->input->get('by');
                 $now = date("Y-m-d");
                 $start = date("Y-m-d",  strtotime($now."-29 days"));
-                redirect("dataentry/bidanbytanggal/".$data['kecamatan']."?start=$start&end=$now");
+                redirect("dataentry/bidanbytanggal/".$data['kecamatan']."?start=$start&end=$now&by=$by");
             }else{
+                $by = $this->input->get('by');
                 $data['start'] = $this->input->get('start');
                 $data['end'] = $this->input->get('end');
             }
-            $data['data']                   = $this->AnalyticsModel->getCountPerDayDrill($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
+            $data['datemode'] = $by;
+            if($by=="subdate") $data['data'] = $this->AnalyticsModel->getCountPerDayDrill($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
+            else $data['data'] = $this->AnalyticsModel->getCountPerDayByVisitDate($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
             $this->load->view("header");
             $this->load->view("dataentry/dataentrysidebar",$data);
             if($data['desa']==""){
@@ -143,6 +152,16 @@ class DataEntry extends CI_Controller{
             $this->load->view("footer");
         }
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
+    }
+    
+    public function getbidanByFormByVisitDate($desa,$date){
+        if($this->session->userdata('level')=="fhw"){
+            $data = $this->AnalyticsFhwModel->getCountPerFormForDrill($desa,$date);
+        }else{
+            $data = $this->AnalyticsModel->getCountPerFormByVisitDateForDrill($desa,$date);
+        }
+        
+        echo json_encode($data);
     }
     
     public function getbidanByForm($desa,$date){
@@ -182,13 +201,17 @@ class DataEntry extends CI_Controller{
             $data['kecamatan']		= $this->uri->segment(3);
             $data['desa']		= str_replace('%20', ' ', $this->uri->segment(4));
             if($this->input->get('start')==null&&$data['desa']==""){
+                if($this->input->get('by')==null)$by = "subdate";else $by = $this->input->get('by');
                 $now = date("Y-m-d");
-                redirect("dataentry/gizibyform/".$data['kecamatan']."?start=2016-06-01&end=$now");
+                redirect("dataentry/gizibyform/".$data['kecamatan']."?start=2016-06-01&end=$now&by=$by");
             }else{
+                $by = $this->input->get('by');
                 $data['start'] = $this->input->get('start');
                 $data['end'] = $this->input->get('end');
             }
-            $data['data']               = $this->GiziModel->getCountPerForm($data['kecamatan'],$data['start'],$data['end']);
+            $data['datemode'] = $by;
+            if($by=="subdate") $data['data'] = $this->GiziModel->getCountPerForm($data['kecamatan'],$data['start'],$data['end']);
+            else $data['data'] = $this->GiziModel->getCountPerFormByVisitDate($data['kecamatan'],$data['start'],$data['end']);
             $this->load->view("header");
             $this->load->view("dataentry/dataentrysidebar",$data);
             if($data['desa']==""){
@@ -232,14 +255,18 @@ class DataEntry extends CI_Controller{
                 $data['desa']		= "";
             }
             if($this->input->get('start')==null&&$data['desa']==""&&$data['mode']==''){
+                if($this->input->get('by')==null)$by = "subdate";else $by = $this->input->get('by');
                 $now = date("Y-m-d");
                 $start = date("Y-m-d",  strtotime($now."-29 days"));
-                redirect("dataentry/gizibytanggal/".$data['kecamatan']."?start=$start&end=$now");
+                redirect("dataentry/gizibytanggal/".$data['kecamatan']."?start=$start&end=$now&by=$by");
             }else{
+                $by = $this->input->get('by');
                 $data['start'] = $this->input->get('start');
                 $data['end'] = $this->input->get('end');
             }
-            $data['data']                   = $this->GiziModel->getCountPerDay($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
+            $data['datemode'] = $by;
+            if($by=="subdate") $data['data'] = $this->GiziModel->getCountPerDay($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
+            else $data['data'] = $this->GiziModel->getCountPerDayByVisitDate($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
             $this->load->view("header");
             $this->load->view("dataentry/dataentrysidebar",$data);
             if($data['desa']==""){
@@ -271,6 +298,17 @@ class DataEntry extends CI_Controller{
         
         echo json_encode($data);
     }
+    
+    public function getGiziByFormByVisitDate($desa,$date){
+        if($this->session->userdata('level')=="fhw"){
+            $data = $this->GiziFhwModel->getCountPerFormForDrill($desa,$date);
+        }else{
+            $data = $this->GiziModel->getCountPerFormByVisitDateForDrill($desa,$date);
+        }
+        
+        echo json_encode($data);
+    }
+    
     public function getFhwGiziByForm($desa,$date){
         $listdesa = ['gizi1'=>'Lekor','gizi2'=>'Saba','gizi3'=>'Pendem','gizi4'=>'Setuta','gizi5'=>'Jango','gizi6'=>'Janapria','gizi8'=>'Ketara','gizi9'=>'Sengkol','gizi10'=>'Sengkol','gizi11'=>'Kawo','gizi12'=>'Tanak Awu','gizi13'=>'Pengembur','gizi14'=>'Segala Anyar'];
         $data = $this->GiziFhwModel->getCountPerFormForDrill($desa,$date);
