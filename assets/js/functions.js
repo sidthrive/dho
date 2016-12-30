@@ -88,6 +88,7 @@ $.fn.showChartDataEntryTanggalDrill = function(data,url){
             y.push({"name":index,"y":value,"drilldown":index});
         });
         //console.log(drill);
+        var username = user;
         user = user.replace(/ /g,"_");
         $('#'+user).highcharts({			
             chart: {
@@ -116,10 +117,19 @@ $.fn.showChartDataEntryTanggalDrill = function(data,url){
                         }
 
                     }
+                },
+                resetZoomButton: {
+                    position: {
+                        // align: 'right', // by default
+                        // verticalAlign: 'top', // by default
+                        x: -10,
+                        y: 10
+                    },
+                    relativeTo: 'chart'
                 }
             },
             title: {
-                text: ''
+                text: username
             },
             xAxis: {
                 type: 'category'
@@ -163,7 +173,14 @@ $.fn.showChartDataEntryTanggalDrill = function(data,url){
                     }
                 }],
             drilldown: {
-                series: []
+                series: [],
+                drillUpButton: {
+                    relativeTo: 'spacingBox',
+                    position: {
+                        y: 0,
+                        x: 0
+                    }
+                }
             }
         });
     });
@@ -462,6 +479,86 @@ $.fn.showChart = function(data){
                         }
                     }
                 }],
+            tooltip: {
+                shared: true,
+                pointFormat: data1['y_label']+": {point.y:.2f} %"
+            },
+            legend: {
+                enabled : false
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.y:.2f}'
+                    }
+                }
+            },
+            series: [{
+                    name: data1['series_name'],
+                    type: 'column',
+                    data: y,
+                    color: '#73c1f7',
+                    tooltip: {
+                        valueSuffix: ''
+                    }
+                }]
+        });
+    });
+};
+
+$.fn.showChartWithPlot = function(data){
+    $.each(data,function(index1,data1){
+        var id = data1['page'];
+        var plot = data1['target'];
+        var ymax = data1['target']+2;
+        var x = [];
+        var y = [];
+        $.each(data1['form'],function(index2,data2){
+            x.push(index2);
+            y.push(data2);
+            if(data2>ymax) ymax = data2;
+        });
+        Highcharts.setOptions({
+            lang: {
+                decimalPoint: ',',
+                thousandsSep: '.'
+            }
+        });
+
+        $('#'+id).highcharts({			
+            chart: {
+                zoomType: 'xy',
+                height: 400
+            },
+            title: {
+                text: ''
+            },
+            xAxis: [{
+                    categories: x
+                }],
+            yAxis: {
+                max: ymax,
+                labels: {
+                    format: '{value}',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                        }
+                    },
+                title: {
+                    text: data1['y_label'],
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                },
+                plotLines: [{
+                    value: plot,
+                    color: 'red',
+                    dashStyle: 'shortdash',
+                    width: 2
+                    }]
+                },
             tooltip: {
                 shared: true,
                 pointFormat: data1['y_label']+": {point.y:.2f} %"
