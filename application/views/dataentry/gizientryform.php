@@ -4,11 +4,20 @@
             <h3>Puskesmas <?=$kecamatan?></h3>
         </div>
         <br><br>
+        <?php if($this->session->userdata('username')=="admindemo"){ ?>
+        <div>
+            <span>Tampilkan Berdasarkan : </span><select id="date">
+                <option id="subdate" value="subdate"<?=$datemode=="subdate"?" selected":""?>>Submission Date</option>
+                <option id="visdate" value="visdate"<?=$datemode=="visdate"?" selected":""?>>Visit Date</option>
+            </select>
+        </div><br><br>
+        <?php } ?>
         <div>
             <form class="form" action="<?php echo site_url()."dataentry/gizibyform/".$kecamatan?>" method="get">
                 <label class="col-sm-2 control-label">Periode: </label>
                 <input type="date" name="start" class="form-control-static" value="<?=$start?>"/>
                 <input type="date" name="end" class="form-control-static" value="<?=$end?>"/>
+                <input type="hidden" name="by" class="form-control-static" value="<?=$datemode?>"/>
                 <button class="form-control-static">GO</button>
             </form>
         </div>
@@ -41,4 +50,17 @@
 <script>
     var json = <?=json_encode($data)?>;
     $.fn.showChartDataEntryForm(json);
+    var datemode = $( "#date option:selected" ).attr("id");
+    $( "#date" ).change(function() {
+        $( "#date option:selected" ).each(function() {
+            var newmode = $( "#date option:selected" ).attr("id");
+            if(datemode!=newmode){
+                if(newmode=="subdate"){
+                    window.location.href = "<?=base_url()."dataentry/gizibyform/".$kecamatan."?start=".$start."&end=".$end."&by=subdate"?>";
+                }else if(newmode=="visdate"){
+                    window.location.href = "<?=base_url()."dataentry/gizibyform/".$kecamatan."?start=".$start."&end=".$end."&by=visdate"?>";
+                }
+            }
+        });    
+    }).trigger( "change" );
 </script>

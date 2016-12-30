@@ -6,7 +6,8 @@
     }else{
         $opt = "Tanggal";
     }
-    
+    if($datemode=="subdate") $url = "getGiziByForm";
+    else $url = "getGiziByFormByVisitDate";
 ?>    
     <div id="content">
         <div id="text">
@@ -16,6 +17,14 @@
                 <option id="bln" value="Bulanan"<?=$opt=="Bulan"?" selected":""?>>Bulan</option>
             </select>
         </div>
+        <?php if($this->session->userdata('username')=="admindemo"&&$opt=="Tanggal"){ ?>
+        <div>
+            <span style="color: white">Tampilkan Berdasarkan : </span><select id="date">
+                <option id="subdate" value="subdate"<?=$datemode=="subdate"?" selected":""?>>Submission Date</option>
+                <option id="visdate" value="visdate"<?=$datemode=="visdate"?" selected":""?>>Visit Date</option>
+            </select>
+        </div>
+        <?php } ?>
         <br>
         <br>
         <div>
@@ -23,6 +32,7 @@
                 <label class="col-sm-2 control-label">Periode: </label>
                 <input type="date" name="start" class="form-control-static" value="<?=$start?>"/>
                 <input type="date" name="end" class="form-control-static" value="<?=$end?>"/>
+                <input type="hidden" name="by" class="form-control-static" value="<?=$datemode?>"/>
                 <button class="form-control-static">GO</button>
             </form>
         </div>
@@ -60,7 +70,7 @@
 <script src="<?=base_url()?>assets/js/modules/exporting.js"></script>
 <script src="<?=base_url()?>assets/js/functions.js"></script>
 <script>
-    var url = "<?=base_url()?>dataentry/getGiziByForm/";
+    var url = "<?=base_url()?>dataentry/<?=$url?>/";
     var json = <?=json_encode($data)?>;
     <?php 
     if(isset($mode)){
@@ -86,6 +96,19 @@
                 window.location.href = "<?=base_url()."dataentry/gizibytanggal/".$kecamatan?>"+modeurl;
             }
             console.log($( "select option:selected" ).attr("id"));
+        });    
+    }).trigger( "change" );
+    var datemode = $( "#date option:selected" ).attr("id");
+    $( "#date" ).change(function() {
+        $( "#date option:selected" ).each(function() {
+            var newmode = $( "#date option:selected" ).attr("id");
+            if(datemode!=newmode){
+                if(newmode=="subdate"){
+                    window.location.href = "<?=base_url()."dataentry/gizibytanggal/".$kecamatan."?start=".$start."&end=".$end."&by=subdate"?>";
+                }else if(newmode=="visdate"){
+                    window.location.href = "<?=base_url()."dataentry/gizibytanggal/".$kecamatan."?start=".$start."&end=".$end."&by=visdate"?>";
+                }
+            }
         });    
     }).trigger( "change" );
 </script>
