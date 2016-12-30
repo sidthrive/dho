@@ -12,6 +12,7 @@ class BidanCakupanModel extends CI_Model{
     
     public function cakupanBulanIni($bulan,$tahun){
         $bulan_map = ['januari'=>1,'februari'=>2,'maret'=>3,'april'=>4,'mei'=>5,'juni'=>6,'juli'=>7,'agustus'=>8,'september'=>9,'oktober'=>10,'november'=>11,'desember'=>12];
+        $startyear = date("Y-m",  strtotime($tahun.'-01'));
         $startdate = date("Y-m",  strtotime($tahun.'-'.$bulan_map[$bulan]));
         $enddate = date("Y-m", strtotime($startdate." +1 months"));
         $this->load->model('PHPExcelModel');
@@ -24,7 +25,7 @@ class BidanCakupanModel extends CI_Model{
         $user_village = ['user1'=>'Lekor','user2'=>'Saba','user3'=>'Pendem','user4'=>'Setuta','user5'=>'Jango','user6'=>'Janapria','user8'=>'Ketara','user9'=>'Sengkol','user10'=>'Sengkol','user11'=>'Kawo','user12'=>'Tanak Awu','user13'=>'Pengembur','user14'=>'Segala Anyar'];
         
         $form = $user;
-        $datavisit = $this->db->query("SELECT * FROM kartu_anc_visit WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND ancKe=1 group by motherId")->result();
+        $datavisit = $this->db->query("SELECT * FROM kartu_anc_visit WHERE (ancDate > '$startyear' AND ancDate < '$enddate') AND ancKe=1 group by motherId")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $user_village)){
                 $form[$user_village[$dvisit->userID]] += 1;
@@ -35,13 +36,14 @@ class BidanCakupanModel extends CI_Model{
         }
         
         $series1['page']='K1A';
+        $series1['target']=(int)$bulan_map[$bulan]*96/12;
         $series1['form']=$form;
         $series1['y_label']='persentase';
         $series1['series_name']='persentase';
         array_push($xlsForm, $series1);
        
         $form = $user;
-        $datavisit = $this->db->query("SELECT * FROM kartu_anc_visit WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND ancKe=4 group by motherId")->result();
+        $datavisit = $this->db->query("SELECT * FROM kartu_anc_visit WHERE (ancDate > '$startyear' AND ancDate < '$enddate') AND ancKe=4 group by motherId")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $user_village)){
                 $form[$user_village[$dvisit->userID]] += 1;
@@ -52,19 +54,74 @@ class BidanCakupanModel extends CI_Model{
         }
         
         $series2['page']='K4';
+        $series2['target']=(int)$bulan_map[$bulan]*96/12;
         $series2['form']=$form;
         $series2['y_label']='persentase';
         $series2['series_name']='persentase';
         array_push($xlsForm, $series2);
        
         $form = $user;
-        $datavisit = $this->db->query("SELECT * FROM kartu_anc_visit WHERE (ancDate > '$startdate' AND ancDate < '$enddate')")->result();
+        $datavisit = $this->db->query("SELECT * FROM kartu_anc_visit WHERE (ancDate > '$startyear' AND ancDate < '$enddate')")->result();
+        $query = $this->db->query("SELECT motherId FROM kartu_anc_visit_labTest WHERE laboratoriumPeriksaHbAnemia='positif'")->result();
+        $laboratoriumPeriksaHbAnemia = [];
+        foreach ($query as $q){
+            if(!array_key_exists($q->motherId, $laboratoriumPeriksaHbAnemia)){
+                $laboratoriumPeriksaHbAnemia[$q->motherId] = TRUE;
+            }
+        }
+        $query = $this->db->query("SELECT kartu_anc_registration.motherId as motherId FROM kartu_anc_registration,kartu_anc_visit_integrasi WHERE kartu_anc_registration.motherId=kartu_anc_visit_integrasi.motherId AND kartu_anc_registration.highRiskTuberculosis='yes' AND kartu_anc_visit_integrasi.integrasiProgramtbObat='yes'")->result();
+        $highRiskTuberculosis = [];
+        foreach ($query as $q){
+            if(!array_key_exists($q->motherId, $highRiskTuberculosis)){
+                $highRiskTuberculosis[$q->motherId] = TRUE;
+            }
+        }
+        $query = $this->db->query("SELECT kartu_anc_registration.motherId as motherId FROM kartu_anc_registration,kartu_anc_visit_integrasi WHERE kartu_anc_registration.motherId=kartu_anc_visit_integrasi.motherId AND kartu_anc_registration.highRiskMalaria='yes' AND kartu_anc_visit_integrasi.integrasiProgramMalariaObat='yes'")->result();
+        $highRiskMalaria = [];
+        foreach ($query as $q){
+            if(!array_key_exists($q->motherId, $highRiskMalaria)){
+                $highRiskMalaria[$q->motherId] = TRUE;
+            }
+        }
+        $query = $this->db->query("SELECT kartu_anc_registration.motherId as motherId FROM kartu_anc_registration,kartu_anc_visit_integrasi WHERE kartu_anc_registration.motherId=kartu_anc_visit_integrasi.motherId AND kartu_anc_registration.highRiskHIVAIDS='yes' AND kartu_anc_visit_integrasi.integrasiProgrampmtctSerologi='yes'")->result();
+        $highRiskHIVAIDS = [];
+        foreach ($query as $q){
+            if(!array_key_exists($q->motherId, $highRiskHIVAIDS)){
+                $highRiskHIVAIDS[$q->motherId] = TRUE;
+            }
+        }
+        $tertangani = array();
         foreach ($datavisit as $dvisit){
+            if(array_key_exists($dvisit->motherId, $tertangani)){
+                continue;
+            }
             if(array_key_exists($dvisit->userID, $user_village)){
-                if($dvisit->komplikasidalamKehamilan!="None"){
+                if($dvisit->komplikasidalamKehamilan!="None"&&$dvisit->komplikasidalamKehamilan!=''&&$dvisit->komplikasidalamKehamilan!='tidak_ada_komplikasi'){
                     if($dvisit->rujukan=="Ya"){
+                        $tertangani[$dvisit->motherId] = 'yes';
                         $form[$user_village[$dvisit->userID]] += 1;
+                        continue;
                     }
+                }
+                if($dvisit->pelayananfe0=="Ya"&&array_key_exists($dvisit->motherId, $laboratoriumPeriksaHbAnemia)){
+                    $tertangani[$dvisit->motherId] = 'yes';
+                    $form[$user_village[$dvisit->userID]] += 1;
+                    continue;
+                }
+                if(array_key_exists($dvisit->motherId, $highRiskTuberculosis)){
+                    $tertangani[$dvisit->motherId] = 'yes';
+                    $form[$user_village[$dvisit->userID]] += 1;
+                    continue;
+                }
+                if(array_key_exists($dvisit->motherId, $highRiskMalaria)){
+                    $tertangani[$dvisit->motherId] = 'yes';
+                    $form[$user_village[$dvisit->userID]] += 1;
+                    continue;
+                }
+                if(array_key_exists($dvisit->motherId, $highRiskHIVAIDS)){
+                    $tertangani[$dvisit->motherId] = 'yes';
+                    $form[$user_village[$dvisit->userID]] += 1;
+                    continue;
                 }
             }
         }
@@ -72,6 +129,7 @@ class BidanCakupanModel extends CI_Model{
             $form[$desa] = $nilai*100/$target_mt[$desa];
         }
         $series3['page']='MT';
+        $series3['target']=(int)$bulan_map[$bulan]*96/12;
         $series3['form']=$form;
         $series3['y_label']='persentase';
         $series3['series_name']='persentase';
@@ -79,7 +137,7 @@ class BidanCakupanModel extends CI_Model{
        
         $likes = $user;
         $nakes = $user;
-        $datapersalinan= $this->db->query("SELECT * FROM kartu_pnc_dokumentasi_persalinan WHERE tanggalLahirAnak > '$startdate' AND tanggalLahirAnak < '$enddate'")->result();
+        $datapersalinan= $this->db->query("SELECT * FROM kartu_pnc_dokumentasi_persalinan WHERE tanggalLahirAnak > '$startyear' AND tanggalLahirAnak < '$enddate'")->result();
         foreach ($datapersalinan as $dsalin){
             if(array_key_exists($dsalin->userID, $user_village)){
                 if($dsalin->tempatBersalin=="podok_bersalin_desa"||$dsalin->tempatBersalin=="pusat_kesehatan_masyarakat_pembantu"||$dsalin->tempatBersalin=="pusat_kesehatan_masyarakat"||$dsalin->tempatBersalin=="rumah_bersalin"||$dsalin->tempatBersalin=="rumah_sakit_ibu_dan_anak"||$dsalin->tempatBersalin=="rumah_sakit"||$dsalin->tempatBersalin=="rumah_sakit_orang_dengan_hiv_aids"){
@@ -90,7 +148,7 @@ class BidanCakupanModel extends CI_Model{
                 }
             }
         }
-        $datapersalinan= $this->db->query("SELECT * FROM kartu_pnc_regitration_oa WHERE tanggalLahirAnak > '$startdate' AND tanggalLahirAnak < '$enddate'")->result();
+        $datapersalinan= $this->db->query("SELECT * FROM kartu_pnc_regitration_oa WHERE tanggalLahirAnak > '$startyear' AND tanggalLahirAnak < '$enddate'")->result();
         foreach ($datapersalinan as $dsalin){
             if(array_key_exists($dsalin->userID, $user_village)){
                 if($dsalin->tempatBersalin=="podok_bersalin_desa"||$dsalin->tempatBersalin=="pusat_kesehatan_masyarakat_pembantu"||$dsalin->tempatBersalin=="pusat_kesehatan_masyarakat"||$dsalin->tempatBersalin=="rumah_bersalin"||$dsalin->tempatBersalin=="rumah_sakit_ibu_dan_anak"||$dsalin->tempatBersalin=="rumah_sakit"||$dsalin->tempatBersalin=="rumah_sakit_orang_dengan_hiv_aids"){
@@ -108,19 +166,21 @@ class BidanCakupanModel extends CI_Model{
         
         
         $series4['page']='PDFK';
+        $series4['target']=(int)$bulan_map[$bulan]*96/12;
         $series4['form']=$likes;
         $series4['y_label']='persentase';
         $series4['series_name']='persentase';
         array_push($xlsForm, $series4);
         
         $series5['page']='PDTK';
+        $series5['target']=(int)$bulan_map[$bulan]*96/12;
         $series5['form']=$nakes;
         $series5['y_label']='persentase';
         $series5['series_name']='persentase';
         array_push($xlsForm, $series5);
        
         $form = $user;
-        $datavisit = $this->db->query("SELECT * FROM kartu_pnc_visit WHERE (referenceDate > '$startdate' AND referenceDate < '$enddate') AND hariKeKF='kf4' group by motherId")->result();
+        $datavisit = $this->db->query("SELECT * FROM kartu_pnc_visit WHERE (referenceDate > '$startyear' AND referenceDate < '$enddate') AND (hariKeKF='kf3' OR hariKeKF='kf4') group by motherId")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $user_village)){
                 $form[$user_village[$dvisit->userID]] += 1;
@@ -131,6 +191,7 @@ class BidanCakupanModel extends CI_Model{
         }
         
         $series6['page']='KN';
+        $series6['target']=(int)$bulan_map[$bulan]*96/12;
         $series6['form']=$form;
         $series6['y_label']='persentase';
         $series6['series_name']='persentase';
@@ -138,7 +199,7 @@ class BidanCakupanModel extends CI_Model{
        
         $form = $user;
         $form2 = $user;
-        $datavisit = $this->db->query("SELECT * FROM kohort_bayi_neonatal_period WHERE submissionDate > '$startdate' AND submissionDate < '$enddate'")->result();
+        $datavisit = $this->db->query("SELECT * FROM kohort_bayi_neonatal_period WHERE submissionDate > '$startyear' AND submissionDate < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $user_village)){
                 if($dvisit->kunjunganNeonatal=="Pertama"){
@@ -154,28 +215,31 @@ class BidanCakupanModel extends CI_Model{
         }
         
         $series7['page']='KNN1';
+        $series7['target']=(int)$bulan_map[$bulan]*96/12;
         $series7['form']=$form;
         $series7['y_label']='persentase';
         $series7['series_name']='persentase';
         array_push($xlsForm, $series7);
         
         $series8['page']='KNN3';
+        $series8['target']=(int)$bulan_map[$bulan]*96/12;
         $series8['form']=$form2;
         $series8['y_label']='persentase';
         $series8['series_name']='persentase';
         array_push($xlsForm, $series8);
        
         $form = $user;
-        $datavisit = $this->db->query("SELECT * FROM kartu_anc_close WHERE submissionDate > '$startdate' AND submissionDate < '$enddate'")->result();
+        $datavisit = $this->db->query("SELECT * FROM kartu_ibu_close WHERE submissionDate > '$startyear' AND submissionDate < '$enddate' GROUP BY kiId")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $user_village)){
-                if($dvisit->closeReason=="maternal_death"){
+                if($dvisit->closeReason=="Penyebab langsung"){
                     $form[$user_village[$dvisit->userID]] += 1;
                 }
             }
         }
         
         $series9['page']='KM';
+        $series9['target']=0;
         $series9['form']=$form;
         $series9['y_label']='Jumlah';
         $series9['series_name']='Jumlah';
@@ -184,39 +248,62 @@ class BidanCakupanModel extends CI_Model{
         $form = $user;
         $form2 = $user;
         $form3 = $user;
-        $data = $this->db->query("SELECT * FROM kohort_anak_tutup WHERE tanggalKematianAnak > '$startdate' AND tanggalKematianAnak < '$enddate'")->result();
+        $data = $this->db->query("SELECT * FROM kohort_anak_tutup WHERE tanggalKematianAnak > '$startyear' AND tanggalKematianAnak < '$enddate'")->result();
+        $query = $this->db->query("SELECT childId,tanggalLahirAnak FROM kohort_bayi_registration")->result();
+        $tanggalLahirAnak = [];
+        foreach ($query as $q){
+            if(!array_key_exists($q->childId, $tanggalLahirAnak)){
+                $tanggalLahirAnak[$q->childId] = $q->tanggalLahirAnak;
+            }
+        }
+        $query = $this->db->query("SELECT childId,tanggalLahirAnak FROM kartu_pnc_dokumentasi_persalinan")->result();
+        $tanggalLahirAnak2 = [];
+        foreach ($query as $q){
+            if(!array_key_exists($q->childId, $tanggalLahirAnak2)){
+                $tanggalLahirAnak2[$q->childId] = $q->tanggalLahirAnak;
+            }
+        }
         foreach ($data as $d){
             if(array_key_exists($d->userID, $user_village)){
-                $query = $this->db->query("SELECT tanggalLahirAnak FROM kohort_bayi_registration WHERE childId='$d->childId'");
-                if($query->num_rows<1){
-                    continue;
+                if(!array_key_exists($d->childId, $tanggalLahirAnak)){
+                    if(!array_key_exists($d->childId, $tanggalLahirAnak2)){
+                        continue;
+                    }else {
+                        if($tanggalLahirAnak2[$d->childId]==""||$tanggalLahirAnak2[$d->childId]=="None") continue;
+                        $tgl_lahir = date_create($tanggalLahirAnak2[$d->childId]);
+                    }
+                }else{
+                    if($tanggalLahirAnak[$d->childId]==""||$tanggalLahirAnak[$d->childId]=="None") continue;
+                    $tgl_lahir = date_create($tanggalLahirAnak[$d->childId]);
                 }
                 $tgl_mati = date_create($d->tanggalKematianAnak);
-                $tgl_lahir = date_create($query->row()->tanggalLahirAnak);
                 $diff = date_diff($tgl_lahir,$tgl_mati);
-                if($tgl_mati->days>0&&$tgl_mati->days<29){
-                    $form[$user_village[$dvisit->userID]] += 1;
-                }elseif($tgl_mati->days>=29&&$tgl_mati->days<331){
-                    $form2[$user_village[$dvisit->userID]] += 1;
-                }elseif($tgl_mati->days>=331&&$tgl_mati->days<=1800){
-                    $form3[$user_village[$dvisit->userID]] += 1;
+                if($diff->days>0&&$diff->days<29){
+                    $form[$user_village[$d->userID]] += 1;
+                }elseif($diff->days>=29&&$diff->days<331){
+                    $form2[$user_village[$d->userID]] += 1;
+                }elseif($diff->days>=331&&$diff->days<=1800){
+                    $form3[$user_village[$d->userID]] += 1;
                 }
             }
         }
         
         $series10['page']='KNN';
+        $series10['target']=0;
         $series10['form']=$form;
         $series9['y_label']='Jumlah';
         $series9['series_name']='Jumlah';
         array_push($xlsForm, $series10);
         
         $series11['page']='KB';
+        $series11['target']=0;
         $series11['form']=$form2;
         $series9['y_label']='Jumlah';
         $series9['series_name']='Jumlah';
         array_push($xlsForm, $series11);
         
         $series12['page']='KBLT';
+        $series12['target']=0;
         $series12['form']=$form3;
         $series9['y_label']='Jumlah';
         $series9['series_name']='Jumlah';
