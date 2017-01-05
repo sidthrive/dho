@@ -10,8 +10,11 @@
                     <option value="sengkol">Sengkol</option>
                 </select>
                 <select name="year" style="width:120px;" class="form-control-static">
-                    <option value="2015">2015</option>
-                    <option value="2016" selected>2016</option>
+                    <?php 
+                    $thn = date("Y");
+                    while($thn >= 2015){ ?>
+                    <option><?=$thn?></option>
+                    <?php $thn--;} ?>
                 </select>
                 <select name="month" style="width:120px;" class="form-control-static">
                     <option value="januari">Januari</option>
