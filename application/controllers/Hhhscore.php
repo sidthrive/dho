@@ -106,7 +106,7 @@ class HHHScore extends CI_Controller{
     public function bidanTrimester1(){
         if($this->input->get('b')==null){
             $bulan_map = [1=>'januari',2=>'februari',3=>'maret',4=>'april',5=>'mei',6=>'juni',7=>'juli',8=>'agustus',9=>'september',10=>'oktober',11=>'november',12=>'desember'];
-            $b = date("m");
+            $b = date("n");
             $t = date("Y");
             redirect("hhhscore/bidantrimester1?b=$bulan_map[$b]&t=$t");
         }else{
@@ -126,7 +126,7 @@ class HHHScore extends CI_Controller{
     public function bidanTrimester2(){
         if($this->input->get('b')==null){
             $bulan_map = [1=>'januari',2=>'februari',3=>'maret',4=>'april',5=>'mei',6=>'juni',7=>'juli',8=>'agustus',9=>'september',10=>'oktober',11=>'november',12=>'desember'];
-            $b = date("m");
+            $b = date("n");
             $t = date("Y");
             redirect("hhhscore/bidantrimester2?b=$bulan_map[$b]&t=$t");
         }else{
@@ -146,7 +146,7 @@ class HHHScore extends CI_Controller{
     public function bidanTrimester3(){
         if($this->input->get('b')==null){
             $bulan_map = [1=>'januari',2=>'februari',3=>'maret',4=>'april',5=>'mei',6=>'juni',7=>'juli',8=>'agustus',9=>'september',10=>'oktober',11=>'november',12=>'desember'];
-            $b = date("m");
+            $b = date("n");
             $t = date("Y");
             redirect("hhhscore/bidantrimester3?b=$bulan_map[$b]&t=$t");
         }else{
@@ -166,7 +166,7 @@ class HHHScore extends CI_Controller{
     public function standar(){
         if($this->input->get('b')==null){
             $bulan_map = [1=>'januari',2=>'februari',3=>'maret',4=>'april',5=>'mei',6=>'juni',7=>'juli',8=>'agustus',9=>'september',10=>'oktober',11=>'november',12=>'desember'];
-            $b = date("m");
+            $b = date("n");
             $t = date("Y");
             redirect("hhhscore/standar?b=$bulan_map[$b]&t=$t");
         }else{
@@ -186,7 +186,7 @@ class HHHScore extends CI_Controller{
     public function heartscore(){
         if($this->input->get('b')==null){
             $bulan_map = [1=>'januari',2=>'februari',3=>'maret',4=>'april',5=>'mei',6=>'juni',7=>'juli',8=>'agustus',9=>'september',10=>'oktober',11=>'november',12=>'desember'];
-            $b = date("m");
+            $b = date("n");
             $t = date("Y");
             redirect("hhhscore/heartscore?b=$bulan_map[$b]&t=$t");
         }else{

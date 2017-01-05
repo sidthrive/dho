@@ -21,7 +21,7 @@ class Laporan extends CI_Controller{
     public function cakupanIndikatorPWS(){
         if($this->input->get('b')==null){
             $bulan_map = [1=>'januari',2=>'februari',3=>'maret',4=>'april',5=>'mei',6=>'juni',7=>'juli',8=>'agustus',9=>'september',10=>'oktober',11=>'november',12=>'desember'];
-            $b = date("m");
+            $b = date("n");
             $t = date("Y");
             redirect("laporan/cakupanindikatorpws?b=$bulan_map[$b]&t=$t");
         }else{
@@ -61,7 +61,7 @@ class Laporan extends CI_Controller{
         $this->load->model('GiziCakupanModel');
         if($this->input->get('b')==null){
             $bulan_map = [1=>'januari',2=>'februari',3=>'maret',4=>'april',5=>'mei',6=>'juni',7=>'juli',8=>'agustus',9=>'september',10=>'oktober',11=>'november',12=>'desember'];
-            $b = date("m");
+            $b = date("n");
             $t = date("Y");
             redirect("laporan/cakupangizi?b=$bulan_map[$b]&t=$t");
         }else{
