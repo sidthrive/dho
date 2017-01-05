@@ -23,8 +23,11 @@
                 <option value="desember" <?=$bulan=="desember"?"selected":""?>>Desember</option>
             </select>
             <select name="t" class="form-control-static">
-                <option>2016</option>
-                <option>2015</option>
+                <?php 
+                $thn = date("Y");
+                while($thn >= 2015){ ?>
+                <option <?=$tahun==$thn?"selected":""?>><?=$thn?></option>
+                <?php $thn--;} ?>
             </select>
             <button class="form-control-static">GO</button>
         </form>
