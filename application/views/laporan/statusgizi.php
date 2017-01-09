@@ -22,8 +22,11 @@
                 <option value="desember" <?=$bulan=="desember"?"selected":""?>>Desember</option>
             </select>
             <select name="t" class="form-control-static">
-                <option>2016</option>
-                <option>2015</option>
+                <?php 
+                $thn = date("Y");
+                while($thn >= 2015){ ?>
+                <option <?=$tahun==$thn?"selected":""?>><?=$thn?></option>
+                <?php $thn--;} ?>
             </select>
             <button class="form-control-static">GO</button>
         </form>
@@ -67,10 +70,22 @@
         </div>
         <br/>
         <br/>
-        <div title="Cakupan Vit/Fe Nifas">
+        <div title="Cakupan Vit A Nifas">
             <div id="">
                 <!-- START Script Block for Chart -->
-                <h3>Cakupan Vit/Fe Nifas </h3>
+                <h3>Cakupan Vit A Nifas Kumulatif</h3>
+                <div id="vitA" align="center">
+                </div>
+
+                <!-- END Script Block for Chart -->                
+            </div>
+        </div>
+        <br/>
+        <br/>
+        <div title="Cakupan Fe Nifas">
+            <div id="">
+                <!-- START Script Block for Chart -->
+                <h3>Cakupan Fe Nifas Kumulatif</h3>
                 <div id="vitfe" align="center">
                 </div>
 
@@ -82,7 +97,7 @@
         <div title="Cakupan Anemia Bumil">
             <div id="">
                 <!-- START Script Block for Chart -->
-                <h3>Cakupan Anemia Bumil</h3>
+                <h3>Cakupan Anemia Bumil Kumulatif</h3>
                 <div id="anemia" align="center">
                 </div>
 
@@ -94,7 +109,7 @@
         <div title="Cakupan Bumil KEK">
             <div id="">
                 <!-- START Script Block for Chart -->
-                <h3>Cakupan Bumil KEK</h3>
+                <h3>Cakupan Bumil KEK Kumulatif</h3>
                 <div id="kek" align="center">
                 </div>
 
@@ -106,7 +121,7 @@
         <div title="Cakupan Kasus Gizi Buruk">
             <div id="">
                 <!-- START Script Block for Chart -->
-                <h3>Cakupan Kasus Gizi Buruk</h3>
+                <h3>Cakupan Kasus Gizi Buruk (BB/U)</h3>
                 <div id="gibur" align="center">
                 </div>
 
@@ -115,11 +130,23 @@
         </div>
         <br/>
         <br/>
-        <div title="Cakupan Fe 1 & Fe 3">
+        <div title="Cakupan Fe 1">
             <div id="">
                 <!-- START Script Block for Chart -->
-                <h3>Cakupan Fe 1 & Fe 3</h3>
-                <div id="fe13" align="center">
+                <h3>Cakupan Fe 1 Kumulatif</h3>
+                <div id="fe1" align="center">
+                </div>
+
+                <!-- END Script Block for Chart -->                
+            </div>
+        </div>
+        <br/>
+        <br/>
+        <div title="Cakupan Fe 3">
+            <div id="">
+                <!-- START Script Block for Chart -->
+                <h3>Cakupan Fe 3 Kumulatif</h3>
+                <div id="fe3" align="center">
                 </div>
 
                 <!-- END Script Block for Chart -->                
@@ -139,10 +166,10 @@
         </div>
         <br/>
         <br/>
-        <div title="Persentase BBLR">
+        <div title="Jumlah BBLR">
             <div id="">
                 <!-- START Script Block for Chart -->
-                <h3>Persentase BBLR</h3>
+                <h3>Jumlah BBLR</h3>
                 <div id="bblr" align="center">
                 </div>
 
@@ -152,7 +179,7 @@
     </div>
 </div>
 <script src="<?=base_url()?>assets/js/highcharts.js"></script>
-<script src="<?=base_url()?>assets/js/exporting.js"></script>
+<script src="<?=base_url()?>assets/js/modules/exporting.js"></script>
 <script src="<?=base_url()?>assets/js/functions.js"></script>
 <script>
     var json = <?=json_encode($xlsForm)?>;

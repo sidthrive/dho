@@ -1,7 +1,16 @@
 <div id="page" class="container">
+    <div id="mini-submenu">
+        <div>
+            <i class="glyphicon glyphicon-play"></i>
+        </div>
+    </div>
     <div id="sidebar1">
-        <h2>Menu Laporan</h2>
+        <h2>Menu Laporan
+            <span class="pull-right" id="slide-submenu">
+                <i class="glyphicon glyphicon-remove-sign"></i>
+            </span></h2>
         <div class="panel-group" id="accordion">
+            <?php if($this->session->userdata('tipe')=="bidan"||$this->session->userdata('tipe')=="all"){ ?>
             <div class="panel panel-default" id="bidans">
                 <div class="panel-heading">
                     <h4 class="panel-title">
@@ -26,7 +35,7 @@
                                 <div class="panel panel-default">
                                     <?php foreach($data as $user => $form){
                                     ?>
-                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords($user))?' style="background-color:#909090"':''?>>
+                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$user)))?' style="background-color:#909090"':''?>>
                                         <h4 class="panel-title">
                                             <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanbyform/Sengkol/".ucwords($user)?>">Desa <?=ucwords($user)?></a>
                                         </h4>
@@ -45,7 +54,7 @@
                                 <div class="panel panel-default">
                                     <?php foreach($data as $user => $form){
                                     ?>
-                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords($user))?' style="background-color:#909090"':''?>>
+                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$user)))?' style="background-color:#909090"':''?>>
                                         <h4 class="panel-title">
                                             <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanbyform/Janapria/".ucwords($user)?>">Desa <?=ucwords($user)?></a>
                                         </h4>
@@ -73,7 +82,7 @@
                                 <div class="panel panel-default">
                                     <?php foreach($data as $user => $form){
                                     ?>
-                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords($user))?' style="background-color:#909090"':''?>>
+                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$user)))?' style="background-color:#909090"':''?>>
                                         <h4 class="panel-title">
                                             <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanbytanggal/Sengkol/".ucwords($user)?>">Desa <?=ucwords($user)?></a>
                                         </h4>
@@ -92,7 +101,7 @@
                                 <div class="panel panel-default">
                                     <?php foreach($data as $user => $form){
                                     ?>
-                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords($user))?' style="background-color:#909090"':''?>>
+                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$user)))?' style="background-color:#909090"':''?>>
                                         <h4 class="panel-title">
                                             <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanbytanggal/Janapria/".ucwords($user)?>">Desa <?=ucwords($user)?></a>
                                         </h4>
@@ -105,6 +114,8 @@
                     </div>
                 </div>
             </div>
+            <?php }?>
+            <?php if($this->session->userdata('tipe')=="gizi"||$this->session->userdata('tipe')=="all"){ ?>
             <div class="panel panel-default" id="gizis">
                 <div class="panel-heading">
                     <h4 class="panel-title">
@@ -129,7 +140,7 @@
                                 <div class="panel panel-default">
                                     <?php foreach($data as $user => $form){
                                     ?>
-                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords($user))?' style="background-color:#909090"':''?>>
+                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$user)))?' style="background-color:#909090"':''?>>
                                         <h4 class="panel-title">
                                             <a data-parent="#gizi_menu" href="<?php echo site_url() ."dataentry/gizibyform/Sengkol/".ucwords($user)?>">Desa <?=ucwords($user)?></a>
                                         </h4>
@@ -148,7 +159,7 @@
                                 <div class="panel panel-default">
                                     <?php foreach($data as $user => $form){
                                     ?>
-                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords($user))?' style="background-color:#909090"':''?>>
+                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$user)))?' style="background-color:#909090"':''?>>
                                         <h4 class="panel-title">
                                             <a data-parent="#gizi_menu" href="<?php echo site_url() ."dataentry/gizibyform/Janapria/".ucwords($user)?>">Desa <?=ucwords($user)?></a>
                                         </h4>
@@ -176,7 +187,7 @@
                                 <div class="panel panel-default">
                                     <?php foreach($data as $user => $form){
                                     ?>
-                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords($user))?' style="background-color:#909090"':''?>>
+                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$user)))?' style="background-color:#909090"':''?>>
                                         <h4 class="panel-title">
                                             <a data-parent="#gizi_menu" href="<?php echo site_url() ."dataentry/gizibytanggal/Sengkol/".ucwords($user)?>">Desa <?=ucwords($user)?></a>
                                         </h4>
@@ -195,7 +206,7 @@
                                 <div class="panel panel-default">
                                     <?php foreach($data as $user => $form){
                                     ?>
-                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords($user))?' style="background-color:#909090"':''?>>
+                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$user)))?' style="background-color:#909090"':''?>>
                                         <h4 class="panel-title">
                                             <a data-parent="#gizi_menu" href="<?php echo site_url() ."dataentry/gizibytanggal/Janapria/".ucwords($user)?>">Desa <?=ucwords($user)?></a>
                                         </h4>
@@ -207,8 +218,9 @@
                         </div>
                     </div>
                 </div>
-                    
             </div>
+            <?php } ?>
+            <?php if($this->session->userdata('tipe')=="vaksinator"||$this->session->userdata('tipe')=="all"){ ?>
             <div class="panel panel-default" id="vaksinators">
                 <div class="panel-heading">
                     <h4 class="panel-title">
@@ -233,7 +245,7 @@
                                 <div class="panel panel-default">
                                     <?php foreach($data as $user => $form){
                                     ?>
-                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords($user))?' style="background-color:#909090"':''?>>
+                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$user)))?' style="background-color:#909090"':''?>>
                                         <h4 class="panel-title">
                                             <a data-parent="#vaksinator_menu" href="<?php echo site_url() ."dataentry/vaksinatorbyform/Sengkol/".ucwords($user)?>">Desa <?=ucwords($user)?></a>
                                         </h4>
@@ -252,7 +264,7 @@
                                 <div class="panel panel-default">
                                     <?php foreach($data as $user => $form){
                                     ?>
-                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords($user))?' style="background-color:#909090"':''?>>
+                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$user)))?' style="background-color:#909090"':''?>>
                                         <h4 class="panel-title">
                                             <a data-parent="#vaksinator_menu" href="<?php echo site_url() ."dataentry/vaksinatorbyform/Janapria/".ucwords($user)?>">Desa <?=ucwords($user)?></a>
                                         </h4>
@@ -280,7 +292,7 @@
                                 <div class="panel panel-default">
                                     <?php foreach($data as $user => $form){
                                     ?>
-                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords($user))?' style="background-color:#909090"':''?>>
+                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$user)))?' style="background-color:#909090"':''?>>
                                         <h4 class="panel-title">
                                             <a data-parent="#vaksinator_menu" href="<?php echo site_url() ."dataentry/vaksinatorbytanggal/Sengkol/".ucwords($user)?>">Desa <?=ucwords($user)?></a>
                                         </h4>
@@ -299,7 +311,7 @@
                                 <div class="panel panel-default">
                                     <?php foreach($data as $user => $form){
                                     ?>
-                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords($user))?' style="background-color:#909090"':''?>>
+                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$user)))?' style="background-color:#909090"':''?>>
                                         <h4 class="panel-title">
                                             <a data-parent="#vaksinator_menu" href="<?php echo site_url() ."dataentry/vaksinatorbytanggal/Janapria/".ucwords($user)?>">Desa <?=ucwords($user)?></a>
                                         </h4>
@@ -312,5 +324,6 @@
                     </div>
                 </div>
             </div>
+            <?php } ?>
         </div>
     </div>

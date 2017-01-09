@@ -1,4 +1,5 @@
 <div id="content">
+    <div id="container">
     
     <h2>
         SELAMAT DATANG

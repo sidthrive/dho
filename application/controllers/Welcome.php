@@ -25,6 +25,7 @@ class Welcome extends CI_Controller {
  
             if(empty($this->session->userdata('id_user'))&&$this->session->userdata('admin_valid') == FALSE) {
                 $this->session->set_flashdata('flash_data', 'You don\'t have access!');
+                $this->session->set_flashdata('url', $this->uri->uri_string);
                 redirect('login');
             }
             
@@ -39,6 +40,7 @@ class Welcome extends CI_Controller {
         
         public function logout() {
             $this->session->sess_destroy();
+            $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
             redirect('login');
         }
         
@@ -86,5 +88,6 @@ class Welcome extends CI_Controller {
             $this->load->view('welcome_message');
             $this->load->view('berita/newslist',$data);
             $this->load->view('footer');
+            $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
         }
 }

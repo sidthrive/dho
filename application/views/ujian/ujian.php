@@ -17,7 +17,7 @@
                 </tr>
                 <tr>
                     <td></td>
-                    <td style="width: 60px"><input value="a" type="radio" name="<?=$s->id?>" <?=($jawaban[$index]->jawaban=='a')?"checked":""?>/> &nbsp;A. </td>
+                    <td style="width: 80px"><input value="a" type="radio" name="<?=$s->id?>" <?=($jawaban[$index]->jawaban=='a')?"checked":""?>/> &nbsp;A. </td>
                     <td><?=$s->pilihan_a?></td>
                 </tr>
                 <tr>
@@ -25,17 +25,19 @@
                     <td><input value="b" type="radio" name="<?=$s->id?>" <?=($jawaban[$index]->jawaban=='b')?"checked":""?>/>&nbsp; B. </td>
                     <td><?=$s->pilihan_b?></td>
                 </tr>
+                <?php if($s->pilihan_c!=""){ ?>
                 <tr>
                     <td></td>
                     <td><input value="c" type="radio" name="<?=$s->id?>" <?=($jawaban[$index]->jawaban=='c')?"checked":""?>/>&nbsp; C. </td>
                     <td><?=$s->pilihan_c?></td>
                 </tr>
+                <?php }if($s->pilihan_d!=""){ ?>
                 <tr>
                     <td></td>
                     <td><input value="d" type="radio" name="<?=$s->id?>" <?=($jawaban[$index]->jawaban=='d')?"checked":""?>/>&nbsp; D. </td>
                     <td><?=$s->pilihan_d?></td>
                 </tr>
-                <?php if($s->pilihan_e!=""){ ?>
+                <?php }if($s->pilihan_e!=""){ ?>
                 <tr>
                     <td></td>
                     <td><input value="e" type="radio" name="<?=$s->id?>" <?=($jawaban[$index]->jawaban=='e')?"checked":""?>/>&nbsp; E. </td>

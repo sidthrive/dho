@@ -51,7 +51,7 @@ class Sertifikasi extends CI_Controller{
                 if(empty($data['on_going'])){
                     $this->UjianModel->addOnGoing($data['ujian']->id,1);
                     $data['on_going'] = $this->UjianModel->getOnGoing($data['ujian']->id,true);
-                    $data['soal'] = $this->UjianModel->getSoalUjian($data['ujian']->id_jenis);
+                    $data['soal'] = $this->UjianModel->getSoalUjian($data['ujian']->id_jenis,$data['on_going']->id_tes);
                     $this->UjianModel->addJawaban($data['ujian']->id,1,$data['soal']);
                     redirect("sertifikasi/do_ujian/".$token."/do");
                 }else{
@@ -63,7 +63,7 @@ class Sertifikasi extends CI_Controller{
                         if(empty($data['on_going'])){
                             $this->UjianModel->addOnGoing($data['ujian']->id,$tes_ke+1);
                             $data['on_going'] = $this->UjianModel->getOnGoing($data['ujian']->id,true);
-                            $data['soal'] = $this->UjianModel->getSoalUjian($data['ujian']->id_jenis);
+                            $data['soal'] = $this->UjianModel->getSoalUjian($data['ujian']->id_jenis,$data['on_going']->id_tes);
                             $this->UjianModel->addJawaban($data['ujian']->id,$tes_ke+1,$data['soal']);
                             redirect("sertifikasi/do_ujian/".$token."/do");
                         }else{
@@ -78,10 +78,10 @@ class Sertifikasi extends CI_Controller{
                 }
                 
             }else{
-                redirect("hhhscore/headscore");
+                redirect("hhhscore/headscore/do/".$token);
             }
         }
-        
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function saveWaktu(){

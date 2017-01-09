@@ -15,7 +15,8 @@ class Ujian extends CI_Controller{
             $this->load->view('footer');
         }else{
             redirect('ujian/user');
-        } 
+        }
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function user(){
@@ -49,6 +50,7 @@ class Ujian extends CI_Controller{
             
             $this->load->view('footer');
         }
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function setUser(){
@@ -82,6 +84,7 @@ class Ujian extends CI_Controller{
                 }
             }
         }
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function tes(){
@@ -126,6 +129,10 @@ class Ujian extends CI_Controller{
                     $config['remove_spaces']            = TRUE;
                     $config['overwrite']                = TRUE;
                     $this->load->library('upload', $config);
+                    if (!$this->upload->do_upload('xls')) {
+                        $error = array('error' => $this->upload->display_errors());
+                        var_dump($error);
+                    }
                     if ($this->upload->do_upload('xls')) {
                         $up_data	 	= $this->upload->data();
                         $this->load->library('PHPExcell');
@@ -164,6 +171,7 @@ class Ujian extends CI_Controller{
             
             $this->load->view('footer');
         }
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function setTes(){
@@ -189,6 +197,7 @@ class Ujian extends CI_Controller{
                 redirect('ujian/tes');
             }
         }
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function setSoal(){
@@ -216,6 +225,7 @@ class Ujian extends CI_Controller{
                 redirect('ujian/tes/soal/'.$data['id_tes']);
             }
         }
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function jadwal(){
@@ -261,6 +271,7 @@ class Ujian extends CI_Controller{
             
             $this->load->view('footer');
         }
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function setJadwalTes(){
@@ -285,6 +296,7 @@ class Ujian extends CI_Controller{
                 redirect('ujian/jadwal');
             }
         }
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function hasil(){
@@ -321,6 +333,7 @@ class Ujian extends CI_Controller{
             }
             $this->load->view('footer');
         }
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
 
 }

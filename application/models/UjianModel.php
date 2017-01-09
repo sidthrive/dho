@@ -117,7 +117,7 @@ class UjianModel extends CI_Model{
         $d = $data['d'];
         $e = $data['e'];
         $jawaban = $data['jawaban'];
-        $this->UjianDB->query("INSERT INTO soal VALUES('',$id_tes,'$pertanyaan','$a','$b','$c','$d','$e','$jawaban','yes')");
+        $this->UjianDB->query("INSERT INTO soal VALUES('','',$id_tes,'$pertanyaan','$a','$b','$c','$d','$e','$jawaban','','','yes')");
     }
     
     public function addSoalExcel($data){
@@ -126,11 +126,14 @@ class UjianModel extends CI_Model{
             $pertanyaan = $soal['B'];
             $a = $soal['C'];
             $b = $soal['D'];
-            $c = $soal['E'];
-            $d = $soal['F'];
-            $e = $soal['G'];
-            $jawaban = $soal['H'];
-            $this->UjianDB->query("INSERT INTO soal VALUES('',$id,'$pertanyaan','$a','$b','$c','$d','$e','$jawaban','yes')");
+            $c = isset($soal['E'])?$soal['E']:"";
+            $d = isset($soal['F'])?$soal['F']:"";
+            $e = isset($soal['G'])?$soal['G']:"";
+            $jawaban = strtolower($soal['H']);
+            $loi = isset($soal['J'])?strtolower($soal['J']):"3";
+            $kat = isset($soal['K'])?strtolower($soal['K']):"none";
+            $lvl = isset($soal['L'])?strtolower($soal['L']):"sedang";
+            $this->UjianDB->query("INSERT INTO soal VALUES('',$id,'$kat','$pertanyaan','$a','$b','$c','$d','$e','$jawaban','$loi','$lvl','yes')");
         }
     }
 
@@ -167,9 +170,48 @@ class UjianModel extends CI_Model{
         }
     }
     
-    public function getSoalUjian($id_tes){      
+    public function getSoalUjian($id_tes,$id_tes_ongoing=''){      
         $tes = $this->getJenisTes($id_tes);
-        return $this->UjianDB->query("SELECT * FROM soal WHERE id_jenis_tes=$id_tes order by RAND() LIMIT $tes->jumlah_soal")->result();
+        if($tes->metode_tes=='random'){
+            return $this->UjianDB->query("SELECT * FROM soal WHERE id_jenis_tes=$id_tes order by RAND() LIMIT $tes->jumlah_soal")->result();
+        }elseif($tes->metode_tes=='random_categorized'){
+            return $this->UjianDB->query("SELECT * FROM soal WHERE id_jenis_tes=$id_tes order by RAND() LIMIT $tes->jumlah_soal")->result();
+        }elseif($tes->metode_tes=='random_categorized_norepeat'){
+            $tes_done = $this->UjianDB->query("SELECT * FROM on_going WHERE id_tes=$id_tes_ongoing")->result();
+            $id_soal = array();
+            $round = 0;
+            foreach ($tes_done as $tdone){
+                $id = $this->getOnGoingIdSoal($tdone);
+                $id_soal=array_merge($id_soal,$id);
+                $round++;
+            }
+            if(empty($id_soal)){
+                $kategori = $this->UjianDB->query("SELECT * FROM kategori WHERE id_jenis_tes=$id_tes AND round=$round")->result();
+                $soal_all = array();
+                foreach ($kategori as $kat){
+                    $note = "SELECT * FROM soal WHERE id_jenis_tes=$id_tes AND kategori='$kat->kategori' AND level='$kat->level' order by RAND() LIMIT $kat->alloc";
+                    $this->UjianDB->query('INSERT INTO debug VALUES("","'.$note.'")');
+                    $soal = $this->UjianDB->query("SELECT * FROM soal WHERE id_jenis_tes=$id_tes AND kategori='$kat->kategori' AND level='$kat->level' order by RAND() LIMIT $kat->alloc")->result();
+                    $soal_all = array_merge($soal,$soal_all);
+                }
+                return $soal_all;
+            }else{
+                $more = "";
+                foreach ($id_soal as $id){
+                    $more .= " AND id!=".$id;
+                }
+                $kategori = $this->UjianDB->query("SELECT * FROM kategori WHERE id_jenis_tes=$id_tes AND round=$round")->result();
+                $soal_all = array();
+                foreach ($kategori as $kat){
+                    $note = "SELECT * FROM soal WHERE id_jenis_tes=$id_tes AND kategori='$kat->kategori' AND level='$kat->level' $more order by RAND() LIMIT $kat->alloc";
+                    $this->UjianDB->query('INSERT INTO debug VALUES("","'.$note.'")');
+                    $soal = $this->UjianDB->query("SELECT * FROM soal WHERE id_jenis_tes=$id_tes AND kategori='$kat->kategori' AND level='$kat->level' $more order by RAND() LIMIT $kat->alloc")->result();
+                    $soal_all = array_merge($soal,$soal_all);
+                }
+                return $soal_all;
+            }
+        }
+        
     }
     
     public function deleteSoal($id){       

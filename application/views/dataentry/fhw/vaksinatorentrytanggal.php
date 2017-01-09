@@ -6,6 +6,13 @@
     }else{
         $opt = "Tanggal";
     }
+    $a = $this->uri->segment(4);
+    if($a!="Mingguan"&&$a!="Bulanan"&&$a!=null){
+        $url = "dataentry/getFhwVaksinatorByForm/";
+    }
+    else {
+        $url = "dataentry/getVaksinatorByForm/";
+    }
     
 ?>    
     <div id="content">
@@ -15,6 +22,20 @@
                 <option id="mng" value="Mingguan"<?=$opt=="Minggu"?" selected":""?>>Minggu</option>
                 <option id="bln" value="Bulanan"<?=$opt=="Bulan"?" selected":""?>>Bulan</option>
             </select>
+        </div>
+        <br>
+        <br>
+        <div>
+            <?php if($this->session->userdata('level')=="fhw"){ ?>
+            <form class="form" action="<?php echo site_url()."dataentry/vaksinatorbytanggal/"?>" method="get">
+            <?php }else{ ?>
+            <form class="form" action="<?php echo site_url()."dataentry/vaksinatorbytanggal/".$kecamatan."/".$desa?>" method="get">
+            <?php } ?>
+                <label class="col-sm-2 control-label">Periode: </label>
+                <input type="date" name="start" class="form-control-static" value="<?=$start?>"/>
+                <input type="date" name="end" class="form-control-static" value="<?=$end?>"/>
+                <button class="form-control-static">GO</button>
+            </form>
         </div>
         <br>
         <div id="text" style="text-align: center;">
@@ -45,9 +66,12 @@
     </div>
 
 <script src="<?=base_url()?>assets/js/highcharts.js"></script>
-<script src="<?=base_url()?>assets/js/exporting.js"></script>
+<script src="<?=base_url()?>assets/js/modules/data.js"></script>
+<script src="<?=base_url()?>assets/js/modules/drilldown.js"></script>
+<script src="<?=base_url()?>assets/js/modules/exporting.js"></script>
 <script src="<?=base_url()?>assets/js/functions.js"></script>
 <script>
+    var url = "<?=base_url().$url?>";
     var json = <?=json_encode($data)?>;
     <?php 
     if(isset($mode)){
@@ -57,7 +81,7 @@
             echo '$.fn.showChartDataEntryBulan(json);';
         }
     }else{
-        echo '$.fn.showChartDataEntryTanggal(json);';
+        echo '$.fn.showChartDataEntryTanggalDrill(json,url);';
     } ?> 
     var mode = $( "select option:selected" ).attr("id");
     $( "select" ).change(function() {

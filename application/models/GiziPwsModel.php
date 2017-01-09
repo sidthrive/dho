@@ -172,11 +172,11 @@ class GiziPwsModel extends CI_Model{
                     $jk = $child->row()->jk;
                     if($jk=='male'||$jk=='Laki-laki'){
                         $result[$user_village[$dds->userID]]['S'][0]['L'] += 1;
-                        if(strtolower($dds->nutrition_status)=="n"){
+                        if(strtolower($dds->nutrition_status)=="Weight Increase"){
                             $result[$user_village[$dds->userID]]['N'][0]['L'] += 1;
-                        }elseif(strtolower($dds->nutrition_status)=="t"){
+                        }elseif(strtolower($dds->nutrition_status)=="Not gaining weight"){
                             $result[$user_village[$dds->userID]]['T'][0]['L'] += 1;
-                        }elseif(strtolower($dds->nutrition_status)=="o"){
+                        }elseif(strtolower($dds->nutrition_status)=="not attending previous visit"){
                             $result[$user_village[$dds->userID]]['O'][0]['L'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="b"){
                             $result[$user_village[$dds->userID]]['B'][0]['L'] += 1;
@@ -189,11 +189,11 @@ class GiziPwsModel extends CI_Model{
                         }
                     }elseif($jk=='female'||$jk=='Perempuan'){
                         $result[$user_village[$dds->userID]]['S'][0]['P'] += 1;
-                        if(strtolower($dds->nutrition_status)=="n"){
+                        if(strtolower($dds->nutrition_status)=="Weight Increase"){
                             $result[$user_village[$dds->userID]]['N'][0]['P'] += 1;
-                        }elseif(strtolower($dds->nutrition_status)=="t"){
+                        }elseif(strtolower($dds->nutrition_status)=="Not gaining weight"){
                             $result[$user_village[$dds->userID]]['T'][0]['P'] += 1;
-                        }elseif(strtolower($dds->nutrition_status)=="o"){
+                        }elseif(strtolower($dds->nutrition_status)=="not attending previous visit"){
                             $result[$user_village[$dds->userID]]['O'][0]['P'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="b"){
                             $result[$user_village[$dds->userID]]['B'][0]['P'] += 1;
@@ -213,11 +213,11 @@ class GiziPwsModel extends CI_Model{
                     $jk = $child->row()->jk;
                     if($jk=='male'||$jk=='Laki-laki'){
                         $result[$user_village[$dds->userID]]['S'][1]['L'] += 1;
-                        if(strtolower($dds->nutrition_status)=="n"){
+                        if(strtolower($dds->nutrition_status)=="Weight Increase"){
                             $result[$user_village[$dds->userID]]['N'][1]['L'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="t"){
                             $result[$user_village[$dds->userID]]['T'][1]['L'] += 1;
-                        }elseif(strtolower($dds->nutrition_status)=="o"){
+                        }elseif(strtolower($dds->nutrition_status)=="not attending previous visit"){
                             $result[$user_village[$dds->userID]]['O'][1]['L'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="b"){
                             $result[$user_village[$dds->userID]]['B'][1]['L'] += 1;
@@ -229,15 +229,15 @@ class GiziPwsModel extends CI_Model{
                             $result[$user_village[$dds->userID]]['V'][1]['L'] += 1;
                         }
                         if(strtolower($dds->mp_asi)=="ya"||strtolower($dds->mp_asi)=="yes"){
-                            $result[$user_village[$dds->userID]]['MP1'][1]['L'] += 1;
+                            $result[$user_village[$dds->userID]]['MP1'][0]['L'] += 1;
                         }
                     }elseif($jk=='female'||$jk=='Perempuan'){
                         $result[$user_village[$dds->userID]]['S'][1]['P'] += 1;
-                        if(strtolower($dds->nutrition_status)=="n"){
+                        if(strtolower($dds->nutrition_status)=="Weight Increase"){
                             $result[$user_village[$dds->userID]]['N'][1]['P'] += 1;
-                        }elseif(strtolower($dds->nutrition_status)=="t"){
+                        }elseif(strtolower($dds->nutrition_status)=="Not gaining weight"){
                             $result[$user_village[$dds->userID]]['T'][1]['P'] += 1;
-                        }elseif(strtolower($dds->nutrition_status)=="o"){
+                        }elseif(strtolower($dds->nutrition_status)=="not attending previous visit"){
                             $result[$user_village[$dds->userID]]['O'][1]['P'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="b"){
                             $result[$user_village[$dds->userID]]['B'][1]['P'] += 1;
@@ -249,7 +249,7 @@ class GiziPwsModel extends CI_Model{
                             $result[$user_village[$dds->userID]]['V'][1]['P'] += 1;
                         }
                         if(strtolower($dds->mp_asi)=="ya"||strtolower($dds->mp_asi)=="yes"){
-                            $result[$user_village[$dds->userID]]['MP1'][1]['P'] += 1;
+                            $result[$user_village[$dds->userID]]['MP1'][0]['P'] += 1;
                         }
                     }
                 }elseif($dds->umur>11&&$dds->umur<=23){
@@ -260,11 +260,11 @@ class GiziPwsModel extends CI_Model{
                     $jk = $child->row()->jk;
                     if($jk=='male'||$jk=='Laki-laki'){
                         $result[$user_village[$dds->userID]]['S'][2]['L'] += 1;
-                        if(strtolower($dds->nutrition_status)=="n"){
+                        if(strtolower($dds->nutrition_status)=="Weight Increase"){
                             $result[$user_village[$dds->userID]]['N'][2]['L'] += 1;
-                        }elseif(strtolower($dds->nutrition_status)=="t"){
+                        }elseif(strtolower($dds->nutrition_status)=="Not gaining weight"){
                             $result[$user_village[$dds->userID]]['T'][2]['L'] += 1;
-                        }elseif(strtolower($dds->nutrition_status)=="o"){
+                        }elseif(strtolower($dds->nutrition_status)=="not attending previous visit"){
                             $result[$user_village[$dds->userID]]['O'][2]['L'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="b"){
                             $result[$user_village[$dds->userID]]['B'][2]['L'] += 1;
@@ -276,15 +276,15 @@ class GiziPwsModel extends CI_Model{
                             $result[$user_village[$dds->userID]]['V'][2]['L'] += 1;
                         }
                         if(strtolower($dds->mp_asi)=="ya"||strtolower($dds->mp_asi)=="yes"){
-                            $result[$user_village[$dds->userID]]['MP2'][2]['L'] += 1;
+                            $result[$user_village[$dds->userID]]['MP2'][0]['L'] += 1;
                         }
                     }elseif($jk=='female'||$jk=='Perempuan'){
                         $result[$user_village[$dds->userID]]['S'][2]['P'] += 1;
-                        if(strtolower($dds->nutrition_status)=="n"){
+                        if(strtolower($dds->nutrition_status)=="Weight Increase"){
                             $result[$user_village[$dds->userID]]['N'][2]['P'] += 1;
-                        }elseif(strtolower($dds->nutrition_status)=="t"){
+                        }elseif(strtolower($dds->nutrition_status)=="Not gaining weight"){
                             $result[$user_village[$dds->userID]]['T'][2]['P'] += 1;
-                        }elseif(strtolower($dds->nutrition_status)=="o"){
+                        }elseif(strtolower($dds->nutrition_status)=="not attending previous visit"){
                             $result[$user_village[$dds->userID]]['O'][2]['P'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="b"){
                             $result[$user_village[$dds->userID]]['B'][2]['P'] += 1;
@@ -296,7 +296,7 @@ class GiziPwsModel extends CI_Model{
                             $result[$user_village[$dds->userID]]['V'][2]['P'] += 1;
                         }
                         if(strtolower($dds->mp_asi)=="ya"||strtolower($dds->mp_asi)=="yes"){
-                            $result[$user_village[$dds->userID]]['MP2'][2]['P'] += 1;
+                            $result[$user_village[$dds->userID]]['MP2'][0]['P'] += 1;
                         }
                     }
                 }elseif($dds->umur>23&&$dds->umur<=59){
@@ -307,11 +307,11 @@ class GiziPwsModel extends CI_Model{
                     $jk = $child->row()->jk;
                     if($jk=='male'||$jk=='Laki-laki'){
                         $result[$user_village[$dds->userID]]['S'][3]['L'] += 1; 
-                        if(strtolower($dds->nutrition_status)=="n"){
+                        if(strtolower($dds->nutrition_status)=="Weight Increase"){
                             $result[$user_village[$dds->userID]]['N'][3]['L'] += 1;
-                        }elseif(strtolower($dds->nutrition_status)=="t"){
+                        }elseif(strtolower($dds->nutrition_status)=="Not gaining weight"){
                             $result[$user_village[$dds->userID]]['T'][3]['L'] += 1;
-                        }elseif(strtolower($dds->nutrition_status)=="o"){
+                        }elseif(strtolower($dds->nutrition_status)=="not attending previous visit"){
                             $result[$user_village[$dds->userID]]['O'][3]['L'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="b"){
                             $result[$user_village[$dds->userID]]['B'][3]['L'] += 1;
@@ -324,11 +324,11 @@ class GiziPwsModel extends CI_Model{
                         }
                     }elseif($jk=='female'||$jk=='Perempuan'){
                         $result[$user_village[$dds->userID]]['S'][3]['P'] += 1; 
-                        if(strtolower($dds->nutrition_status)=="n"){
+                        if(strtolower($dds->nutrition_status)=="Weight Increase"){
                             $result[$user_village[$dds->userID]]['N'][3]['P'] += 1;
-                        }elseif(strtolower($dds->nutrition_status)=="t"){
+                        }elseif(strtolower($dds->nutrition_status)=="Not gaining weight"){
                             $result[$user_village[$dds->userID]]['T'][3]['P'] += 1;
-                        }elseif(strtolower($dds->nutrition_status)=="o"){
+                        }elseif(strtolower($dds->nutrition_status)=="not attending previous visit"){
                             $result[$user_village[$dds->userID]]['O'][3]['P'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="b"){
                             $result[$user_village[$dds->userID]]['B'][3]['P'] += 1;

@@ -17,6 +17,16 @@
             </select>
         </div>
         <br>
+        <br>
+        <div>
+            <form class="form" action="<?php echo site_url()."dataentry/vaksinatorbytanggal/".$kecamatan?>" method="get">
+                <label class="col-sm-2 control-label">Periode: </label>
+                <input type="date" name="start" class="form-control-static" value="<?=$start?>"/>
+                <input type="date" name="end" class="form-control-static" value="<?=$end?>"/>
+                <button class="form-control-static">GO</button>
+            </form>
+        </div>
+        <br>
         <div id="text" style="text-align: center;">
             <h3>Total Entri tiap <?=$opt?></h3>
             <h3>Puskesmas <?=$kecamatan?></h3>
@@ -45,9 +55,12 @@
     </div>
 
 <script src="<?=base_url()?>assets/js/highcharts.js"></script>
-<script src="<?=base_url()?>assets/js/exporting.js"></script>
+<script src="<?=base_url()?>assets/js/modules/data.js"></script>
+<script src="<?=base_url()?>assets/js/modules/drilldown.js"></script>
+<script src="<?=base_url()?>assets/js/modules/exporting.js"></script>
 <script src="<?=base_url()?>assets/js/functions.js"></script>
 <script>
+    var url = "<?=base_url()?>dataentry/getVaksinatorByForm/";
     var json = <?=json_encode($data)?>;
     <?php 
     if(isset($mode)){
@@ -57,7 +70,7 @@
             echo '$.fn.showChartDataEntryBulan(json);';
         }
     }else{
-        echo '$.fn.showChartDataEntryTanggal(json);';
+        echo '$.fn.showChartDataEntryTanggalDrill(json,url);';
     } ?> 
     var mode = $( "select option:selected" ).attr("id");
     $( "select" ).change(function() {

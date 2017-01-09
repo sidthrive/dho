@@ -6,7 +6,8 @@
     }else{
         $opt = "Tanggal";
     }
-    
+    if($datemode=="subdate") $url = "getGiziByForm";
+    else $url = "getGiziByFormByVisitDate";
 ?>    
     <div id="content">
         <div id="text">
@@ -15,6 +16,25 @@
                 <option id="mng" value="Mingguan"<?=$opt=="Minggu"?" selected":""?>>Minggu</option>
                 <option id="bln" value="Bulanan"<?=$opt=="Bulan"?" selected":""?>>Bulan</option>
             </select>
+        </div>
+        <?php if($this->session->userdata('username')=="admindemo"&&$opt=="Tanggal"){ ?>
+        <div>
+            <span style="color: white">Tampilkan Berdasarkan : </span><select id="date">
+                <option id="subdate" value="subdate"<?=$datemode=="subdate"?" selected":""?>>Submission Date</option>
+                <option id="visdate" value="visdate"<?=$datemode=="visdate"?" selected":""?>>Visit Date</option>
+            </select>
+        </div>
+        <?php } ?>
+        <br>
+        <br>
+        <div>
+            <form class="form" action="<?php echo site_url()."dataentry/gizibytanggal/".$kecamatan?>" method="get">
+                <label class="col-sm-2 control-label">Periode: </label>
+                <input type="date" name="start" class="form-control-static" value="<?=$start?>"/>
+                <input type="date" name="end" class="form-control-static" value="<?=$end?>"/>
+                <input type="hidden" name="by" class="form-control-static" value="<?=$datemode?>"/>
+                <button class="form-control-static">GO</button>
+            </form>
         </div>
         <br>
         <div id="text" style="text-align: center;">
@@ -45,9 +65,12 @@
     </div>
 
 <script src="<?=base_url()?>assets/js/highcharts.js"></script>
-<script src="<?=base_url()?>assets/js/exporting.js"></script>
+<script src="<?=base_url()?>assets/js/modules/data.js"></script>
+<script src="<?=base_url()?>assets/js/modules/drilldown.js"></script>
+<script src="<?=base_url()?>assets/js/modules/exporting.js"></script>
 <script src="<?=base_url()?>assets/js/functions.js"></script>
 <script>
+    var url = "<?=base_url()?>dataentry/<?=$url?>/";
     var json = <?=json_encode($data)?>;
     <?php 
     if(isset($mode)){
@@ -57,7 +80,7 @@
             echo '$.fn.showChartDataEntryBulan(json);';
         }
     }else{
-        echo '$.fn.showChartDataEntryTanggal(json);';
+        echo '$.fn.showChartDataEntryTanggalDrill(json,url);';
     } ?> 
     var mode = $( "select option:selected" ).attr("id");
     $( "select" ).change(function() {
@@ -73,6 +96,19 @@
                 window.location.href = "<?=base_url()."dataentry/gizibytanggal/".$kecamatan?>"+modeurl;
             }
             console.log($( "select option:selected" ).attr("id"));
+        });    
+    }).trigger( "change" );
+    var datemode = $( "#date option:selected" ).attr("id");
+    $( "#date" ).change(function() {
+        $( "#date option:selected" ).each(function() {
+            var newmode = $( "#date option:selected" ).attr("id");
+            if(datemode!=newmode){
+                if(newmode=="subdate"){
+                    window.location.href = "<?=base_url()."dataentry/gizibytanggal/".$kecamatan."?start=".$start."&end=".$end."&by=subdate"?>";
+                }else if(newmode=="visdate"){
+                    window.location.href = "<?=base_url()."dataentry/gizibytanggal/".$kecamatan."?start=".$start."&end=".$end."&by=visdate"?>";
+                }
+            }
         });    
     }).trigger( "change" );
 </script>
