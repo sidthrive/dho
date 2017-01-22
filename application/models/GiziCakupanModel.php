@@ -112,7 +112,7 @@ class GiziCakupanModel extends CI_Model{
         }
         $ds = $balita;
         foreach ($ds as $x=>$d){
-            $d = $d*100/$sasaran[$x];
+            $d = $d*100/$balita[$x];
             $ds[$x] = $d;
         }
         
