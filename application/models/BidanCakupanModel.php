@@ -342,7 +342,8 @@ class BidanCakupanModel extends CI_Model{
             }
         }
         foreach ($form as $desa=>$nilai){
-            $form[$desa] = $nilai*100/$den[$desa];
+            if($den[$desa]==0) $form[$desa] = 0;
+            else $form[$desa] = $nilai*100/$den[$desa];
         }
         
         $series['page']='ANC1SC';
@@ -359,7 +360,8 @@ class BidanCakupanModel extends CI_Model{
             }
         }
         foreach ($form as $desa=>$nilai){
-            $form[$desa] = $nilai*100/$den[$desa];
+            if($den[$desa]==0) $form[$desa] = 0;
+            else $form[$desa] = $nilai*100/$den[$desa];
         }
         
         $series['page']='ANC1NC';
@@ -385,7 +387,8 @@ class BidanCakupanModel extends CI_Model{
             }
         }
         foreach ($form as $desa=>$nilai){
-            $form[$desa] = $nilai*100/$den[$desa];
+            if($den[$desa]==0) $form[$desa] = 0;
+            else $form[$desa] = $nilai*100/$den[$desa];
         }
         
         $series['page']='ANC4SC';
@@ -402,7 +405,8 @@ class BidanCakupanModel extends CI_Model{
             }
         }
         foreach ($form as $desa=>$nilai){
-            $form[$desa] = $nilai*100/$den[$desa];
+            if($den[$desa]==0) $form[$desa] = 0;
+            else $form[$desa] = $nilai*100/$den[$desa];
         }
         
         $series['page']='ANC4NC';
