@@ -10,7 +10,6 @@ class Push extends CI_Controller
  
     function __construct() {
         parent::__construct();
-        $this->db = $this->load->database('vaksinator', TRUE);
     }
  
     public function index() {

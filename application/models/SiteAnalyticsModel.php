@@ -19,8 +19,7 @@ class SiteAnalyticsModel extends CI_Model{
     public function trackPage($tab,$page,$url){
         date_default_timezone_set("Asia/Makassar");
         $now = date("Y-m-d H:i:s");
-        $sitedb = $this->load->database('site_analytics', TRUE);
-        $sitedb->query("INSERT INTO page_views (username,level,tipe,tab,page,url,timestamp) VALUES ("
+        $this->db->query("INSERT INTO page_views (username,level,tipe,tab,page,url,timestamp) VALUES ("
                 ."'".$this->session->userdata('username')."',"
                 ."'".$this->session->userdata('level')."',"
                 ."'".$this->session->userdata('tipe')."',"
@@ -31,7 +30,6 @@ class SiteAnalyticsModel extends CI_Model{
     }
     
     public function getPageViewsForGraph($params=array()){
-        $sitedb = $this->load->database('site_analytics', TRUE);
         $user = $this->db->query("SELECT * FROM users WHERE level!='super' AND level!='master' ORDER BY level")->result();
         $result_data = array();
         $tanggal = array();
@@ -93,13 +91,12 @@ class SiteAnalyticsModel extends CI_Model{
 
 
     public function getPageViews($params=array()){
-        $sitedb = $this->load->database('site_analytics', TRUE);
         if(isset($params['user']))$user = "AND username='".$params['user']."'";else $user="";
         if(isset($params['level']))$level = "AND level='".$params['level']."'";else $level="";
         if(isset($params['tipe']))$tipe = "AND tipe='".$params['tipe']."'";else $tipe="";
         if(isset($params['date']))$date = "AND DATE(timestamp)='".$params['date']."'";else $date="";
         if(isset($params['date_range'])&&$date=="")$date = "AND DATE(timestamp)>='".$params['date_range'][0]."' AND DATE(timestamp)<='".$params['date_range'][1]."'";
-        return $sitedb->query("SELECT *,DATE(timestamp) as date FROM page_views WHERE 1 $user$level$tipe$date")->result();
+        return $this->db->query("SELECT *,DATE(timestamp) as date FROM page_views WHERE 1 $user$level$tipe$date")->result();
     }
     
 }

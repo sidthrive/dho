@@ -20,16 +20,15 @@ class HHHScore extends CI_Controller{
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     public function headscore(){
-        $UjianDB = $this->load->database('ujian', TRUE);
         if($this->session->userdata('level')=="fhw"){
             $data['mode']  = $this->uri->segment(3);
             if($data['mode']=='hasil'){
                 $this->load->view('header');
                 $this->load->view('hhhscore/hhhsidebar');
-                $user = $UjianDB->query("SELECT * FROM user WHERE username='".$this->session->userdata('username')."'")->result();
+                $user = $this->db->query("SELECT * FROM user WHERE username='".$this->session->userdata('username')."'")->result();
                 $id = array();
                 foreach($user as $u){
-                    $tes_id = $UjianDB->query("SELECT * FROM tes WHERE id_user=$u->id")->result();
+                    $tes_id = $this->db->query("SELECT * FROM tes WHERE id_user=$u->id")->result();
                     foreach($tes_id as $t){
                         array_push($id, $t->id);
                     }
@@ -38,8 +37,8 @@ class HHHScore extends CI_Controller{
                 $this->load->view('ujian/hasillist',$data);
                 $this->load->view('footer');
             }elseif($data['mode']=='do'){
-                $data['id_user'] = $UjianDB->query("SELECT id FROM user WHERE username='".$this->session->userdata('username')."'")->row()->id;
-                $data['jadwal'] = $UjianDB->query("SELECT * FROM tes WHERE id_user='".$data['id_user']."' AND id_jenis=3 AND aktif='yes'")->row();
+                $data['id_user'] = $this->db->query("SELECT id FROM user WHERE username='".$this->session->userdata('username')."'")->row()->id;
+                $data['jadwal'] = $this->db->query("SELECT * FROM tes WHERE id_user='".$data['id_user']."' AND id_jenis=3 AND aktif='yes'")->row();
                 if(empty($data['jadwal'])){
                     $data['token'] = $this->UjianModel->setJadwalTesBidan();
                 }else{
@@ -64,8 +63,8 @@ class HHHScore extends CI_Controller{
                 $this->load->view('ujian/hasil',$data);
                 $this->load->view('footer');
             }else{
-                $data['id_user'] = $UjianDB->query("SELECT id FROM user WHERE username='".$this->session->userdata('username')."'")->row()->id;
-                $data['jadwal'] = $UjianDB->query("SELECT * FROM tes WHERE id_user='".$data['id_user']."' AND id_jenis=3 AND aktif='yes'")->row();
+                $data['id_user'] = $this->db->query("SELECT id FROM user WHERE username='".$this->session->userdata('username')."'")->row()->id;
+                $data['jadwal'] = $this->db->query("SELECT * FROM tes WHERE id_user='".$data['id_user']."' AND id_jenis=3 AND aktif='yes'")->row();
                 $this->load->view('header');
                 $this->load->view('hhhscore/hhhsidebar');
                 $this->load->view('hhhscore/headscore',$data);
@@ -82,10 +81,10 @@ class HHHScore extends CI_Controller{
                 $this->load->view('ujian/hasil',$data);
             }elseif($data['mode']=='cari'){
                 $q = $this->input->get('q');
-                $user = $UjianDB->query("SELECT * FROM user WHERE nama_lengkap LIKE '%$q%' order by id")->result();
+                $user = $this->db->query("SELECT * FROM user WHERE nama_lengkap LIKE '%$q%' order by id")->result();
                 $id = array();
                 foreach($user as $u){
-                    $tes_id = $UjianDB->query("SELECT * FROM tes WHERE id_user=$u->id")->result();
+                    $tes_id = $this->db->query("SELECT * FROM tes WHERE id_user=$u->id")->result();
                     foreach($tes_id as $t){
                         array_push($id, $t->id);
                     }

@@ -4,7 +4,6 @@ class Ujian extends CI_Controller{
     public function __construct() {
         parent::__construct();
         $this->load->model('UjianModel');
-        $this->UjianDB = $this->load->database('ujian', TRUE);
         date_default_timezone_set("Asia/Makassar");
     }
     
@@ -41,7 +40,7 @@ class Ujian extends CI_Controller{
                 $this->load->view('ujian/formuser',$data);
             }elseif($data['mode']=='cari'){
                 $q = $this->input->get('q');
-                $data['user'] = $this->UjianDB->query("SELECT * FROM user WHERE nama_lengkap LIKE '%$q%' OR username LIKE '%$q%' order by id")->result();
+                $data['user'] = $this->db->query("SELECT * FROM user WHERE nama_lengkap LIKE '%$q%' OR username LIKE '%$q%' order by id")->result();
                 $this->load->view('ujian/userlist',$data);
             }else{
                 $data['user'] = $this->UjianModel->getUser("all");
@@ -162,7 +161,7 @@ class Ujian extends CI_Controller{
                 }
             }elseif($data['mode']=='cari'){
                 $q = $this->input->get('q');
-                $data['tes'] = $this->UjianDB->query("SELECT * FROM jenis_tes WHERE nama_tes LIKE '%$q%' OR jumlah_soal LIKE '%$q%' OR waktu LIKE '%$q%' OR metode_tes LIKE '%$q%' order by id")->result();
+                $data['tes'] = $this->db->query("SELECT * FROM jenis_tes WHERE nama_tes LIKE '%$q%' OR jumlah_soal LIKE '%$q%' OR waktu LIKE '%$q%' OR metode_tes LIKE '%$q%' order by id")->result();
                 $this->load->view('ujian/teslist',$data);
             }else{
                 $data['tes'] = $this->UjianModel->getJenisTes("all");
@@ -254,10 +253,10 @@ class Ujian extends CI_Controller{
                 $this->load->view('ujian/formjadwal',$data);
             }elseif($data['mode']=='cari'){
                 $q = $this->input->get('q');
-                $user = $this->UjianDB->query("SELECT * FROM user WHERE nama_lengkap LIKE '%$q%' order by id")->result();
+                $user = $this->db->query("SELECT * FROM user WHERE nama_lengkap LIKE '%$q%' order by id")->result();
                 $id = array();
                 foreach($user as $u){
-                    $tes_id = $this->UjianDB->query("SELECT * FROM tes WHERE id_user=$u->id")->result();
+                    $tes_id = $this->db->query("SELECT * FROM tes WHERE id_user=$u->id")->result();
                     foreach($tes_id as $t){
                         array_push($id, $t->id);
                     }
@@ -314,10 +313,10 @@ class Ujian extends CI_Controller{
                 $this->load->view('ujian/hasil',$data);
             }elseif($data['mode']=='cari'){
                 $q = $this->input->get('q');
-                $user = $this->UjianDB->query("SELECT * FROM user WHERE nama_lengkap LIKE '%$q%' order by id")->result();
+                $user = $this->db->query("SELECT * FROM user WHERE nama_lengkap LIKE '%$q%' order by id")->result();
                 $id = array();
                 foreach($user as $u){
-                    $tes_id = $this->UjianDB->query("SELECT * FROM tes WHERE id_user=$u->id")->result();
+                    $tes_id = $this->db->query("SELECT * FROM tes WHERE id_user=$u->id")->result();
                     foreach($tes_id as $t){
                         array_push($id, $t->id);
                     }

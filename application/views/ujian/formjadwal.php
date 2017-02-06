@@ -6,11 +6,10 @@
     $tanggal_     = "";
     
     if($jadwal!=null){
-        $UjianDB = $this->load->database('ujian', TRUE);
         $page_header = "EDIT JADWAL TES";
         $id_         = $jadwal->id;
-        $user_    = $UjianDB->query("SELECT * FROM user WHERE id=".$jadwal->id_user)->row()->nama_lengkap;
-        $tes_     = $UjianDB->query("SELECT * FROM jenis_tes WHERE id=".$jadwal->id_jenis)->row()->nama_tes;
+        $user_    = $this->db->query("SELECT * FROM user WHERE id=".$jadwal->id_user)->row()->nama_lengkap;
+        $tes_     = $this->db->query("SELECT * FROM jenis_tes WHERE id=".$jadwal->id_jenis)->row()->nama_tes;
         $tanggal_    = date("d-m-Y", strtotime($jadwal->tanggal_tes));
     }
 
