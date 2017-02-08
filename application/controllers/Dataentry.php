@@ -9,7 +9,8 @@ class DataEntry extends CI_Controller{
             redirect('login');
         }
         $this->load->model('AnalyticsFhwModel');
-        $this->load->model('AnalyticsModel');
+        $this->load->model('LocationModel','loc');
+        $this->load->model('AnalyticsEcModel','AnalyticsModel');
         $this->load->model('GiziModel');
         $this->load->model('GiziFhwModel');
         $this->load->model('VaksinatorFhwModel');
@@ -24,7 +25,8 @@ class DataEntry extends CI_Controller{
             $this->load->view('footer');
         }else{
             $this->load->view('header');
-            $this->load->view('dataentry/dataentrysidebar');
+            $data['location'] = $this->loc->getAllLoc();
+            $this->load->view('dataentry/dataentrysidebar',$data);
             $this->load->view('dataentry/dataentrymainpage');
             $this->load->view('footer');
         }
@@ -46,16 +48,17 @@ class DataEntry extends CI_Controller{
             if($this->input->get('start')==null&&$data['desa']==""){
                 if($this->input->get('by')==null)$by = "subdate";else $by = $this->input->get('by');
                 $now = date("Y-m-d");
-                redirect("dataentry/bidanbyform/".$data['kecamatan']."?start=2015-05-01&end=$now&by=$by");
+                redirect("dataentry/bidanbyform/".$data['kecamatan']."?start=2016-01-01&end=$now&by=$by");
             }else{
                 $by = $this->input->get('by');
                 $data['start'] = $this->input->get('start');
                 $data['end'] = $this->input->get('end');
                 $old_data = $this->input->get('old');
             }$data['datemode'] = $by;
-            if($by=="subdate") $data['data'] = $this->AnalyticsModel->getCountPerForm($data['kecamatan'],$data['start'],$data['end'],$old_data);
-            else $data['data'] = $this->AnalyticsModel->getCountPerFormByVisitDate($data['kecamatan'],$data['start'],$data['end'],$old_data);
+            if($by=="subdate") $data['data'] = $this->AnalyticsModel->getCountPerForm($data['kecamatan'],$data['start'],$data['end']);
+            else $data['data'] = $this->AnalyticsModel->getCountPerFormByVisitDate($data['kecamatan'],$data['start'],$data['end']);
             $this->load->view("header");
+            $data['location'] = $this->loc->getAllLoc();
             $this->load->view("dataentry/dataentrysidebar",$data);
             if($data['desa']==""){
                 $this->load->view("dataentry/bidanentryform",$data);
@@ -133,6 +136,7 @@ class DataEntry extends CI_Controller{
             if($by=="subdate") $data['data'] = $this->AnalyticsModel->getCountPerDayDrill($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
             else $data['data'] = $this->AnalyticsModel->getCountPerDayByVisitDate($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
             $this->load->view("header");
+            $data['location'] = $this->loc->getAllLoc();
             $this->load->view("dataentry/dataentrysidebar",$data);
             if($data['desa']==""){
                 $this->load->view("dataentry/bidanentrytanggal",$data);
