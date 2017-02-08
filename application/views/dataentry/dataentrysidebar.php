@@ -25,44 +25,29 @@
                             </h4>
                         </div>
                         <div id="by_form" class="panel-collapse collapse<?=$this->uri->segment(2)=='bidanbyform'?' in':''?>">
+                            <?php
+                            foreach($location as $kec=>$desas){
+                            ?>
                             <div class="panel panel-default panel-collapse">
-                                <div <?=($this->uri->segment(2)=='bidanbyform'&&$this->uri->segment(3)=='Sengkol')?' style="background-color:#909090"':''?> class="panel-heading">
+                                <div <?=($this->uri->segment(2)=='bidanbyform'&&$this->uri->segment(3)==$kec)?' style="background-color:#909090"':''?> class="panel-heading">
                                     <h4 class="panel-title">
-                                        <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanbyform/Sengkol"?>">Puskesmas Sengkol</a>
+                                        <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanbyform/".$kec?>">Puskesmas <?=$kec?></a>
                                     </h4>
                                 </div>
-                                <?php if($this->uri->segment(2)=='bidanbyform'&&$this->uri->segment(3)=='Sengkol'){ ?>
+                                <?php if($this->uri->segment(2)=='bidanbyform'&&$this->uri->segment(3)==$kec){ ?>
                                 <div class="panel panel-default">
-                                    <?php foreach($data as $user => $form){
+                                    <?php foreach($desas as $user => $desa){
                                     ?>
-                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$user)))?' style="background-color:#909090"':''?>>
+                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$desa)))?' style="background-color:#909090"':''?>>
                                         <h4 class="panel-title">
-                                            <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanbyform/Sengkol/".ucwords($user)?>">Desa <?=ucwords($user)?></a>
+                                            <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanbyform/".$kec."/".ucwords($desa)?>">Desa <?=ucwords($desa)?></a>
                                         </h4>
                                     </div>
                                     <?php }?>
                                 </div>
                                 <?php }?>
                             </div>
-                            <div class="panel panel-default panel-collapse">
-                                <div <?=($this->uri->segment(2)=='bidanbyform'&&$this->uri->segment(3)=='Janapria')?' style="background-color:#909090"':''?> class="panel-heading<?=($this->uri->segment(2)=='bidanbyform'&&$this->uri->segment(3)=='Janapria')?' active':''?>">
-                                    <h4 class="panel-title">
-                                        <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanbyform/Janapria"?>">Puskesmas Janapria</a>
-                                    </h4>
-                                </div>
-                                <?php if($this->uri->segment(2)=='bidanbyform'&&$this->uri->segment(3)=='Janapria'){ ?>
-                                <div class="panel panel-default">
-                                    <?php foreach($data as $user => $form){
-                                    ?>
-                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$user)))?' style="background-color:#909090"':''?>>
-                                        <h4 class="panel-title">
-                                            <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanbyform/Janapria/".ucwords($user)?>">Desa <?=ucwords($user)?></a>
-                                        </h4>
-                                    </div>
-                                    <?php }?>
-                                </div>
-                                <?php }?>
-                            </div>
+                            <?php } ?>
                         </div>
                     </div>
                     <div class="panel panel-default">
@@ -72,44 +57,29 @@
                             </h4>
                         </div>
                         <div id="by_date" class="panel-collapse collapse<?=$this->uri->segment(2)=='bidanbytanggal'?' in':''?>">
+                            <?php
+                            foreach($location as $kec=>$desas){
+                            ?>
                             <div class="panel panel-default panel-collapse">
-                                <div class="panel-heading"<?=($this->uri->segment(2)=='bidanbytanggal'&&$this->uri->segment(3)=='Sengkol')?' style="background-color:#909090"':''?>>
+                                <div class="panel-heading"<?=($this->uri->segment(2)=='bidanbytanggal'&&$this->uri->segment(3)==$kec)?' style="background-color:#909090"':''?>>
                                     <h4 class="panel-title">
-                                        <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanbytanggal/Sengkol"?>">Puskesmas Sengkol</a>
+                                        <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanbytanggal/".$kec?>">Puskesmas <?=$kec?></a>
                                     </h4>
                                 </div>
-                                <?php if($this->uri->segment(2)=='bidanbytanggal'&&$this->uri->segment(3)=='Sengkol'){ ?>
+                                <?php if($this->uri->segment(2)=='bidanbytanggal'&&$this->uri->segment(3)==$kec){ ?>
                                 <div class="panel panel-default">
-                                    <?php foreach($data as $user => $form){
+                                    <?php foreach($desas as $user => $desa){
                                     ?>
-                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$user)))?' style="background-color:#909090"':''?>>
+                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$desa)))?' style="background-color:#909090"':''?>>
                                         <h4 class="panel-title">
-                                            <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanbytanggal/Sengkol/".ucwords($user)?>">Desa <?=ucwords($user)?></a>
+                                            <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanbytanggal/".$kec."/".ucwords($desa)?>">Desa <?=ucwords($desa)?></a>
                                         </h4>
                                     </div>
                                     <?php }?>
                                 </div>
                                 <?php }?>
                             </div>
-                            <div class="panel panel-default panel-collapse">
-                                <div class="panel-heading"<?=($this->uri->segment(2)=='bidanbytanggal'&&$this->uri->segment(3)=='Janapria')?' style="background-color:#909090"':''?>>
-                                    <h4 class="panel-title">
-                                        <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanbytanggal/Janapria"?>">Puskesmas Janapria</a>
-                                    </h4>
-                                </div>
-                                <?php if($this->uri->segment(2)=='bidanbytanggal'&&$this->uri->segment(3)=='Janapria'){ ?>
-                                <div class="panel panel-default">
-                                    <?php foreach($data as $user => $form){
-                                    ?>
-                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$user)))?' style="background-color:#909090"':''?>>
-                                        <h4 class="panel-title">
-                                            <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanbytanggal/Janapria/".ucwords($user)?>">Desa <?=ucwords($user)?></a>
-                                        </h4>
-                                    </div>
-                                    <?php }?>
-                                </div>
-                                <?php }?>
-                            </div>
+                            <?php } ?>
                         </div>
                     </div>
                 </div>
@@ -130,44 +100,29 @@
                             </h4>
                         </div>
                         <div id="giziby_form" class="panel-collapse collapse<?=$this->uri->segment(2)=='gizibyform'?' in':''?>">
+                            <?php
+                            foreach($location as $kec=>$desas){
+                            ?>
                             <div class="panel panel-default panel-collapse">
-                                <div <?=($this->uri->segment(2)=='gizibyform'&&$this->uri->segment(3)=='Sengkol')?' style="background-color:#909090"':''?> class="panel-heading">
+                                <div <?=($this->uri->segment(2)=='gizibyform'&&$this->uri->segment(3)==$kec)?' style="background-color:#909090"':''?> class="panel-heading">
                                     <h4 class="panel-title">
-                                        <a data-parent="#gizi_menu" href="<?php echo site_url() ."dataentry/gizibyform/Sengkol"?>">Puskesmas Sengkol</a>
+                                        <a data-parent="#gizi_menu" href="<?php echo site_url() ."dataentry/gizibyform/".$kec?>">Puskesmas <?=$kec?></a>
                                     </h4>
                                 </div>
-                                <?php if($this->uri->segment(2)=='gizibyform'&&$this->uri->segment(3)=='Sengkol'){ ?>
+                                <?php if($this->uri->segment(2)=='gizibyform'&&$this->uri->segment(3)==$kec){ ?>
                                 <div class="panel panel-default">
-                                    <?php foreach($data as $user => $form){
+                                    <?php foreach($desas as $user => $desa){
                                     ?>
-                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$user)))?' style="background-color:#909090"':''?>>
+                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$desa)))?' style="background-color:#909090"':''?>>
                                         <h4 class="panel-title">
-                                            <a data-parent="#gizi_menu" href="<?php echo site_url() ."dataentry/gizibyform/Sengkol/".ucwords($user)?>">Desa <?=ucwords($user)?></a>
+                                            <a data-parent="#gizi_menu" href="<?php echo site_url() ."dataentry/gizibyform/".$kec."/".ucwords($desa)?>">Desa <?=ucwords($desa)?></a>
                                         </h4>
                                     </div>
                                     <?php }?>
                                 </div>
                                 <?php }?>
                             </div>
-                            <div class="panel panel-default panel-collapse">
-                                <div <?=($this->uri->segment(2)=='gizibyform'&&$this->uri->segment(3)=='Janapria')?' style="background-color:#909090"':''?> class="panel-heading<?=($this->uri->segment(2)=='gizibyform'&&$this->uri->segment(3)=='Janapria')?' active':''?>">
-                                    <h4 class="panel-title">
-                                        <a data-parent="#gizi_menu" href="<?php echo site_url() ."dataentry/gizibyform/Janapria"?>">Puskesmas Janapria</a>
-                                    </h4>
-                                </div>
-                                <?php if($this->uri->segment(2)=='gizibyform'&&$this->uri->segment(3)=='Janapria'){ ?>
-                                <div class="panel panel-default">
-                                    <?php foreach($data as $user => $form){
-                                    ?>
-                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$user)))?' style="background-color:#909090"':''?>>
-                                        <h4 class="panel-title">
-                                            <a data-parent="#gizi_menu" href="<?php echo site_url() ."dataentry/gizibyform/Janapria/".ucwords($user)?>">Desa <?=ucwords($user)?></a>
-                                        </h4>
-                                    </div>
-                                    <?php }?>
-                                </div>
-                                <?php }?>
-                            </div>
+                            <?php } ?>
                         </div>
                     </div>
                     <div class="panel panel-default">
@@ -177,44 +132,29 @@
                             </h4>
                         </div>
                         <div id="giziby_date" class="panel-collapse collapse<?=$this->uri->segment(2)=='gizibytanggal'?' in':''?>">
+                            <?php
+                            foreach($location as $kec=>$desas){
+                            ?>
                             <div class="panel panel-default panel-collapse">
-                                <div class="panel-heading"<?=($this->uri->segment(2)=='gizibytanggal'&&$this->uri->segment(3)=='Sengkol')?' style="background-color:#909090"':''?>>
+                                <div class="panel-heading"<?=($this->uri->segment(2)=='gizibytanggal'&&$this->uri->segment(3)==$kec)?' style="background-color:#909090"':''?>>
                                     <h4 class="panel-title">
-                                        <a data-parent="#gizi_menu" href="<?php echo site_url() ."dataentry/gizibytanggal/Sengkol"?>">Puskesmas Sengkol</a>
+                                        <a data-parent="#gizi_menu" href="<?php echo site_url() ."dataentry/gizibytanggal/".$kec?>">Puskesmas <?=$kec?></a>
                                     </h4>
                                 </div>
-                                <?php if($this->uri->segment(2)=='gizibytanggal'&&$this->uri->segment(3)=='Sengkol'){ ?>
+                                <?php if($this->uri->segment(2)=='gizibytanggal'&&$this->uri->segment(3)==$kec){ ?>
                                 <div class="panel panel-default">
-                                    <?php foreach($data as $user => $form){
+                                    <?php foreach($desas as $user => $desa){
                                     ?>
-                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$user)))?' style="background-color:#909090"':''?>>
+                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$desa)))?' style="background-color:#909090"':''?>>
                                         <h4 class="panel-title">
-                                            <a data-parent="#gizi_menu" href="<?php echo site_url() ."dataentry/gizibytanggal/Sengkol/".ucwords($user)?>">Desa <?=ucwords($user)?></a>
+                                            <a data-parent="#gizi_menu" href="<?php echo site_url() ."dataentry/gizibytanggal/".$kec."/".ucwords($desa)?>">Desa <?=ucwords($desa)?></a>
                                         </h4>
                                     </div>
                                     <?php }?>
                                 </div>
                                 <?php }?>
                             </div>
-                            <div class="panel panel-default panel-collapse">
-                                <div class="panel-heading"<?=($this->uri->segment(2)=='gizibytanggal'&&$this->uri->segment(3)=='Janapria')?' style="background-color:#909090"':''?>>
-                                    <h4 class="panel-title">
-                                        <a data-parent="#gizi_menu" href="<?php echo site_url() ."dataentry/gizibytanggal/Janapria"?>">Puskesmas Janapria</a>
-                                    </h4>
-                                </div>
-                                <?php if($this->uri->segment(2)=='gizibytanggal'&&$this->uri->segment(3)=='Janapria'){ ?>
-                                <div class="panel panel-default">
-                                    <?php foreach($data as $user => $form){
-                                    ?>
-                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$user)))?' style="background-color:#909090"':''?>>
-                                        <h4 class="panel-title">
-                                            <a data-parent="#gizi_menu" href="<?php echo site_url() ."dataentry/gizibytanggal/Janapria/".ucwords($user)?>">Desa <?=ucwords($user)?></a>
-                                        </h4>
-                                    </div>
-                                    <?php }?>
-                                </div>
-                                <?php }?>
-                            </div>
+                            <?php } ?>
                         </div>
                     </div>
                 </div>
@@ -235,44 +175,29 @@
                             </h4>
                         </div>
                         <div id="vaksinatorby_form" class="panel-collapse collapse<?=$this->uri->segment(2)=='vaksinatorbyform'?' in':''?>">
+                            <?php
+                            foreach($location as $kec=>$desas){
+                            ?>
                             <div class="panel panel-default panel-collapse">
-                                <div <?=($this->uri->segment(2)=='vaksinatorbyform'&&$this->uri->segment(3)=='Sengkol')?' style="background-color:#909090"':''?> class="panel-heading">
+                                <div <?=($this->uri->segment(2)=='vaksinatorbyform'&&$this->uri->segment(3)==$kec)?' style="background-color:#909090"':''?> class="panel-heading">
                                     <h4 class="panel-title">
-                                        <a data-parent="#vaksinator_menu" href="<?php echo site_url() ."dataentry/vaksinatorbyform/Sengkol"?>">Puskesmas Sengkol</a>
+                                        <a data-parent="#vaksinator_menu" href="<?php echo site_url() ."dataentry/vaksinatorbyform/$kec"?>">Puskesmas <?=$kec?></a>
                                     </h4>
                                 </div>
-                                <?php if($this->uri->segment(2)=='vaksinatorbyform'&&$this->uri->segment(3)=='Sengkol'){ ?>
+                                <?php if($this->uri->segment(2)=='vaksinatorbyform'&&$this->uri->segment(3)==$kec){ ?>
                                 <div class="panel panel-default">
-                                    <?php foreach($data as $user => $form){
+                                    <?php foreach($desas as $user => $desa){
                                     ?>
-                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$user)))?' style="background-color:#909090"':''?>>
+                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$desa)))?' style="background-color:#909090"':''?>>
                                         <h4 class="panel-title">
-                                            <a data-parent="#vaksinator_menu" href="<?php echo site_url() ."dataentry/vaksinatorbyform/Sengkol/".ucwords($user)?>">Desa <?=ucwords($user)?></a>
+                                            <a data-parent="#vaksinator_menu" href="<?php echo site_url() ."dataentry/vaksinatorbyform/$kec/".ucwords($desa)?>">Desa <?=ucwords($desa)?></a>
                                         </h4>
                                     </div>
                                     <?php }?>
                                 </div>
                                 <?php }?>
                             </div>
-                            <div class="panel panel-default panel-collapse">
-                                <div <?=($this->uri->segment(2)=='vaksinatorbyform'&&$this->uri->segment(3)=='Janapria')?' style="background-color:#909090"':''?> class="panel-heading<?=($this->uri->segment(2)=='vaksinatorbyform'&&$this->uri->segment(3)=='Janapria')?' active':''?>">
-                                    <h4 class="panel-title">
-                                        <a data-parent="#vaksinator_menu" href="<?php echo site_url() ."dataentry/vaksinatorbyform/Janapria"?>">Puskesmas Janapria</a>
-                                    </h4>
-                                </div>
-                                <?php if($this->uri->segment(2)=='vaksinatorbyform'&&$this->uri->segment(3)=='Janapria'){ ?>
-                                <div class="panel panel-default">
-                                    <?php foreach($data as $user => $form){
-                                    ?>
-                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$user)))?' style="background-color:#909090"':''?>>
-                                        <h4 class="panel-title">
-                                            <a data-parent="#vaksinator_menu" href="<?php echo site_url() ."dataentry/vaksinatorbyform/Janapria/".ucwords($user)?>">Desa <?=ucwords($user)?></a>
-                                        </h4>
-                                    </div>
-                                    <?php }?>
-                                </div>
-                                <?php }?>
-                            </div>
+                            <?php } ?>
                         </div>
                     </div>
                     <div class="panel panel-default">
@@ -282,44 +207,29 @@
                             </h4>
                         </div>
                         <div id="vaksinatorby_date" class="panel-collapse collapse<?=$this->uri->segment(2)=='vaksinatorbytanggal'?' in':''?>">
+                            <?php
+                            foreach($location as $kec=>$desas){
+                            ?>
                             <div class="panel panel-default panel-collapse">
-                                <div class="panel-heading"<?=($this->uri->segment(2)=='vaksinatorbytanggal'&&$this->uri->segment(3)=='Sengkol')?' style="background-color:#909090"':''?>>
+                                <div class="panel-heading"<?=($this->uri->segment(2)=='vaksinatorbytanggal'&&$this->uri->segment(3)==$kec)?' style="background-color:#909090"':''?>>
                                     <h4 class="panel-title">
-                                        <a data-parent="#vaksinator_menu" href="<?php echo site_url() ."dataentry/vaksinatorbytanggal/Sengkol"?>">Puskesmas Sengkol</a>
+                                        <a data-parent="#vaksinator_menu" href="<?php echo site_url() ."dataentry/vaksinatorbytanggal/$kec"?>">Puskesmas <?=$kec?></a>
                                     </h4>
                                 </div>
-                                <?php if($this->uri->segment(2)=='vaksinatorbytanggal'&&$this->uri->segment(3)=='Sengkol'){ ?>
+                                <?php if($this->uri->segment(2)=='vaksinatorbytanggal'&&$this->uri->segment(3)==$kec){ ?>
                                 <div class="panel panel-default">
-                                    <?php foreach($data as $user => $form){
+                                    <?php foreach($desas as $user => $desa){
                                     ?>
-                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$user)))?' style="background-color:#909090"':''?>>
+                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$desa)))?' style="background-color:#909090"':''?>>
                                         <h4 class="panel-title">
-                                            <a data-parent="#vaksinator_menu" href="<?php echo site_url() ."dataentry/vaksinatorbytanggal/Sengkol/".ucwords($user)?>">Desa <?=ucwords($user)?></a>
+                                            <a data-parent="#vaksinator_menu" href="<?php echo site_url() ."dataentry/vaksinatorbytanggal/$kec/".ucwords($desa)?>">Desa <?=ucwords($desa)?></a>
                                         </h4>
                                     </div>
                                     <?php }?>
                                 </div>
                                 <?php }?>
                             </div>
-                            <div class="panel panel-default panel-collapse">
-                                <div class="panel-heading"<?=($this->uri->segment(2)=='vaksinatorbytanggal'&&$this->uri->segment(3)=='Janapria')?' style="background-color:#909090"':''?>>
-                                    <h4 class="panel-title">
-                                        <a data-parent="#vaksinator_menu" href="<?php echo site_url() ."dataentry/vaksinatorbytanggal/Janapria"?>">Puskesmas Janapria</a>
-                                    </h4>
-                                </div>
-                                <?php if($this->uri->segment(2)=='vaksinatorbytanggal'&&$this->uri->segment(3)=='Janapria'){ ?>
-                                <div class="panel panel-default">
-                                    <?php foreach($data as $user => $form){
-                                    ?>
-                                    <div class="panel-heading" <?=($this->uri->segment(4)==ucwords(str_replace(' ','%20',$user)))?' style="background-color:#909090"':''?>>
-                                        <h4 class="panel-title">
-                                            <a data-parent="#vaksinator_menu" href="<?php echo site_url() ."dataentry/vaksinatorbytanggal/Janapria/".ucwords($user)?>">Desa <?=ucwords($user)?></a>
-                                        </h4>
-                                    </div>
-                                    <?php }?>
-                                </div>
-                                <?php }?>
-                            </div>
+                            <?php } ?>
                         </div>
                     </div>
                 </div>
