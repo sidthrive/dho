@@ -17,7 +17,7 @@
                 <option id="bln" value="Bulanan"<?=$opt=="Bulan"?" selected":""?>>Bulan</option>
             </select>
         </div>
-        <?php if($this->session->userdata('username')=="admindemo"&&$opt=="Tanggal"){ ?>
+        <?php if($opt=="Tanggal"){ ?>
         <div>
             <span style="color: white">Tampilkan Berdasarkan : </span><select id="date">
                 <option id="subdate" value="subdate"<?=$datemode=="subdate"?" selected":""?>>Submission Date</option>

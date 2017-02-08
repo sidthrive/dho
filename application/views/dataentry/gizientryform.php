@@ -4,14 +4,12 @@
             <h3>Puskesmas <?=$kecamatan?></h3>
         </div>
         <br><br>
-        <?php if($this->session->userdata('username')=="admindemo"){ ?>
         <div>
             <span>Tampilkan Berdasarkan : </span><select id="date">
                 <option id="subdate" value="subdate"<?=$datemode=="subdate"?" selected":""?>>Submission Date</option>
                 <option id="visdate" value="visdate"<?=$datemode=="visdate"?" selected":""?>>Visit Date</option>
             </select>
         </div><br><br>
-        <?php } ?>
         <div>
             <form class="form" action="<?php echo site_url()."dataentry/gizibyform/".$kecamatan?>" method="get">
                 <label class="col-sm-2 control-label">Periode: </label>
