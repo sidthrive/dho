@@ -8,7 +8,7 @@ class DataEntry extends CI_Controller{
             $this->session->set_flashdata('url', $this->uri->uri_string);
             redirect('login');
         }
-        $this->load->model('AnalyticsFhwModel');
+        $this->load->model('AnalyticsFhwEcModel','AnalyticsFhwModel');
         $this->load->model('LocationModel','loc');
         $this->load->model('AnalyticsEcModel','AnalyticsModel');
         $this->load->model('GiziModel');
@@ -25,7 +25,7 @@ class DataEntry extends CI_Controller{
             $this->load->view('footer');
         }else{
             $this->load->view('header');
-            $data['location'] = $this->loc->getAllLoc();
+            $data['location'] = $this->loc->getAllLoc('bidan');
             $this->load->view('dataentry/dataentrysidebar',$data);
             $this->load->view('dataentry/dataentrymainpage');
             $this->load->view('footer');
@@ -58,7 +58,7 @@ class DataEntry extends CI_Controller{
             if($by=="subdate") $data['data'] = $this->AnalyticsModel->getCountPerForm($data['kecamatan'],$data['start'],$data['end']);
             else $data['data'] = $this->AnalyticsModel->getCountPerFormByVisitDate($data['kecamatan'],$data['start'],$data['end']);
             $this->load->view("header");
-            $data['location'] = $this->loc->getAllLoc();
+            $data['location'] = $this->loc->getAllLoc('bidan');
             $this->load->view("dataentry/dataentrysidebar",$data);
             if($data['desa']==""){
                 $this->load->view("dataentry/bidanentryform",$data);
@@ -136,7 +136,7 @@ class DataEntry extends CI_Controller{
             if($by=="subdate") $data['data'] = $this->AnalyticsModel->getCountPerDayDrill($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
             else $data['data'] = $this->AnalyticsModel->getCountPerDayByVisitDate($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
             $this->load->view("header");
-            $data['location'] = $this->loc->getAllLoc();
+            $data['location'] = $this->loc->getAllLoc('bidan');
             $this->load->view("dataentry/dataentrysidebar",$data);
             if($data['desa']==""){
                 $this->load->view("dataentry/bidanentrytanggal",$data);
