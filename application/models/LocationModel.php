@@ -14,7 +14,7 @@ class LocationModel extends CI_Model{
             "Pengadang"=>array('user30'=>'Gerantung','nouser1'=>'Jurang Jaler','nouser2'=>'Pengadang'),
             "Kopang"=>array('user21'=>'Aik Bual','user25'=>'Kopang Rembiga','user29'=>'Montong Gamang'),
             "Mantang"=>array('nouser1'=>'Barabali','user24'=>'Mantang','user23'=>'Presak','nouser2'=>'Tampak Siring'),
-            "Mujur  "=>array('nouser1'=>'Mujur','nouser2'=>'Sukaraja'),
+            "Mujur"=>array('nouser1'=>'Mujur','nouser2'=>'Sukaraja'),
             "Puyung"=>array('nouser1'=>'Dasan Ketujur','user27'=>'Gemel'),
             "Ubung"=>array('user20'=>'Batu Tulis','user28'=>'Labulia','nouser1'=>'Ubung')),
         "vaksinator"=>array(
@@ -22,7 +22,7 @@ class LocationModel extends CI_Model{
             "Pengadang"=>array('vaksin30'=>'Gerantung','nouser1'=>'Jurang Jaler','nouser2'=>'Pengadang'),
             "Kopang"=>array('vaksin21'=>'Aik Bual','vaksin25'=>'Kopang Rembiga','vaksin29'=>'Montong Gamang'),
             "Mantang"=>array('nouser1'=>'Barabali','nouser2'=>'Mantang','vaksin23'=>'Presak','nouser3'=>'Tampak Siring'),
-            "Mujur  "=>array('nouser1'=>'Mujur','nouser2'=>'Sukaraja'),
+            "Mujur"=>array('nouser1'=>'Mujur','nouser2'=>'Sukaraja'),
             "Puyung"=>array('nouser1'=>'Dasan Ketujur','nouser2'=>'Gemel'),
             "Ubung"=>array('vaksin20'=>'Batu Tulis','nouser1'=>'Labulia','nouser2'=>'Ubung')),
         "gizi"=>array(
@@ -30,7 +30,7 @@ class LocationModel extends CI_Model{
             "Pengadang"=>array('gizi30'=>'Gerantung','nouser1'=>'Jurang Jaler','nouser2'=>'Pengadang'),
             "Kopang"=>array('gizi21'=>'Aik Bual','gizi25'=>'Kopang Rembiga','gizi29'=>'Montong Gamang'),
             "Mantang"=>array('nouser1'=>'Barabali','nouser2'=>'Mantang','gizi23'=>'Presak','nouser3'=>'Tampak Siring'),
-            "Mujur  "=>array('nouser1'=>'Mujur','nouser2'=>'Sukaraja'),
+            "Mujur"=>array('nouser1'=>'Mujur','nouser2'=>'Sukaraja'),
             "Puyung"=>array('nouser1'=>'Dasan Ketujur','nouser2'=>'Gemel'),
             "Ubung"=>array('gizi20'=>'Batu Tulis','nouser1'=>'Labulia','nouser2'=>'Ubung'))
         ];
