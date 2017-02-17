@@ -11,10 +11,7 @@ class GiziFhwEcModel extends CI_Model{
     public function getCountPerForm($desa=""){
         $giziDB = $this->load->database('analytics', TRUE);
         $query  = $giziDB->query("SHOW TABLES FROM ec_analytics");
-        $table_default = [
-            'event_gizi_registrasi_gizi'=>'Registrasi Gizi',
-            'event_gizi_kunjungan_gizi'=>'Kunjungan Gizi',
-            'event_gizi_penutupan_anak'=>'Penutupan Anak'];
+        $table_default = $this->Table->getTable('gizi');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
@@ -76,14 +73,8 @@ class GiziFhwEcModel extends CI_Model{
         $dusun = implode(" ", explode('_', $dusun));
         $giziDB = $this->load->database('analytics', TRUE);
         $query  = $giziDB->query("SHOW TABLES FROM ec_analytics");
-        $table_default = [
-            'event_gizi_registrasi_gizi'=>'Registrasi Gizi',
-            'event_gizi_kunjungan_gizi'=>'Kunjungan Gizi',
-            'event_gizi_penutupan_anak'=>'Penutupan Anak'];
-        $tabindex = [
-            'event_gizi_registrasi_gizi'=>0,
-            'event_gizi_kunjungan_gizi'=>1,
-            'event_gizi_penutupan_anak'=>2];
+        $table_default = $this->Table->getTable('gizi');
+        $tabindex = $this->Table->getTableIndex('gizi');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
@@ -157,10 +148,7 @@ class GiziFhwEcModel extends CI_Model{
         $giziDB = $this->load->database('analytics', TRUE);
         $query  = $giziDB->query("SHOW TABLES FROM ec_analytics");
         
-        $table_default = [
-            'event_gizi_registrasi_gizi'=>'Registrasi Gizi',
-            'event_gizi_kunjungan_gizi'=>'Kunjungan Gizi',
-            'event_gizi_penutupan_anak'=>'Penutupan Anak'];
+        $table_default = $this->Table->getTable('gizi');
         //retrieve the tables name
         
         $tables = array();
@@ -253,10 +241,7 @@ class GiziFhwEcModel extends CI_Model{
         $giziDB = $this->load->database('analytics', TRUE);
         $query  = $giziDB->query("SHOW TABLES FROM ec_analytics");
         
-        $table_default = [
-            'event_gizi_registrasi_gizi'=>'Registrasi Gizi',
-            'event_gizi_kunjungan_gizi'=>'Kunjungan Gizi',
-            'event_gizi_penutupan_anak'=>'Penutupan Anak'];
+        $table_default = $this->Table->getTable('gizi');
         //retrieve the tables name
         
         $tables = array();

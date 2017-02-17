@@ -6,6 +6,7 @@ class AnalyticsEcModel extends CI_Model{
 
     function __construct() {
         parent::__construct();
+        $this->load->model('AnalyticsEcTableModel','Table');
     }
     
     public function getCountPerDayDrill($kecamatan="",$mode="",$range=""){
@@ -112,16 +113,7 @@ class AnalyticsEcModel extends CI_Model{
         date_default_timezone_set("Asia/Makassar"); 
         $analyticsDB = $this->load->database('analytics', TRUE);
         $query  = $analyticsDB->query("SHOW TABLES FROM ec_analytics");
-        $table_default = [
-            'event_bidan_identitas_ibu'=>'Registrasi Ibu',
-            'event_bidan_tambah_anc'=>'Registrasi ANC',
-            'event_bidan_kunjungan_anc'=>'Kunjungan ANC',
-            'event_bidan_kunjungan_anc_lab_test'=>'Lab Test',
-            'event_bidan_rencana_persalinan'=>'Rencana Persalinan',
-            'event_bidan_dokumentasi_persalinan'=>'Dokumentasi Persalinan',
-            'event_bidan_kunjungan_pnc'=>'Kunjungan PNC',
-            'event_bidan_child_registration'=>'Registrasi Anak',
-            'event_bidan_penutupan_anak'=>'Penutupuan Anak'];
+        $table_default = $this->Table->getTable('bidan');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
@@ -381,26 +373,8 @@ class AnalyticsEcModel extends CI_Model{
         $analyticsDB = $this->load->database('analytics', TRUE);
         $query  = $analyticsDB->query("SHOW TABLES FROM ec_analytics");
         
-        $table_default = [
-            'event_bidan_identitas_ibu'=>'Registrasi Ibu',
-            'event_bidan_tambah_anc'=>'Registrasi ANC',
-            'event_bidan_kunjungan_anc'=>'Kunjungan ANC',
-            'event_bidan_kunjungan_anc_lab_test'=>'Lab Test',
-            'event_bidan_rencana_persalinan'=>'Rencana Persalinan',
-            'event_bidan_dokumentasi_persalinan'=>'Dokumentasi Persalinan',
-            'event_bidan_kunjungan_pnc'=>'Kunjungan PNC',
-            'event_bidan_child_registration'=>'Registrasi Anak',
-            'event_bidan_penutupan_anak'=>'Penutupuan Anak'];
-        $table_name = [
-            'event_bidan_identitas_ibu',
-            'event_bidan_tambah_anc',
-            'event_bidan_kunjungan_anc',
-            'event_bidan_kunjungan_anc_lab_test',
-            'event_bidan_rencana_persalinan',
-            'event_bidan_dokumentasi_persalinan',
-            'event_bidan_kunjungan_pnc',
-            'event_bidan_child_registration',
-            'event_bidan_penutupan_anak'];
+        $table_default = $this->Table->getTable('bidan');
+        $table_name = $this->Table->getTableName('bidan');
         //retrieve the tables name
         $tables = array();
         
@@ -506,26 +480,8 @@ class AnalyticsEcModel extends CI_Model{
         $analyticsDB = $this->load->database('analytics', TRUE);
         $query  = $analyticsDB->query("SHOW TABLES FROM analytics");
         
-        $table_default = [
-            'event_bidan_identitas_ibu'=>'Registrasi Ibu',
-            'event_bidan_tambah_anc'=>'Registrasi ANC',
-            'event_bidan_kunjungan_anc'=>'Kunjungan ANC',
-            'event_bidan_kunjungan_anc_lab_test'=>'Lab Test',
-            'event_bidan_rencana_persalinan'=>'Rencana Persalinan',
-            'event_bidan_dokumentasi_persalinan'=>'Dokumentasi Persalinan',
-            'event_bidan_kunjungan_pnc'=>'Kunjungan PNC',
-            'event_bidan_child_registration'=>'Registrasi Anak',
-            'event_bidan_penutupan_anak'=>'Penutupuan Anak'];
-        $table_name = [
-            'event_bidan_identitas_ibu',
-            'event_bidan_tambah_anc',
-            'event_bidan_kunjungan_anc',
-            'event_bidan_kunjungan_anc_lab_test',
-            'event_bidan_rencana_persalinan',
-            'event_bidan_dokumentasi_persalinan',
-            'event_bidan_kunjungan_pnc',
-            'event_bidan_child_registration',
-            'event_bidan_penutupan_anak'];
+        $table_default = $this->Table->getTable('bidan');
+        $table_name = $this->Table->getTableName('bidan');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
@@ -626,16 +582,7 @@ class AnalyticsEcModel extends CI_Model{
         $analyticsDB = $this->load->database('analytics', TRUE);
         $query  = $analyticsDB->query("SHOW TABLES FROM ec_analytics");
             
-        $table_default = [
-            'event_bidan_identitas_ibu'=>'Registrasi Ibu',
-            'event_bidan_tambah_anc'=>'Registrasi ANC',
-            'event_bidan_kunjungan_anc'=>'Kunjungan ANC',
-            'event_bidan_kunjungan_anc_lab_test'=>'Lab Test',
-            'event_bidan_rencana_persalinan'=>'Rencana Persalinan',
-            'event_bidan_dokumentasi_persalinan'=>'Dokumentasi Persalinan',
-            'event_bidan_kunjungan_pnc'=>'Kunjungan PNC',
-            'event_bidan_child_registration'=>'Registrasi Anak',
-            'event_bidan_penutupan_anak'=>'Penutupuan Anak'];
+        $table_default = $this->Table->getTable('bidan');
         //retrieve the tables name
         $tables = array();
         
@@ -694,16 +641,7 @@ class AnalyticsEcModel extends CI_Model{
         $analyticsDB = $this->load->database('analytics', TRUE);
         $query  = $analyticsDB->query("SHOW TABLES FROM ec_analytics");
         
-        $table_default = [
-            'event_bidan_identitas_ibu'=>'Registrasi Ibu',
-            'event_bidan_tambah_anc'=>'Registrasi ANC',
-            'event_bidan_kunjungan_anc'=>'Kunjungan ANC',
-            'event_bidan_kunjungan_anc_lab_test'=>'Lab Test',
-            'event_bidan_rencana_persalinan'=>'Rencana Persalinan',
-            'event_bidan_dokumentasi_persalinan'=>'Dokumentasi Persalinan',
-            'event_bidan_kunjungan_pnc'=>'Kunjungan PNC',
-            'event_bidan_child_registration'=>'Registrasi Anak',
-            'event_bidan_penutupan_anak'=>'Penutupuan Anak'];
+        $table_default = $this->Table->getTable('bidan');
         //retrieve the tables name
         $tables = array();
         
@@ -759,26 +697,8 @@ class AnalyticsEcModel extends CI_Model{
     public function getCountPerFormForDrill($desa="",$date=""){
         $analyticsDB = $this->load->database('analytics', TRUE);
         $query  = $analyticsDB->query("SHOW TABLES FROM ec_analytics");
-        $table_default = [
-            'event_bidan_identitas_ibu'=>'Registrasi Ibu',
-            'event_bidan_tambah_anc'=>'Registrasi ANC',
-            'event_bidan_kunjungan_anc'=>'Kunjungan ANC',
-            'event_bidan_kunjungan_anc_lab_test'=>'Lab Test',
-            'event_bidan_rencana_persalinan'=>'Rencana Persalinan',
-            'event_bidan_dokumentasi_persalinan'=>'Dokumentasi Persalinan',
-            'event_bidan_kunjungan_pnc'=>'Kunjungan PNC',
-            'event_bidan_child_registration'=>'Registrasi Anak',
-            'event_bidan_penutupan_anak'=>'Penutupuan Anak'];
-        $tabindex = [
-            'event_bidan_identitas_ibu'=>0,
-            'event_bidan_tambah_anc'=>1,
-            'event_bidan_kunjungan_anc'=>2,
-            'event_bidan_kunjungan_anc_lab_test'=>3,
-            'event_bidan_rencana_persalinan'=>4,
-            'event_bidan_dokumentasi_persalinan'=>5,
-            'event_bidan_kunjungan_pnc'=>6,
-            'event_bidan_child_registration'=>7,
-            'event_bidan_penutupan_anak'=>8];
+        $table_default = $this->Table->getTable('bidan');
+        $tabindex = $this->Table->getTableIndex('bidan');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
@@ -846,26 +766,8 @@ class AnalyticsEcModel extends CI_Model{
     public function getCountPerFormByVisitDateForDrill($desa="",$date=""){
         $analyticsDB = $this->load->database('analytics', TRUE);
         $query  = $analyticsDB->query("SHOW TABLES FROM analytics");
-        $table_default = [
-            'event_bidan_identitas_ibu'=>'Registrasi Ibu',
-            'event_bidan_tambah_anc'=>'Registrasi ANC',
-            'event_bidan_kunjungan_anc'=>'Kunjungan ANC',
-            'event_bidan_kunjungan_anc_lab_test'=>'Lab Test',
-            'event_bidan_rencana_persalinan'=>'Rencana Persalinan',
-            'event_bidan_dokumentasi_persalinan'=>'Dokumentasi Persalinan',
-            'event_bidan_kunjungan_pnc'=>'Kunjungan PNC',
-            'event_bidan_child_registration'=>'Registrasi Anak',
-            'event_bidan_penutupan_anak'=>'Penutupuan Anak'];
-        $tabindex = [
-            'event_bidan_identitas_ibu'=>0,
-            'event_bidan_tambah_anc'=>1,
-            'event_bidan_kunjungan_anc'=>2,
-            'event_bidan_kunjungan_anc_lab_test'=>3,
-            'event_bidan_rencana_persalinan'=>4,
-            'event_bidan_dokumentasi_persalinan'=>5,
-            'event_bidan_kunjungan_pnc'=>6,
-            'event_bidan_child_registration'=>7,
-            'event_bidan_penutupan_anak'=>8];
+        $table_default = $this->Table->getTable('bidan');
+        $tabindex = $this->Table->getTableIndex('bidan');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){

@@ -6,6 +6,7 @@ class GiziEcModel extends CI_Model{
 
     function __construct() {
         parent::__construct();
+        $this->load->model('AnalyticsEcTableModel','Table');
     }
     
     public function getCountPerDay($kecamatan="",$mode="",$range=""){
@@ -15,10 +16,7 @@ class GiziEcModel extends CI_Model{
         date_default_timezone_set("Asia/Makassar"); 
         $giziDB = $this->load->database('analytics', TRUE);
         $query  = $giziDB->query("SHOW TABLES FROM ec_analytics");
-        $table_default = [
-            'event_gizi_registrasi_gizi'=>'Registrasi Gizi',
-            'event_gizi_kunjungan_gizi'=>'Kunjungan Gizi',
-            'event_gizi_penutupan_anak'=>'Penutupan Anak'];
+        $table_default = $this->Table->getTable('gizi');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
@@ -117,10 +115,7 @@ class GiziEcModel extends CI_Model{
         date_default_timezone_set("Asia/Makassar"); 
         $giziDB = $this->load->database('analytics', TRUE);
         $query  = $giziDB->query("SHOW TABLES FROM ec_analytics");
-        $table_default = [
-            'event_gizi_registrasi_gizi'=>'Registrasi Gizi',
-            'event_gizi_kunjungan_gizi'=>'Kunjungan Gizi',
-            'event_gizi_penutupan_anak'=>'Penutupan Anak'];
+        $table_default = $this->Table->getTable('gizi');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
@@ -366,10 +361,7 @@ class GiziEcModel extends CI_Model{
         $end = date("Y-m-d",  strtotime($end." +1 day"));
         $giziDB = $this->load->database('analytics', TRUE);
         $query  = $giziDB->query("SHOW TABLES FROM ec_analytics");
-        $table_default = [
-            'event_gizi_registrasi_gizi'=>'Registrasi Gizi',
-            'event_gizi_kunjungan_gizi'=>'Kunjungan Gizi',
-            'event_gizi_penutupan_anak'=>'Penutupan Anak'];
+        $table_default = $this->Table->getTable('gizi');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
@@ -427,8 +419,7 @@ class GiziEcModel extends CI_Model{
         $end = date("Y-m-d",  strtotime($end." +1 day"));
         $giziDB = $this->load->database('analytics', TRUE);
         $query  = $giziDB->query("SHOW TABLES FROM ec_analytics");
-        $table_default = [
-            'event_gizi_kunjungan_gizi'=>'Kunjungan Gizi'];
+        $table_default = $this->Table->getTable('gizi');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
@@ -491,14 +482,8 @@ class GiziEcModel extends CI_Model{
     public function getCountPerFormForDrill($desa="",$date=""){
         $giziDB = $this->load->database('analytics', TRUE);
         $query  = $giziDB->query("SHOW TABLES FROM ec_analytics");
-        $table_default = [
-            'event_gizi_registrasi_gizi'=>'Registrasi Gizi',
-            'event_gizi_kunjungan_gizi'=>'Kunjungan Gizi',
-            'event_gizi_penutupan_anak'=>'Penutupan Anak'];
-        $tabindex = [
-            'event_gizi_registrasi_gizi'=>0,
-            'event_gizi_kunjungan_gizi'=>1,
-            'event_gizi_penutupan_anak'=>2];
+        $table_default = $this->Table->getTable('gizi');
+        $tabindex = $this->Table->getTableIndex('gizi');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
@@ -572,10 +557,8 @@ class GiziEcModel extends CI_Model{
     public function getCountPerFormByVisitDateForDrill($desa="",$date=""){
         $giziDB = $this->load->database('analytics', TRUE);
         $query  = $giziDB->query("SHOW TABLES FROM ec_analytics");
-        $table_default = [
-            'event_gizi_kunjungan_gizi'=>'Kunjungan Gizi'];
-        $tabindex = [
-            'event_gizi_kunjungan_gizi'=>0];
+        $table_default = $this->Table->getTable('gizi');
+        $tabindex = $this->Table->getTableIndex('gizi');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){

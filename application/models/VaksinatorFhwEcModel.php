@@ -11,9 +11,7 @@ class VaksinatorFhwEcModel extends CI_Model{
     public function getCountPerForm($desa=""){
         $vaksinatorDB = $this->load->database('analytics', TRUE);
         $query  = $vaksinatorDB->query("SHOW TABLES FROM ec_analytics");
-        $table_default = [
-            'event_vaksin_registrasi_vaksinator'=>'Registrasi Vaksinator',
-            'event_vaksin_imunisasi_bayi'=>'Form Imunisasi'];
+        $table_default = $this->Table->getTable('vaksinator');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
@@ -75,12 +73,8 @@ class VaksinatorFhwEcModel extends CI_Model{
         $dusun = implode(" ", explode('_', $dusun));
         $vaksinatorDB = $this->load->database('analytics', TRUE);
         $query  = $vaksinatorDB->query("SHOW TABLES FROM ec_analytics");
-        $table_default = [
-            'event_vaksin_registrasi_vaksinator'=>'Registrasi Vaksinator',
-            'event_vaksin_imunisasi_bayi'=>'Form Imunisasi'];
-        $tabindex = [
-            'event_vaksin_registrasi_vaksinator'=>0,
-            'event_vaksin_imunisasi_bayi'=>1];
+        $table_default = $this->Table->getTable('vaksinator');
+        $tabindex = $this->Table->getTableIndex('vaksinator');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
@@ -155,9 +149,7 @@ class VaksinatorFhwEcModel extends CI_Model{
         $vaksinatorDB = $this->load->database('analytics', TRUE);
         $query  = $vaksinatorDB->query("SHOW TABLES FROM ec_analytics");
         
-        $table_default = [
-            'event_vaksin_registrasi_vaksinator'=>'Registrasi Vaksinator',
-            'event_vaksin_imunisasi_bayi'=>'Form Imunisasi'];
+        $table_default = $this->Table->getTable('vaksinator');
         //retrieve the tables name
         
         $tables = array();
@@ -249,9 +241,7 @@ class VaksinatorFhwEcModel extends CI_Model{
         $vaksinatorDB = $this->load->database('analytics', TRUE);
         $query  = $vaksinatorDB->query("SHOW TABLES FROM ec_analytics");
         
-        $table_default = [
-            'event_vaksin_registrasi_vaksinator'=>'Registrasi Vaksinator',
-            'event_vaksin_imunisasi_bayi'=>'Form Imunisasi'];
+        $table_default = $this->Table->getTable('vaksinator');
         //retrieve the tables name
         
         $tables = array();
