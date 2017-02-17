@@ -11,10 +11,10 @@ class DataEntry extends CI_Controller{
         $this->load->model('AnalyticsFhwEcModel','AnalyticsFhwModel');
         $this->load->model('LocationModel','loc');
         $this->load->model('AnalyticsEcModel','AnalyticsModel');
-        $this->load->model('GiziModel');
-        $this->load->model('GiziFhwModel');
-        $this->load->model('VaksinatorFhwModel');
-        $this->load->model('VaksinatorModel');
+        $this->load->model('GiziEcModel','GiziModel');
+        $this->load->model('GiziFhwEcModel','GiziFhwModel');
+        $this->load->model('VaksinatorFhwEcModel','VaksinatorFhwModel');
+        $this->load->model('VaksinatorEcModel','VaksinatorModel');
     }
     
     public function index(){
@@ -217,6 +217,7 @@ class DataEntry extends CI_Controller{
             if($by=="subdate") $data['data'] = $this->GiziModel->getCountPerForm($data['kecamatan'],$data['start'],$data['end']);
             else $data['data'] = $this->GiziModel->getCountPerFormByVisitDate($data['kecamatan'],$data['start'],$data['end']);
             $this->load->view("header");
+            $data['location'] = $this->loc->getAllLoc('gizi');
             $this->load->view("dataentry/dataentrysidebar",$data);
             if($data['desa']==""){
                 $this->load->view("dataentry/gizientryform",$data);
@@ -272,6 +273,7 @@ class DataEntry extends CI_Controller{
             if($by=="subdate") $data['data'] = $this->GiziModel->getCountPerDay($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
             else $data['data'] = $this->GiziModel->getCountPerDayByVisitDate($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
             $this->load->view("header");
+            $data['location'] = $this->loc->getAllLoc('gizi');
             $this->load->view("dataentry/dataentrysidebar",$data);
             if($data['desa']==""){
                 $this->load->view("dataentry/gizientrytanggal",$data);
@@ -349,6 +351,7 @@ class DataEntry extends CI_Controller{
             }
             $data['data']               = $this->VaksinatorModel->getCountPerForm($data['kecamatan'],$data['start'],$data['end']);
             $this->load->view("header");
+            $data['location'] = $this->loc->getAllLoc('vaksinator');
             $this->load->view("dataentry/dataentrysidebar",$data);
             if($data['desa']==""){
                 $this->load->view("dataentry/vaksinatorentryform",$data);
@@ -401,6 +404,7 @@ class DataEntry extends CI_Controller{
             }
             $data['data']                   = $this->VaksinatorModel->getCountPerDay($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
             $this->load->view("header");
+            $data['location'] = $this->loc->getAllLoc('vaksinator');
             $this->load->view("dataentry/dataentrysidebar",$data);
             if($data['desa']==""){
                 $this->load->view("dataentry/vaksinatorentrytanggal",$data);
