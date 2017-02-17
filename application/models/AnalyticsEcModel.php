@@ -56,35 +56,35 @@ class AnalyticsEcModel extends CI_Model{
             //query tha data
             if($range!=""){
                 if($kecamatan=='Darek'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '".$range[0]."' AND eventDate <= '".$range[1]."' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user22%' OR providerId LIKE '%user26%') OR eventDate >= '".$range[0]."' AND eventDate <= '".$range[1]."' group by providerId, eventDate");
                 }elseif($kecamatan=='Pengadang'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '".$range[0]."' AND eventDate <= '".$range[1]."' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user30%') AND eventDate >= '".$range[0]."' AND eventDate <= '".$range[1]."' group by providerId, eventDate");
                 }elseif($kecamatan=='Kopang'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user21') AND eventDate >= '".$range[0]."' AND eventDate <= '".$range[1]."' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user21%' OR providerId LIKE '%user25%' AND providerId LIKE '%user29%') AND eventDate >= '".$range[0]."' AND eventDate <= '".$range[1]."' group by providerId, eventDate");
                 }elseif($kecamatan=='Mantang'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '".$range[0]."' AND eventDate <= '".$range[1]."' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user23%' OR providerId LIKE '%user24%') OR eventDate >= '".$range[0]."' AND eventDate <= '".$range[1]."' group by providerId, eventDate");
                 }elseif($kecamatan=='Mujur'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '".$range[0]."' AND eventDate <= '".$range[1]."' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId = 'user') AND eventDate >= '".$range[0]."' AND eventDate <= '".$range[1]."' group by providerId, eventDate");
                 }elseif($kecamatan=='Puyung'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '".$range[0]."' AND eventDate <= '".$range[1]."' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user27%') AND eventDate >= '".$range[0]."' AND eventDate <= '".$range[1]."' group by providerId, eventDate");
                 }elseif($kecamatan=='Ubung'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user20') AND eventDate >= '".$range[0]."' AND eventDate <= '".$range[1]."' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user20%' OR providerId LIKE '%user28%') AND eventDate >= '".$range[0]."' AND eventDate <= '".$range[1]."' group by providerId, eventDate");
                 }
             }else{
                 if($kecamatan=='Darek'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '".date("Y-m-d",strtotime("-30 days"))."' AND eventDate <= '".date("Y-m-d")."' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user22%' OR providerId LIKE '%user26%') AND eventDate >= '".date("Y-m-d",strtotime("-30 days"))."' AND eventDate <= '".date("Y-m-d")."' group by providerId, eventDate");
                 }elseif($kecamatan=='Pengadang'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '".date("Y-m-d",strtotime("-30 days"))."' AND eventDate <= '".date("Y-m-d")."' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user30%') AND eventDate >= '".date("Y-m-d",strtotime("-30 days"))."' AND eventDate <= '".date("Y-m-d")."' group by providerId, eventDate");
                 }elseif($kecamatan=='Kopang'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user21') AND eventDate >= '".date("Y-m-d",strtotime("-30 days"))."' AND eventDate <= '".date("Y-m-d")."' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user21%' OR providerId LIKE '%user25%' OR providerId LIKE '%user29%') AND eventDate >= '".date("Y-m-d",strtotime("-30 days"))."' AND eventDate <= '".date("Y-m-d")."' group by providerId, eventDate");
                 }elseif($kecamatan=='Mantang'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '".date("Y-m-d",strtotime("-30 days"))."' AND eventDate <= '".date("Y-m-d")."' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user23%' OR providerId LIKE '%user24%') AND eventDate >= '".date("Y-m-d",strtotime("-30 days"))."' AND eventDate <= '".date("Y-m-d")."' group by providerId, eventDate");
                 }elseif($kecamatan=='Mujur'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '".date("Y-m-d",strtotime("-30 days"))."' AND eventDate <= '".date("Y-m-d")."' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId = 'user') AND eventDate >= '".date("Y-m-d",strtotime("-30 days"))."' AND eventDate <= '".date("Y-m-d")."' group by providerId, eventDate");
                 }elseif($kecamatan=='Puyung'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '".date("Y-m-d",strtotime("-30 days"))."' AND eventDate <= '".date("Y-m-d")."' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user27%') AND eventDate >= '".date("Y-m-d",strtotime("-30 days"))."' AND eventDate <= '".date("Y-m-d")."' group by providerId, eventDate");
                 }elseif($kecamatan=='Ubung'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user20') AND eventDate >= '".date("Y-m-d",strtotime("-30 days"))."' AND eventDate <= '".date("Y-m-d")."' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user20%' OR providerId LIKE '%user28%') AND eventDate >= '".date("Y-m-d",strtotime("-30 days"))."' AND eventDate <= '".date("Y-m-d")."' group by providerId, eventDate");
                 }
             }
             
@@ -283,45 +283,45 @@ class AnalyticsEcModel extends CI_Model{
             //query tha data
             if($kecamatan=='Darek'){
                 if($mode=='Mingguan'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND eventDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user22%' OR providerId LIKE '%user26%') AND eventDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND eventDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."' group by providerId, eventDate");
                 }elseif($mode=='Bulanan'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND eventDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user22%' OR providerId LIKE '%user26%') AND eventDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND eventDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by providerId, eventDate");
                 }
             }elseif($kecamatan=='Pengadang'){
                 if($mode=='Mingguan'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND eventDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user30%') AND eventDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND eventDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."' group by providerId, eventDate");
                 }elseif($mode=='Bulanan'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND eventDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user30%') AND eventDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND eventDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by providerId, eventDate");
                 }
             }elseif($kecamatan=='Kopang'){
                 if($mode=='Mingguan'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user21') AND eventDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND eventDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user21%' OR providerId LIKE '%user25%' AND providerId LIKE '%user29%') AND eventDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND eventDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."' group by providerId, eventDate");
                 }elseif($mode=='Bulanan'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user21') AND eventDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND eventDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user21%' OR providerId LIKE '%user25%' AND providerId LIKE '%user29%') AND eventDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND eventDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by providerId, eventDate");
                 }
             }elseif($kecamatan=='Mantang'){
                 if($mode=='Mingguan'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND eventDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user23%' OR providerId LIKE '%user24%') AND eventDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND eventDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."' group by providerId, eventDate");
                 }elseif($mode=='Bulanan'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND eventDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user23%' OR providerId LIKE '%user24%') AND eventDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND eventDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by providerId, eventDate");
                 }
             }elseif($kecamatan=='Mujur'){
                 if($mode=='Mingguan'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND eventDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId = 'user') AND eventDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND eventDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."' group by providerId, eventDate");
                 }elseif($mode=='Bulanan'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND eventDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId = 'user') AND eventDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND eventDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by providerId, eventDate");
                 }
             }elseif($kecamatan=='Puyung'){
                 if($mode=='Mingguan'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND eventDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user27%') AND eventDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND eventDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."' group by providerId, eventDate");
                 }elseif($mode=='Bulanan'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND eventDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user27%') AND eventDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND eventDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by providerId, eventDate");
                 }
             }elseif($kecamatan=='Ubung'){
                 if($mode=='Mingguan'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user20') AND eventDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND eventDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user20%' OR providerId LIKE '%user28%') AND eventDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND eventDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."' group by providerId, eventDate");
                 }elseif($mode=='Bulanan'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user20') AND eventDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND eventDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user20%' OR providerId LIKE '%user28%') AND eventDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND eventDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by providerId, eventDate");
                 }
             }
             
@@ -429,19 +429,19 @@ class AnalyticsEcModel extends CI_Model{
             //query tha data
             foreach($daterange as $date){
                 if($kecamatan=='Darek'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate LIKE '".$date->format("Y-m-d")."%' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user22%' OR providerId LIKE '%user26%') AND eventDate LIKE '".$date->format("Y-m-d")."%' group by providerId, eventDate");
                 }elseif($kecamatan=='Pengadang'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate LIKE '".$date->format("Y-m-d")."%' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user30%') AND eventDate LIKE '".$date->format("Y-m-d")."%' group by providerId, eventDate");
                 }elseif($kecamatan=='Kopang'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user21') AND eventDate LIKE '".$date->format("Y-m-d")."%' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user21%' OR providerId LIKE '%user25%' AND providerId LIKE '%user29%') AND eventDate LIKE '".$date->format("Y-m-d")."%' group by providerId, eventDate");
                 }elseif($kecamatan=='Mantang'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate LIKE '".$date->format("Y-m-d")."%' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user23%' OR providerId LIKE '%user24%') AND eventDate LIKE '".$date->format("Y-m-d")."%' group by providerId, eventDate");
                 }elseif($kecamatan=='Mujur'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate LIKE '".$date->format("Y-m-d")."%' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId = 'user') AND eventDate LIKE '".$date->format("Y-m-d")."%' group by providerId, eventDate");
                 }elseif($kecamatan=='Puyung'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate LIKE '".$date->format("Y-m-d")."%' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user27%') AND eventDate LIKE '".$date->format("Y-m-d")."%' group by providerId, eventDate");
                 }elseif($kecamatan=='Ubung'){
-                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user20') AND eventDate LIKE '".$date->format("Y-m-d")."%' group by providerId, eventDate");
+                    $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user20%' OR providerId LIKE '%user28%') AND eventDate LIKE '".$date->format("Y-m-d")."%' group by providerId, eventDate");
                 }
                 foreach ($query->result() as $datas){
                     if(array_key_exists($datas->userid, $users)){
@@ -662,19 +662,19 @@ class AnalyticsEcModel extends CI_Model{
         foreach ($tables as $table=>$legend){
             //query tha data
             if($kecamatan=='Darek'){
-                $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
+                $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user22%' OR providerId LIKE '%user26%') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
             }elseif($kecamatan=='Pengadang'){
-                $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
+                $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user30%') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
             }elseif($kecamatan=='Kopang'){
-                $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user21') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
+                $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user21%' OR providerId LIKE '%user25%' AND providerId LIKE '%user29%') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
             }elseif($kecamatan=='Mantang'){
-                $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
+                $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user23%' OR providerId LIKE '%user24%') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
             }elseif($kecamatan=='Mujur'){
-                $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
+                $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId = 'user') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
             }elseif($kecamatan=='Puyung'){
-                $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
+                $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user27%') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
             }elseif($kecamatan=='Ubung'){
-                $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user20') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
+                $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user20%' OR providerId LIKE '%user28%') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
             }
             foreach ($query->result() as $datas){
                 if(array_key_exists($datas->userid, $users)){
@@ -730,19 +730,19 @@ class AnalyticsEcModel extends CI_Model{
         foreach ($tables as $table=>$legend){
             //query tha data
             if($kecamatan=='Darek'){
-                $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
+                $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user22%' OR providerId LIKE '%user26%') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
             }elseif($kecamatan=='Pengadang'){
-                $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
+                $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user30%') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
             }elseif($kecamatan=='Kopang'){
-                $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user21') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
+                $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user21%' OR providerId LIKE '%user25%' AND providerId LIKE '%user29%') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
             }elseif($kecamatan=='Mantang'){
-                $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
+                $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user23%' OR providerId LIKE '%user24%') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
             }elseif($kecamatan=='Mujur'){
-                $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
+                $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId = 'user') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
             }elseif($kecamatan=='Puyung'){
-                $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
+                $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user27%') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
             }elseif($kecamatan=='Ubung'){
-                $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='user20') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
+                $query = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%user20%' OR providerId LIKE '%user28%') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
             }
             foreach ($query->result() as $datas){
                 if(array_key_exists($datas->userid, $users)){
@@ -790,22 +790,24 @@ class AnalyticsEcModel extends CI_Model{
             $users = ['user20'=>'Batu Tulis'];
         }elseif($desa=="Aik_Bual"){
             $users = ['user21'=>'Aik Bual'];
-        }elseif($desa=="Pendem"){
-            $users = ['user22'=>'Pendem'];
-        }elseif($desa=="Setuta"){
-            $users = ['user23'=>'Setuta'];
-        }elseif($desa=="Jango"){
-            $users = ['user24'=>'Jango'];
-        }elseif($desa=="Janapria"){
-            $users = ['user25'=>'Janapria'];
-        }elseif($desa=="Ketara"){
-            $users = ['user26'=>'Ketara'];
-        }elseif($desa=="Sengkol"){
-            $users = ['user27'=>'Sengkol'];
-        }elseif($desa=="Kawo"){
-            $users = ['user28'=>'Kawo'];
-        }elseif($desa=="Tanak_Awu"){
-            $users = ['user29'=>'Tanak Awu'];
+        }elseif($desa=="Teduh"){
+            $users = ['user22'=>'Teduh'];
+        }elseif($desa=="Presak"){
+            $users = ['user23'=>'Presak'];
+        }elseif($desa=="Mantang"){
+            $users = ['user24'=>'Mantang'];
+        }elseif($desa=="Kopang Rembiga"){
+            $users = ['user25'=>'Kopang Rembiga'];
+        }elseif($desa=="Serage"){
+            $users = ['user26'=>'Serage'];
+        }elseif($desa=="Gemel"){
+            $users = ['user27'=>'Gemel'];
+        }elseif($desa=="Labulia"){
+            $users = ['user28'=>'Labulia'];
+        }elseif($desa=="Montong Gamang"){
+            $users = ['user29'=>'Montong Gamang'];
+        }elseif($desa=="Gerantung"){
+            $users = ['user30'=>'Gerantung'];
         }
         //make result array from the tables name
         $result_data = array();
@@ -826,7 +828,7 @@ class AnalyticsEcModel extends CI_Model{
         foreach ($users as $user=>$desa){
             foreach ($tables as $table=>$legend){
                 //query tha data
-                $query3 = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId='".$user."') and eventDate LIKE '".$date."%' group by providerId, eventDate");
+                $query3 = $analyticsDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%".$user."%') and eventDate LIKE '".$date."%' group by providerId, eventDate");
                 foreach ($query3->result() as $datas){
                     if(array_key_exists($datas->userid, $users)){
                         $data_count                  = $result_data[$date];
