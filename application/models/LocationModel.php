@@ -35,6 +35,16 @@ class LocationModel extends CI_Model{
             "Ubung"=>array('gizi20'=>'Batu Tulis','nouser1'=>'Labulia','nouser2'=>'Ubung'))
         ];
     
+    private $loc_id = [
+            "Darek"=>array('Pandan Indah'=>'Pandan Indah','Serage'=>'Serage','Teduh'=>'Teduh'),
+            "Pengadang"=>array('Gerantung'=>'Gerantung','Jurang Jaler'=>'Jurang Jaler','Pengadang'=>'Pengadang'),
+            "Kopang"=>array('Aik Bual'=>'Aik Bual','Kopang Rembiga'=>'Kopang Rembiga','Montong Gamang'=>'Montong Gamang'),
+            "Mantang"=>array('Barabali'=>'Barabali','Mantang.'=>'Mantang','Presak.'=>'Presak','Tampak Siring'=>'Tampak Siring'),
+            "Mujur"=>array('Mujur'=>'Mujur','Sukaraja'=>'Sukaraja'),
+            "Puyung"=>array('Dasan Ketujur'=>'Dasan Ketujur','Gemel'=>'Gemel'),
+            "Ubung"=>array('Batu Tulis'=>'Batu Tulis','Labulia'=>'Labulia','Ubung'=>'Ubung')
+        ];
+    
     private $dusun = [
         'Pandan Indah'=>array(1=>'Aik kerit','Bolor gejek','kelambi 1','kelambi 2','Kreak','Mangkoneng','Nangker','Panggongan','Rege','Sukalalem'),
         'Serage'=>array(1=>'Beberik','Belenje','Bt. salang','Lekong jae','Mapasan','Rurut','Semaye','Sulung'),
@@ -83,6 +93,31 @@ class LocationModel extends CI_Model{
     
     public function getAllLoc($fhw){
         return $this->loc[$fhw];
+    }
+    
+    public function getLocId($kec){
+        return $this->loc_id[$kec];
+    }
+    
+    public function getLocIdQuery($locId){
+        $location = '';
+        foreach ($locId as $loc=>$id){
+            $location .= "locationId LIKE '%$loc%'";
+            if($loc!=  end($locId)) $location .= " OR ";
+        }
+        return $location;
+    }
+    
+    public function getLocIdAndDesabyDesa($desa){
+        foreach ($this->loc_id as $kec=>$desas){
+            if($ret = array_search($desa, $desas)) return [$ret=>$desa];
+        }
+    }
+    
+    public function getLocIdbyDesa($desa){
+        foreach ($this->loc_id as $kec=>$desas){
+            if($ret = array_search($desa, $desas)) return $ret;
+        }
     }
     
     public function getDesa($fhw,$kec){
