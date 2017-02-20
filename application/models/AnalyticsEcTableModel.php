@@ -21,6 +21,7 @@ class AnalyticsEcTableModel extends CI_Model{
             'event_bidan_kunjungan_pnc'=>'Kunjungan PNC',
             'event_bidan_child_registration'=>'Registrasi Anak',
             'event_bidan_kunjungan_neonatal'=>'Kunjungan Neonatal',
+            'event_bidan_imunisasi_bayi'=>'Imunisasi Bayi',
             'event_bidan_penutupan_anak'=>'Penutupuan Anak',
             'event_bidan_tambah_kb'=>'Tambah KB',
             'event_bidan_kohort_pelayanan_kb'=>'Pelayanan KB',
