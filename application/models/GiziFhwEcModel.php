@@ -154,7 +154,7 @@ class GiziFhwEcModel extends CI_Model{
         $tables = array();
         foreach ($query->result() as $table){
             if(array_key_exists($table->Tables_in_ec_analytics, $table_default)){
-                array_push($tables, $table->Tables_in_ec_analytics);
+                $tables[$table->Tables_in_ec_analytics]=$table_default[$table->Tables_in_ec_analytics];
             }
         }
         
@@ -196,7 +196,7 @@ class GiziFhwEcModel extends CI_Model{
         }        
         
         
-        foreach ($tables as $table){
+        foreach ($tables as $table=>$legend){
             if($table=='event_gizi_registrasi_gizi'){
                 $query = $giziDB->query("SELECT ".$table.".`providerId`,".$table.".`eventDate`,client_ibu.dusun,count(*) as counts from ".$table." 
                                       left join client_ibu 
@@ -247,7 +247,7 @@ class GiziFhwEcModel extends CI_Model{
         $tables = array();
         foreach ($query->result() as $table){
             if(array_key_exists($table->Tables_in_ec_analytics, $table_default)){
-                array_push($tables, $table->Tables_in_ec_analytics);
+                $tables[$table->Tables_in_ec_analytics]=$table_default[$table->Tables_in_ec_analytics];
             }
         }
         
@@ -307,7 +307,7 @@ class GiziFhwEcModel extends CI_Model{
             $result_data[$nama] = $data;
         }
         
-        foreach ($tables as $table){
+        foreach ($tables as $table=>$legend){
             if($mode=='Mingguan'){
                 if($table=='event_gizi_registrasi_gizi'){
                     $query = $giziDB->query("SELECT ".$table.".`providerId`,".$table.".`eventDate`,client_ibu.dusun,count(*) as counts from ".$table." 

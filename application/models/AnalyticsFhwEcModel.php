@@ -22,14 +22,15 @@ class AnalyticsFhwEcModel extends CI_Model{
         if($desa==""){
             $username = $this->session->userdata('username');
             $kec = $this->loc->getKecFromUser('bidan',$username);
-            $namadusun = $this->loc->getDesaFromUser('bidan',$kec,$username);
-            $users = [$username=>$this->listdesa[$username]];
+            $desa = $this->loc->getDesaFromUser('bidan',$kec,$username);
+            $namadusun = $this->loc->getDusunTypo($desa);
+            $users = [$username=>$namadusun];
         }else{
-            $kec = $this->loc->getKecFromDesa($desa);
-            $username = $this->loc->getDesaUser('bidan',$kec,$desa);
+            $username = $this->loc->getLocIdbyDesa($desa);
             $namadusun = $this->loc->getDusunTypo($desa);
             $users = [$username=>$namadusun];
         }
+        
         
         
         //make result array from the tables name
@@ -43,7 +44,7 @@ class AnalyticsFhwEcModel extends CI_Model{
         }
         
         foreach ($table_default as $table=>$legend){
-            $query = $analyticsDB->query("SELECT providerId, baseEntityId, eventDate from ".$table." where (providerId LIKE '%$username%')");
+            $query = $analyticsDB->query("SELECT locationId, baseEntityId, eventDate from ".$table." where (locationId LIKE '%$username%')");
             foreach ($query->result() as $c_data){
                 $query2 = $analyticsDB->query("SELECT dusun FROM client_ibu where baseEntityId='$c_data->baseEntityId' LIMIT 1");
                 foreach ($query2->result() as $c2_data){
@@ -79,19 +80,19 @@ class AnalyticsFhwEcModel extends CI_Model{
         
         if($this->session->userdata('level')=="fhw"){
             $username = $this->session->userdata('username');
+            $desa = $this->loc->getDesaFromDusun($dusun);
+            $listdusun = $this->loc->getDusunTypo($this->loc->getDesaFromUser('bidan',$this->loc->getKecFromUser('bidan',$username),$username));
         }else{
-            $username = $this->loc->getUserFromDusun('bidan',$dusun);
+            $username = $this->loc->getDesaFromDusun($dusun);
+            $listdusun = $this->loc->getDusunTypo($username);
         }
         
-        $listdusun = $this->loc->getDusunTypo($this->loc->getDesaFromUser('bidan',$this->loc->getKecFromUser('bidan',$username),$username));
         $namadusun = array();
         foreach ($listdusun as $x=>$n){
             if($n==$dusun){
                 $namadusun[$x]=$dusun;
             }
         }
-        
-        
         
         //make result array from the tables name
         $result_data = array();
@@ -108,7 +109,7 @@ class AnalyticsFhwEcModel extends CI_Model{
         $result_data = $data;
         
         foreach ($tables as $table=>$legend){
-            $query = $analyticsDB->query("SELECT providerId, baseEntityId, eventDate from ".$table." where (providerId LIKE '%$username%') and eventDate LIKE '".$date."%'");
+            $query = $analyticsDB->query("SELECT locationId, baseEntityId, eventDate from ".$table." where (locationId LIKE '%$username%') and eventDate LIKE '".$date."%'");
             foreach ($query->result() as $c_data){
                 $query2 = $analyticsDB->query("SELECT dusun FROM client_ibu where baseEntityId='$c_data->baseEntityId' LIMIT 1");
                 foreach ($query2->result() as $c2_data){
@@ -141,17 +142,18 @@ class AnalyticsFhwEcModel extends CI_Model{
         $tables = array();
         foreach ($query->result() as $table){
             if(array_key_exists($table->Tables_in_ec_analytics, $table_default)){
-                array_push($tables, $table->Tables_in_ec_analytics);
+                $tables[$table->Tables_in_ec_analytics]=$table_default[$table->Tables_in_ec_analytics];
             }
         }
         
         if($desa==""){
             $username = $this->session->userdata('username');
-            $namadusun = $this->listdusun[$username];
-            $users = [$username=>$this->listdesa[$username]];
+            $kec = $this->loc->getKecFromUser('bidan',$username);
+            $desa = $this->loc->getDesaFromUser('bidan',$kec,$username);
+            $namadusun = $this->loc->getDusunTypo($desa);
+            $users = [$username=>$namadusun];
         }else{
-            $kec = $this->loc->getKecFromDesa($desa);
-            $username = $this->loc->getDesaUser('bidan',$kec,$desa);
+            $username = $this->loc->getLocIdbyDesa($desa);
             $namadusun = $this->loc->getDusunTypo($desa);
             $users = [$username=>$namadusun];
         }
@@ -181,15 +183,15 @@ class AnalyticsFhwEcModel extends CI_Model{
             }
         }
         
-        foreach ($tables as $table){
-            $query = $analyticsDB->query("SELECT providerId, baseEntityId, eventDate from ".$table." where (providerId LIKE '%$username%')");
+        foreach ($tables as $table=>$legend){
+            $query = $analyticsDB->query("SELECT locationId, baseEntityId, eventDate from ".$table." where (locationId LIKE '%$username%')");
             foreach ($query->result() as $c_data){
                 $query2 = $analyticsDB->query("SELECT dusun FROM client_ibu where baseEntityId='$c_data->baseEntityId' LIMIT 1");
                 foreach ($query2->result() as $c2_data){
                     if(array_key_exists($c2_data->dusun, $namadusun)){
                         $data_count                  = $result_data[$namadusun[$c2_data->dusun]];
                         $tgl = explode('T', $c_data->eventDate);
-                        $tgl = $tgl[0];
+                        $tgl = trim($tgl[0]);
                         if(array_key_exists($tgl, $data_count)){
                             $data_count[$tgl] += 1;;
                         }
@@ -219,18 +221,18 @@ class AnalyticsFhwEcModel extends CI_Model{
         $tables = array();
         foreach ($query->result() as $table){
             if(array_key_exists($table->Tables_in_ec_analytics, $table_default)){
-                array_push($tables, $table->Tables_in_ec_analytics);
+                $tables[$table->Tables_in_ec_analytics]=$table_default[$table->Tables_in_ec_analytics];
             }
         }
         
         if($desa==""){
             $username = $this->session->userdata('username');
             $kec = $this->loc->getKecFromUser('bidan',$username);
-            $namadusun = $this->loc->getDesaFromUser('bidan',$kec,$username);
-            $users = [$username=>$this->listdesa[$username]];
+            $desa = $this->loc->getDesaFromUser('bidan',$kec,$username);
+            $namadusun = $this->loc->getDusunTypo($desa);
+            $users = [$username=>$namadusun];
         }else{
-            $kec = $this->loc->getKecFromDesa($desa);
-            $username = $this->loc->getDesaUser('bidan',$kec,$desa);
+            $username = $this->loc->getLocIdbyDesa($desa);
             $namadusun = $this->loc->getDusunTypo($desa);
             $users = [$username=>$namadusun];
         }
@@ -279,16 +281,16 @@ class AnalyticsFhwEcModel extends CI_Model{
             $result_data[$nama] = $data;
         }
         
-        foreach ($tables as $table){
+        foreach ($tables as $table=>$legend){
             if($mode=='Mingguan'){
-                $query = $analyticsDB->query("SELECT providerId, baseEntityId, eventDate from ".$table." where (providerId LIKE '%$username%') and (eventDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' and eventDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."')");
+                $query = $analyticsDB->query("SELECT locationId, baseEntityId, eventDate from ".$table." where (locationId LIKE '%$username%') and (eventDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' and eventDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."')");
             }elseif($mode=='Bulanan'){
-                $query = $analyticsDB->query("SELECT providerId, baseEntityId, eventDate from ".$table." where (providerId LIKE '%$username%') and (eventDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' and eventDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."')");
+                $query = $analyticsDB->query("SELECT locationId, baseEntityId, eventDate from ".$table." where (locationId LIKE '%$username%') and (eventDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' and eventDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."')");
             }
             foreach ($query->result() as $c_data){
                 $query2 = $analyticsDB->query("SELECT dusun FROM client_ibu where baseEntityId='$c_data->baseEntityId' LIMIT 1");
                 $tgl = explode('T', $c_data->eventDate);
-                $tgl = $tgl[0];
+                $tgl = trim($tgl[0]);
                 foreach ($query2->result() as $c2_data){
                     if($mode=='Mingguan'){
                         if(array_key_exists($c2_data->dusun, $namadusun)){

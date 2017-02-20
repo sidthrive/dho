@@ -26,7 +26,7 @@ class VaksinatorEcModel extends CI_Model{
             }
         }
         
-        $users = $this->loc->getDesa('vaksinator',$kecamatan);
+        $users = $this->loc->getLocId($kecamatan);$location = $this->loc->getLocIdQuery($users);
         
         //make result array from the tables name
         if($range!=""){
@@ -55,37 +55,9 @@ class VaksinatorEcModel extends CI_Model{
         foreach ($tables as $table=>$legend){
             //query tha data
             if($range!=""){
-                if($kecamatan=='Darek'){
-                    $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin26%') AND eventDate >= '".$range[0]."' AND eventDate <= '".$range[1]."' group by providerId, eventDate");
-                }elseif($kecamatan=='Pengadang'){
-                    $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin30%') AND eventDate >= '".$range[0]."' AND eventDate <= '".$range[1]."' group by providerId, eventDate");
-                }elseif($kecamatan=='Kopang'){
-                    $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin21%' OR providerId LIKE '%vaksin25%' OR providerId LIKE '%vaksin29%') AND eventDate >= '".$range[0]."' AND eventDate <= '".$range[1]."' group by providerId, eventDate");
-                }elseif($kecamatan=='Mantang'){
-                    $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin23%') AND eventDate >= '".$range[0]."' AND eventDate <= '".$range[1]."' group by providerId, eventDate");
-                }elseif($kecamatan=='Mujur'){
-                    $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin') AND eventDate >= '".$range[0]."' AND eventDate <= '".$range[1]."' group by providerId, eventDate");
-                }elseif($kecamatan=='Puyung'){
-                    $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin') AND eventDate >= '".$range[0]."' AND eventDate <= '".$range[1]."' group by providerId, eventDate");
-                }elseif($kecamatan=='Ubung'){
-                    $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin20%') AND eventDate >= '".$range[0]."' AND eventDate <= '".$range[1]."' group by providerId, eventDate");
-                }
+                $query = $vaksinatorDB->query("SELECT locationId as userid, eventDate,count(*) as counts from ".$table." where ($location) AND eventDate >= '".$range[0]."' AND eventDate <= '".$range[1]."' group by locationId, eventDate");
             }else{
-                if($kecamatan=='Darek'){
-                    $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin26%') AND eventDate >= '".date("Y-m-d",strtotime("-30 days"))."' AND eventDate <= '".date("Y-m-d")."' group by providerId, eventDate");
-                }elseif($kecamatan=='Pengadang'){
-                    $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin30%') AND eventDate >= '".date("Y-m-d",strtotime("-30 days"))."' AND eventDate <= '".date("Y-m-d")."' group by providerId, eventDate");
-                }elseif($kecamatan=='Kopang'){
-                    $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin21%' OR providerId LIKE '%vaksin25%' OR providerId LIKE '%vaksin29%') AND eventDate >= '".date("Y-m-d",strtotime("-30 days"))."' AND eventDate <= '".date("Y-m-d")."' group by providerId, eventDate");
-                }elseif($kecamatan=='Mantang'){
-                    $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin23%') AND eventDate >= '".date("Y-m-d",strtotime("-30 days"))."' AND eventDate <= '".date("Y-m-d")."' group by providerId, eventDate");
-                }elseif($kecamatan=='Mujur'){
-                    $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin') AND eventDate >= '".date("Y-m-d",strtotime("-30 days"))."' AND eventDate <= '".date("Y-m-d")."' group by providerId, eventDate");
-                }elseif($kecamatan=='Puyung'){
-                    $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin') AND eventDate >= '".date("Y-m-d",strtotime("-30 days"))."' AND eventDate <= '".date("Y-m-d")."' group by providerId, eventDate");
-                }elseif($kecamatan=='Ubung'){
-                    $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin20%') AND eventDate >= '".date("Y-m-d",strtotime("-30 days"))."' AND eventDate <= '".date("Y-m-d")."' group by providerId, eventDate");
-                }
+                $query = $vaksinatorDB->query("SELECT locationId as userid, eventDate,count(*) as counts from ".$table." where ($location) AND eventDate >= '".date("Y-m-d",strtotime("-30 days"))."' AND eventDate <= '".date("Y-m-d")."' group by locationId, eventDate");
             }
             foreach ($query->result() as $datas){
                 $datas->userid = trim($datas->userid);
@@ -115,10 +87,10 @@ class VaksinatorEcModel extends CI_Model{
         foreach ($query->result() as $table){
             if($table->Tables_in_ec_analytics[0]=='c'||$table->Tables_in_ec_analytics[0]=='_'){
                 continue;
-            }else array_push($tables, $table->Tables_in_ec_analytics);
+            }else $tables[$table->Tables_in_ec_analytics]=$table_default[$table->Tables_in_ec_analytics];
         }
         
-        $users = $this->loc->getDesa('vaksinator',$kecamatan);
+        $users = $this->loc->getLocId($kecamatan);$location = $this->loc->getLocIdQuery($users);
         
         //make result array from the tables name
         $result_data = array();
@@ -168,48 +140,10 @@ class VaksinatorEcModel extends CI_Model{
         foreach ($tables as $table){
             
             //query tha data
-            if($kecamatan=='Darek'){
-                if($mode=='Mingguan'){
-                    $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin26%') AND eventDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND eventDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."' group by providerId, eventDate");
-                }elseif($mode=='Bulanan'){
-                    $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin26%') AND eventDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND eventDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by providerId, eventDate");
-                }
-            }elseif($kecamatan=='Pengadang'){
-                if($mode=='Mingguan'){
-                    $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin30%') AND eventDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND eventDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."' group by providerId, eventDate");
-                }elseif($mode=='Bulanan'){
-                    $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin30%') AND eventDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND eventDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by providerId, eventDate");
-                }
-            }elseif($kecamatan=='Kopang'){
-                if($mode=='Mingguan'){
-                    $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin21%' OR providerId LIKE '%vaksin25%' OR providerId LIKE '%vaksin29%') AND eventDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND eventDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."' group by providerId, eventDate");
-                }elseif($mode=='Bulanan'){
-                    $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin21%' OR providerId LIKE '%vaksin25%' OR providerId LIKE '%vaksin29%') AND eventDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND eventDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by providerId, eventDate");
-                }
-            }elseif($kecamatan=='Mantang'){
-                if($mode=='Mingguan'){
-                    $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin23%') AND eventDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND eventDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."' group by providerId, eventDate");
-                }elseif($mode=='Bulanan'){
-                    $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin23%') AND eventDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND eventDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by providerId, eventDate");
-                }
-            }elseif($kecamatan=='Mujur'){
-                if($mode=='Mingguan'){
-                    $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin') AND eventDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND eventDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."' group by providerId, eventDate");
-                }elseif($mode=='Bulanan'){
-                    $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin') AND eventDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND eventDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by providerId, eventDate");
-                }
-            }elseif($kecamatan=='Puyung'){
-                if($mode=='Mingguan'){
-                    $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin') AND eventDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND eventDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."' group by providerId, eventDate");
-                }elseif($mode=='Bulanan'){
-                    $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin') AND eventDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND eventDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by providerId, eventDate");
-                }
-            }elseif($kecamatan=='Ubung'){
-                if($mode=='Mingguan'){
-                    $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin20%') AND eventDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND eventDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."' group by providerId, eventDate");
-                }elseif($mode=='Bulanan'){
-                    $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin20%') AND eventDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND eventDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by providerId, eventDate");
-                }
+            if($mode=='Mingguan'){
+                $query = $vaksinatorDB->query("SELECT locationId as userid, eventDate,count(*) as counts from ".$table." where ($location) AND eventDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND eventDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."' group by locationId, eventDate");
+            }elseif($mode=='Bulanan'){
+                $query = $vaksinatorDB->query("SELECT locationId as userid, eventDate,count(*) as counts from ".$table." where ($location) AND eventDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND eventDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by locationId, eventDate");
             }
             
             foreach ($query->result() as $datas){
@@ -270,7 +204,7 @@ class VaksinatorEcModel extends CI_Model{
             }
         }
         
-        $users = $this->loc->getDesa('vaksinator',$kecamatan);
+        $users = $this->loc->getLocId($kecamatan);$location = $this->loc->getLocIdQuery($users);
         
         //make result array from the tables name
         $result_data = array();
@@ -286,22 +220,7 @@ class VaksinatorEcModel extends CI_Model{
         foreach ($table_default as $table=>$legend){
             
             //query tha data
-            if($kecamatan=='Darek'){
-                $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin26%') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
-            }elseif($kecamatan=='Pengadang'){
-                $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin30%') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
-            }elseif($kecamatan=='Kopang'){
-                $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin21%' OR providerId LIKE '%vaksin25%' OR providerId LIKE '%vaksin29%') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
-            }elseif($kecamatan=='Mantang'){
-                $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin23%') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
-            }elseif($kecamatan=='Mujur'){
-                $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
-            }elseif($kecamatan=='Puyung'){
-                $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
-            }elseif($kecamatan=='Ubung'){
-                $query = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%vaksin20%') AND eventDate >= '$start' AND eventDate <= '$end' group by providerId, eventDate");
-            }
-            
+            $query = $vaksinatorDB->query("SELECT locationId as userid, eventDate,count(*) as counts from ".$table." where ($location) AND eventDate >= '$start' AND eventDate <= '$end' group by locationId, eventDate");
             foreach ($query->result() as $datas){
                 $datas->userid = trim($datas->userid);
                 if(array_key_exists($datas->userid, $users)){
@@ -328,29 +247,7 @@ class VaksinatorEcModel extends CI_Model{
             }
         }
         
-        if($desa=="Batu_Tulis"){
-            $users = ['vaksin20'=>'Batu Tulis'];
-        }elseif($desa=="Aik_Bual"){
-            $users = ['vaksin21'=>'Aik Bual'];
-        }elseif($desa=="Teduh"){
-            $users = ['vaksin22'=>'Teduh'];
-        }elseif($desa=="Presak"){
-            $users = ['vaksin23'=>'Presak'];
-        }elseif($desa=="Mantang"){
-            $users = ['vaksin24'=>'Mantang'];
-        }elseif($desa=="Kopang Rembiga"){
-            $users = ['vaksin25'=>'Kopang Rembiga'];
-        }elseif($desa=="Serage"){
-            $users = ['vaksin26'=>'Serage'];
-        }elseif($desa=="Gemel"){
-            $users = ['vaksin27'=>'Gemel'];
-        }elseif($desa=="Labulia"){
-            $users = ['vaksin28'=>'Labulia'];
-        }elseif($desa=="Montong Gamang"){
-            $users = ['vaksin29'=>'Montong Gamang'];
-        }elseif($desa=="Gerantung"){
-            $users = ['vaksin30'=>'Gerantung'];
-        }
+        $users = $this->loc->getLocIdAndDesabyDesa(str_replace('_',' ',$desa));
         
         //make result array from the tables name
         $result_data = array();
@@ -372,7 +269,7 @@ class VaksinatorEcModel extends CI_Model{
             
             //query tha data
             reset($users);
-            $query3 = $vaksinatorDB->query("SELECT providerId as userid, eventDate,count(*) as counts from ".$table." where (providerId LIKE '%".$user."%') and eventDate LIKE '".$date."%' group by providerId, eventDate");
+            $query3 = $vaksinatorDB->query("SELECT locationId as userid, eventDate,count(*) as counts from ".$table." where eventDate LIKE '".$date."%' group by locationId, eventDate");
             foreach ($query3->result() as $datas){
                 $datas->userid = trim($datas->userid);
                 if(array_key_exists($datas->userid, $users)){
