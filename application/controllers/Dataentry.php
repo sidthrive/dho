@@ -55,8 +55,9 @@ class DataEntry extends CI_Controller{
                 $data['end'] = $this->input->get('end');
                 $old_data = $this->input->get('old');
             }$data['datemode'] = $by;
-            if($by=="subdate") $data['data'] = $this->AnalyticsModel->getCountPerForm($data['kecamatan'],$data['start'],$data['end']);
-            else $data['data'] = $this->AnalyticsModel->getCountPerFormByVisitDate($data['kecamatan'],$data['start'],$data['end']);
+            //if($by=="subdate") 
+                $data['data'] = $this->AnalyticsModel->getCountPerForm($data['kecamatan'],$data['start'],$data['end']);
+            //else $data['data'] = $this->AnalyticsModel->getCountPerFormByVisitDate($data['kecamatan'],$data['start'],$data['end']);
             $this->load->view("header");
             $data['location'] = $this->loc->getAllLoc('bidan');
             $this->load->view("dataentry/dataentrysidebar",$data);
@@ -133,8 +134,9 @@ class DataEntry extends CI_Controller{
                 $data['end'] = $this->input->get('end');
             }
             $data['datemode'] = $by;
-            if($by=="subdate") $data['data'] = $this->AnalyticsModel->getCountPerDayDrill($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
-            else $data['data'] = $this->AnalyticsModel->getCountPerDayByVisitDate($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
+            //if($by=="subdate") 
+                $data['data'] = $this->AnalyticsModel->getCountPerDayDrill($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
+            //else $data['data'] = $this->AnalyticsModel->getCountPerDayByVisitDate($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
             $this->load->view("header");
             $data['location'] = $this->loc->getAllLoc('bidan');
             $this->load->view("dataentry/dataentrysidebar",$data);
@@ -214,8 +216,9 @@ class DataEntry extends CI_Controller{
                 $data['end'] = $this->input->get('end');
             }
             $data['datemode'] = $by;
-            if($by=="subdate") $data['data'] = $this->GiziModel->getCountPerForm($data['kecamatan'],$data['start'],$data['end']);
-            else $data['data'] = $this->GiziModel->getCountPerFormByVisitDate($data['kecamatan'],$data['start'],$data['end']);
+            //if($by=="subdate") 
+                $data['data'] = $this->GiziModel->getCountPerForm($data['kecamatan'],$data['start'],$data['end']);
+            //else $data['data'] = $this->GiziModel->getCountPerFormByVisitDate($data['kecamatan'],$data['start'],$data['end']);
             $this->load->view("header");
             $data['location'] = $this->loc->getAllLoc('gizi');
             $this->load->view("dataentry/dataentrysidebar",$data);
@@ -270,8 +273,9 @@ class DataEntry extends CI_Controller{
                 $data['end'] = $this->input->get('end');
             }
             $data['datemode'] = $by;
-            if($by=="subdate") $data['data'] = $this->GiziModel->getCountPerDay($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
-            else $data['data'] = $this->GiziModel->getCountPerDayByVisitDate($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
+            //if($by=="subdate") 
+                $data['data'] = $this->GiziModel->getCountPerDay($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
+            //else $data['data'] = $this->GiziModel->getCountPerDayByVisitDate($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
             $this->load->view("header");
             $data['location'] = $this->loc->getAllLoc('gizi');
             $this->load->view("dataentry/dataentrysidebar",$data);
