@@ -45,6 +45,12 @@ class LocationModel extends CI_Model{
             "Ubung"=>array('Batu Tulis'=>'Batu Tulis','Labulia'=>'Labulia','Ubung'=>'Ubung')
         ];
     
+    private $int_loc_id = [
+            "bidan"=>array('Serage'=>'Serage','Teduh'=>'Teduh','Gerantung'=>'Gerantung','Kopang Rembiga'=>'Kopang Rembiga','Montong Gamang'=>'Montong Gamang','Mantang.'=>'Mantang','Presak.'=>'Presak','Gemel'=>'Gemel','Batu Tulis'=>'Batu Tulis','Labulia'=>'Labulia'),
+            "gizi"=>array('Serage'=>'Serage','Gerantung'=>'Gerantung','Kopang Rembiga'=>'Kopang Rembiga','Montong Gamang'=>'Montong Gamang','Presak.'=>'Presak','Batu Tulis'=>'Batu Tulis'),
+            "vaksinator"=>array('Serage'=>'Serage','Gerantung'=>'Gerantung','Kopang Rembiga'=>'Kopang Rembiga','Montong Gamang'=>'Montong Gamang','Presak.'=>'Presak','Batu Tulis'=>'Batu Tulis')
+        ];
+    
     private $dusun = [
         'Pandan Indah'=>array(1=>'Aik kerit','Bolor gejek','kelambi 1','kelambi 2','Kreak','Mangkoneng','Nangker','Panggongan','Rege','Sukalalem'),
         'Serage'=>array(1=>'Beberik','Belenje','Bt. salang','Lekong jae','Mapasan','Rurut','Semaye','Sulung'),
@@ -97,6 +103,10 @@ class LocationModel extends CI_Model{
     
     public function getLocId($kec){
         return $this->loc_id[$kec];
+    }
+    
+    public function getIntLocId($fhw){
+        return $this->int_loc_id[$fhw];
     }
     
     public function getLocIdQuery($locId){
