@@ -7,14 +7,15 @@ class GiziEcCakupanModel extends CI_Model{
     function __construct() {
         parent::__construct();
         date_default_timezone_set("Asia/Makassar"); 
+        $this->db = $this->load->database('analytics', TRUE);
     }
     
     public function getDataKunjungan($clause=1){
-        return $this->db->query("SELECT * FROM kunjungan_gizi WHERE ".$clause)->result();
+        return $this->db->query("SELECT * FROM event_gizi_kunjungan_gizi WHERE ".$clause)->result();
     }
     
     public function getDataRegistrasi($clause=1){
-        return $this->db->query("SELECT * FROM registrasi_gizi WHERE ".$clause)->result();
+        return $this->db->query("SELECT * FROM event_gizi_registrasi_gizi WHERE ".$clause)->result();
     }
     
     private function isGainedWeight($jk,$umur,$berat){
@@ -79,67 +80,67 @@ class GiziEcCakupanModel extends CI_Model{
         $user_village = ['gizi2'=>'Saba','gizi12'=>'Tanak Awu'];
         $bidan_village = ['user2'=>'Saba','user12'=>'Tanak Awu'];
         
-        $user_village = $this->loc->getIntLocId('gizi');
+        $user_village = $bidan_village = $this->loc->getIntLocId('gizi');
         $user = $this->ec->getCakupanContainer('gizi');
         
-//        $datads = $this->getDataKunjungan("(umur <= 59) AND (tanggalPenimbangan > '$startdate' AND tanggalPenimbangan < '$enddate')");
+        $datads = $this->getDataKunjungan("(umur <= 1856) AND (tanggalPenimbangan > '$startdate' AND tanggalPenimbangan < '$enddate')");
         $balita = $user;
         $nd     = $user;
         $bgm    = $user;
         $asi    = $user;
-//        foreach ($datads as $dds){
-//            if(array_key_exists($dds->userID, $user_village)){
-//                $balita[$user_village[$dds->userID]] += 1;
-//                $jk = $this->db->query("SELECT jenisKelamin as jk FROM registrasi_gizi WHERE childID = '".$dds->childId."'")->row()->jk;
-//                if(strtolower($dds->nutrition_status)=="n"){
-//                    $nd[$user_village[$dds->userID]] += 1;
-//                }elseif($dds->nutrition_status==""||$dds->nutrition_status=="-"){
-//                    if($this->isGainedWeight($jk,$dds->history_umur, $dds->history_berat)){
-//                        $nd[$user_village[$dds->userID]] += 1;
-//                    }
-//                }
-//                if(strtolower($dds->bgm)=="ya"||strtolower($dds->bgm)=="yes"){
-//                    $bgm[$user_village[$dds->userID]] += 1;
-//                }elseif($dds->bgm==""||$dds->bgm=="-"){
-//                    if($this->isBgm($jk,abs($dds->umur),abs($dds->beratBadan))){
-//                        $bgm[$user_village[$dds->userID]] += 1;
-//                    }
-//                }
-//                if($dds->umur<6){
-//                    if(strtolower($dds->asi)=="ya"||strtolower($dds->asi)=="yes"){
-//                        $asi[$user_village[$dds->userID]] += 1;
-//                    }
-//                }
-//            }
-//        }
+        foreach ($datads as $dds){
+            if(array_key_exists($dds->locationId, $user_village)){
+                $balita[$user_village[$dds->locationId]] += 1;
+                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$dds->baseEntityId."'")->row()->jk;
+                if(strtolower($dds->nutrition_status)=="n"){
+                    $nd[$user_village[$dds->locationId]] += 1;
+                }elseif($dds->nutrition_status==""||$dds->nutrition_status=="-"){
+                    if($this->isGainedWeight($jk,$dds->history_umur, $dds->history_berat)){
+                        $nd[$user_village[$dds->locationId]] += 1;
+                    }
+                }
+                if(strtolower($dds->bgm)=="ya"||strtolower($dds->bgm)=="yes"){
+                    $bgm[$user_village[$dds->locationId]] += 1;
+                }elseif($dds->bgm==""||$dds->bgm=="-"){
+                    if($this->isBgm($jk,abs($dds->umur),abs($dds->beratBadan))){
+                        $bgm[$user_village[$dds->locationId]] += 1;
+                    }
+                }
+                if($dds->umur<180){
+                    if(strtolower($dds->asi)=="ya"||strtolower($dds->asi)=="yes"){
+                        $asi[$user_village[$dds->locationId]] += 1;
+                    }
+                }
+            }
+        }
         $ds = $balita;
-//        foreach ($ds as $x=>$d){
-//            if($balita[$x]==0)
-//                continue;
-//            $d = $d*100/$balita[$x];
-//            $ds[$x] = $d;
-//        }
-//        
-//        foreach ($nd as $x=>$n){
-//            if($balita[$x]==0)
-//                continue;
-//            $n = $n*100/$balita[$x];
-//            $nd[$x] = $n;
-//        }
-//        
-//        foreach ($bgm as $x=>$n){
-//            if($balita[$x]==0)
-//                continue;
-//            $n = $n*100/$balita[$x];
-//            $bgm[$x] = $n;
-//        }
-//        
-//        foreach ($asi as $x=>$n){
-//            if($balita[$x]==0)
-//                continue;
-//            $n = $n*100/$balita[$x];
-//            $asi[$x] = $n;
-//        }
+        foreach ($ds as $x=>$d){
+            if($balita[$x]==0)
+                continue;
+            $d = $d*100/$balita[$x];
+            $ds[$x] = $d;
+        }
+        
+        foreach ($nd as $x=>$n){
+            if($balita[$x]==0)
+                continue;
+            $n = $n*100/$balita[$x];
+            $nd[$x] = $n;
+        }
+        
+        foreach ($bgm as $x=>$n){
+            if($balita[$x]==0)
+                continue;
+            $n = $n*100/$balita[$x];
+            $bgm[$x] = $n;
+        }
+        
+        foreach ($asi as $x=>$n){
+            if($balita[$x]==0)
+                continue;
+            $n = $n*100/$balita[$x];
+            $asi[$x] = $n;
+        }
         
         
         $series1['page']='ds';
@@ -157,28 +158,27 @@ class GiziEcCakupanModel extends CI_Model{
         $series1['form']=$bgm;
         array_push($xlsForm, $series1);
         
-//        $bidanDB = $this->load->database('analytics', TRUE);
         $vitfe = $vitA = $user;
         $vitfe_ = $vitA_ = [];
-//        $datavisit= $bidanDB->query("SELECT * FROM kartu_pnc_visit WHERE referenceDate > '$startyear' AND referenceDate < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $bidan_village)){
-//                if($dvisit->vitaminA2jamPP!="None"&&$dvisit->vitaminA2jamPP!=""){
-//                    if($dvisit->vitaminA24jamPP!="None"&&$dvisit->vitaminA24jamPP!=""){
-//                        if(!array_key_exists($dvisit->motherId, $vitA_)){
-//                            $vitA[$bidan_village[$dvisit->userID]] += 1;
-//                            $vitA_[$dvisit->motherId] = TRUE;
-//                        }
-//                    }
-//                }
-//                if($dvisit->pelayananfe!="None"&&$dvisit->pelayananfe!=""&&$dvisit->pelayananfe!="Tidak"){
-//                    if(!array_key_exists($dvisit->motherId, $vitfe_)){
-//                        $vitfe[$bidan_village[$dvisit->userID]] += 1;
-//                        $vitfe_[$dvisit->motherId] = TRUE;
-//                    }
-//                }
-//            }
-//        }
+        $datavisit= $this->db->query("SELECT * FROM event_bidan_kunjungan_pnc WHERE pncDate > '$startyear' AND pncDate < '$enddate'")->result(); //
+        foreach ($datavisit as $dvisit){
+            if(array_key_exists($dvisit->locationId, $bidan_village)){
+                if($dvisit->vitaminA2jamPP!="None"&&$dvisit->vitaminA2jamPP!=""){
+                    if($dvisit->vitaminA24jamPP!="None"&&$dvisit->vitaminA24jamPP!=""){
+                        if(!array_key_exists($dvisit->baseEntityId, $vitA_)){
+                            $vitA[$bidan_village[$dvisit->locationId]] += 1;
+                            $vitA_[$dvisit->baseEntityId] = TRUE;
+                        }
+                    }
+                }
+                if($dvisit->pelayananfe0!="None"&&$dvisit->pelayananfe0!=""&&$dvisit->pelayananfe0!="Tidak"){
+                    if(!array_key_exists($dvisit->baseEntityId, $vitfe_)){
+                        $vitfe[$bidan_village[$dvisit->locationId]] += 1;
+                        $vitfe_[$dvisit->baseEntityId] = TRUE;
+                    }
+                }
+            }
+        }
         $series1['page']='vitA';
         $series1['form']=$vitA;
         array_push($xlsForm, $series1);
@@ -189,17 +189,17 @@ class GiziEcCakupanModel extends CI_Model{
         
         $anemia = $user;
         $anemia_ = [];
-//        $datavisit= $bidanDB->query("SELECT * FROM kartu_anc_visit_labTest WHERE referenceDate > '$startyear' AND referenceDate < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $bidan_village)){
-//                if($dvisit->laboratoriumPeriksaHbAnemia='positif'){
-//                    if(!array_key_exists($dvisit->motherId, $anemia_)){
-//                        $anemia[$bidan_village[$dvisit->userID]] += 1;
-//                        $anemia_[$dvisit->motherId] = TRUE;
-//                    }
-//                }
-//            }
-//        }
+        $datavisit= $this->db->query("SELECT * FROM event_bidan_kunjungan_anc_lab_test WHERE eventDate > '$startyear' AND eventDate < '$enddate'")->result();
+        foreach ($datavisit as $dvisit){
+            if(array_key_exists($dvisit->locationId, $bidan_village)){
+                if($dvisit->laboratoriumPeriksaHbAnemia='positif'){
+                    if(!array_key_exists($dvisit->baseEntityId, $anemia_)){
+                        $anemia[$bidan_village[$dvisit->locationId]] += 1;
+                        $anemia_[$dvisit->baseEntityId] = TRUE;
+                    }
+                }
+            }
+        }
 //        foreach ($anemia as $x=>$n){
 //            if($target_bumil[$x]==0)
 //                continue;
@@ -212,29 +212,29 @@ class GiziEcCakupanModel extends CI_Model{
         
         $fe1 = $fe3 = $kek = $user;
         $fe1_ = $fe3_ = $kek_ = [];
-//        $datavisit= $bidanDB->query("SELECT * FROM kartu_anc_visit WHERE ancDate > '$startyear' AND ancDate < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $bidan_village)){
-//                if($dvisit->pelayananfe0=="Ya"&&$dvisit->ancKe==1){
-//                    if(!array_key_exists($dvisit->motherId, $fe1_)){
-//                        $fe1[$bidan_village[$dvisit->userID]] += 1;
-//                        $fe1_[$dvisit->motherId] = TRUE;
-//                    }
-//                }
-//                if($dvisit->pelayananfe0=="Ya"&&$dvisit->ancKe==4){
-//                    if(!array_key_exists($dvisit->motherId, $fe3_)){
-//                        $fe3[$bidan_village[$dvisit->userID]] += 1;
-//                        $fe3_[$dvisit->motherId] = TRUE;
-//                    }
-//                }
-//                if($dvisit->highRiskPregnancyProteinEnergyMalnutrition='yes'){
-//                    if(!array_key_exists($dvisit->motherId, $kek_)){
-//                        $kek[$bidan_village[$dvisit->userID]] += 1;
-//                        $kek_[$dvisit->motherId] = TRUE;
-//                    }
-//                }
-//            }
-//        }
+        $datavisit= $this->db->query("SELECT * FROM event_bidan_kunjungan_anc WHERE ancDate > '$startyear' AND ancDate < '$enddate'")->result();
+        foreach ($datavisit as $dvisit){
+            if(array_key_exists($dvisit->locationId, $bidan_village)){
+                if($dvisit->pelayananfe0=="Ya"&&$dvisit->ancKe==1){
+                    if(!array_key_exists($dvisit->baseEntityId, $fe1_)){
+                        $fe1[$bidan_village[$dvisit->locationId]] += 1;
+                        $fe1_[$dvisit->baseEntityId] = TRUE;
+                    }
+                }
+                if($dvisit->pelayananfe0=="Ya"&&$dvisit->ancKe==4){
+                    if(!array_key_exists($dvisit->baseEntityId, $fe3_)){
+                        $fe3[$bidan_village[$dvisit->locationId]] += 1;
+                        $fe3_[$dvisit->baseEntityId] = TRUE;
+                    }
+                }
+                if($dvisit->highRiskPregnancyProteinEnergyMalnutrition='yes'){
+                    if(!array_key_exists($dvisit->baseEntityId, $kek_)){
+                        $kek[$bidan_village[$dvisit->locationId]] += 1;
+                        $kek_[$dvisit->baseEntityId] = TRUE;
+                    }
+                }
+            }
+        }
 //        foreach ($kek as $x=>$n){
 //            if($target_bumil[$x]==0)
 //                continue;
@@ -275,22 +275,14 @@ class GiziEcCakupanModel extends CI_Model{
         array_push($xlsForm, $series1);
         
         $bblr = $user;
-//        $datapersalinan= $bidanDB->query("SELECT * FROM kartu_pnc_dokumentasi_persalinan WHERE tanggalLahirAnak > '$startdate' AND tanggalLahirAnak < '$enddate'")->result();
-//        foreach ($datapersalinan as $dsalin){
-//            if(array_key_exists($dsalin->userID, $bidan_village)){
-//                if($dsalin->beratLahir<2500){
-//                    $bblr[$bidan_village[$dsalin->userID]] += 1;
-//                }
-//            }
-//        }
-//        $datapersalinan= $bidanDB->query("SELECT * FROM kartu_pnc_regitration_oa WHERE tanggalLahirAnak > '$startdate' AND tanggalLahirAnak < '$enddate'")->result();
-//        foreach ($datapersalinan as $dsalin){
-//            if(array_key_exists($dsalin->userID, $bidan_village)){
-//                if($dsalin->beratLahir<2500){
-//                    $bblr[$bidan_village[$dsalin->userID]] += 1;
-//                }
-//            }
-//        }
+        $datapersalinan= $this->db->query("SELECT event_bidan_dokumentasi_persalinan.*,event_bidan_child_registration.beratLahir FROM event_bidan_dokumentasi_persalinan LEFT JOIN event_bidan_child_registration ON event_bidan_dokumentasi_persalinan.baseEntityId=event_bidan_child_registration.baseEntityId WHERE tanggalPlasentaLahir > '$startdate' AND tanggalPlasentaLahir < '$enddate'")->result();
+        foreach ($datapersalinan as $dsalin){
+            if(array_key_exists($dsalin->locationId, $bidan_village)){
+                if($dsalin->beratLahir<2500){
+                    $bblr[$bidan_village[$dsalin->locationId]] += 1;
+                }
+            }
+        }
         
         $series1['page']='bblr';
         $series1['form']=$bblr;
