@@ -9,6 +9,8 @@ class HHHScore extends CI_Controller{
             redirect('login');
         }
         $this->load->model('UjianModel');
+        $this->load->model('LocationModel','loc');
+        $this->load->model('EcCakupanModel','ec');
     }
     
     public function index(){
@@ -112,9 +114,9 @@ class HHHScore extends CI_Controller{
             $dataXLS['bulan'] = $this->input->get('b');
             $dataXLS['tahun'] = $this->input->get('t');
         }
-        $this->load->model('BidanCakupanModel');
+        $this->load->model('BidanEcCakupanModel');
         
-        $dataXLS['xlsForm']=$this->BidanCakupanModel->trimester1BulanIni($dataXLS['bulan'],$dataXLS['tahun']);
+        $dataXLS['xlsForm']=$this->BidanEcCakupanModel->trimester1BulanIni($dataXLS['bulan'],$dataXLS['tahun']);
         
         $this->load->view("header");
         $this->load->view("hhhscore/hhhsidebar");
@@ -132,9 +134,9 @@ class HHHScore extends CI_Controller{
             $dataXLS['bulan'] = $this->input->get('b');
             $dataXLS['tahun'] = $this->input->get('t');
         }
-        $this->load->model('BidanCakupanModel');
+        $this->load->model('BidanEcCakupanModel');
         
-        $dataXLS['xlsForm']=$this->BidanCakupanModel->trimester2BulanIni($dataXLS['bulan'],$dataXLS['tahun']);
+        $dataXLS['xlsForm']=$this->BidanEcCakupanModel->trimester2BulanIni($dataXLS['bulan'],$dataXLS['tahun']);
         
         $this->load->view("header");
         $this->load->view("hhhscore/hhhsidebar");
@@ -152,9 +154,9 @@ class HHHScore extends CI_Controller{
             $dataXLS['bulan'] = $this->input->get('b');
             $dataXLS['tahun'] = $this->input->get('t');
         }
-        $this->load->model('BidanCakupanModel');
+        $this->load->model('BidanEcCakupanModel');
         
-        $dataXLS['xlsForm']=$this->BidanCakupanModel->trimester3BulanIni($dataXLS['bulan'],$dataXLS['tahun']);
+        $dataXLS['xlsForm']=$this->BidanEcCakupanModel->trimester3BulanIni($dataXLS['bulan'],$dataXLS['tahun']);
         
         $this->load->view("header");
         $this->load->view("hhhscore/hhhsidebar");
@@ -172,9 +174,9 @@ class HHHScore extends CI_Controller{
             $dataXLS['bulan'] = $this->input->get('b');
             $dataXLS['tahun'] = $this->input->get('t');
         }
-        $this->load->model('BidanCakupanModel');
+        $this->load->model('BidanEcCakupanModel');
        
-        $dataXLS['xlsForm']=$this->BidanCakupanModel->cakupanHHHBulanIni($dataXLS['bulan'],$dataXLS['tahun']);
+        $dataXLS['xlsForm']=$this->BidanEcCakupanModel->cakupanHHHBulanIni($dataXLS['bulan'],$dataXLS['tahun']);
         
         $this->load->view('header');
         $this->load->view('hhhscore/hhhsidebar');
@@ -192,9 +194,9 @@ class HHHScore extends CI_Controller{
             $dataXLS['bulan'] = $this->input->get('b');
             $dataXLS['tahun'] = $this->input->get('t');
         }
-        $this->load->model('BidanCakupanModel');
+        $this->load->model('BidanEcCakupanModel');
         
-        $dataXLS['xlsForm']=$this->BidanCakupanModel->heartScoreBulanIni($dataXLS['bulan'],$dataXLS['tahun']);
+        $dataXLS['xlsForm']=$this->BidanEcCakupanModel->heartScoreBulanIni($dataXLS['bulan'],$dataXLS['tahun']);
         
         $this->load->view('header');
         $this->load->view('hhhscore/hhhsidebar');

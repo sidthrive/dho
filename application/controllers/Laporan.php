@@ -8,6 +8,8 @@ class Laporan extends CI_Controller{
             $this->session->set_flashdata('url', $this->uri->uri_string);
             redirect('login');
         }
+        $this->load->model('LocationModel','loc');
+        $this->load->model('EcCakupanModel','ec');
     }
     
     public function index(){
@@ -33,8 +35,8 @@ class Laporan extends CI_Controller{
             $this->load->model('BidanFhwCakupanModel');
             $dataXLS['xlsForm']=$this->BidanFhwCakupanModel->cakupanBulanIni($dataXLS['bulan'],$dataXLS['tahun']);
         }else{
-            $this->load->model('BidanCakupanModel');
-            $dataXLS['xlsForm']=$this->BidanCakupanModel->cakupanBulanIni($dataXLS['bulan'],$dataXLS['tahun']);
+            $this->load->model('BidanEcCakupanModel');
+            $dataXLS['xlsForm']=$this->BidanEcCakupanModel->cakupanBulanIni($dataXLS['bulan'],$dataXLS['tahun']);
         }
         
         $this->load->view("header");
@@ -58,7 +60,7 @@ class Laporan extends CI_Controller{
     }
     
     public function cakupanGizi(){
-        $this->load->model('GiziCakupanModel');
+        $this->load->model('GiziEcCakupanModel');
         if($this->input->get('b')==null){
             $bulan_map = [1=>'januari',2=>'februari',3=>'maret',4=>'april',5=>'mei',6=>'juni',7=>'juli',8=>'agustus',9=>'september',10=>'oktober',11=>'november',12=>'desember'];
             $b = date("n");
@@ -68,7 +70,7 @@ class Laporan extends CI_Controller{
             $dataXLS['bulan'] = $this->input->get('b');
             $dataXLS['tahun'] = $this->input->get('t');
         }
-        $dataXLS['xlsForm']=$this->GiziCakupanModel->cakupanBulanIni($dataXLS['bulan'],$dataXLS['tahun']);
+        $dataXLS['xlsForm']=$this->GiziEcCakupanModel->cakupanBulanIni($dataXLS['bulan'],$dataXLS['tahun']);
         $this->load->view("header");
         $this->load->view("laporan/laporansidebar");
         $this->load->view("laporan/statusgizi",$dataXLS, false);
@@ -94,23 +96,23 @@ class Laporan extends CI_Controller{
     }
     
     public function cakupanpwsvaksinator(){
-        $this->load->model('VaksinatorCakupanModel');
+        $this->load->model('VaksinatorEcCakupanModel');
         $xlsForm = [];
         $mode = $this->uri->segment(3);
         $header = "";
         if($mode=="bulanini"){
             $header = "Bulan Ini";
-            $xlsForm = $this->VaksinatorCakupanModel->cakupanBulanIni();
+            $xlsForm = $this->VaksinatorEcCakupanModel->cakupanBulanIni();
         }elseif($mode=="akumulatifbulanini"){
             $header = "Akumulasi Sampai Bulan Ini";
-            $xlsForm = $this->VaksinatorCakupanModel->akumulasiBulanIni();
+            $xlsForm = $this->VaksinatorEcCakupanModel->akumulasiBulanIni();
         }elseif($mode=="bulaninivsbulanlalu"){
             $header = "Bulan Ini vs Bulan Lalu";
-            $xlsForm = $this->VaksinatorCakupanModel->bulanIniVsBulanLalu();
+            $xlsForm = $this->VaksinatorEcCakupanModel->bulanIniVsBulanLalu();
         }elseif($mode=="tahuninivstahunlalu"){
             $header = "Tahun Ini vs Tahun Lalu";
             $bulan = $this->uri->segment(4);
-            $xlsForm = $this->VaksinatorCakupanModel->tahunIniVsTahunLalu($bulan);
+            $xlsForm = $this->VaksinatorEcCakupanModel->tahunIniVsTahunLalu($bulan);
         }
         $dataXLS['xlsForm']=$xlsForm;
         $dataXLS['header']=$header;
