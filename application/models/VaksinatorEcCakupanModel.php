@@ -13,26 +13,33 @@ class VaksinatorEcCakupanModel extends CI_Model{
     function __construct() {
         parent::__construct();
         date_default_timezone_set("Asia/Makassar"); 
+        $this->db = $this->load->database('analytics', TRUE);
     }
     
     public function getDataVisit($clause=1){
-        return $this->db->query("SELECT * FROM jurim_visit WHERE ".$clause)->result();
+        return $this->db->query("SELECT * FROM event_vaksin_imunisasi_bayi WHERE ".$clause)->result();
     }
     
     public function getDataRegistrasi($clause=1){
-        return $this->db->query("SELECT * FROM registrasi_jurim WHERE ".$clause)->result();
+        return $this->db->query("SELECT * FROM event_vaksin_registrasi_vaksinator WHERE ".$clause)->result();
     }
     
-    private function cekImunisasiLengkap($childID){
+    private function cekImunisasiLengkap($baseEntityId){
         $im_table = ['bcg_visit','polio1_visit','hb1_visit','polio2_visit','dpt_hb2_visit','polio3_visit','hb3_visit','polio4_visit','campak_visit'];
         $lengkap = true;
         foreach ($im_table as $table){
-            if(!($this->db->query("SELECT childId from $table WHERE childId = '$childID'")->num_rows()>0)){
+            if(!($this->db->query("SELECT baseEntityId from $table WHERE baseEntityId = '$baseEntityId'")->num_rows()>0)){
                 $lengkap = false;
                 break;
             }
         }
         return $lengkap;
+    }
+    
+    private function cekTanggalImu($tgl,$start,$end){
+        if($tgl=='NULL') return FALSE;
+        if(strtotime($tgl)>=strtotime($start)&&strtotime($tgl)<strtotime($end)) return TRUE;
+        return FALSE;
     }
 
     public function cakupanBulanIni(){
@@ -41,22 +48,150 @@ class VaksinatorEcCakupanModel extends CI_Model{
         $this->bidan_village = $this->loc->getIntLocId('vaksinator');
         $startdate = date("Y-m");
         $enddate = date("Y-m", strtotime("+1 months"));
-//        $datavisit = $this->getDataVisit("clientVersionSubmissionDate > '".$startdate."' AND clientVersionSubmissionDate < '".$enddate."'");
-//        $datareg = $this->getDataRegistrasi("clientVersionSubmissionDate > '".$startdate."' AND clientVersionSubmissionDate < '".$enddate."'");
         
-        $hb0 = $bcg = $polio1 = $dpthb1 = $polio2 = $dpthb2 = $polio3 = $dpthb3 = $polio4 = $campak = $imunisasi = $campak_lanjutan = $tt1 = $tt2 = $tt3 = $tt4 = $tt5 = $uci = $this->user;
+        $hb0 = $bcg = $polio1 = $dpthb1 = $polio2 = $dpthb2 = $polio3 = $dpthb3 = $polio4 = $campak = $ipv = $imunisasi = $campak_lanjutan = $tt1 = $tt2 = $tt3 = $tt4 = $tt5 = $uci = $this->user;
+        $datavisit = $this->db->query("SELECT *,client_anak.gender FROM event_vaksin_imunisasi_bayi LEFT JOIN client_anak ON client_anak.baseEntityId=event_vaksin_imunisasi_bayi.baseEntityId "
+                . "WHERE (hb0 > '".$startdate."' AND hb0 < '".$enddate."')"
+                . "OR (bcg > '".$startdate."' AND bcg < '".$enddate."')"
+                . "OR (polio1 > '".$startdate."' AND polio1 < '".$enddate."')"
+                . "OR (dptHb1 > '".$startdate."' AND dptHb1 < '".$enddate."')"
+                . "OR (polio2 > '".$startdate."' AND polio2 < '".$enddate."')"
+                . "OR (dptHb2 > '".$startdate."' AND dptHb2 < '".$enddate."')"
+                . "OR (polio3 > '".$startdate."' AND polio3 < '".$enddate."')"
+                . "OR (dptHb3 > '".$startdate."' AND dptHb3 < '".$enddate."')"
+                . "OR (polio4 > '".$startdate."' AND polio4 < '".$enddate."')"
+                . "OR (campak > '".$startdate."' AND campak < '".$enddate."')"
+                . "OR (campak_lanjutan > '".$startdate."' AND campak_lanjutan < '".$enddate."')"
+                . "OR (ipv > '".$startdate."' AND ipv < '".$enddate."')")->result();
         
-//        $datavisit = $this->db->query("SELECT * FROM hb0_visit WHERE hb0 > '$startdate' AND hb0 < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $hb0[$this->user_village[$dvisit->userID]]['l'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $hb0[$this->user_village[$dvisit->userID]]['p'] +=1; 
-//                }
-//            }
-//        }
+        foreach($datavisit as $dvisit){
+            $imu_count = 0;
+            if($this->cekTanggalImu($dvisit->hb0, $startdate, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $hb0[$this->user_village[$dvisit->locationId]]['l'] +=1; 
+                    $imu_count++;
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $hb0[$this->user_village[$dvisit->locationId]]['p'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->bcg, $startdate, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $bcg[$this->user_village[$dvisit->locationId]]['l'] +=1;  
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $bcg[$this->user_village[$dvisit->locationId]]['p'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->polio1, $startdate, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $polio1[$this->user_village[$dvisit->locationId]]['l'] +=1;  
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $polio1[$this->user_village[$dvisit->locationId]]['p'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->dptHb1, $startdate, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $dpthb1[$this->user_village[$dvisit->locationId]]['l'] +=1;   
+                    $imu_count++;  
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $dpthb1[$this->user_village[$dvisit->locationId]]['p'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->polio2, $startdate, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $polio2[$this->user_village[$dvisit->locationId]]['l'] +=1;  
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $polio2[$this->user_village[$dvisit->locationId]]['p'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->dptHb2, $startdate, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $dpthb2[$this->user_village[$dvisit->locationId]]['l'] +=1;  
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $dpthb2[$this->user_village[$dvisit->locationId]]['p'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->polio3, $startdate, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $polio3[$this->user_village[$dvisit->locationId]]['l'] +=1; 
+                    $imu_count++;    
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $polio3[$this->user_village[$dvisit->locationId]]['p'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->dptHb3, $startdate, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $dpthb3[$this->user_village[$dvisit->locationId]]['l'] +=1;    
+                    $imu_count++; 
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $dpthb3[$this->user_village[$dvisit->locationId]]['p'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->polio4, $startdate, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $polio4[$this->user_village[$dvisit->locationId]]['l'] +=1;  
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $polio4[$this->user_village[$dvisit->locationId]]['p'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->campak, $startdate, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $campak[$this->user_village[$dvisit->locationId]]['l'] +=1;   
+                    $imu_count++;  
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $campak[$this->user_village[$dvisit->locationId]]['p'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->ipv, $startdate, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $ipv[$this->user_village[$dvisit->locationId]]['l'] +=1;     
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $ipv[$this->user_village[$dvisit->locationId]]['p'] +=1; 
+                }
+            }
+            if($this->cekTanggalImu($dvisit->campak_lanjutan, $startdate, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $campak_lanjutan[$this->user_village[$dvisit->locationId]]['l'] +=1;     
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $campak_lanjutan[$this->user_village[$dvisit->locationId]]['p'] +=1; 
+                }
+            }
+            if($imu_count==10){
+                 $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $imunisasi[$this->user_village[$dvisit->locationId]]['l'] +=1;
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $imunisasi[$this->user_village[$dvisit->locationId]]['p'] +=1;
+                }
+            }
+        }
+      
         
         $series1['page']='hb0';
         $series1['form']=$hb0;
@@ -64,214 +199,66 @@ class VaksinatorEcCakupanModel extends CI_Model{
         $series1['series_name']=array("Laki-laki","Perempuan");
         array_push($this->xlsForm, $series1);
         
-//        $datavisit = $this->db->query("SELECT * FROM bcg_visit WHERE bcg > '$startdate' AND bcg < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");
-//                if($jk->num_rows()>0){
-//                    $jk = $jk->row()->jk;
-//                }else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $bcg[$this->user_village[$dvisit->userID]]['l'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $bcg[$this->user_village[$dvisit->userID]]['p'] +=1; 
-//                }
-//            }
-//        }
-        
         $series1['page']='bcg';
         $series1['form']=$bcg;
         array_push($this->xlsForm, $series1);
-        
-//        $datavisit = $this->db->query("SELECT * FROM polio1_visit WHERE polio1 > '$startdate' AND polio1 < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $polio1[$this->user_village[$dvisit->userID]]['l'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $polio1[$this->user_village[$dvisit->userID]]['p'] +=1; 
-//                }
-//            }
-//        }
         
         $series1['page']='polio1';
         $series1['form']=$polio1;
         array_push($this->xlsForm, $series1);
         
-//        $datavisit = $this->db->query("SELECT * FROM hb1_visit WHERE dpt_hb1 > '$startdate' AND dpt_hb1 < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $dpthb1[$this->user_village[$dvisit->userID]]['l'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $dpthb1[$this->user_village[$dvisit->userID]]['p'] +=1; 
-//                }
-//            }
-//        }
-        
         $series1['page']='dpthb1';
         $series1['form']=$dpthb1;
         array_push($this->xlsForm, $series1);
-        
-//        $datavisit = $this->db->query("SELECT * FROM polio2_visit WHERE polio2 > '$startdate' AND polio2 < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $polio2[$this->user_village[$dvisit->userID]]['l'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $polio2[$this->user_village[$dvisit->userID]]['p'] +=1; 
-//                }
-//            }
-//        }
-        
         
         $series1['page']='polio2';
         $series1['form']=$polio2;
         array_push($this->xlsForm, $series1);
         
-//        $datavisit = $this->db->query("SELECT * FROM dpt_hb2_visit WHERE dpt_hb2 > '$startdate' AND dpt_hb2 < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $dpthb2[$this->user_village[$dvisit->userID]]['l'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $dpthb2[$this->user_village[$dvisit->userID]]['p'] +=1; 
-//                }
-//            }
-//        }
-        
-        
         $series1['page']='dpthb2';
         $series1['form']=$dpthb2;
         array_push($this->xlsForm, $series1);
-        
-//        $datavisit = $this->db->query("SELECT * FROM polio3_visit WHERE polio3 > '$startdate' AND polio3 < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $polio3[$this->user_village[$dvisit->userID]]['l'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $polio3[$this->user_village[$dvisit->userID]]['p'] +=1; 
-//                }
-//            }
-//        }
-        
         
         $series1['page']='polio3';
         $series1['form']=$polio3;
         array_push($this->xlsForm, $series1);
         
-//        $datavisit = $this->db->query("SELECT * FROM hb3_visit WHERE dpt_hb3 > '$startdate' AND dpt_hb3 < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $dpthb3[$this->user_village[$dvisit->userID]]['l'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $dpthb3[$this->user_village[$dvisit->userID]]['p'] +=1; 
-//                }
-//            }
-//        }
-        
-        
         $series1['page']='dpthb3';
         $series1['form']=$dpthb3;
         array_push($this->xlsForm, $series1);
-        
-//        $datavisit = $this->db->query("SELECT * FROM polio4_visit WHERE polio4 > '$startdate' AND polio4 < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $polio4[$this->user_village[$dvisit->userID]]['l'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $polio4[$this->user_village[$dvisit->userID]]['p'] +=1; 
-//                }
-//            }
-//        }
-        
         
         $series1['page']='polio4';
         $series1['form']=$polio4;
         array_push($this->xlsForm, $series1);
         
-//        $datavisit = $this->db->query("SELECT * FROM campak_visit WHERE imunisasi_campak > '$startdate' AND imunisasi_campak < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $campak[$this->user_village[$dvisit->userID]]['l'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $campak[$this->user_village[$dvisit->userID]]['p'] +=1; 
-//                }
-//            }
-//        }
-        
-        
         $series1['page']='campak';
         $series1['form']=$campak;
         array_push($this->xlsForm, $series1);
-        
-        //calculate Imunisasi lengkap data
-        $lastyearfromthismonth = date("Y-m", strtotime($startdate." -1 year"));
-//        $datavisit = $this->db->query("SELECT * FROM registrasi_jurim WHERE tanggal_lahir > '$lastyearfromthismonth' AND tanggal_lahir < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $dvisit->jenis_kelamin;
-//                if($this->cekImunisasiLengkap($dvisit->childId)){
-//                    if($jk=="laki-laki"||$jk=="male"){
-//                        $imunisasi[$this->user_village[$dvisit->userID]]['l'] +=1;    
-//                    }elseif($jk=="perempuan"||$jk=="female"){
-//                        $imunisasi[$this->user_village[$dvisit->userID]]['p'] +=1; 
-//                    }
-//               }
-//            }
-//        }
-        
         
         $series1['page']='imunisasi';
         $series1['form']=$imunisasi;
         array_push($this->xlsForm, $series1);
         
-//        $datavisit = $this->db->query("SELECT * FROM campak_lanjutan_visit WHERE campak_lanjutan > '$startdate' AND campak_lanjutan < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $campak_lanjutan[$this->user_village[$dvisit->userID]]['l'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $campak_lanjutan[$this->user_village[$dvisit->userID]]['p'] +=1; 
-//                }
-//            }
-//        }
-        
-        
         $series1['page']='booster_campak';
         $series1['form']=$campak_lanjutan;
         array_push($this->xlsForm, $series1);
         
-//        $bidanDB = $this->load->database('analytics', TRUE);
-//        $databulanini = $bidanDB->query("SELECT * FROM kartu_anc_visit WHERE ancDate > '$startdate' AND ancDate < '$enddate'")->result();
-//        foreach ($databulanini as $d){
-//            if(array_key_exists($d->userID, $this->bidan_village)){
-//                if($d->statusImunisasitt=="tt_ke_0"){
-//                    $tt1[$this->bidan_village[$d->userID]]['p'] +=1; 
-//                }elseif($d->statusImunisasitt=="tt_ke_1"){
-//                    $tt2[$this->bidan_village[$d->userID]]['p'] +=1;  
-//                }elseif($d->statusImunisasitt=="tt_ke_2"){
-//                    $tt3[$this->bidan_village[$d->userID]]['p'] +=1;  
-//                }elseif($d->statusImunisasitt=="tt_ke_3"){
-//                    $tt4[$this->bidan_village[$d->userID]]['p'] +=1; 
-//                }elseif($d->statusImunisasitt=="tt_ke_4"){
-//                    $tt5[$this->bidan_village[$d->userID]]['p'] +=1; 
-//                }
-//            }
-//        }
+        $databulanini = $this->db->query("SELECT * FROM event_bidan_kunjungan_anc WHERE ancDate > '$startdate' AND ancDate < '$enddate'")->result();
+        foreach ($databulanini as $d){
+            if(array_key_exists($d->locationId, $this->bidan_village)){
+                if($d->statusImunisasitt=="tt_ke_0"){
+                    $tt1[$this->bidan_village[$d->locationId]]['p'] +=1; 
+                }elseif($d->statusImunisasitt=="tt_ke_1"){
+                    $tt2[$this->bidan_village[$d->locationId]]['p'] +=1;  
+                }elseif($d->statusImunisasitt=="tt_ke_2"){
+                    $tt3[$this->bidan_village[$d->locationId]]['p'] +=1;  
+                }elseif($d->statusImunisasitt=="tt_ke_3"){
+                    $tt4[$this->bidan_village[$d->locationId]]['p'] +=1; 
+                }elseif($d->statusImunisasitt=="tt_ke_4"){
+                    $tt5[$this->bidan_village[$d->locationId]]['p'] +=1; 
+                }
+            }
+        }
         
         $series1['page']='tt1';
         $series1['form']=$tt1;
@@ -301,13 +288,13 @@ class VaksinatorEcCakupanModel extends CI_Model{
 //        $databulanini = $this->db->query("SELECT * FROM registrasi_jurim WHERE tanggal_lahir > '$lastyearfromthismonth' AND tanggal_lahir < '$enddate'")->result();
 //        
 //        foreach ($databulanini as $d){
-//            if(array_key_exists($d->userID, $this->user_village)){
+//            if(array_key_exists($d->locationId, $this->user_village)){
 //                $jk = $d->jenis_kelamin;
-//                if($this->cekImunisasiLengkap($d->childId)){
+//                if($this->cekImunisasiLengkap($d->baseEntityId)){
 //                    if($jk=="laki-laki"||$jk=="male"){
-//                        $uci[$this->user_village[$d->userID]]['l'] +=1;   
+//                        $uci[$this->user_village[$d->locationId]]['l'] +=1;   
 //                    }elseif($jk=="perempuan"||$jk=="female"){
-//                        $uci[$this->user_village[$d->userID]]['p'] +=1; 
+//                        $uci[$this->user_village[$d->locationId]]['p'] +=1; 
 //                    }
 //               }
 //            }
@@ -327,22 +314,151 @@ class VaksinatorEcCakupanModel extends CI_Model{
         $startdate = date("Y-m");
         $startyear = date("Y").'-01';
         $enddate = date("Y-m", strtotime("+1 months"));
-//        $datavisit = $this->getDataVisit("clientVersionSubmissionDate > '".$startdate."' AND clientVersionSubmissionDate < '".$enddate."'");
-//        $datareg = $this->getDataRegistrasi("clientVersionSubmissionDate > '".$startdate."' AND clientVersionSubmissionDate < '".$enddate."'");
+//        $datavisit = $this->getDataVisit("eventDate > '".$startdate."' AND eventDate < '".$enddate."'");
+//        $datareg = $this->getDataRegistrasi("eventDate > '".$startdate."' AND eventDate < '".$enddate."'");
         
-        $hb0 = $bcg = $polio1 = $dpthb1 = $polio2 = $dpthb2 = $polio3 = $dpthb3 = $polio4 = $campak = $imunisasi = $campak_lanjutan = $tt1 = $tt2 = $tt3 = $tt4 = $tt5 = $uci = $this->user;
+        $hb0 = $bcg = $polio1 = $dpthb1 = $polio2 = $dpthb2 = $polio3 = $dpthb3 = $polio4 = $campak = $ipv = $imunisasi = $campak_lanjutan = $tt1 = $tt2 = $tt3 = $tt4 = $tt5 = $uci = $this->user;
+        $datavisit = $this->db->query("SELECT *,client_anak.gender FROM event_vaksin_imunisasi_bayi LEFT JOIN client_anak ON client_anak.baseEntityId=event_vaksin_imunisasi_bayi.baseEntityId "
+                . "WHERE (hb0 > '".$startyear."' AND hb0 < '".$enddate."')"
+                . "OR (bcg > '".$startyear."' AND bcg < '".$enddate."')"
+                . "OR (polio1 > '".$startyear."' AND polio1 < '".$enddate."')"
+                . "OR (dptHb1 > '".$startyear."' AND dptHb1 < '".$enddate."')"
+                . "OR (polio2 > '".$startyear."' AND polio2 < '".$enddate."')"
+                . "OR (dptHb2 > '".$startyear."' AND dptHb2 < '".$enddate."')"
+                . "OR (polio3 > '".$startyear."' AND polio3 < '".$enddate."')"
+                . "OR (dptHb3 > '".$startyear."' AND dptHb3 < '".$enddate."')"
+                . "OR (polio4 > '".$startyear."' AND polio4 < '".$enddate."')"
+                . "OR (campak > '".$startyear."' AND campak < '".$enddate."')"
+                . "OR (campak_lanjutan > '".$startdate."' AND campak_lanjutan < '".$enddate."')"
+                . "OR (ipv > '".$startdate."' AND ipv < '".$enddate."')")->result();
         
-//        $datavisit = $this->db->query("SELECT * FROM hb0_visit WHERE hb0 > '$startyear' AND hb0 < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $hb0[$this->user_village[$dvisit->userID]]['l'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $hb0[$this->user_village[$dvisit->userID]]['p'] +=1; 
-//                }
-//            }
-//        }
+        foreach($datavisit as $dvisit){
+            $imu_count = 0;
+            if($this->cekTanggalImu($dvisit->hb0, $startyear, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $hb0[$this->user_village[$dvisit->locationId]]['l'] +=1; 
+                    $imu_count++;
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $hb0[$this->user_village[$dvisit->locationId]]['p'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->bcg, $startyear, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $bcg[$this->user_village[$dvisit->locationId]]['l'] +=1;  
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $bcg[$this->user_village[$dvisit->locationId]]['p'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->polio1, $startyear, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $polio1[$this->user_village[$dvisit->locationId]]['l'] +=1;  
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $polio1[$this->user_village[$dvisit->locationId]]['p'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->dptHb1, $startyear, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $dpthb1[$this->user_village[$dvisit->locationId]]['l'] +=1;   
+                    $imu_count++;  
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $dpthb1[$this->user_village[$dvisit->locationId]]['p'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->polio2, $startyear, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $polio2[$this->user_village[$dvisit->locationId]]['l'] +=1;  
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $polio2[$this->user_village[$dvisit->locationId]]['p'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->dptHb2, $startyear, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $dpthb2[$this->user_village[$dvisit->locationId]]['l'] +=1;  
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $dpthb2[$this->user_village[$dvisit->locationId]]['p'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->polio3, $startyear, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $polio3[$this->user_village[$dvisit->locationId]]['l'] +=1; 
+                    $imu_count++;    
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $polio3[$this->user_village[$dvisit->locationId]]['p'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->dptHb3, $startyear, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $dpthb3[$this->user_village[$dvisit->locationId]]['l'] +=1;    
+                    $imu_count++; 
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $dpthb3[$this->user_village[$dvisit->locationId]]['p'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->polio4, $startyear, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $polio4[$this->user_village[$dvisit->locationId]]['l'] +=1;  
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $polio4[$this->user_village[$dvisit->locationId]]['p'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->campak, $startyear, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $campak[$this->user_village[$dvisit->locationId]]['l'] +=1;   
+                    $imu_count++;  
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $campak[$this->user_village[$dvisit->locationId]]['p'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->ipv, $startyear, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $ipv[$this->user_village[$dvisit->locationId]]['l'] +=1;     
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $ipv[$this->user_village[$dvisit->locationId]]['p'] +=1; 
+                }
+            }
+            if($this->cekTanggalImu($dvisit->campak_lanjutan, $startyear, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $campak_lanjutan[$this->user_village[$dvisit->locationId]]['l'] +=1;     
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $campak_lanjutan[$this->user_village[$dvisit->locationId]]['p'] +=1; 
+                }
+            }
+            if($imu_count==10){
+                 $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $imunisasi[$this->user_village[$dvisit->locationId]]['l'] +=1;
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $imunisasi[$this->user_village[$dvisit->locationId]]['p'] +=1;
+                }
+            }
+        }
         
         $series1['page']='hb0';
         $series1['form']=$hb0;
@@ -350,211 +466,66 @@ class VaksinatorEcCakupanModel extends CI_Model{
         $series1['series_name']=array("Laki-laki","Perempuan");
         array_push($this->xlsForm, $series1);
         
-//        $datavisit = $this->db->query("SELECT * FROM bcg_visit WHERE bcg > '$startyear' AND bcg < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $bcg[$this->user_village[$dvisit->userID]]['l'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $bcg[$this->user_village[$dvisit->userID]]['p'] +=1; 
-//                }
-//            }
-//        }
-        
         $series1['page']='bcg';
         $series1['form']=$bcg;
         array_push($this->xlsForm, $series1);
-        
-//        $datavisit = $this->db->query("SELECT * FROM polio1_visit WHERE polio1 > '$startyear' AND polio1 < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $polio1[$this->user_village[$dvisit->userID]]['l'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $polio1[$this->user_village[$dvisit->userID]]['p'] +=1; 
-//                }
-//            }
-//        }
         
         $series1['page']='polio1';
         $series1['form']=$polio1;
         array_push($this->xlsForm, $series1);
         
-//        $datavisit = $this->db->query("SELECT * FROM hb1_visit WHERE dpt_hb1 > '$startyear' AND dpt_hb1 < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $dpthb1[$this->user_village[$dvisit->userID]]['l'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $dpthb1[$this->user_village[$dvisit->userID]]['p'] +=1; 
-//                }
-//            }
-//        }
-        
         $series1['page']='dpthb1';
         $series1['form']=$dpthb1;
         array_push($this->xlsForm, $series1);
-        
-//        $datavisit = $this->db->query("SELECT * FROM polio2_visit WHERE polio2 > '$startyear' AND polio2 < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $polio2[$this->user_village[$dvisit->userID]]['l'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $polio2[$this->user_village[$dvisit->userID]]['p'] +=1; 
-//                }
-//            }
-//        }
-        
         
         $series1['page']='polio2';
         $series1['form']=$polio2;
         array_push($this->xlsForm, $series1);
         
-//        $datavisit = $this->db->query("SELECT * FROM dpt_hb2_visit WHERE dpt_hb2 > '$startyear' AND dpt_hb2 < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $dpthb2[$this->user_village[$dvisit->userID]]['l'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $dpthb2[$this->user_village[$dvisit->userID]]['p'] +=1; 
-//                }
-//            }
-//        }
-        
-        
         $series1['page']='dpthb2';
         $series1['form']=$dpthb2;
         array_push($this->xlsForm, $series1);
-        
-//        $datavisit = $this->db->query("SELECT * FROM polio3_visit WHERE polio3 > '$startyear' AND polio3 < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $polio3[$this->user_village[$dvisit->userID]]['l'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $polio3[$this->user_village[$dvisit->userID]]['p'] +=1; 
-//                }
-//            }
-//        }
-        
         
         $series1['page']='polio3';
         $series1['form']=$polio3;
         array_push($this->xlsForm, $series1);
         
-//        $datavisit = $this->db->query("SELECT * FROM hb3_visit WHERE dpt_hb3 > '$startyear' AND dpt_hb3 < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $dpthb3[$this->user_village[$dvisit->userID]]['l'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $dpthb3[$this->user_village[$dvisit->userID]]['p'] +=1; 
-//                }
-//            }
-//        }
-        
-        
         $series1['page']='dpthb3';
         $series1['form']=$dpthb3;
         array_push($this->xlsForm, $series1);
         
-//        $datavisit = $this->db->query("SELECT * FROM polio4_visit WHERE polio4 > '$startyear' AND polio4 < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $polio4[$this->user_village[$dvisit->userID]]['l'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $polio4[$this->user_village[$dvisit->userID]]['p'] +=1; 
-//                }
-//            }
-//        }
-        
-        
         $series1['page']='polio4';
         $series1['form']=$polio4;
-        array_push($this->xlsForm, $series1);
-        
-//        $datavisit = $this->db->query("SELECT * FROM campak_visit WHERE imunisasi_campak > '$startyear' AND imunisasi_campak < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $campak[$this->user_village[$dvisit->userID]]['l'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $campak[$this->user_village[$dvisit->userID]]['p'] +=1; 
-//                }
-//            }
-//        }
-        
+        array_push($this->xlsForm, $series1);        
         
         $series1['page']='campak';
         $series1['form']=$campak;
         array_push($this->xlsForm, $series1);
         
-        //calculate Imunisasi lengkap data
-        $lastyearfromthisjanuari = date("Y-m", strtotime($startyear." -1 year"));
-//        $datavisit = $this->db->query("SELECT * FROM registrasi_jurim WHERE tanggal_lahir > '$lastyearfromthisjanuari' AND tanggal_lahir < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $dvisit->jenis_kelamin;
-//                if($this->cekImunisasiLengkap($dvisit->childId)){
-//                    if($jk=="laki-laki"||$jk=="male"){
-//                        $imunisasi[$this->user_village[$dvisit->userID]]['l'] +=1;    
-//                    }elseif($jk=="perempuan"||$jk=="female"){
-//                        $imunisasi[$this->user_village[$dvisit->userID]]['p'] +=1; 
-//                    }
-//               }
-//            }
-//        }
-        
-        
         $series1['page']='imunisasi';
         $series1['form']=$imunisasi;
         array_push($this->xlsForm, $series1);
-        
-//        $datavisit = $this->db->query("SELECT * FROM campak_lanjutan_visit WHERE campak_lanjutan > '$startyear' AND campak_lanjutan < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $campak_lanjutan[$this->user_village[$dvisit->userID]]['l'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $campak_lanjutan[$this->user_village[$dvisit->userID]]['p'] +=1; 
-//                }
-//            }
-//        }
-        
         
         $series1['page']='booster_campak';
         $series1['form']=$campak_lanjutan;
         array_push($this->xlsForm, $series1);
         
-//        $bidanDB = $this->load->database('analytics', TRUE);
-//        $databulanini = $bidanDB->query("SELECT * FROM kartu_anc_visit WHERE ancDate > '$startyear' AND ancDate < '$enddate'")->result();
-//        foreach ($databulanini as $d){
-//            if(array_key_exists($d->userID, $this->bidan_village)){
-//                if($d->statusImunisasitt=="tt_ke_0"){
-//                    $tt1[$this->bidan_village[$d->userID]]['p'] +=1; 
-//                }elseif($d->statusImunisasitt=="tt_ke_1"){
-//                    $tt2[$this->bidan_village[$d->userID]]['p'] +=1;  
-//                }elseif($d->statusImunisasitt=="tt_ke_2"){
-//                    $tt3[$this->bidan_village[$d->userID]]['p'] +=1;  
-//                }elseif($d->statusImunisasitt=="tt_ke_3"){
-//                    $tt4[$this->bidan_village[$d->userID]]['p'] +=1; 
-//                }elseif($d->statusImunisasitt=="tt_ke_4"){
-//                    $tt5[$this->bidan_village[$d->userID]]['p'] +=1; 
-//                }
-//            }
-//        }
+        $databulanini = $this->db->query("SELECT * FROM event_bidan_kunjungan_anc WHERE ancDate > '$startyear' AND ancDate < '$enddate'")->result();
+        foreach ($databulanini as $d){
+            if(array_key_exists($d->locationId, $this->bidan_village)){
+                if($d->statusImunisasitt=="tt_ke_0"){
+                    $tt1[$this->bidan_village[$d->locationId]]['p'] +=1; 
+                }elseif($d->statusImunisasitt=="tt_ke_1"){
+                    $tt2[$this->bidan_village[$d->locationId]]['p'] +=1;  
+                }elseif($d->statusImunisasitt=="tt_ke_2"){
+                    $tt3[$this->bidan_village[$d->locationId]]['p'] +=1;  
+                }elseif($d->statusImunisasitt=="tt_ke_3"){
+                    $tt4[$this->bidan_village[$d->locationId]]['p'] +=1; 
+                }elseif($d->statusImunisasitt=="tt_ke_4"){
+                    $tt5[$this->bidan_village[$d->locationId]]['p'] +=1; 
+                }
+            }
+        }
         
         $series1['page']='tt1';
         $series1['form']=$tt1;
@@ -583,13 +554,13 @@ class VaksinatorEcCakupanModel extends CI_Model{
 //        $databulanini = $this->db->query("SELECT * FROM registrasi_jurim WHERE tanggal_lahir > '$lastyearfromthisjanuari' AND tanggal_lahir < '$enddate'")->result();
 //        
 //        foreach ($databulanini as $d){
-//            if(array_key_exists($d->userID, $this->user_village)){
+//            if(array_key_exists($d->locationId, $this->user_village)){
 //                $jk = $d->jenis_kelamin;
-//                if($this->cekImunisasiLengkap($d->childId)){
+//                if($this->cekImunisasiLengkap($d->baseEntityId)){
 //                    if($jk=="laki-laki"||$jk=="male"){
-//                        $uci[$this->user_village[$d->userID]]['l'] +=1;   
+//                        $uci[$this->user_village[$d->locationId]]['l'] +=1;   
 //                    }elseif($jk=="perempuan"||$jk=="female"){
-//                        $uci[$this->user_village[$d->userID]]['p'] +=1; 
+//                        $uci[$this->user_village[$d->locationId]]['p'] +=1; 
 //                    }
 //               }
 //            }
@@ -610,34 +581,292 @@ class VaksinatorEcCakupanModel extends CI_Model{
         $enddate = date("Y-m", strtotime("+1 months"));
         $lastmonth = date("Y-m", strtotime("-1 months"));
         
-//        $datavisit = $this->getDataVisit("clientVersionSubmissionDate > '".$startdate."' AND clientVersionSubmissionDate < '".$enddate."'");
-//        $datareg = $this->getDataRegistrasi("clientVersionSubmissionDate > '".$startdate."' AND clientVersionSubmissionDate < '".$enddate."'");
         $user   =  ['Saba'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0),'Tanak Awu'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0)];
         $user = $this->ec->getCakupanContainer('vaksinator',TRUE);
-        $hb0 = $bcg = $polio1 = $dpthb1 = $polio2 = $dpthb2 = $polio3 = $dpthb3 = $polio4 = $campak = $imunisasi = $campak_lanjutan = $tt1 = $tt2 = $tt3 = $tt4 = $tt5 = $uci = $user; 
+        $hb0 = $bcg = $polio1 = $dpthb1 = $polio2 = $dpthb2 = $polio3 = $dpthb3 = $polio4 = $campak = $ipv = $imunisasi = $campak_lanjutan = $tt1 = $tt2 = $tt3 = $tt4 = $tt5 = $uci = $user;
+        $datavisit = $this->db->query("SELECT *,client_anak.gender FROM event_vaksin_imunisasi_bayi LEFT JOIN client_anak ON client_anak.baseEntityId=event_vaksin_imunisasi_bayi.baseEntityId "
+                . "WHERE (hb0 > '".$lastmonth."' AND hb0 < '".$startdate."')"
+                . "OR (bcg > '".$lastmonth."' AND bcg < '".$startdate."')"
+                . "OR (polio1 > '".$lastmonth."' AND polio1 < '".$startdate."')"
+                . "OR (dptHb1 > '".$lastmonth."' AND dptHb1 < '".$startdate."')"
+                . "OR (polio2 > '".$lastmonth."' AND polio2 < '".$startdate."')"
+                . "OR (dptHb2 > '".$lastmonth."' AND dptHb2 < '".$startdate."')"
+                . "OR (polio3 > '".$lastmonth."' AND polio3 < '".$startdate."')"
+                . "OR (dptHb3 > '".$lastmonth."' AND dptHb3 < '".$startdate."')"
+                . "OR (polio4 > '".$lastmonth."' AND polio4 < '".$startdate."')"
+                . "OR (campak > '".$lastmonth."' AND campak < '".$startdate."')"
+                . "OR (campak_lanjutan > '".$lastmonth."' AND campak_lanjutan < '".$startdate."')"
+                . "OR (ipv > '".$lastmonth."' AND ipv < '".$startdate."')")->result();
         
-//        $datavisit = $this->db->query("SELECT * FROM hb0_visit WHERE hb0 > '$lastmonth' AND hb0 < '$startdate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $hb0[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $hb0[$this->user_village[$dvisit->userID]]['pbl'] +=1; 
-//                }
-//            }
-//        }
-//        $datavisit = $this->db->query("SELECT * FROM hb0_visit WHERE hb0 > '$startdate' AND hb0 < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $hb0[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $hb0[$this->user_village[$dvisit->userID]]['pbi'] +=1; 
-//                }
-//            }
-//        }
+        foreach($datavisit as $dvisit){
+            $imu_count = 0;
+            if($this->cekTanggalImu($dvisit->hb0, $lastmonth, $startdate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $hb0[$this->user_village[$dvisit->locationId]]['lbl'] +=1;  
+                    $imu_count++;
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $hb0[$this->user_village[$dvisit->locationId]]['pbl'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->bcg, $lastmonth, $startdate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $bcg[$this->user_village[$dvisit->locationId]]['lbl'] +=1;   
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $bcg[$this->user_village[$dvisit->locationId]]['pbl'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->polio1, $lastmonth, $startdate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $polio1[$this->user_village[$dvisit->locationId]]['lbl'] +=1;   
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $polio1[$this->user_village[$dvisit->locationId]]['pbl'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->dptHb1, $lastmonth, $startdate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $dpthb1[$this->user_village[$dvisit->locationId]]['lbl'] +=1;    
+                    $imu_count++;  
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $dpthb1[$this->user_village[$dvisit->locationId]]['pbl'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->polio2, $lastmonth, $startdate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $polio2[$this->user_village[$dvisit->locationId]]['lbl'] +=1;   
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $polio2[$this->user_village[$dvisit->locationId]]['pbl'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->dptHb2, $lastmonth, $startdate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $dpthb2[$this->user_village[$dvisit->locationId]]['lbl'] +=1;   
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $dpthb2[$this->user_village[$dvisit->locationId]]['pbl'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->polio3, $lastmonth, $startdate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $polio3[$this->user_village[$dvisit->locationId]]['lbl'] +=1;  
+                    $imu_count++;    
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $polio3[$this->user_village[$dvisit->locationId]]['pbl'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->dptHb3, $lastmonth, $startdate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $dpthb3[$this->user_village[$dvisit->locationId]]['lbl'] +=1;     
+                    $imu_count++; 
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $dpthb3[$this->user_village[$dvisit->locationId]]['pbl'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->polio4, $lastmonth, $startdate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $polio4[$this->user_village[$dvisit->locationId]]['lbl'] +=1;   
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $polio4[$this->user_village[$dvisit->locationId]]['pbl'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->campak, $lastmonth, $startdate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $campak[$this->user_village[$dvisit->locationId]]['lbl'] +=1;    
+                    $imu_count++;  
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $campak[$this->user_village[$dvisit->locationId]]['pbl'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->ipv, $lastmonth, $startdate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $ipv[$this->user_village[$dvisit->locationId]]['lbl'] +=1;      
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $ipv[$this->user_village[$dvisit->locationId]]['pbl'] +=1; 
+                }
+            }
+            if($this->cekTanggalImu($dvisit->campak_lanjutan, $lastmonth, $startdate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $campak_lanjutan[$this->user_village[$dvisit->locationId]]['lbl'] +=1;      
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $campak_lanjutan[$this->user_village[$dvisit->locationId]]['pbl'] +=1; 
+                }
+            }
+            if($imu_count==10){
+                 $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $imunisasi[$this->user_village[$dvisit->locationId]]['lbl'] +=1;
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $imunisasi[$this->user_village[$dvisit->locationId]]['pbl'] +=1;
+                }
+            }
+        }
+        
+        $datavisit = $this->db->query("SELECT *,client_anak.gender FROM event_vaksin_imunisasi_bayi LEFT JOIN client_anak ON client_anak.baseEntityId=event_vaksin_imunisasi_bayi.baseEntityId "
+                . "WHERE (hb0 > '".$startdate."' AND hb0 < '".$enddate."')"
+                . "OR (bcg > '".$startdate."' AND bcg < '".$enddate."')"
+                . "OR (polio1 > '".$startdate."' AND polio1 < '".$enddate."')"
+                . "OR (dptHb1 > '".$startdate."' AND dptHb1 < '".$enddate."')"
+                . "OR (polio2 > '".$startdate."' AND polio2 < '".$enddate."')"
+                . "OR (dptHb2 > '".$startdate."' AND dptHb2 < '".$enddate."')"
+                . "OR (polio3 > '".$startdate."' AND polio3 < '".$enddate."')"
+                . "OR (dptHb3 > '".$startdate."' AND dptHb3 < '".$enddate."')"
+                . "OR (polio4 > '".$startdate."' AND polio4 < '".$enddate."')"
+                . "OR (campak > '".$startdate."' AND campak < '".$enddate."')"
+                . "OR (campak_lanjutan > '".$startdate."' AND campak_lanjutan < '".$enddate."')"
+                . "OR (ipv > '".$startdate."' AND ipv < '".$enddate."')")->result();
+        
+        foreach($datavisit as $dvisit){
+            $imu_count = 0;
+            if($this->cekTanggalImu($dvisit->hb0, $startdate, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $hb0[$this->user_village[$dvisit->locationId]]['lbi'] +=1;  
+                    $imu_count++;
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $hb0[$this->user_village[$dvisit->locationId]]['pbi'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->bcg, $startdate, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $bcg[$this->user_village[$dvisit->locationId]]['lbi'] +=1;   
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $bcg[$this->user_village[$dvisit->locationId]]['pbi'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->polio1, $startdate, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $polio1[$this->user_village[$dvisit->locationId]]['lbi'] +=1;   
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $polio1[$this->user_village[$dvisit->locationId]]['pbi'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->dptHb1, $startdate, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $dpthb1[$this->user_village[$dvisit->locationId]]['lbi'] +=1;    
+                    $imu_count++;  
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $dpthb1[$this->user_village[$dvisit->locationId]]['pbi'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->polio2, $startdate, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $polio2[$this->user_village[$dvisit->locationId]]['lbi'] +=1;   
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $polio2[$this->user_village[$dvisit->locationId]]['pbi'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->dptHb2, $startdate, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $dpthb2[$this->user_village[$dvisit->locationId]]['lbi'] +=1;   
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $dpthb2[$this->user_village[$dvisit->locationId]]['pbi'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->polio3, $startdate, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $polio3[$this->user_village[$dvisit->locationId]]['lbi'] +=1;  
+                    $imu_count++;    
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $polio3[$this->user_village[$dvisit->locationId]]['pbi'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->dptHb3, $startdate, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $dpthb3[$this->user_village[$dvisit->locationId]]['lbi'] +=1;     
+                    $imu_count++; 
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $dpthb3[$this->user_village[$dvisit->locationId]]['pbi'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->polio4, $startdate, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $polio4[$this->user_village[$dvisit->locationId]]['lbi'] +=1;   
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $polio4[$this->user_village[$dvisit->locationId]]['pbi'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->campak, $startdate, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $campak[$this->user_village[$dvisit->locationId]]['lbi'] +=1;    
+                    $imu_count++;  
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $campak[$this->user_village[$dvisit->locationId]]['pbi'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->ipv, $startdate, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $ipv[$this->user_village[$dvisit->locationId]]['lbi'] +=1;      
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $ipv[$this->user_village[$dvisit->locationId]]['pbi'] +=1; 
+                }
+            }
+            if($this->cekTanggalImu($dvisit->campak_lanjutan, $startdate, $enddate)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $campak_lanjutan[$this->user_village[$dvisit->locationId]]['lbi'] +=1;      
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $campak_lanjutan[$this->user_village[$dvisit->locationId]]['pbi'] +=1; 
+                }
+            }
+            if($imu_count==10){
+                 $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $imunisasi[$this->user_village[$dvisit->locationId]]['lbi'] +=1;
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $imunisasi[$this->user_village[$dvisit->locationId]]['pbi'] +=1;
+                }
+            }
+        }
         
         $series1['page']='hb0';
         $series1['form']=$hb0;
@@ -646,352 +875,83 @@ class VaksinatorEcCakupanModel extends CI_Model{
         $series1['series_name']=array("Laki-laki","Perempuan");
         array_push($this->xlsForm, $series1);
         
-//        $datavisit = $this->db->query("SELECT * FROM bcg_visit WHERE bcg > '$lastmonth' AND bcg < '$startdate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $bcg[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $bcg[$this->user_village[$dvisit->userID]]['pbl'] +=1; 
-//                }
-//            }
-//        }
-//        $datavisit = $this->db->query("SELECT * FROM bcg_visit WHERE bcg > '$startdate' AND bcg < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $bcg[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $bcg[$this->user_village[$dvisit->userID]]['pbi'] +=1; 
-//                }
-//            }
-//        }
-        
         $series1['page']='bcg';
         $series1['form']=$bcg;
         array_push($this->xlsForm, $series1);
-        
-//        $datavisit = $this->db->query("SELECT * FROM polio1_visit WHERE polio1 > '$lastmonth' AND polio1 < '$startdate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $polio1[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $polio1[$this->user_village[$dvisit->userID]]['pbl'] +=1; 
-//                }
-//            }
-//        }
-//        $datavisit = $this->db->query("SELECT * FROM polio1_visit WHERE polio1 > '$startdate' AND polio1 < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $polio1[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $polio1[$this->user_village[$dvisit->userID]]['pbi'] +=1; 
-//                }
-//            }
-//        }
-        
         
         $series1['page']='polio1';
         $series1['form']=$polio1;
         array_push($this->xlsForm, $series1);
         
-//        $datavisit = $this->db->query("SELECT * FROM hb1_visit WHERE dpt_hb1 > '$lastmonth' AND dpt_hb1 < '$startdate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $dpthb1[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $dpthb1[$this->user_village[$dvisit->userID]]['pbl'] +=1; 
-//                }
-//            }
-//        }
-//        $datavisit = $this->db->query("SELECT * FROM hb1_visit WHERE dpt_hb1 > '$startdate' AND dpt_hb1 < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $dpthb1[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $dpthb1[$this->user_village[$dvisit->userID]]['pbi'] +=1; 
-//                }
-//            }
-//        }
-        
-        
         $series1['page']='dpthb1';
         $series1['form']=$dpthb1;
         array_push($this->xlsForm, $series1);
-        
-//        $datavisit = $this->db->query("SELECT * FROM polio2_visit WHERE polio2 > '$lastmonth' AND polio2 < '$startdate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $polio2[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $polio2[$this->user_village[$dvisit->userID]]['pbl'] +=1; 
-//                }
-//            }
-//        }
-//        $datavisit = $this->db->query("SELECT * FROM polio2_visit WHERE polio2 > '$startdate' AND polio2 < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $polio2[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $polio2[$this->user_village[$dvisit->userID]]['pbi'] +=1; 
-//                }
-//            }
-//        }
-        
         
         $series1['page']='polio2';
         $series1['form']=$polio2;
         array_push($this->xlsForm, $series1);
         
-//        $datavisit = $this->db->query("SELECT * FROM dpt_hb2_visit WHERE dpt_hb2 > '$lastmonth' AND dpt_hb2 < '$startdate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $dpthb2[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $dpthb2[$this->user_village[$dvisit->userID]]['pbl'] +=1; 
-//                }
-//            }
-//        }
-//        $datavisit = $this->db->query("SELECT * FROM dpt_hb2_visit WHERE dpt_hb2 > '$startdate' AND dpt_hb2 < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $dpthb2[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $dpthb2[$this->user_village[$dvisit->userID]]['pbi'] +=1; 
-//                }
-//            }
-//        }
-        
-        
         $series1['page']='dpthb2';
         $series1['form']=$dpthb2;
         array_push($this->xlsForm, $series1);
-        
-//        $datavisit = $this->db->query("SELECT * FROM polio3_visit WHERE polio3 > '$lastmonth' AND polio3 < '$startdate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $polio3[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $polio3[$this->user_village[$dvisit->userID]]['pbl'] +=1; 
-//                }
-//            }
-//        }
-//        $datavisit = $this->db->query("SELECT * FROM polio3_visit WHERE polio3 > '$startdate' AND polio3 < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $polio3[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $polio3[$this->user_village[$dvisit->userID]]['pbi'] +=1; 
-//                }
-//            }
-//        }
-        
         
         $series1['page']='polio3';
         $series1['form']=$polio3;
         array_push($this->xlsForm, $series1);
         
-//        $datavisit = $this->db->query("SELECT * FROM hb3_visit WHERE dpt_hb3 > '$lastmonth' AND dpt_hb3 < '$startdate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $dpthb3[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $dpthb3[$this->user_village[$dvisit->userID]]['pbl'] +=1; 
-//                }
-//            }
-//        }
-//        $datavisit = $this->db->query("SELECT * FROM hb3_visit WHERE dpt_hb3 > '$startdate' AND dpt_hb3 < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $dpthb3[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $dpthb3[$this->user_village[$dvisit->userID]]['pbi'] +=1; 
-//                }
-//            }
-//        }
-        
-        
         $series1['page']='dpthb3';
         $series1['form']=$dpthb3;
         array_push($this->xlsForm, $series1);
         
-//        $datavisit = $this->db->query("SELECT * FROM polio4_visit WHERE polio4 > '$lastmonth' AND polio4 < '$startdate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $polio4[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $polio4[$this->user_village[$dvisit->userID]]['pbl'] +=1; 
-//                }
-//            }
-//        }
-//        $datavisit = $this->db->query("SELECT * FROM polio4_visit WHERE polio4 > '$startdate' AND polio4 < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $polio4[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $polio4[$this->user_village[$dvisit->userID]]['pbi'] +=1; 
-//                }
-//            }
-//        }
-        
-        
         $series1['page']='polio4';
         $series1['form']=$polio4;
         array_push($this->xlsForm, $series1);
-        
-//        $datavisit = $this->db->query("SELECT * FROM campak_visit WHERE imunisasi_campak > '$lastmonth' AND imunisasi_campak < '$startdate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $campak[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $campak[$this->user_village[$dvisit->userID]]['pbl'] +=1; 
-//                }
-//            }
-//        }
-//        $datavisit = $this->db->query("SELECT * FROM campak_visit WHERE imunisasi_campak > '$startdate' AND imunisasi_campak < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $campak[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $campak[$this->user_village[$dvisit->userID]]['pbi'] +=1; 
-//                }
-//            }
-//        }
         
         
         $series1['page']='campak';
         $series1['form']=$campak;
         array_push($this->xlsForm, $series1);
         
-        $lastyearfromthismonth = date("Y-m", strtotime($lastmonth." -1 year"));
-//        $datavisit = $this->db->query("SELECT * FROM registrasi_jurim WHERE tanggal_lahir > '$lastyearfromthismonth' AND tanggal_lahir < '$startdate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $dvisit->jenis_kelamin;
-//                if($this->cekImunisasiLengkap($dvisit->childId)){
-//                    if($jk=="laki-laki"||$jk=="male"){
-//                        $imunisasi[$this->user_village[$dvisit->userID]]['lbl'] +=1;    
-//                    }elseif($jk=="perempuan"||$jk=="female"){
-//                        $imunisasi[$this->user_village[$dvisit->userID]]['pbl'] +=1; 
-//                    }
-//               }
-//            }
-//        }
-//        $lastyearfromthismonth = date("Y-m", strtotime($startdate." -1 year"));
-//        $datavisit = $this->db->query("SELECT * FROM registrasi_jurim WHERE tanggal_lahir > '$lastyearfromthismonth' AND tanggal_lahir < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $dvisit->jenis_kelamin;
-//                if($this->cekImunisasiLengkap($dvisit->childId)){
-//                    if($jk=="laki-laki"||$jk=="male"){
-//                        $imunisasi[$this->user_village[$dvisit->userID]]['lbi'] +=1;    
-//                    }elseif($jk=="perempuan"||$jk=="female"){
-//                        $imunisasi[$this->user_village[$dvisit->userID]]['pbi'] +=1; 
-//                    }
-//               }
-//            }
-//        }
-        
-        
         $series1['page']='imunisasi';
         $series1['form']=$imunisasi;
         array_push($this->xlsForm, $series1);
-        
-//        $datavisit = $this->db->query("SELECT * FROM campak_lanjutan_visit WHERE campak_lanjutan > '$lastmonth' AND campak_lanjutan < '$startdate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $campak_lanjutan[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $campak_lanjutan[$this->user_village[$dvisit->userID]]['pbl'] +=1; 
-//                }
-//            }
-//        }
-//        $datavisit = $this->db->query("SELECT * FROM campak_lanjutan_visit WHERE campak_lanjutan > '$startdate' AND campak_lanjutan < '$enddate'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $campak_lanjutan[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $campak_lanjutan[$this->user_village[$dvisit->userID]]['pbi'] +=1; 
-//                }
-//            }
-//        }
-        
         
         $series1['page']='booster_campak';
         $series1['form']=$campak_lanjutan;
         array_push($this->xlsForm, $series1);
         
-//        $bidanDB = $this->load->database('analytics', TRUE);
-//        $databulanini = $bidanDB->query("SELECT * FROM kartu_anc_visit WHERE ancDate > '$lastmonth' AND ancDate < '$startdate'")->result();
-//        foreach ($databulanini as $d){
-//            if(array_key_exists($d->userID, $this->bidan_village)){
-//                if($d->statusImunisasitt=="tt_ke_0"){
-//                    $tt1[$this->bidan_village[$d->userID]]['pbl'] +=1; 
-//                }elseif($d->statusImunisasitt=="tt_ke_1"){
-//                    $tt2[$this->bidan_village[$d->userID]]['pbl'] +=1;  
-//                }elseif($d->statusImunisasitt=="tt_ke_2"){
-//                    $tt3[$this->bidan_village[$d->userID]]['pbl'] +=1;  
-//                }elseif($d->statusImunisasitt=="tt_ke_3"){
-//                    $tt4[$this->bidan_village[$d->userID]]['pbl'] +=1; 
-//                }elseif($d->statusImunisasitt=="tt_ke_4"){
-//                    $tt5[$this->bidan_village[$d->userID]]['pbl'] +=1; 
-//                }
-//            }
-//        }
-//        $databulanini = $bidanDB->query("SELECT * FROM kartu_anc_visit WHERE ancDate > '$startdate' AND ancDate < '$enddate'")->result();
-//        foreach ($databulanini as $d){
-//            if(array_key_exists($d->userID, $this->bidan_village)){
-//                if($d->statusImunisasitt=="tt_ke_0"){
-//                    $tt1[$this->bidan_village[$d->userID]]['pbi'] +=1; 
-//                }elseif($d->statusImunisasitt=="tt_ke_1"){
-//                    $tt2[$this->bidan_village[$d->userID]]['pbi'] +=1;  
-//                }elseif($d->statusImunisasitt=="tt_ke_2"){
-//                    $tt3[$this->bidan_village[$d->userID]]['pbi'] +=1;  
-//                }elseif($d->statusImunisasitt=="tt_ke_3"){
-//                    $tt4[$this->bidan_village[$d->userID]]['pbi'] +=1; 
-//                }elseif($d->statusImunisasitt=="tt_ke_4"){
-//                    $tt5[$this->bidan_village[$d->userID]]['pbi'] +=1; 
-//                }
-//            }
-//        }
+        $databulanini = $this->db->query("SELECT * FROM event_bidan_kunjungan_anc WHERE ancDate > '$lastmonth' AND ancDate < '$startdate'")->result();
+        foreach ($databulanini as $d){
+            if(array_key_exists($d->locationId, $this->bidan_village)){
+                if($d->statusImunisasitt=="tt_ke_0"){
+                    $tt1[$this->bidan_village[$d->locationId]]['pbl'] +=1; 
+                }elseif($d->statusImunisasitt=="tt_ke_1"){
+                    $tt2[$this->bidan_village[$d->locationId]]['pbl'] +=1;  
+                }elseif($d->statusImunisasitt=="tt_ke_2"){
+                    $tt3[$this->bidan_village[$d->locationId]]['pbl'] +=1;  
+                }elseif($d->statusImunisasitt=="tt_ke_3"){
+                    $tt4[$this->bidan_village[$d->locationId]]['pbl'] +=1; 
+                }elseif($d->statusImunisasitt=="tt_ke_4"){
+                    $tt5[$this->bidan_village[$d->locationId]]['pbl'] +=1; 
+                }
+            }
+        }
+        $databulanini = $this->db->query("SELECT * FROM event_bidan_kunjungan_anc WHERE ancDate > '$startdate' AND ancDate < '$enddate'")->result();
+        foreach ($databulanini as $d){
+            if(array_key_exists($d->locationId, $this->bidan_village)){
+                if($d->statusImunisasitt=="tt_ke_0"){
+                    $tt1[$this->bidan_village[$d->locationId]]['pbi'] +=1; 
+                }elseif($d->statusImunisasitt=="tt_ke_1"){
+                    $tt2[$this->bidan_village[$d->locationId]]['pbi'] +=1;  
+                }elseif($d->statusImunisasitt=="tt_ke_2"){
+                    $tt3[$this->bidan_village[$d->locationId]]['pbi'] +=1;  
+                }elseif($d->statusImunisasitt=="tt_ke_3"){
+                    $tt4[$this->bidan_village[$d->locationId]]['pbi'] +=1; 
+                }elseif($d->statusImunisasitt=="tt_ke_4"){
+                    $tt5[$this->bidan_village[$d->locationId]]['pbi'] +=1; 
+                }
+            }
+        }
         
         $series1['page']='tt1';
         $series1['form']=$tt1;
@@ -1021,13 +981,13 @@ class VaksinatorEcCakupanModel extends CI_Model{
 //        $databulanini = $this->db->query("SELECT * FROM registrasi_jurim WHERE tanggal_lahir > '$lastyearfromthismonth' AND tanggal_lahir < '$startdate'")->result();
 //        
 //        foreach ($databulanini as $d){
-//            if(array_key_exists($d->userID, $this->user_village)){
+//            if(array_key_exists($d->locationId, $this->user_village)){
 //                $jk = $d->jenis_kelamin;
-//                if($this->cekImunisasiLengkap($d->childId)){
+//                if($this->cekImunisasiLengkap($d->baseEntityId)){
 //                    if($jk=="laki-laki"||$jk=="male"){
-//                        $uci[$this->user_village[$d->userID]]['lbl'] +=1;   
+//                        $uci[$this->user_village[$d->locationId]]['lbl'] +=1;   
 //                    }elseif($jk=="perempuan"||$jk=="female"){
-//                        $uci[$this->user_village[$d->userID]]['pbl'] +=1; 
+//                        $uci[$this->user_village[$d->locationId]]['pbl'] +=1; 
 //                    }
 //               }
 //            }
@@ -1036,13 +996,13 @@ class VaksinatorEcCakupanModel extends CI_Model{
 //        $databulanini = $this->db->query("SELECT * FROM registrasi_jurim WHERE tanggal_lahir > '$lastyearfromthismonth' AND tanggal_lahir < '$enddate'")->result();
 //        
 //        foreach ($databulanini as $d){
-//            if(array_key_exists($d->userID, $this->user_village)){
+//            if(array_key_exists($d->locationId, $this->user_village)){
 //                $jk = $d->jenis_kelamin;
-//                if($this->cekImunisasiLengkap($d->childId)){
+//                if($this->cekImunisasiLengkap($d->baseEntityId)){
 //                    if($jk=="laki-laki"||$jk=="male"){
-//                        $uci[$this->user_village[$d->userID]]['lbi'] +=1;   
+//                        $uci[$this->user_village[$d->locationId]]['lbi'] +=1;   
 //                    }elseif($jk=="perempuan"||$jk=="female"){
-//                        $uci[$this->user_village[$d->userID]]['pbi'] +=1; 
+//                        $uci[$this->user_village[$d->locationId]]['pbi'] +=1; 
 //                    }
 //               }
 //            }
@@ -1065,389 +1025,380 @@ class VaksinatorEcCakupanModel extends CI_Model{
         $enddate1 = date("Y-m",  strtotime($startdate1." +1 month"));
         $startdate2 = date("Y-m",  strtotime($thisyear."-".$thismonth));
         $enddate2 = date("Y-m",  strtotime($startdate2." +1 month"));
-//        $datavisit = $this->getDataVisit("clientVersionSubmissionDate > '".$startdate."' AND clientVersionSubmissionDate < '".$enddate."'");
-//        $datareg = $this->getDataRegistrasi("clientVersionSubmissionDate > '".$startdate."' AND clientVersionSubmissionDate < '".$enddate."'");
+//        $datavisit = $this->getDataVisit("eventDate > '".$startdate."' AND eventDate < '".$enddate."'");
+//        $datareg = $this->getDataRegistrasi("eventDate > '".$startdate."' AND eventDate < '".$enddate."'");
         $user   =  ['Saba'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0),'Tanak Awu'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0)];
         $user = $this->ec->getCakupanContainer('vaksinator',TRUE);
-        $hb0 = $bcg = $polio1 = $dpthb1 = $polio2 = $dpthb2 = $polio3 = $dpthb3 = $polio4 = $campak = $imunisasi = $campak_lanjutan = $tt1 = $tt2 = $tt3 = $tt4 = $tt5 = $uci = $user; 
+        $hb0 = $bcg = $polio1 = $dpthb1 = $polio2 = $dpthb2 = $polio3 = $dpthb3 = $polio4 = $campak = $ipv = $imunisasi = $campak_lanjutan = $tt1 = $tt2 = $tt3 = $tt4 = $tt5 = $uci = $user; 
+        
+        $datavisit = $this->db->query("SELECT *,client_anak.gender FROM event_vaksin_imunisasi_bayi LEFT JOIN client_anak ON client_anak.baseEntityId=event_vaksin_imunisasi_bayi.baseEntityId "
+                . "WHERE (hb0 > '".$startdate1."' AND hb0 < '".$enddate1."')"
+                . "OR (bcg > '".$startdate1."' AND bcg < '".$enddate1."')"
+                . "OR (polio1 > '".$startdate1."' AND polio1 < '".$enddate1."')"
+                . "OR (dptHb1 > '".$startdate1."' AND dptHb1 < '".$enddate1."')"
+                . "OR (polio2 > '".$startdate1."' AND polio2 < '".$enddate1."')"
+                . "OR (dptHb2 > '".$startdate1."' AND dptHb2 < '".$enddate1."')"
+                . "OR (polio3 > '".$startdate1."' AND polio3 < '".$enddate1."')"
+                . "OR (dptHb3 > '".$startdate1."' AND dptHb3 < '".$enddate1."')"
+                . "OR (polio4 > '".$startdate1."' AND polio4 < '".$enddate1."')"
+                . "OR (campak > '".$startdate1."' AND campak < '".$enddate1."')"
+                . "OR (campak_lanjutan > '".$startdate1."' AND campak_lanjutan < '".$enddate1."')"
+                . "OR (ipv > '".$startdate1."' AND ipv < '".$enddate1."')")->result();
+        
+        foreach($datavisit as $dvisit){
+            $imu_count = 0;
+            if($this->cekTanggalImu($dvisit->hb0, $startdate1, $enddate1)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $hb0[$this->user_village[$dvisit->locationId]]['lbl'] +=1;  
+                    $imu_count++;
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $hb0[$this->user_village[$dvisit->locationId]]['pbl'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->bcg, $startdate1, $enddate1)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $bcg[$this->user_village[$dvisit->locationId]]['lbl'] +=1;   
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $bcg[$this->user_village[$dvisit->locationId]]['pbl'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->polio1, $startdate1, $enddate1)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $polio1[$this->user_village[$dvisit->locationId]]['lbl'] +=1;   
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $polio1[$this->user_village[$dvisit->locationId]]['pbl'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->dptHb1, $startdate1, $enddate1)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $dpthb1[$this->user_village[$dvisit->locationId]]['lbl'] +=1;    
+                    $imu_count++;  
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $dpthb1[$this->user_village[$dvisit->locationId]]['pbl'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->polio2, $startdate1, $enddate1)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $polio2[$this->user_village[$dvisit->locationId]]['lbl'] +=1;   
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $polio2[$this->user_village[$dvisit->locationId]]['pbl'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->dptHb2, $startdate1, $enddate1)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $dpthb2[$this->user_village[$dvisit->locationId]]['lbl'] +=1;   
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $dpthb2[$this->user_village[$dvisit->locationId]]['pbl'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->polio3, $startdate1, $enddate1)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $polio3[$this->user_village[$dvisit->locationId]]['lbl'] +=1;  
+                    $imu_count++;    
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $polio3[$this->user_village[$dvisit->locationId]]['pbl'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->dptHb3, $startdate1, $enddate1)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $dpthb3[$this->user_village[$dvisit->locationId]]['lbl'] +=1;     
+                    $imu_count++; 
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $dpthb3[$this->user_village[$dvisit->locationId]]['pbl'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->polio4, $startdate1, $enddate1)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $polio4[$this->user_village[$dvisit->locationId]]['lbl'] +=1;   
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $polio4[$this->user_village[$dvisit->locationId]]['pbl'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->campak, $startdate1, $enddate1)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $campak[$this->user_village[$dvisit->locationId]]['lbl'] +=1;    
+                    $imu_count++;  
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $campak[$this->user_village[$dvisit->locationId]]['pbl'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->ipv, $startdate1, $enddate1)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $ipv[$this->user_village[$dvisit->locationId]]['lbl'] +=1;      
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $ipv[$this->user_village[$dvisit->locationId]]['pbl'] +=1; 
+                }
+            }
+            if($this->cekTanggalImu($dvisit->campak_lanjutan, $startdate1, $enddate1)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $campak_lanjutan[$this->user_village[$dvisit->locationId]]['lbl'] +=1;      
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $campak_lanjutan[$this->user_village[$dvisit->locationId]]['pbl'] +=1; 
+                }
+            }
+            if($imu_count==10){
+                 $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $imunisasi[$this->user_village[$dvisit->locationId]]['lbl'] +=1;
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $imunisasi[$this->user_village[$dvisit->locationId]]['pbl'] +=1;
+                }
+            }
+        }
+        
+        $datavisit = $this->db->query("SELECT *,client_anak.gender FROM event_vaksin_imunisasi_bayi LEFT JOIN client_anak ON client_anak.baseEntityId=event_vaksin_imunisasi_bayi.baseEntityId "
+                . "WHERE (hb0 > '".$startdate2."' AND hb0 < '".$enddate2."')"
+                . "OR (bcg > '".$startdate2."' AND bcg < '".$enddate2."')"
+                . "OR (polio1 > '".$startdate2."' AND polio1 < '".$enddate2."')"
+                . "OR (dptHb1 > '".$startdate2."' AND dptHb1 < '".$enddate2."')"
+                . "OR (polio2 > '".$startdate2."' AND polio2 < '".$enddate2."')"
+                . "OR (dptHb2 > '".$startdate2."' AND dptHb2 < '".$enddate2."')"
+                . "OR (polio3 > '".$startdate2."' AND polio3 < '".$enddate2."')"
+                . "OR (dptHb3 > '".$startdate2."' AND dptHb3 < '".$enddate2."')"
+                . "OR (polio4 > '".$startdate2."' AND polio4 < '".$enddate2."')"
+                . "OR (campak > '".$startdate2."' AND campak < '".$enddate2."')"
+                . "OR (campak_lanjutan > '".$startdate2."' AND campak_lanjutan < '".$enddate2."')"
+                . "OR (ipv > '".$startdate2."' AND ipv < '".$enddate2."')")->result();
+        
+        foreach($datavisit as $dvisit){
+            $imu_count = 0;
+            if($this->cekTanggalImu($dvisit->hb0, $startdate2, $enddate2)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $hb0[$this->user_village[$dvisit->locationId]]['lbi'] +=1;  
+                    $imu_count++;
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $hb0[$this->user_village[$dvisit->locationId]]['pbi'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->bcg, $startdate2, $enddate2)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $bcg[$this->user_village[$dvisit->locationId]]['lbi'] +=1;   
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $bcg[$this->user_village[$dvisit->locationId]]['pbi'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->polio1, $startdate2, $enddate2)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $polio1[$this->user_village[$dvisit->locationId]]['lbi'] +=1;   
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $polio1[$this->user_village[$dvisit->locationId]]['pbi'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->dptHb1, $startdate2, $enddate2)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $dpthb1[$this->user_village[$dvisit->locationId]]['lbi'] +=1;    
+                    $imu_count++;  
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $dpthb1[$this->user_village[$dvisit->locationId]]['pbi'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->polio2, $startdate2, $enddate2)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $polio2[$this->user_village[$dvisit->locationId]]['lbi'] +=1;   
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $polio2[$this->user_village[$dvisit->locationId]]['pbi'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->dptHb2, $startdate2, $enddate2)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $dpthb2[$this->user_village[$dvisit->locationId]]['lbi'] +=1;   
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $dpthb2[$this->user_village[$dvisit->locationId]]['pbi'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->polio3, $startdate2, $enddate2)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $polio3[$this->user_village[$dvisit->locationId]]['lbi'] +=1;  
+                    $imu_count++;    
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $polio3[$this->user_village[$dvisit->locationId]]['pbi'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->dptHb3, $startdate2, $enddate2)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $dpthb3[$this->user_village[$dvisit->locationId]]['lbi'] +=1;     
+                    $imu_count++; 
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $dpthb3[$this->user_village[$dvisit->locationId]]['pbi'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->polio4, $startdate2, $enddate2)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $polio4[$this->user_village[$dvisit->locationId]]['lbi'] +=1;   
+                    $imu_count++;   
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $polio4[$this->user_village[$dvisit->locationId]]['pbi'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->campak, $startdate2, $enddate2)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $campak[$this->user_village[$dvisit->locationId]]['lbi'] +=1;    
+                    $imu_count++;  
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $campak[$this->user_village[$dvisit->locationId]]['pbi'] +=1; 
+                    $imu_count++;
+                }
+            }
+            if($this->cekTanggalImu($dvisit->ipv, $startdate2, $enddate2)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $ipv[$this->user_village[$dvisit->locationId]]['lbi'] +=1;      
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $ipv[$this->user_village[$dvisit->locationId]]['pbi'] +=1; 
+                }
+            }
+            if($this->cekTanggalImu($dvisit->campak_lanjutan, $startdate2, $enddate2)){
+                $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $campak_lanjutan[$this->user_village[$dvisit->locationId]]['lbi'] +=1;      
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $campak_lanjutan[$this->user_village[$dvisit->locationId]]['pbi'] +=1; 
+                }
+            }
+            if($imu_count==10){
+                 $jk =  $dvisit->gender;
+                if($jk=="laki-laki"||$jk=="male"){
+                    $imunisasi[$this->user_village[$dvisit->locationId]]['lbi'] +=1;
+                }elseif($jk=="perempuan"||$jk=="female"){
+                    $imunisasi[$this->user_village[$dvisit->locationId]]['pbi'] +=1;
+                }
+            }
+        }
         
         $series1['y_label']='Persentase';
         $series1['series_stack_name']=array("Tahun Lalu","Tahun Ini");
         $series1['series_name']=array("Laki-laki","Perempuan");
         
-//        $datavisit = $this->db->query("SELECT * FROM hb0_visit WHERE hb0 > '$startdate1' AND hb0 < '$enddate1'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $hb0[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $hb0[$this->user_village[$dvisit->userID]]['pbl'] +=1; 
-//                }
-//            }
-//        }
-//        $datavisit = $this->db->query("SELECT * FROM hb0_visit WHERE hb0 > '$startdate2' AND hb0 < '$enddate2'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $hb0[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $hb0[$this->user_village[$dvisit->userID]]['pbi'] +=1; 
-//                }
-//            }
-//        }
-        
         $series1['page']='hb0';
         $series1['form']=$hb0;
         array_push($this->xlsForm, $series1);
-        
-//        $datavisit = $this->db->query("SELECT * FROM bcg_visit WHERE bcg > '$startdate1' AND bcg < '$enddate1'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $bcg[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $bcg[$this->user_village[$dvisit->userID]]['pbl'] +=1; 
-//                }
-//            }
-//        }
-//        $datavisit = $this->db->query("SELECT * FROM bcg_visit WHERE bcg > '$startdate2' AND bcg < '$enddate2'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $bcg[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $bcg[$this->user_village[$dvisit->userID]]['pbi'] +=1; 
-//                }
-//            }
-//        }
         
         $series1['page']='bcg';
         $series1['form']=$bcg;
         array_push($this->xlsForm, $series1);
         
-//        $datavisit = $this->db->query("SELECT * FROM polio1_visit WHERE polio1 > '$startdate1' AND polio1 < '$enddate1'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $polio1[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $polio1[$this->user_village[$dvisit->userID]]['pbl'] +=1; 
-//                }
-//            }
-//        }
-//        $datavisit = $this->db->query("SELECT * FROM polio1_visit WHERE polio1 > '$startdate2' AND polio1 < '$enddate2'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $polio1[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $polio1[$this->user_village[$dvisit->userID]]['pbi'] +=1; 
-//                }
-//            }
-//        }
-        
-        
         $series1['page']='polio1';
         $series1['form']=$polio1;
         array_push($this->xlsForm, $series1);
-        
-//        $datavisit = $this->db->query("SELECT * FROM hb1_visit WHERE dpt_hb1 > '$startdate1' AND dpt_hb1 < '$enddate1'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $dpthb1[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $dpthb1[$this->user_village[$dvisit->userID]]['pbl'] +=1; 
-//                }
-//            }
-//        }
-//        $datavisit = $this->db->query("SELECT * FROM hb1_visit WHERE dpt_hb1 > '$startdate2' AND dpt_hb1 < '$enddate2'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $dpthb1[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $dpthb1[$this->user_village[$dvisit->userID]]['pbi'] +=1; 
-//                }
-//            }
-//        }
-        
         
         $series1['page']='dpthb1';
         $series1['form']=$dpthb1;
         array_push($this->xlsForm, $series1);
         
-//        $datavisit = $this->db->query("SELECT * FROM polio2_visit WHERE polio2 > '$startdate1' AND polio2 < '$enddate1'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $polio2[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $polio2[$this->user_village[$dvisit->userID]]['pbl'] +=1; 
-//                }
-//            }
-//        }
-//        $datavisit = $this->db->query("SELECT * FROM polio2_visit WHERE polio2 > '$startdate2' AND polio2 < '$enddate2'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $polio2[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $polio2[$this->user_village[$dvisit->userID]]['pbi'] +=1; 
-//                }
-//            }
-//        }
-        
-        
         $series1['page']='polio2';
         $series1['form']=$polio2;
         array_push($this->xlsForm, $series1);
-        
-//        $datavisit = $this->db->query("SELECT * FROM dpt_hb2_visit WHERE dpt_hb2 > '$startdate1' AND dpt_hb2 < '$enddate1'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $dpthb2[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $dpthb2[$this->user_village[$dvisit->userID]]['pbl'] +=1; 
-//                }
-//            }
-//        }
-//        $datavisit = $this->db->query("SELECT * FROM dpt_hb2_visit WHERE dpt_hb2 > '$startdate2' AND dpt_hb2 < '$enddate2'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $dpthb2[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $dpthb2[$this->user_village[$dvisit->userID]]['pbi'] +=1; 
-//                }
-//            }
-//        }
-        
         
         $series1['page']='dpthb2';
         $series1['form']=$dpthb2;
         array_push($this->xlsForm, $series1);
         
-//        $datavisit = $this->db->query("SELECT * FROM polio3_visit WHERE polio3 > '$startdate1' AND polio3 < '$enddate1'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $polio3[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $polio3[$this->user_village[$dvisit->userID]]['pbl'] +=1; 
-//                }
-//            }
-//        }
-//        $datavisit = $this->db->query("SELECT * FROM polio3_visit WHERE polio3 > '$startdate2' AND polio3 < '$enddate2'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $polio3[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $polio3[$this->user_village[$dvisit->userID]]['pbi'] +=1; 
-//                }
-//            }
-//        }
-        
-        
         $series1['page']='polio3';
         $series1['form']=$polio3;
         array_push($this->xlsForm, $series1);
-        
-//        $datavisit = $this->db->query("SELECT * FROM hb3_visit WHERE dpt_hb3 > '$startdate1' AND dpt_hb3 < '$enddate1'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $dpthb3[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $dpthb3[$this->user_village[$dvisit->userID]]['pbl'] +=1; 
-//                }
-//            }
-//        }
-//        $datavisit = $this->db->query("SELECT * FROM hb3_visit WHERE dpt_hb3 > '$startdate2' AND dpt_hb3 < '$enddate2'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $dpthb3[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $dpthb3[$this->user_village[$dvisit->userID]]['pbi'] +=1; 
-//                }
-//            }
-//        }
-        
         
         $series1['page']='dpthb3';
         $series1['form']=$dpthb3;
         array_push($this->xlsForm, $series1);
         
-//        $datavisit = $this->db->query("SELECT * FROM polio4_visit WHERE polio4 > '$startdate1' AND polio4 < '$enddate1'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $polio4[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $polio4[$this->user_village[$dvisit->userID]]['pbl'] +=1; 
-//                }
-//            }
-//        }
-//        $datavisit = $this->db->query("SELECT * FROM polio4_visit WHERE polio4 > '$startdate2' AND polio4 < '$enddate2'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $polio4[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $polio4[$this->user_village[$dvisit->userID]]['pbi'] +=1; 
-//                }
-//            }
-//        }
-        
-        
         $series1['page']='polio4';
         $series1['form']=$polio4;
         array_push($this->xlsForm, $series1);
-        
-//        $datavisit = $this->db->query("SELECT * FROM campak_visit WHERE imunisasi_campak > '$startdate1' AND imunisasi_campak < '$enddate1'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $campak[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $campak[$this->user_village[$dvisit->userID]]['pbl'] +=1; 
-//                }
-//            }
-//        }
-//        $datavisit = $this->db->query("SELECT * FROM campak_visit WHERE imunisasi_campak > '$startdate2' AND imunisasi_campak < '$enddate2'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $campak[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $campak[$this->user_village[$dvisit->userID]]['pbi'] +=1; 
-//                }
-//            }
-//        }
-        
         
         $series1['page']='campak';
         $series1['form']=$campak;
         array_push($this->xlsForm, $series1);
         
-//        $lastyearfromthismonth = date("Y-m", strtotime($startdate1." -1 year"));
-//        $datavisit = $this->db->query("SELECT * FROM registrasi_jurim WHERE tanggal_lahir > '$lastyearfromthismonth' AND tanggal_lahir < '$enddate1'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $dvisit->jenis_kelamin;
-//                if($this->cekImunisasiLengkap($dvisit->childId)){
-//                    if($jk=="laki-laki"||$jk=="male"){
-//                        $imunisasi[$this->user_village[$dvisit->userID]]['lbl'] +=1;    
-//                    }elseif($jk=="perempuan"||$jk=="female"){
-//                        $imunisasi[$this->user_village[$dvisit->userID]]['pbl'] +=1; 
-//                    }
-//               }
-//            }
-//        }
-//        $lastyearfromthismonth = date("Y-m", strtotime($startdate2." -1 year"));
-//        $datavisit = $this->db->query("SELECT * FROM registrasi_jurim WHERE tanggal_lahir > '$lastyearfromthismonth' AND tanggal_lahir < '$enddate2'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $dvisit->jenis_kelamin;
-//                if($this->cekImunisasiLengkap($dvisit->childId)){
-//                    if($jk=="laki-laki"||$jk=="male"){
-//                        $imunisasi[$this->user_village[$dvisit->userID]]['lbi'] +=1;    
-//                    }elseif($jk=="perempuan"||$jk=="female"){
-//                        $imunisasi[$this->user_village[$dvisit->userID]]['pbi'] +=1; 
-//                    }
-//               }
-//            }
-//        }
-//        
-        
         $series1['page']='imunisasi';
         $series1['form']=$imunisasi;
         array_push($this->xlsForm, $series1);
-        
-//        $datavisit = $this->db->query("SELECT * FROM campak_lanjutan_visit WHERE campak_lanjutan > '$startdate1' AND campak_lanjutan < '$enddate1'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $campak_lanjutan[$this->user_village[$dvisit->userID]]['lbl'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $campak_lanjutan[$this->user_village[$dvisit->userID]]['pbl'] +=1; 
-//                }
-//            }
-//        }
-//        $datavisit = $this->db->query("SELECT * FROM campak_lanjutan_visit WHERE campak_lanjutan > '$startdate2' AND campak_lanjutan < '$enddate2'")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $this->user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$dvisit->childId."'");if($jk->num_rows()>0){$jk = $jk->row()->jk;}else continue;
-//                if($jk=="laki-laki"||$jk=="male"){
-//                    $campak_lanjutan[$this->user_village[$dvisit->userID]]['lbi'] +=1;     
-//                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $campak_lanjutan[$this->user_village[$dvisit->userID]]['pbi'] +=1; 
-//                }
-//            }
-//        }
-//        
         
         $series1['page']='booster_campak';
         $series1['form']=$campak_lanjutan;
         array_push($this->xlsForm, $series1);
         
-//        $bidanDB = $this->load->database('analytics', TRUE);
-//        $databulanini = $bidanDB->query("SELECT * FROM kartu_anc_visit WHERE ancDate > '$startdate1' AND ancDate < '$enddate1'")->result();
-//        foreach ($databulanini as $d){
-//            if(array_key_exists($d->userID, $this->bidan_village)){
-//                if($d->statusImunisasitt=="tt_ke_0"){
-//                    $tt1[$this->bidan_village[$d->userID]]['pbl'] +=1; 
-//                }elseif($d->statusImunisasitt=="tt_ke_1"){
-//                    $tt2[$this->bidan_village[$d->userID]]['pbl'] +=1;  
-//                }elseif($d->statusImunisasitt=="tt_ke_2"){
-//                    $tt3[$this->bidan_village[$d->userID]]['pbl'] +=1;  
-//                }elseif($d->statusImunisasitt=="tt_ke_3"){
-//                    $tt4[$this->bidan_village[$d->userID]]['pbl'] +=1; 
-//                }elseif($d->statusImunisasitt=="tt_ke_4"){
-//                    $tt5[$this->bidan_village[$d->userID]]['pbl'] +=1; 
-//                }
-//            }
-//        }
-//        $databulanini = $bidanDB->query("SELECT * FROM kartu_anc_visit WHERE ancDate > '$startdate2' AND ancDate < '$enddate2'")->result();
-//        foreach ($databulanini as $d){
-//            if(array_key_exists($d->userID, $this->bidan_village)){
-//                if($d->statusImunisasitt=="tt_ke_0"){
-//                    $tt1[$this->bidan_village[$d->userID]]['pbi'] +=1; 
-//                }elseif($d->statusImunisasitt=="tt_ke_1"){
-//                    $tt2[$this->bidan_village[$d->userID]]['pbi'] +=1;  
-//                }elseif($d->statusImunisasitt=="tt_ke_2"){
-//                    $tt3[$this->bidan_village[$d->userID]]['pbi'] +=1;  
-//                }elseif($d->statusImunisasitt=="tt_ke_3"){
-//                    $tt4[$this->bidan_village[$d->userID]]['pbi'] +=1; 
-//                }elseif($d->statusImunisasitt=="tt_ke_4"){
-//                    $tt5[$this->bidan_village[$d->userID]]['pbi'] +=1; 
-//                }
-//            }
-//        }
+        $databulanini = $this->db->query("SELECT * FROM event_bidan_kunjungan_anc WHERE ancDate > '$startdate1' AND ancDate < '$enddate1'")->result();
+        foreach ($databulanini as $d){
+            if(array_key_exists($d->locationId, $this->bidan_village)){
+                if($d->statusImunisasitt=="tt_ke_0"){
+                    $tt1[$this->bidan_village[$d->locationId]]['pbl'] +=1; 
+                }elseif($d->statusImunisasitt=="tt_ke_1"){
+                    $tt2[$this->bidan_village[$d->locationId]]['pbl'] +=1;  
+                }elseif($d->statusImunisasitt=="tt_ke_2"){
+                    $tt3[$this->bidan_village[$d->locationId]]['pbl'] +=1;  
+                }elseif($d->statusImunisasitt=="tt_ke_3"){
+                    $tt4[$this->bidan_village[$d->locationId]]['pbl'] +=1; 
+                }elseif($d->statusImunisasitt=="tt_ke_4"){
+                    $tt5[$this->bidan_village[$d->locationId]]['pbl'] +=1; 
+                }
+            }
+        }
+        $databulanini = $this->db->query("SELECT * FROM event_bidan_kunjungan_anc WHERE ancDate > '$startdate2' AND ancDate < '$enddate2'")->result();
+        foreach ($databulanini as $d){
+            if(array_key_exists($d->locationId, $this->bidan_village)){
+                if($d->statusImunisasitt=="tt_ke_0"){
+                    $tt1[$this->bidan_village[$d->locationId]]['pbi'] +=1; 
+                }elseif($d->statusImunisasitt=="tt_ke_1"){
+                    $tt2[$this->bidan_village[$d->locationId]]['pbi'] +=1;  
+                }elseif($d->statusImunisasitt=="tt_ke_2"){
+                    $tt3[$this->bidan_village[$d->locationId]]['pbi'] +=1;  
+                }elseif($d->statusImunisasitt=="tt_ke_3"){
+                    $tt4[$this->bidan_village[$d->locationId]]['pbi'] +=1; 
+                }elseif($d->statusImunisasitt=="tt_ke_4"){
+                    $tt5[$this->bidan_village[$d->locationId]]['pbi'] +=1; 
+                }
+            }
+        }
         
         $series1['page']='tt1';
         $series1['form']=$tt1;
@@ -1477,13 +1428,13 @@ class VaksinatorEcCakupanModel extends CI_Model{
 //        $databulanini = $this->db->query("SELECT * FROM registrasi_jurim WHERE tanggal_lahir > '$lastyearfromthismonth' AND tanggal_lahir < '$enddate1'")->result();
 //        
 //        foreach ($databulanini as $d){
-//            if(array_key_exists($d->userID, $this->user_village)){
+//            if(array_key_exists($d->locationId, $this->user_village)){
 //                $jk = $d->jenis_kelamin;
-//                if($this->cekImunisasiLengkap($d->childId)){
+//                if($this->cekImunisasiLengkap($d->baseEntityId)){
 //                    if($jk=="laki-laki"||$jk=="male"){
-//                        $uci[$this->user_village[$d->userID]]['lbl'] +=1;   
+//                        $uci[$this->user_village[$d->locationId]]['lbl'] +=1;   
 //                    }elseif($jk=="perempuan"||$jk=="female"){
-//                        $uci[$this->user_village[$d->userID]]['pbl'] +=1; 
+//                        $uci[$this->user_village[$d->locationId]]['pbl'] +=1; 
 //                    }
 //               }
 //            }
@@ -1492,13 +1443,13 @@ class VaksinatorEcCakupanModel extends CI_Model{
 //        $databulanini = $this->db->query("SELECT * FROM registrasi_jurim WHERE tanggal_lahir > '$lastyearfromthismonth' AND tanggal_lahir < '$enddate2'")->result();
 //        
 //        foreach ($databulanini as $d){
-//            if(array_key_exists($d->userID, $this->user_village)){
+//            if(array_key_exists($d->locationId, $this->user_village)){
 //                $jk = $d->jenis_kelamin;
-//                if($this->cekImunisasiLengkap($d->childId)){
+//                if($this->cekImunisasiLengkap($d->baseEntityId)){
 //                    if($jk=="laki-laki"||$jk=="male"){
-//                        $uci[$this->user_village[$d->userID]]['lbi'] +=1;   
+//                        $uci[$this->user_village[$d->locationId]]['lbi'] +=1;   
 //                    }elseif($jk=="perempuan"||$jk=="female"){
-//                        $uci[$this->user_village[$d->userID]]['pbi'] +=1; 
+//                        $uci[$this->user_village[$d->locationId]]['pbi'] +=1; 
 //                    }
 //               }
 //            }
