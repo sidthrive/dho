@@ -198,7 +198,12 @@ class AnalyticsEcModel extends CI_Model{
         foreach ($query->result() as $table){
             if($table->Tables_in_ec_analytics[0]=='c'||$table->Tables_in_ec_analytics[0]=='_'){
                 continue;
-            }else $tables[$table->Tables_in_ec_analytics]=$table_default[$table->Tables_in_ec_analytics];
+            }else {
+                if(array_key_exists($table->Tables_in_ec_analytics, $table_default)){
+                    $tables[$table->Tables_in_ec_analytics]=$table_default[$table->Tables_in_ec_analytics];
+                }
+                
+            }
         }
         
         $locId = $this->loc->getLocId($kecamatan);$location = $this->loc->getLocIdQuery($locId);
