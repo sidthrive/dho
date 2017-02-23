@@ -21,4 +21,41 @@ class EcCakupanModel extends CI_Model{
         }
         return $ret;
     }
+    
+    public function getSpvCakupanContainer($fhw,$kec,$p=FALSE){
+        $loc = $this->loc->getLocId($kec);
+        $ret = [];
+        foreach ($loc as $loc1=>$loc2){
+            if($fhw=='vaksinator'){
+                if($p){
+                    $ret[$loc2] = array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0);
+                }else $ret[$loc2] = array('l'=>0,'p'=>0);
+            }else $ret[$loc2] = 0;
+        }
+        return $ret;
+    }
+    
+    public function getFhwCakupanContainer($desa,$p=FALSE){
+        $loc = $this->loc->getDusunTypo($desa);
+        $ret = [];
+        foreach ($loc as $loc1=>$loc2){
+            if($loc2!='Lainnya')
+            $ret[$loc2] = 0;
+        }
+        return $ret;
+    }
+    
+    public function getDesaPws($fhw){
+        $loc = $this->loc->getIntLocId($fhw);
+        $ret = [];
+        foreach ($loc as $loc1=>$loc2) array_push ($ret, $loc2);
+        return $ret;
+    }
+    
+    public function getDesaPwsSpv($fhw,$kec){
+        $loc = $this->loc->getLocId($kec);
+        $ret = [];
+        foreach ($loc as $loc1=>$loc2) array_push ($ret, $loc2);
+        return $ret;
+    }
 }

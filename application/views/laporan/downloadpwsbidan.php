@@ -6,8 +6,9 @@
         <form action="<?php echo site_url()."laporan/download"?>" method="post">
             <div id="option" class="form">
                 <select name="kecamatan" style="width:120px;" class="form-control-static">
-                    <option value="janapria">Janapria</option>
-                    <option value="sengkol">Sengkol</option>
+                    <?php foreach($location as $kec=>$loc){ ?>
+                    <option value="<?=$kec?>"><?=$kec?></option>
+                    <?php } ?>
                 </select>
                 <select name="year" style="width:120px;" class="form-control-static">
                     <?php 

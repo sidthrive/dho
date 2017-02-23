@@ -25,7 +25,7 @@ class DataEntry extends CI_Controller{
             $this->load->view('footer');
         }else{
             $this->load->view('header');
-            if($this->session->userdata('level')=="supervisor"){
+            if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
                 $data['location'] = $this->loc->getAllLocSpv('bidan',$this->session->userdata('location'));
             }else{
                 $data['location'] = $this->loc->getAllLoc('bidan');
@@ -63,7 +63,7 @@ class DataEntry extends CI_Controller{
                 $data['data'] = $this->AnalyticsModel->getCountPerForm($data['kecamatan'],$data['start'],$data['end']);
             //else $data['data'] = $this->AnalyticsModel->getCountPerFormByVisitDate($data['kecamatan'],$data['start'],$data['end']);
             $this->load->view("header");
-            if($this->session->userdata('level')=="supervisor"){
+            if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
                 $data['location'] = $this->loc->getAllLocSpv('bidan',$this->session->userdata('location'));
             }else{
                 $data['location'] = $this->loc->getAllLoc('bidan');
@@ -146,7 +146,7 @@ class DataEntry extends CI_Controller{
                 $data['data'] = $this->AnalyticsModel->getCountPerDayDrill($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
             //else $data['data'] = $this->AnalyticsModel->getCountPerDayByVisitDate($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
             $this->load->view("header");
-            if($this->session->userdata('level')=="supervisor"){
+            if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
                 $data['location'] = $this->loc->getAllLocSpv('bidan',$this->session->userdata('location'));
             }else{
                 $data['location'] = $this->loc->getAllLoc('bidan');
@@ -232,7 +232,7 @@ class DataEntry extends CI_Controller{
                 $data['data'] = $this->GiziModel->getCountPerForm($data['kecamatan'],$data['start'],$data['end']);
             //else $data['data'] = $this->GiziModel->getCountPerFormByVisitDate($data['kecamatan'],$data['start'],$data['end']);
             $this->load->view("header");
-            if($this->session->userdata('level')=="supervisor"){
+            if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
                 $data['location'] = $this->loc->getAllLocSpv('gizi',$this->session->userdata('location'));
             }else{
                 $data['location'] = $this->loc->getAllLoc('gizi');
@@ -293,7 +293,7 @@ class DataEntry extends CI_Controller{
                 $data['data'] = $this->GiziModel->getCountPerDay($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
             //else $data['data'] = $this->GiziModel->getCountPerDayByVisitDate($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
             $this->load->view("header");
-            if($this->session->userdata('level')=="supervisor"){
+            if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
                 $data['location'] = $this->loc->getAllLocSpv('gizi',$this->session->userdata('location'));
             }else{
                 $data['location'] = $this->loc->getAllLoc('gizi');
@@ -375,7 +375,7 @@ class DataEntry extends CI_Controller{
             }
             $data['data']               = $this->VaksinatorModel->getCountPerForm($data['kecamatan'],$data['start'],$data['end']);
             $this->load->view("header");
-            if($this->session->userdata('level')=="supervisor"){
+            if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
                 $data['location'] = $this->loc->getAllLocSpv('vaksinator',$this->session->userdata('location'));
             }else{
                 $data['location'] = $this->loc->getAllLoc('vaksinator');
@@ -432,7 +432,7 @@ class DataEntry extends CI_Controller{
             }
             $data['data']                   = $this->VaksinatorModel->getCountPerDay($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
             $this->load->view("header");
-            if($this->session->userdata('level')=="supervisor"){
+            if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
                 $data['location'] = $this->loc->getAllLocSpv('vaksinator',$this->session->userdata('location'));
             }else{
                 $data['location'] = $this->loc->getAllLoc('vaksinator');

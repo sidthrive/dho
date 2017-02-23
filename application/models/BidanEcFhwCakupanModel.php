@@ -2,8 +2,8 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class BidanEcCakupanModel extends CI_Model{
-
+class BidanEcFhwCakupanModel extends CI_Model{
+    
     function __construct() {
         parent::__construct();
         date_default_timezone_set("Asia/Makassar"); 
@@ -11,43 +11,42 @@ class BidanEcCakupanModel extends CI_Model{
     }
     
     public function cakupanBulanIni($bulan,$tahun){
+        $bidan = $this->session->userdata('location');
+        $dusun = $this->loc->getDusunTypo($bidan);
         $bulan_map = ['januari'=>1,'februari'=>2,'maret'=>3,'april'=>4,'mei'=>5,'juni'=>6,'juli'=>7,'agustus'=>8,'september'=>9,'oktober'=>10,'november'=>11,'desember'=>12];
-        $startyear = date("Y-m",  strtotime($tahun.'-01'));
         $startdate = date("Y-m",  strtotime($tahun.'-'.$bulan_map[$bulan]));
         $enddate = date("Y-m", strtotime($startdate." +1 months"));
         $this->load->model('PHPExcelModel');
         $xlsForm = [];
-        if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
-            $user_village = $this->loc->getLocId($this->session->userdata('location'));
-            $user = $this->ec->getSpvCakupanContainer('bidan',$this->session->userdata('location'));
-        }else{
-            $user_village = $this->loc->getIntLocId('bidan');
-            $user = $this->ec->getCakupanContainer('bidan');
-        }
+        $user = $this->ec->getFhwCakupanContainer($bidan);
+        
+//        $target_bumil   =  $this->target[$bidan];
+//        $target_bulin   =  $this->target[$bidan];
+//        $target_bufas   =  $this->target[$bidan];
+//        $target_mt      =  $this->target[$bidan];
         
         $form = $user;
-        $datavisit = $this->db->query("SELECT * FROM event_bidan_kunjungan_anc WHERE (ancDate > '$startyear' AND ancDate < '$enddate') AND ancKe=1 group by baseEntityId")->result();
+        $datavisit = $this->db->query("SELECT *,client_ibu.dusun FROM event_bidan_kunjungan_anc LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_kunjungan_anc.baseEntityId WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND ancKe=1 AND locationId='$bidan' group by event_bidan_kunjungan_anc.baseEntityId")->result();
         foreach ($datavisit as $dvisit){
-            if(array_key_exists($dvisit->locationId, $user_village)){
-                $form[$user_village[$dvisit->locationId]] += 1;
+            if(array_key_exists($dvisit->dusun, $dusun)){
+                $form[$dusun[$dvisit->dusun]] += 1;
             }
         }
-//        foreach ($form as $desa=>$nilai){
-//            $form[$desa] = $nilai*100/$target_bumil[$desa];
+//        foreach ($form as $dusun=>$nilai){
+//            $form[$dusun] = $nilai*100/$target_bumil[$dusun];
 //        }
         
         $series1['page']='K1A';
-        $series1['target']=(int)$bulan_map[$bulan]*96/12;
         $series1['form']=$form;
-        $series1['y_label']='persentase';
-        $series1['series_name']='persentase';
+        $series1['y_label']='Jumlah';
+        $series1['series_name']='Jumlah';
         array_push($xlsForm, $series1);
        
         $form = $user;
-        $datavisit = $this->db->query("SELECT * FROM event_bidan_kunjungan_anc WHERE (ancDate > '$startyear' AND ancDate < '$enddate') AND ancKe=4 group by baseEntityId")->result();
+        $datavisit = $this->db->query("SELECT *,client_ibu.dusun FROM event_bidan_kunjungan_anc LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_kunjungan_anc.baseEntityId WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND ancKe=4 AND locationId='$bidan' group by event_bidan_kunjungan_anc.baseEntityId")->result();
         foreach ($datavisit as $dvisit){
-            if(array_key_exists($dvisit->locationId, $user_village)){
-                $form[$user_village[$dvisit->locationId]] += 1;
+            if(array_key_exists($dvisit->dusun, $dusun)){
+                $form[$dusun[$dvisit->dusun]] += 1;
             }
         }
 //        foreach ($form as $desa=>$nilai){
@@ -55,76 +54,21 @@ class BidanEcCakupanModel extends CI_Model{
 //        }
         
         $series2['page']='K4';
-        $series2['target']=(int)$bulan_map[$bulan]*96/12;
         $series2['form']=$form;
-        $series2['y_label']='persentase';
-        $series2['series_name']='persentase';
+        $series2['y_label']='Jumlah';
+        $series2['series_name']='Jumlah';
         array_push($xlsForm, $series2);
        
         $form = $user;
-        $datavisit = $this->db->query("SELECT * FROM event_bidan_kunjungan_anc WHERE (ancDate > '$startyear' AND ancDate < '$enddate')")->result();
-        $query = $this->db->query("SELECT baseEntityId FROM event_bidan_kunjungan_anc_lab_test WHERE laboratoriumPeriksaHbAnemia='positif'")->result();
-        $laboratoriumPeriksaHbAnemia = [];
-        foreach ($query as $q){
-            if(!array_key_exists($q->baseEntityId, $laboratoriumPeriksaHbAnemia)){
-                $laboratoriumPeriksaHbAnemia[$q->baseEntityId] = TRUE;
-            }
-        }
-//        $query = $this->db->query("SELECT event_bidan_tambah_anc.baseEntityId as baseEntityId FROM event_bidan_tambah_anc,event_bidan_kunjungan_anc_integrasi WHERE event_bidan_tambah_anc.baseEntityId=event_bidan_kunjungan_anc_integrasi.baseEntityId AND event_bidan_tambah_anc.highRiskTuberculosis='yes' AND event_bidan_kunjungan_anc_integrasi.integrasiProgramtbObat='yes'")->result();
-        $highRiskTuberculosis = [];
-        foreach ($query as $q){
-            if(!array_key_exists($q->baseEntityId, $highRiskTuberculosis)){
-                $highRiskTuberculosis[$q->baseEntityId] = TRUE;
-            }
-        }
-//        $query = $this->db->query("SELECT event_bidan_tambah_anc.baseEntityId as baseEntityId FROM event_bidan_tambah_anc,event_bidan_kunjungan_anc_integrasi WHERE event_bidan_tambah_anc.baseEntityId=event_bidan_kunjungan_anc_integrasi.baseEntityId AND event_bidan_tambah_anc.highRiskMalaria='yes' AND event_bidan_kunjungan_anc_integrasi.integrasiProgramMalariaObat='yes'")->result();
-        $highRiskMalaria = [];
-        foreach ($query as $q){
-            if(!array_key_exists($q->baseEntityId, $highRiskMalaria)){
-                $highRiskMalaria[$q->baseEntityId] = TRUE;
-            }
-        }
-        $query = $this->db->query("SELECT event_bidan_tambah_anc.baseEntityId as baseEntityId FROM event_bidan_tambah_anc,event_bidan_kunjungan_anc_integrasi WHERE event_bidan_tambah_anc.baseEntityId=event_bidan_kunjungan_anc_integrasi.baseEntityId AND event_bidan_tambah_anc.highRiskHIVAIDS='yes' AND event_bidan_kunjungan_anc_integrasi.integrasiProgrampmtctSerologi='yes'")->result();
-        $highRiskHIVAIDS = [];
-        foreach ($query as $q){
-            if(!array_key_exists($q->baseEntityId, $highRiskHIVAIDS)){
-                $highRiskHIVAIDS[$q->baseEntityId] = TRUE;
-            }
-        }
-        $tertangani = array();
+        $datavisit = $this->db->query("SELECT *,client_ibu.dusun FROM event_bidan_kunjungan_anc LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_kunjungan_anc.baseEntityId WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND locationId='$bidan'")->result();
         foreach ($datavisit as $dvisit){
-            if(array_key_exists($dvisit->baseEntityId, $tertangani)){
-                continue;
-            }
-            if(array_key_exists($dvisit->locationId, $user_village)){
-                if($dvisit->komplikasidalamKehamilan!="None"&&$dvisit->komplikasidalamKehamilan!=''&&$dvisit->komplikasidalamKehamilan!='tidak_ada_komplikasi'){
+            if(array_key_exists($dvisit->dusun, $dusun)){
+                if($dvisit->komplikasidalamKehamilan!="None"){
                     if(isset($dvisit->rujukan)){
                         if($dvisit->rujukan=="Ya"){
-                            $tertangani[$dvisit->baseEntityId] = 'yes';
-                            $form[$user_village[$dvisit->locationId]] += 1;
-                            continue;
+                            $form[$dusun[$dvisit->dusun]] += 1;
                         }
                     }
-                }
-                if($dvisit->pelayananfe0=="Ya"&&array_key_exists($dvisit->baseEntityId, $laboratoriumPeriksaHbAnemia)){
-                    $tertangani[$dvisit->baseEntityId] = 'yes';
-                    $form[$user_village[$dvisit->locationId]] += 1;
-                    continue;
-                }
-                if(array_key_exists($dvisit->baseEntityId, $highRiskTuberculosis)){
-                    $tertangani[$dvisit->baseEntityId] = 'yes';
-                    $form[$user_village[$dvisit->locationId]] += 1;
-                    continue;
-                }
-                if(array_key_exists($dvisit->baseEntityId, $highRiskMalaria)){
-                    $tertangani[$dvisit->baseEntityId] = 'yes';
-                    $form[$user_village[$dvisit->locationId]] += 1;
-                    continue;
-                }
-                if(array_key_exists($dvisit->baseEntityId, $highRiskHIVAIDS)){
-                    $tertangani[$dvisit->baseEntityId] = 'yes';
-                    $form[$user_village[$dvisit->locationId]] += 1;
-                    continue;
                 }
             }
         }
@@ -132,36 +76,24 @@ class BidanEcCakupanModel extends CI_Model{
 //            $form[$desa] = $nilai*100/$target_mt[$desa];
 //        }
         $series3['page']='MT';
-        $series3['target']=(int)$bulan_map[$bulan]*96/12;
         $series3['form']=$form;
-        $series3['y_label']='persentase';
-        $series3['series_name']='persentase';
+        $series3['y_label']='Jumlah';
+        $series3['series_name']='Jumlah';
         array_push($xlsForm, $series3);
        
         $likes = $user;
         $nakes = $user;
-        $datapersalinan= $this->db->query("SELECT * FROM event_bidan_dokumentasi_persalinan WHERE tanggalPlasentaLahir > '$startyear' AND tanggalPlasentaLahir < '$enddate'")->result();
+        $datapersalinan= $this->db->query("SELECT *,client_ibu.dusun FROM event_bidan_dokumentasi_persalinan LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_dokumentasi_persalinan.baseEntityId WHERE tanggalPlasentaLahir > '$startdate' AND tanggalPlasentaLahir < '$enddate'  AND locationId='$bidan'")->result();
         foreach ($datapersalinan as $dsalin){
-            if(array_key_exists($dsalin->locationId, $user_village)){
+            if(array_key_exists($dsalin->dusun, $dusun)){
                 if($dsalin->tempatBersalin=="podok_bersalin_desa"||$dsalin->tempatBersalin=="pusat_kesehatan_masyarakat_pembantu"||$dsalin->tempatBersalin=="pusat_kesehatan_masyarakat"||$dsalin->tempatBersalin=="rumah_bersalin"||$dsalin->tempatBersalin=="rumah_sakit_ibu_dan_anak"||$dsalin->tempatBersalin=="rumah_sakit"||$dsalin->tempatBersalin=="rumah_sakit_orang_dengan_hiv_aids"){
-                    $likes[$user_village[$dsalin->locationId]] += 1;
+                    $likes[$dusun[$dsalin->dusun]] += 1;
                 }
                 if($dsalin->penolong=="bidan"||$dsalin->penolong=="dr.spesialis"||$dsalin->penolong=="dr.umum"||$dsalin->penolong=="lain-lain"){
-                    $nakes[$user_village[$dsalin->locationId]] += 1;
+                    $nakes[$dusun[$dsalin->dusun]] += 1;
                 }
             }
         }
-//        $datapersalinan= $this->db->query("SELECT * FROM kartu_pnc_regitration_oa WHERE tanggalLahirAnak > '$startyear' AND tanggalLahirAnak < '$enddate'")->result();
-//        foreach ($datapersalinan as $dsalin){
-//            if(array_key_exists($dsalin->locationId, $user_village)){
-//                if($dsalin->tempatBersalin=="podok_bersalin_desa"||$dsalin->tempatBersalin=="pusat_kesehatan_masyarakat_pembantu"||$dsalin->tempatBersalin=="pusat_kesehatan_masyarakat"||$dsalin->tempatBersalin=="rumah_bersalin"||$dsalin->tempatBersalin=="rumah_sakit_ibu_dan_anak"||$dsalin->tempatBersalin=="rumah_sakit"||$dsalin->tempatBersalin=="rumah_sakit_orang_dengan_hiv_aids"){
-//                    $likes[$user_village[$dsalin->locationId]] += 1;
-//                }
-//                if($dsalin->penolong=="bidan"||$dsalin->penolong=="dr.spesialis"||$dsalin->penolong=="dr.umum"||$dsalin->penolong=="lain-lain"){
-//                    $nakes[$user_village[$dsalin->locationId]] += 1;
-//                }
-//            }
-//        }
 //        foreach ($form as $desa=>$nilai){
 //            $likes[$desa] = $likes[$desa]*100/$target_bulin[$desa];
 //            $nakes[$desa] = $nakes[$desa]*100/$target_bulin[$desa];
@@ -169,24 +101,22 @@ class BidanEcCakupanModel extends CI_Model{
         
         
         $series4['page']='PDFK';
-        $series4['target']=(int)$bulan_map[$bulan]*96/12;
         $series4['form']=$likes;
-        $series4['y_label']='persentase';
-        $series4['series_name']='persentase';
+        $series4['y_label']='Jumlah';
+        $series4['series_name']='Jumlah';
         array_push($xlsForm, $series4);
         
         $series5['page']='PDTK';
-        $series5['target']=(int)$bulan_map[$bulan]*96/12;
         $series5['form']=$nakes;
-        $series5['y_label']='persentase';
-        $series5['series_name']='persentase';
+        $series5['y_label']='Jumlah';
+        $series5['series_name']='Jumlah';
         array_push($xlsForm, $series5);
        
         $form = $user;
-        $datavisit = $this->db->query("SELECT * FROM event_bidan_kunjungan_pnc WHERE (PNCDate > '$startyear' AND PNCDate < '$enddate') AND (hariKeKF='kf3' OR hariKeKF='kf4') group by baseEntityId")->result();
+        $datavisit = $this->db->query("SELECT *,client_ibu.dusun FROM event_bidan_kunjungan_pnc LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_kunjungan_pnc.baseEntityId WHERE (pncDate > '$startdate' AND pncDate < '$enddate') AND hariKeKF='kf4' AND locationId='$bidan' group by event_bidan_kunjungan_pnc.baseEntityId")->result();
         foreach ($datavisit as $dvisit){
-            if(array_key_exists($dvisit->locationId, $user_village)){
-                $form[$user_village[$dvisit->locationId]] += 1;
+            if(array_key_exists($dvisit->dusun, $dusun)){
+                $form[$dusun[$dvisit->dusun]] += 1;
             }
         }
 //        foreach ($form as $desa=>$nilai){
@@ -194,21 +124,20 @@ class BidanEcCakupanModel extends CI_Model{
 //        }
         
         $series6['page']='KN';
-        $series6['target']=(int)$bulan_map[$bulan]*96/12;
         $series6['form']=$form;
-        $series6['y_label']='persentase';
-        $series6['series_name']='persentase';
+        $series6['y_label']='Jumlah';
+        $series6['series_name']='Jumlah';
         array_push($xlsForm, $series6);
        
         $form = $user;
         $form2 = $user;
-        $datavisit = $this->db->query("SELECT * FROM event_bidan_kunjungan_neonatal WHERE eventDate > '$startyear' AND eventDate < '$enddate'")->result();
+        $datavisit = $this->db->query("SELECT *,client_ibu.dusun FROM event_bidan_kunjungan_neonatal LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_kunjungan_neonatal.baseEntityId WHERE eventDate > '$startdate' AND eventDate < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
-            if(array_key_exists($dvisit->locationId, $user_village)){
+            if(array_key_exists($dvisit->dusun, $dusun)){
                 if($dvisit->kunjunganNeonatal=="Pertama"){
-                    $form[$user_village[$dvisit->locationId]] += 1;
+                    $form[$dusun[$dvisit->dusun]] += 1;
                 }elseif($dvisit->kunjunganNeonatal=="Ketiga"){
-                    $form2[$user_village[$dvisit->locationId]] += 1;
+                    $form2[$dusun[$dvisit->dusun]] += 1;
                 }
             }
         }
@@ -218,31 +147,28 @@ class BidanEcCakupanModel extends CI_Model{
 //        }
         
         $series7['page']='KNN1';
-        $series7['target']=(int)$bulan_map[$bulan]*96/12;
         $series7['form']=$form;
-        $series7['y_label']='persentase';
-        $series7['series_name']='persentase';
+        $series7['y_label']='Jumlah';
+        $series7['series_name']='Jumlah';
         array_push($xlsForm, $series7);
         
         $series8['page']='KNN3';
-        $series8['target']=(int)$bulan_map[$bulan]*96/12;
         $series8['form']=$form2;
-        $series8['y_label']='persentase';
-        $series8['series_name']='persentase';
+        $series8['y_label']='Jumlah';
+        $series8['series_name']='Jumlah';
         array_push($xlsForm, $series8);
        
         $form = $user;
-        $datavisit = $this->db->query("SELECT * FROM event_bidan_penutupan_ibu WHERE eventDate > '$startyear' AND eventDate < '$enddate' GROUP BY baseEntityId")->result();
+        $datavisit = $this->db->query("SELECT *,client_ibu.dusun FROM event_bidan_penutupan_anc LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_penutupan_anc.baseEntityId WHERE eventDate > '$startdate' AND eventDate < '$enddate' AND locationId='$bidan'")->result();
         foreach ($datavisit as $dvisit){
-            if(array_key_exists($dvisit->locationId, $user_village)){
-                if($dvisit->closeReason=="Penyebab langsung"){
-                    $form[$user_village[$dvisit->locationId]] += 1;
+            if(array_key_exists($dvisit->dusun, $dusun)){
+                if($dvisit->closeReason=="maternal_death"){
+                    $form[$dusun[$dvisit->dusun]] += 1;
                 }
             }
         }
         
         $series9['page']='KM';
-        $series9['target']=0;
         $series9['form']=$form;
         $series9['y_label']='Jumlah';
         $series9['series_name']='Jumlah';
@@ -251,65 +177,39 @@ class BidanEcCakupanModel extends CI_Model{
         $form = $user;
         $form2 = $user;
         $form3 = $user;
-        
-        /* BELUM ADA KOLOM TANGGAL KEMATIAN ANAK */
-        
-//        $data = $this->db->query("SELECT * FROM event_bidan_penutupan_anak WHERE tanggalKematianAnak > '$startyear' AND tanggalKematianAnak < '$enddate'")->result();
-//        $query = $this->db->query("SELECT childId,tanggalLahirAnak FROM kohort_bayi_registration")->result();
-//        $tanggalLahirAnak = [];
-//        foreach ($query as $q){
-//            if(!array_key_exists($q->childId, $tanggalLahirAnak)){
-//                $tanggalLahirAnak[$q->childId] = $q->tanggalLahirAnak;
-//            }
-//        }
-//        $query = $this->db->query("SELECT childId,tanggalLahirAnak FROM event_bidan_dokumentasi_persalinan")->result();
-//        $tanggalLahirAnak2 = [];
-//        foreach ($query as $q){
-//            if(!array_key_exists($q->childId, $tanggalLahirAnak2)){
-//                $tanggalLahirAnak2[$q->childId] = $q->tanggalLahirAnak;
-//            }
-//        }
-//        foreach ($data as $d){
-//            if(array_key_exists($d->locationId, $user_village)){
-//                if(!array_key_exists($d->childId, $tanggalLahirAnak)){
-//                    if(!array_key_exists($d->childId, $tanggalLahirAnak2)){
-//                        continue;
-//                    }else {
-//                        if($tanggalLahirAnak2[$d->childId]==""||$tanggalLahirAnak2[$d->childId]=="None") continue;
-//                        $tgl_lahir = date_create($tanggalLahirAnak2[$d->childId]);
-//                    }
-//                }else{
-//                    if($tanggalLahirAnak[$d->childId]==""||$tanggalLahirAnak[$d->childId]=="None") continue;
-//                    $tgl_lahir = date_create($tanggalLahirAnak[$d->childId]);
-//                }
-//                $tgl_mati = date_create($d->tanggalKematianAnak);
-//                $diff = date_diff($tgl_lahir,$tgl_mati);
-//                if($diff->days>0&&$diff->days<29){
-//                    $form[$user_village[$d->locationId]] += 1;
-//                }elseif($diff->days>=29&&$diff->days<331){
-//                    $form2[$user_village[$d->locationId]] += 1;
-//                }elseif($diff->days>=331&&$diff->days<=1800){
-//                    $form3[$user_village[$d->locationId]] += 1;
-//                }
-//            }
-//        }
+        $data = $this->db->query("SELECT *,client_ibu.dusun FROM event_bidan_penutupan_anak LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_penutupan_anak.baseEntityId WHERE eventDate > '$startdate' AND eventDate < '$enddate' AND locationId='$bidan'")->result();
+        foreach ($data as $d){
+            if(array_key_exists($d->dusun, $dusun)){
+                $query = $this->db->query("SELECT tanggalPlasentaLahir FROM event_bidan_dokumentasi_persalinan WHERE baseEntityId='$d->baseEntityId'");
+                if($query->num_rows<1){
+                    continue;
+                }
+                $tgl_mati = date_create($d->tanggalKematianAnak);
+                $tgl_lahir = date_create($query->row()->tanggalPlasentaLahir);
+                $diff = date_diff($tgl_lahir,$tgl_mati);
+                if($tgl_mati->days>0&&$tgl_mati->days<29){
+                    $form[$dusun[$d->dusun]] += 1;
+                }elseif($tgl_mati->days>=29&&$tgl_mati->days<331){
+                    $form2[$dusun[$d->dusun]] += 1;
+                }elseif($tgl_mati->days>=331&&$tgl_mati->days<=1800){
+                    $form3[$dusun[$d->dusun]] += 1;
+                }
+            }
+        }
         
         $series10['page']='KNN';
-        $series10['target']=0;
         $series10['form']=$form;
         $series9['y_label']='Jumlah';
         $series9['series_name']='Jumlah';
         array_push($xlsForm, $series10);
         
         $series11['page']='KB';
-        $series11['target']=0;
         $series11['form']=$form2;
         $series9['y_label']='Jumlah';
         $series9['series_name']='Jumlah';
         array_push($xlsForm, $series11);
         
         $series12['page']='KBLT';
-        $series12['target']=0;
         $series12['form']=$form3;
         $series9['y_label']='Jumlah';
         $series9['series_name']='Jumlah';
@@ -326,28 +226,29 @@ class BidanEcCakupanModel extends CI_Model{
         $gadate42 = date("Y-m", strtotime($startdate." -42 weeks"));
         $this->load->model('PHPExcelModel');
         $xlsForm = [];
+        $user   =  ['Lekor'=>0,'Saba'=>0,'Pendem'=>0,'Setuta'=>0,'Jango'=>0,'Janapria'=>0,'Ketara'=>0,'Sengkol'=>0,'Kawo'=>0,'Tanak Awu'=>0,'Pengembur'=>0,'Segala Anyar'=>0];
+        $target_bumil   =  ['Lekor'=>230,'Saba'=>199,'Pendem'=>163,'Setuta'=>85,'Jango'=>81,'Janapria'=>199,'Ketara'=>101,'Sengkol'=>259,'Kawo'=>224,'Tanak Awu'=>217,'Pengembur'=>221,'Segala Anyar'=>72];
+        $target_bulin   =  ['Lekor'=>220,'Saba'=>190,'Pendem'=>161,'Setuta'=>81,'Jango'=>78,'Janapria'=>190,'Ketara'=>97,'Sengkol'=>247,'Kawo'=>214,'Tanak Awu'=>207,'Pengembur'=>211,'Segala Anyar'=>69];
+        $target_bufas   =  ['Lekor'=>220,'Saba'=>190,'Pendem'=>161,'Setuta'=>81,'Jango'=>78,'Janapria'=>190,'Ketara'=>97,'Sengkol'=>247,'Kawo'=>214,'Tanak Awu'=>207,'Pengembur'=>211,'Segala Anyar'=>69];
+        $target_mt      =  ['Lekor'=>46,'Saba'=>40,'Pendem'=>34,'Setuta'=>17,'Jango'=>16,'Janapria'=>40,'Ketara'=>20,'Sengkol'=>52,'Kawo'=>45,'Tanak Awu'=>43,'Pengembur'=>44,'Segala Anyar'=>14];
         $user_village = ['user1'=>'Lekor','user2'=>'Saba','user3'=>'Pendem','user4'=>'Setuta','user5'=>'Jango','user6'=>'Janapria','user8'=>'Ketara','user9'=>'Sengkol','user10'=>'Sengkol','user11'=>'Kawo','user12'=>'Tanak Awu','user13'=>'Pengembur','user14'=>'Segala Anyar'];
-        
-        $user_village = $this->loc->getIntLocId('bidan');
-        $user = $this->ec->getCakupanContainer('bidan');
         
         $form = $user;
         $den = $user;
-        $datavisit = $this->db->query("SELECT * FROM event_bidan_kunjungan_anc WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND (ancKe=1) group by baseEntityId")->result(); // AND hiddenAncKe=1
+        $datavisit = $this->db->query("SELECT * FROM event_bidan_kunjungan_anc WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND (ancKe=1 AND hiddenAncKe=1) group by baseEntityId")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->locationId, $user_village)){
                 $form[$user_village[$dvisit->locationId]] += 1;
             }
         }
-        $datavisit = $this->db->query("SELECT * FROM event_bidan_tambah_anc WHERE tanggalHPHT > '$gadate12' group by baseEntityId")->result();
+        $datavisit = $this->db->query("SELECT * FROM kartu_anc_registration WHERE tanggalHPHT > '$gadate12' group by baseEntityId")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->locationId, $user_village)){
                 $den[$user_village[$dvisit->locationId]] += 1;
             }
         }
         foreach ($form as $desa=>$nilai){
-            if($den[$desa]==0) $form[$desa] = 0;
-            else $form[$desa] = $nilai*100/$den[$desa];
+            $form[$desa] = $nilai*100/$den[$desa];
         }
         
         $series['page']='ANC1SC';
@@ -364,8 +265,7 @@ class BidanEcCakupanModel extends CI_Model{
             }
         }
         foreach ($form as $desa=>$nilai){
-            if($den[$desa]==0) $form[$desa] = 0;
-            else $form[$desa] = $nilai*100/$den[$desa];
+            $form[$desa] = $nilai*100/$den[$desa];
         }
         
         $series['page']='ANC1NC';
@@ -384,15 +284,14 @@ class BidanEcCakupanModel extends CI_Model{
             }
         }
         $den = $user;
-        $datavisit = $this->db->query("SELECT * FROM event_bidan_tambah_anc WHERE tanggalHPHT > '$gadate42' group by baseEntityId")->result();
+        $datavisit = $this->db->query("SELECT * FROM kartu_anc_registration WHERE tanggalHPHT > '$gadate42' group by baseEntityId")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->locationId, $user_village)){
                 $den[$user_village[$dvisit->locationId]] += 1;
             }
         }
         foreach ($form as $desa=>$nilai){
-            if($den[$desa]==0) $form[$desa] = 0;
-            else $form[$desa] = $nilai*100/$den[$desa];
+            $form[$desa] = $nilai*100/$den[$desa];
         }
         
         $series['page']='ANC4SC';
@@ -409,8 +308,7 @@ class BidanEcCakupanModel extends CI_Model{
             }
         }
         foreach ($form as $desa=>$nilai){
-            if($den[$desa]==0) $form[$desa] = 0;
-            else $form[$desa] = $nilai*100/$den[$desa];
+            $form[$desa] = $nilai*100/$den[$desa];
         }
         
         $series['page']='ANC4NC';
@@ -426,15 +324,15 @@ class BidanEcCakupanModel extends CI_Model{
                 $form[$user_village[$dsalin->locationId]] += 1;
             }
         }
-//        $datapersalinan= $this->db->query("SELECT * FROM kartu_pnc_regitration_oa WHERE tanggalLahirAnak > '$startdate' AND tanggalLahirAnak < '$enddate'")->result();
-//        foreach ($datapersalinan as $dsalin){
-//            if(array_key_exists($dsalin->locationId, $user_village)){
-//                $form[$user_village[$dsalin->locationId]] += 1;
-//            }
-//        }
-//        foreach ($form as $desa=>$nilai){
-//            $form[$desa] = $form[$desa]*100/$target_bulin[$desa];
-//        }
+        $datapersalinan= $this->db->query("SELECT * FROM kartu_pnc_regitration_oa WHERE tanggalPlasentaLahir > '$startdate' AND tanggalPlasentaLahir < '$enddate'")->result();
+        foreach ($datapersalinan as $dsalin){
+            if(array_key_exists($dsalin->locationId, $user_village)){
+                $form[$user_village[$dsalin->locationId]] += 1;
+            }
+        }
+        foreach ($form as $desa=>$nilai){
+            $form[$desa] = $form[$desa]*100/$target_bulin[$desa];
+        }
         
         
         $series['page']='BC';
@@ -450,9 +348,9 @@ class BidanEcCakupanModel extends CI_Model{
                 $form[$user_village[$dvisit->locationId]] += 1;
             }
         }
-//        foreach ($form as $desa=>$nilai){
-//            $form[$desa] = $nilai*100/$target_bufas[$desa];
-//        }
+        foreach ($form as $desa=>$nilai){
+            $form[$desa] = $nilai*100/$target_bufas[$desa];
+        }
         $series['page']='PNCC';
         $series['form']=$form;
         $series['y_label'] = 'Persentase';
@@ -463,7 +361,7 @@ class BidanEcCakupanModel extends CI_Model{
     }
     
     private function isAnc4($bumil){
-        $ancvisit = $this->db->query("SELECT event_bidan_tambah_anc.tanggalHPHT,ancDate FROM event_bidan_kunjungan_anc LEFT JOIN event_bidan_tambah_anc on event_bidan_tambah_anc.baseEntityId=event_bidan_kunjungan_anc.baseEntityId WHERE event_bidan_kunjungan_anc.baseEntityId='$bumil->baseEntityId' ORDER BY ancDate")->result();
+        $ancvisit = $this->db->query("SELECT * FROM event_bidan_kunjungan_anc WHERE baseEntityId='$bumil->baseEntityId' ORDER BY ancDate")->result();
         $anc = [false,false,false,false,false];
         $i = 0;
         foreach ($ancvisit as $visit){
@@ -482,10 +380,10 @@ class BidanEcCakupanModel extends CI_Model{
     }
     
     private function isPnc4($bumil){
-        $ancvisit = $this->db->query("SELECT event_bidan_dokumentasi_persalinan.tanggalPlasentaLahir,pncDate FROM event_bidan_kunjungan_pnc LEFT JOIN event_bidan_dokumentasi_persalinan ON event_bidan_dokumentasi_persalinan.baseEntityId=event_bidan_kunjungan_pnc.baseEntityId WHERE event_bidan_kunjungan_pnc.baseEntityId='$bumil->baseEntityId' ORDER BY pncDate")->result();
+        $ancvisit = $this->db->query("SELECT * FROM event_bidan_kunjungan_pnc WHERE baseEntityId='$bumil->baseEntityId' ORDER BY pncDate")->result();
         $pnc = [false,false,false,false,false];
         foreach ($ancvisit as $visit){
-            if($visit->tanggalPlasentaLahir=="None"||$visit->tanggalPlasentaLahir=="NULL") continue;
+            if($visit->tanggalPlasentaLahir=="None"||$visit->tanggalPlasentaLahir=="0NaN-NaN-NaN") continue;
             $ga = intval(date_diff(date_create($visit->pncDate),date_create($visit->tanggalPlasentaLahir))->days/7);
             if($ga<=2){
                 $pnc[1] = true;
@@ -521,9 +419,9 @@ class BidanEcCakupanModel extends CI_Model{
     }
     
     private function isHbGiven($bayi){
-        $bayivisit = $this->db->query("SELECT * FROM event_bidan_kunjungan_neonatal WHERE baseEntityId='$bayi->baseEntityId' ORDER BY eventDate")->result();
+        $bayivisit = $this->db->query("SELECT * FROM event_bidan_kunjungan_neonatal WHERE childId='$bayi->childId' ORDER BY eventDate")->result();
         foreach ($bayivisit as $visit){
-            if($visit->hb0!="NULL"){ //$visit->saatLahirsd5JamPemberianImunisasihbJikaDilakukan=="ya"||$visit->kunjunganNeonatalpertama6sd48jamPemberianimunisasiHB0=="ya"||$visit->kunjunganNeonatalKeduaHarike3sd7BayiDiberikanImunisasi=="ya"||$visit->KunjunganNeonatalKetigaharike8sd28bayidiberikanimunisasi=="ya"
+            if($visit->saatLahirsd5JamPemberianImunisasihbJikaDilakukan=="ya"||$visit->kunjunganNeonatalpertama6sd48jamPemberianimunisasiHB0=="ya"||$visit->kunjunganNeonatalKeduaHarike3sd7BayiDiberikanImunisasi=="ya"||$visit->KunjunganNeonatalKetigaharike8sd28bayidiberikanimunisasi=="ya"){
                 return true;
             }
         }
@@ -544,9 +442,6 @@ class BidanEcCakupanModel extends CI_Model{
         $target_bufas   =  ['Lekor'=>220,'Saba'=>190,'Pendem'=>161,'Setuta'=>81,'Jango'=>78,'Janapria'=>190,'Ketara'=>97,'Sengkol'=>247,'Kawo'=>214,'Tanak Awu'=>207,'Pengembur'=>211,'Segala Anyar'=>69];
         $target_mt      =  ['Lekor'=>46,'Saba'=>40,'Pendem'=>34,'Setuta'=>17,'Jango'=>16,'Janapria'=>40,'Ketara'=>20,'Sengkol'=>52,'Kawo'=>45,'Tanak Awu'=>43,'Pengembur'=>44,'Segala Anyar'=>14];
         $user_village = ['user1'=>'Lekor','user2'=>'Saba','user3'=>'Pendem','user4'=>'Setuta','user5'=>'Jango','user6'=>'Janapria','user8'=>'Ketara','user9'=>'Sengkol','user10'=>'Sengkol','user11'=>'Kawo','user12'=>'Tanak Awu','user13'=>'Pengembur','user14'=>'Segala Anyar'];
-        
-        $user_village = $this->loc->getIntLocId('bidan');
-        $user = $this->ec->getCakupanContainer('bidan');
         
         $form = $user;
         $den = $user;
@@ -598,7 +493,7 @@ class BidanEcCakupanModel extends CI_Model{
         
         $form = $user;
         $den = $user;
-        $datavisit = $this->db->query("SELECT * FROM event_bidan_kunjungan_neonatal WHERE (eventDate > '$startdate' AND eventDate < '$enddate') group by baseEntityId")->result();
+        $datavisit = $this->db->query("SELECT * FROM event_bidan_kunjungan_neonatal WHERE (eventDate > '$startdate' AND eventDate < '$enddate') group by childId")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->locationId, $user_village)){
                 if($this->isHbGiven($dvisit)){
@@ -642,7 +537,7 @@ class BidanEcCakupanModel extends CI_Model{
         
         $form = $user;
         $den = $user;
-        $datavisit = $this->db->query("SELECT event_bidan_rencana_persalinan.*,event_bidan_identitas_ibu.locationId as locationId FROM event_bidan_rencana_persalinan LEFT JOIN event_bidan_identitas_ibu ON event_bidan_rencana_persalinan.baseEntityId=event_bidan_identitas_ibu.baseEntityId WHERE (event_bidan_rencana_persalinan.eventDate > '$startdate' AND event_bidan_rencana_persalinan.eventDate < '$enddate') group by event_bidan_rencana_persalinan.baseEntityId")->result();
+        $datavisit = $this->db->query("SELECT * FROM kartu_anc_rencana_persalinan WHERE (clientVersionSubmissionDate > '$startdate' AND clientVersionSubmissionDate < '$enddate') group by baseEntityId")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->locationId, $user_village)){
                 if($dvisit->tanggalRencanaPersalinan!=""){
@@ -666,7 +561,8 @@ class BidanEcCakupanModel extends CI_Model{
     }
     
     private function isHbChecked($bumil){
-        $dataibu = $this->db->query("SELECT * FROM event_bidan_kunjungan_anc_lab_test WHERE baseEntityId='$bumil->baseEntityId'");
+        $dataibu = $this->db->query("SELECT * FROM kartu_anc_registration_oa WHERE baseEntityId='$bumil->baseEntityId'");
+        if($dataibu->num_rows()<1)$dataibu = $this->db->query("SELECT * FROM event_bidan_kunjungan_anc_labTest WHERE baseEntityId='$bumil->baseEntityId'");
         if($dataibu->num_rows()<1) return false;
         else{
             $dataibu=$dataibu->row();
@@ -678,7 +574,7 @@ class BidanEcCakupanModel extends CI_Model{
     }
     
     private function isHamil($ibu){
-        $datahamil = $this->db->query("SELECT * FROM event_bidan_tambah_anc WHERE baseEntityId='$ibu->baseEntityId'")->result();
+        $datahamil = $this->db->query("SELECT * FROM kartu_anc_registration WHERE baseEntityId='$ibu->baseEntityId'")->result();
         foreach ($datahamil as $dhamil){
             $datapnc = $this->db->query("SELECT * FROM event_bidan_dokumentasi_persalinan WHERE baseEntityId='$dhamil->baseEntityId'");
             if($datapnc->num_rows()<1){
@@ -702,9 +598,6 @@ class BidanEcCakupanModel extends CI_Model{
         $target_bufas   =  ['Lekor'=>220,'Saba'=>190,'Pendem'=>161,'Setuta'=>81,'Jango'=>78,'Janapria'=>190,'Ketara'=>97,'Sengkol'=>247,'Kawo'=>214,'Tanak Awu'=>207,'Pengembur'=>211,'Segala Anyar'=>69];
         $target_mt      =  ['Lekor'=>46,'Saba'=>40,'Pendem'=>34,'Setuta'=>17,'Jango'=>16,'Janapria'=>40,'Ketara'=>20,'Sengkol'=>52,'Kawo'=>45,'Tanak Awu'=>43,'Pengembur'=>44,'Segala Anyar'=>14];
         $user_village = ['user1'=>'Lekor','user2'=>'Saba','user3'=>'Pendem','user4'=>'Setuta','user5'=>'Jango','user6'=>'Janapria','user8'=>'Ketara','user9'=>'Sengkol','user10'=>'Sengkol','user11'=>'Kawo','user12'=>'Tanak Awu','user13'=>'Pengembur','user14'=>'Segala Anyar'];
-        
-        $user_village = $this->loc->getIntLocId('bidan');
-        $user = $this->ec->getCakupanContainer('bidan');
         
         $tdt = $bbt = $lilat = $hbt = $gdt = $user;
         $den = $user;
@@ -800,9 +693,6 @@ class BidanEcCakupanModel extends CI_Model{
         $target_mt      =  ['Lekor'=>46,'Saba'=>40,'Pendem'=>34,'Setuta'=>17,'Jango'=>16,'Janapria'=>40,'Ketara'=>20,'Sengkol'=>52,'Kawo'=>45,'Tanak Awu'=>43,'Pengembur'=>44,'Segala Anyar'=>14];
         $user_village = ['user1'=>'Lekor','user2'=>'Saba','user3'=>'Pendem','user4'=>'Setuta','user5'=>'Jango','user6'=>'Janapria','user8'=>'Ketara','user9'=>'Sengkol','user10'=>'Sengkol','user11'=>'Kawo','user12'=>'Tanak Awu','user13'=>'Pengembur','user14'=>'Segala Anyar'];
         
-        $user_village = $this->loc->getIntLocId('bidan');
-        $user = $this->ec->getCakupanContainer('bidan');
-        
         $tdt = $bbt = $tfu = $pj = $djj = $user;
         $den = $user;
         $datavisit = $this->db->query("SELECT * FROM event_bidan_kunjungan_anc WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND trimesterKe=2")->result();
@@ -884,9 +774,6 @@ class BidanEcCakupanModel extends CI_Model{
         $target_bufas   =  ['Lekor'=>220,'Saba'=>190,'Pendem'=>161,'Setuta'=>81,'Jango'=>78,'Janapria'=>190,'Ketara'=>97,'Sengkol'=>247,'Kawo'=>214,'Tanak Awu'=>207,'Pengembur'=>211,'Segala Anyar'=>69];
         $target_mt      =  ['Lekor'=>46,'Saba'=>40,'Pendem'=>34,'Setuta'=>17,'Jango'=>16,'Janapria'=>40,'Ketara'=>20,'Sengkol'=>52,'Kawo'=>45,'Tanak Awu'=>43,'Pengembur'=>44,'Segala Anyar'=>14];
         $user_village = ['user1'=>'Lekor','user2'=>'Saba','user3'=>'Pendem','user4'=>'Setuta','user5'=>'Jango','user6'=>'Janapria','user8'=>'Ketara','user9'=>'Sengkol','user10'=>'Sengkol','user11'=>'Kawo','user12'=>'Tanak Awu','user13'=>'Pengembur','user14'=>'Segala Anyar'];
-        
-        $user_village = $this->loc->getIntLocId('bidan');
-        $user = $this->ec->getCakupanContainer('bidan');
         
         $tdt = $bbt = $user;
         $den = $user;
