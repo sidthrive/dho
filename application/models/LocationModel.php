@@ -101,6 +101,10 @@ class LocationModel extends CI_Model{
         return $this->loc[$fhw];
     }
     
+    public function getAllLocSpv($fhw,$kec){
+        return [$kec=>$this->loc[$fhw][$kec]];
+    }
+    
     public function getLocId($kec){
         return $this->loc_id[$kec];
     }

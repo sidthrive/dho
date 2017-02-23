@@ -34,7 +34,8 @@ class AnalyticsEcTableModel extends CI_Model{
             'event_gizi_penutupan_anak'=>'Penutupan Anak'],
         'vaksinator'=>[
             'event_vaksin_registrasi_vaksinator'=>'Registrasi Vaksinator',
-            'event_vaksin_imunisasi_bayi'=>'Form Imunisasi']];
+            'event_vaksin_imunisasi_bayi'=>'Form Imunisasi',
+            'event_vaksin_penutupan_anak'=>'Penutuan Anak']];
     
     public function getTable($fhw){
         return $this->table[$fhw];

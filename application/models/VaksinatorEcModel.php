@@ -81,13 +81,13 @@ class VaksinatorEcModel extends CI_Model{
         date_default_timezone_set("Asia/Makassar"); 
         $vaksinatorDB = $this->load->database('analytics', TRUE);
         $query  = $vaksinatorDB->query("SHOW TABLES FROM ec_analytics");
-        
+        $table_default = $this->Table->getTable('vaksinator');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
-            if($table->Tables_in_ec_analytics[0]=='c'||$table->Tables_in_ec_analytics[0]=='_'){
-                continue;
-            }else $tables[$table->Tables_in_ec_analytics]=$table_default[$table->Tables_in_ec_analytics];
+            if(array_key_exists($table->Tables_in_ec_analytics, $table_default)){
+                $tables[$table->Tables_in_ec_analytics]=$table_default[$table->Tables_in_ec_analytics];
+            }
         }
         
         $users = $this->loc->getLocId($kecamatan);$location = $this->loc->getLocIdQuery($users);
@@ -137,7 +137,7 @@ class VaksinatorEcModel extends CI_Model{
         }
         
         
-        foreach ($tables as $table){
+        foreach ($tables as $table=>$legend){
             
             //query tha data
             if($mode=='Mingguan'){

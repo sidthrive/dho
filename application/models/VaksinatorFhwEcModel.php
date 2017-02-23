@@ -20,13 +20,11 @@ class VaksinatorFhwEcModel extends CI_Model{
             }
         }
         if($desa==""){
-            $username = $this->session->userdata('username');
-            $kec = $this->loc->getKecFromUser('vaksinator',$username);
-            $namadusun = $this->loc->getDesaFromUser('vaksinator',$kec,$username);
-            $users = [$username=>$this->listdesa[$username]];
+            $username = $this->session->userdata('location');
+            $namadusun = $this->loc->getDusunTypo($username);
+            $users = [$username=>$namadusun];
         }else{
-            $kec = $this->loc->getKecFromDesa($desa);
-            $username = $this->loc->getDesaUser('vaksinator',$kec,$desa);
+            $username = $desa;
             $namadusun = $this->loc->getDusunTypo($desa);
             $users = [$username=>$namadusun];
         }
@@ -42,17 +40,17 @@ class VaksinatorFhwEcModel extends CI_Model{
             $result_data[$nama] = $data;
         }
         
-        $data_dusun = $giziDB->query("SELECT client_anak.baseEntityId as baseEntityId,client_ibu.dusun as dusun FROM client_anak LEFT JOIN client_ibu ON client_ibu.baseEntityId=client_anak.ibuCaseId");
+        $data_dusun = $vaksinatorDB->query("SELECT client_anak.baseEntityId as baseEntityId,client_ibu.dusun as dusun FROM client_anak LEFT JOIN client_ibu ON client_ibu.baseEntityId=client_anak.ibuCaseId");
         $list_dusun = [];
         foreach ($data_dusun->result() as $d){
             $list_dusun[$d->baseEntityId] = $d->dusun;
         }
         
         foreach ($tables as $table=>$legend){
-            $query = $giziDB->query("SELECT providerId, baseEntityId, eventDate from ".$table." where (providerId LIKE '%$username%')");
-            foreach ($query->result() as $c_data){
-                if(array_key_exists($c_data->baseEntityId, $list_dusun)){
-                    $n_dusun = $list_dusun[$c_data->baseEntityId];
+            if($table=='event_vaksin_registrasi_vaksinator'){
+                $query = $vaksinatorDB->query("SELECT client_ibu.dusun, $table.baseEntityId from ".$table." LEFT JOIN client_ibu ON client_ibu.baseEntityId=$table.baseEntityId where (locationId LIKE '%$username%')");
+                foreach ($query->result() as $c_data){
+                    $n_dusun = $c_data->dusun;
                     if(array_key_exists($n_dusun, $namadusun)){
                         $data_count                  = $result_data[$namadusun[$n_dusun]];
                         $data_count[$legend]         += 1;
@@ -61,6 +59,22 @@ class VaksinatorFhwEcModel extends CI_Model{
                         $data_count                  = $result_data["Lainnya"];
                         $data_count[$legend]         += 1;
                         $result_data["Lainnya"] = $data_count;
+                    }
+                }
+            }else{
+                $query = $vaksinatorDB->query("SELECT locationId, baseEntityId, eventDate from ".$table." where (locationId LIKE '%$username%')");
+                foreach ($query->result() as $c_data){
+                    if(array_key_exists($c_data->baseEntityId, $list_dusun)){
+                        $n_dusun = $list_dusun[$c_data->baseEntityId];
+                        if(array_key_exists($n_dusun, $namadusun)){
+                            $data_count                  = $result_data[$namadusun[$n_dusun]];
+                            $data_count[$legend]         += 1;
+                            $result_data[$namadusun[$n_dusun]] = $data_count;
+                        }else{
+                            $data_count                  = $result_data["Lainnya"];
+                            $data_count[$legend]         += 1;
+                            $result_data["Lainnya"] = $data_count;
+                        }
                     }
                 }
             }
@@ -84,12 +98,12 @@ class VaksinatorFhwEcModel extends CI_Model{
         }
         
         if($this->session->userdata('level')=="fhw"){
-            $username = $this->session->userdata('username');
+            $username = $this->session->userdata('location');
         }else{
-            $username = $this->loc->getUserFromDusun('vaksinator',$dusun);
+            $username = $this->loc->getDesaFromDusun($dusun);
         }
 
-        $listdusun = $this->loc->getDusunTypo($this->loc->getDesaFromUser('vaksinator',$this->loc->getKecFromUser('vaksinator',$username),$username));
+        $listdusun = $this->loc->getDusunTypo($username);
         $namadusun = array();
         foreach ($listdusun as $x=>$n){
             if($n==$dusun){
@@ -114,18 +128,18 @@ class VaksinatorFhwEcModel extends CI_Model{
         
         foreach ($tables as $table=>$legend){
             if($table=='event_vaksin_registrasi_vaksinator'){
-                $query = $giziDB->query("SELECT ".$table.".`providerId`,client_ibu.dusun,count(*) as counts from ".$table." 
+                $query = $vaksinatorDB->query("SELECT ".$table.".`locationId`,client_ibu.dusun,count(*) as counts from ".$table." 
                                       left join client_ibu 
                                         on ".$table.".`baseEntityId`=client_ibu.`baseEntityId`
-                                    WHERE (".$table.".providerId LIKE '%$username%')  and ".$table.".eventDate LIKE '".$date."%'
+                                    WHERE (".$table.".locationId LIKE '%$username%')  and ".$table.".eventDate LIKE '".$date."%'
                                     GROUP BY dusun");
             }else
-            $query = $giziDB->query("SELECT ".$table.".`providerId`,client_ibu.dusun,count(*) as counts from ".$table." 
+            $query = $vaksinatorDB->query("SELECT ".$table.".`locationId`,client_ibu.dusun,count(*) as counts from ".$table." 
                                       left join client_anak 
                                         on ".$table.".`baseEntityId`=client_anak.`baseEntityId` 
                                       LEFT JOIN client_ibu
                                         on client_anak.ibuCaseId=client_ibu.baseEntityId
-                                    WHERE (".$table.".providerId LIKE '%$username%') and ".$table.".eventDate LIKE '".$date."%'
+                                    WHERE (".$table.".locationId LIKE '%$username%') and ".$table.".eventDate LIKE '".$date."%'
                                     GROUP BY dusun");
             foreach ($query->result() as $datas){
                 if(array_key_exists($datas->dusun, $namadusun)){
@@ -141,7 +155,7 @@ class VaksinatorFhwEcModel extends CI_Model{
         return $result_data;
     }
     
-    public function getCountPerDay($desa="",$mode=""){
+    public function getCountPerDay($desa="",$mode="",$range=""){
         if($mode!=""){
             return self::getCountPerMode($desa,$mode);
         }
@@ -160,13 +174,11 @@ class VaksinatorFhwEcModel extends CI_Model{
         }
         
         if($desa==""){
-            $username = $this->session->userdata('username');
-            $kec = $this->loc->getKecFromUser('vaksinator',$username);
-            $namadusun = $this->loc->getDesaFromUser('vaksinator',$kec,$username);
-            $users = [$username=>$this->listdesa[$username]];
+            $username = $this->session->userdata('location');
+            $namadusun = $this->loc->getDusunTypo($username);
+            $users = [$username=>$namadusun];
         }else{
-            $kec = $this->loc->getKecFromDesa($desa);
-            $username = $this->loc->getDesaUser('vaksinator',$kec,$desa);
+            $username = $desa;
             $namadusun = $this->loc->getDusunTypo($desa);
             $users = [$username=>$namadusun];
         }
@@ -198,18 +210,18 @@ class VaksinatorFhwEcModel extends CI_Model{
         
         foreach ($tables as $table=>$legend){
             if($table=='event_vaksin_registrasi_vaksinator'){
-                $query = $giziDB->query("SELECT ".$table.".`providerId`,".$table.".`eventDate`,client_ibu.dusun,count(*) as counts from ".$table." 
+                $query = $vaksinatorDB->query("SELECT ".$table.".`locationId`,".$table.".`eventDate`,client_ibu.dusun,count(*) as counts from ".$table." 
                                       left join client_ibu 
                                         on ".$table.".`baseEntityId`=client_ibu.`baseEntityId`
-                                    WHERE (".$table.".providerId LIKE '%$username%')
+                                    WHERE (".$table.".locationId LIKE '%$username%')
                                     GROUP BY dusun,eventDate");
             }else
-            $query = $giziDB->query("SELECT ".$table.".`providerId`,".$table.".`eventDate`,client_ibu.dusun,count(*) as counts from ".$table." 
+            $query = $vaksinatorDB->query("SELECT ".$table.".`locationId`,".$table.".`eventDate`,client_ibu.dusun,count(*) as counts from ".$table." 
                                       left join client_anak 
                                         on ".$table.".`baseEntityId`=client_anak.`baseEntityId` 
                                       LEFT JOIN client_ibu
                                         on client_anak.ibuCaseId=client_ibu.baseEntityId
-                                    WHERE (".$table.".providerId LIKE '%$username%')
+                                    WHERE (".$table.".locationId LIKE '%$username%')
                                     GROUP BY dusun,eventDate");
             foreach ($query->result() as $datas){
                 if(array_key_exists($datas->dusun, $namadusun)){
@@ -252,13 +264,11 @@ class VaksinatorFhwEcModel extends CI_Model{
         }
         
         if($desa==""){
-            $username = $this->session->userdata('username');
-            $kec = $this->loc->getKecFromUser('vaksinator',$username);
-            $namadusun = $this->loc->getDesaFromUser('vaksinator',$kec,$username);
-            $users = [$username=>$this->listdesa[$username]];
+            $username = $this->session->userdata('location');
+            $namadusun = $this->loc->getDusunTypo($username);
+            $users = [$username=>$namadusun];
         }else{
-            $kec = $this->loc->getKecFromDesa($desa);
-            $username = $this->loc->getDesaUser('vaksinator',$kec,$desa);
+            $username = $desa;
             $namadusun = $this->loc->getDusunTypo($desa);
             $users = [$username=>$namadusun];
         }
@@ -311,33 +321,33 @@ class VaksinatorFhwEcModel extends CI_Model{
         foreach ($tables as $table=>$legend){
             if($mode=='Mingguan'){
                 if($table=='event_vaksin_registrasi_vaksinator'){
-                    $query = $giziDB->query("SELECT ".$table.".`providerId`,".$table.".`eventDate`,client_ibu.dusun,count(*) as counts from ".$table." 
+                    $query = $vaksinatorDB->query("SELECT ".$table.".`locationId`,".$table.".`eventDate`,client_ibu.dusun,count(*) as counts from ".$table." 
                                           left join client_ibu 
                                             on ".$table.".`baseEntityId`=client_ibu.`baseEntityId`
-                                        WHERE (".$table.".providerId LIKE '%$username%') AND ".$table.".`eventDate` >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND ".$table.".`eventDate` <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."'
+                                        WHERE (".$table.".locationId LIKE '%$username%') AND ".$table.".`eventDate` >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND ".$table.".`eventDate` <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."'
                                         GROUP BY dusun,eventDate");
                 }else
-                $query = $giziDB->query("SELECT ".$table.".`providerId`,".$table.".`eventDate`,client_ibu.dusun,count(*) as counts from ".$table." 
+                $query = $vaksinatorDB->query("SELECT ".$table.".`locationId`,".$table.".`eventDate`,client_ibu.dusun,count(*) as counts from ".$table." 
                                           left join client_anak 
                                             on ".$table.".`baseEntityId`=client_anak.`baseEntityId` 
                                           LEFT JOIN client_ibu
                                             on client_anak.ibuCaseId=client_ibu.baseEntityId
-                                        WHERE (".$table.".providerId LIKE '%$username%')  AND ".$table.".`eventDate` >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND ".$table.".`eventDate` <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."'
+                                        WHERE (".$table.".locationId LIKE '%$username%')  AND ".$table.".`eventDate` >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND ".$table.".`eventDate` <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."'
                                         GROUP BY dusun,eventDate");
             }elseif($mode=='Bulanan'){
                 if($table=='event_vaksin_registrasi_vaksinator'){
-                    $query = $giziDB->query("SELECT ".$table.".`providerId`,".$table.".`eventDate`,client_ibu.dusun,count(*) as counts from ".$table." 
+                    $query = $vaksinatorDB->query("SELECT ".$table.".`locationId`,".$table.".`eventDate`,client_ibu.dusun,count(*) as counts from ".$table." 
                                           left join client_ibu 
                                             on ".$table.".`baseEntityId`=client_ibu.`baseEntityId`
-                                        WHERE (".$table.".providerId LIKE '%$username%') AND ".$table.".`eventDate` >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND ".$table.".`eventDate` <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."'
+                                        WHERE (".$table.".locationId LIKE '%$username%') AND ".$table.".`eventDate` >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND ".$table.".`eventDate` <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."'
                                         GROUP BY dusun,eventDate");
                 }else
-                $query = $giziDB->query("SELECT ".$table.".`providerId`,".$table.".`eventDate`,client_ibu.dusun,count(*) as counts from ".$table." 
+                $query = $vaksinatorDB->query("SELECT ".$table.".`locationId`,".$table.".`eventDate`,client_ibu.dusun,count(*) as counts from ".$table." 
                                           left join client_anak 
                                             on ".$table.".`baseEntityId`=client_anak.`baseEntityId` 
                                           LEFT JOIN client_ibu
                                             on client_anak.ibuCaseId=client_ibu.baseEntityId
-                                        WHERE (".$table.".providerId LIKE '%$username%')  AND ".$table.".`eventDate` >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND ".$table.".`eventDate` <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."'
+                                        WHERE (".$table.".locationId LIKE '%$username%')  AND ".$table.".`eventDate` >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND ".$table.".`eventDate` <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."'
                                         GROUP BY dusun,eventDate");
             }
             

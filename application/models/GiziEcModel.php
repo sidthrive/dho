@@ -161,7 +161,7 @@ class GiziEcModel extends CI_Model{
         date_default_timezone_set("Asia/Makassar"); 
         $giziDB = $this->load->database('analytics', TRUE);
         $query  = $giziDB->query("SHOW TABLES FROM ec_analytics");
-        
+        $table_default = $this->Table->getTable('gizi');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
@@ -222,13 +222,13 @@ class GiziEcModel extends CI_Model{
         }
         
         
-        foreach ($tables as $table){
+        foreach ($tables as $table=>$legend){
             
             //query tha data
             if($mode=='Mingguan'){
-                $query = $analyticsDB->query("SELECT locationId as userid, eventDate,count(*) as counts from ".$table." where ($location) AND eventDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 7)?"last Saturday ":"-7 days")."-5 days"))."' AND eventDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"-1 days")))."' group by locationId, eventDate");
+                $query = $giziDB->query("SELECT locationId as userid, eventDate,count(*) as counts from ".$table." where ($location) AND eventDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 7)?"last Saturday ":"-7 days")."-5 days"))."' AND eventDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"-1 days")))."' group by locationId, eventDate");
             }elseif($mode=='Bulanan'){
-                $query = $analyticsDB->query("SELECT locationId as userid, eventDate,count(*) as counts from ".$table." where ($location) AND eventDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND eventDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by locationId, eventDate");
+                $query = $giziDB->query("SELECT locationId as userid, eventDate,count(*) as counts from ".$table." where ($location) AND eventDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND eventDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by locationId, eventDate");
             }
             
             foreach ($query->result() as $datas){

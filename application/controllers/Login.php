@@ -22,6 +22,7 @@ class Login extends CI_Controller
                 $data = [
                     'id_user' => $result->id_user,
                     'username' => $result->username,
+                    'location' => $result->location,
                     'level' => $result->level,
                     'tipe' => $result->tipe,
                     'last_login' => $result->last_login,

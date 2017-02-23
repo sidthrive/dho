@@ -20,11 +20,9 @@ class AnalyticsFhwEcModel extends CI_Model{
             }
         }
         if($desa==""){
-            $username = $this->session->userdata('username');
-            $kec = $this->loc->getKecFromUser('bidan',$username);
-            $desa = $this->loc->getDesaFromUser('bidan',$kec,$username);
-            $namadusun = $this->loc->getDusunTypo($desa);
-            $users = [$username=>$namadusun];
+            $username = $this->session->userdata('location');
+            $namadusun = $this->loc->getDusunTypo($username);
+            $users = [$desa=>$namadusun];
         }else{
             $username = $this->loc->getLocIdbyDesa($desa);
             $namadusun = $this->loc->getDusunTypo($desa);
@@ -79,9 +77,8 @@ class AnalyticsFhwEcModel extends CI_Model{
         }
         
         if($this->session->userdata('level')=="fhw"){
-            $username = $this->session->userdata('username');
-            $desa = $this->loc->getDesaFromDusun($dusun);
-            $listdusun = $this->loc->getDusunTypo($this->loc->getDesaFromUser('bidan',$this->loc->getKecFromUser('bidan',$username),$username));
+            $username = $this->session->userdata('location');
+            $listdusun = $this->loc->getDusunTypo($username);
         }else{
             $username = $this->loc->getDesaFromDusun($dusun);
             $listdusun = $this->loc->getDusunTypo($username);
@@ -147,10 +144,8 @@ class AnalyticsFhwEcModel extends CI_Model{
         }
         
         if($desa==""){
-            $username = $this->session->userdata('username');
-            $kec = $this->loc->getKecFromUser('bidan',$username);
-            $desa = $this->loc->getDesaFromUser('bidan',$kec,$username);
-            $namadusun = $this->loc->getDusunTypo($desa);
+            $username = $this->session->userdata('location');
+            $namadusun = $this->loc->getDusunTypo($username);
             $users = [$username=>$namadusun];
         }else{
             $username = $this->loc->getLocIdbyDesa($desa);
@@ -226,11 +221,9 @@ class AnalyticsFhwEcModel extends CI_Model{
         }
         
         if($desa==""){
-            $username = $this->session->userdata('username');
-            $kec = $this->loc->getKecFromUser('bidan',$username);
-            $desa = $this->loc->getDesaFromUser('bidan',$kec,$username);
-            $namadusun = $this->loc->getDusunTypo($desa);
-            $users = [$username=>$namadusun];
+            $username = $this->session->userdata('location');
+            $namadusun = $this->loc->getDusunTypo($username);
+            $users = [$desa=>$namadusun];
         }else{
             $username = $this->loc->getLocIdbyDesa($desa);
             $namadusun = $this->loc->getDusunTypo($desa);

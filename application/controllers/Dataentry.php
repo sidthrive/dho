@@ -25,7 +25,11 @@ class DataEntry extends CI_Controller{
             $this->load->view('footer');
         }else{
             $this->load->view('header');
-            $data['location'] = $this->loc->getAllLoc('bidan');
+            if($this->session->userdata('level')=="supervisor"){
+                $data['location'] = $this->loc->getAllLocSpv('bidan',$this->session->userdata('location'));
+            }else{
+                $data['location'] = $this->loc->getAllLoc('bidan');
+            }
             $this->load->view('dataentry/dataentrysidebar',$data);
             $this->load->view('dataentry/dataentrymainpage');
             $this->load->view('footer');
@@ -35,8 +39,8 @@ class DataEntry extends CI_Controller{
     
     public function bidanByForm(){
         if($this->session->userdata('level')=="fhw"){
-            $listdesa = ['user1'=>'Lekor','user2'=>'Saba','user3'=>'Pendem','user4'=>'Setuta','user5'=>'Jango','user6'=>'Janapria','user8'=>'Ketara','user9'=>'Sengkol','user10'=>'Sengkol','user11'=>'Kawo','user12'=>'Tanak Awu','user13'=>'Pengembur','user14'=>'Segala Anyar'];
-            $data['desa']		= $listdesa[$this->session->userdata('username')];
+            
+            $data['desa']		= $this->loc->getLocIdbyDesa($this->session->userdata('location'));
             $data['data']                   = $this->AnalyticsFhwModel->getCountPerForm();
             $this->load->view("header");
             $this->load->view("dataentry/fhw/dataentrysidebar");
@@ -59,7 +63,11 @@ class DataEntry extends CI_Controller{
                 $data['data'] = $this->AnalyticsModel->getCountPerForm($data['kecamatan'],$data['start'],$data['end']);
             //else $data['data'] = $this->AnalyticsModel->getCountPerFormByVisitDate($data['kecamatan'],$data['start'],$data['end']);
             $this->load->view("header");
-            $data['location'] = $this->loc->getAllLoc('bidan');
+            if($this->session->userdata('level')=="supervisor"){
+                $data['location'] = $this->loc->getAllLocSpv('bidan',$this->session->userdata('location'));
+            }else{
+                $data['location'] = $this->loc->getAllLoc('bidan');
+            }
             $this->load->view("dataentry/dataentrysidebar",$data);
             if($data['desa']==""){
                 $this->load->view("dataentry/bidanentryform",$data);
@@ -76,8 +84,8 @@ class DataEntry extends CI_Controller{
     
     public function downloadbidanByForm(){
         if($this->session->userdata('level')=="fhw"){
-            $listdesa = ['user1'=>'Lekor','user2'=>'Saba','user3'=>'Pendem','user4'=>'Setuta','user5'=>'Jango','user6'=>'Janapria','user8'=>'Ketara','user9'=>'Sengkol','user10'=>'Sengkol','user11'=>'Kawo','user12'=>'Tanak Awu','user13'=>'Pengembur','user14'=>'Segala Anyar'];
-            $data['desa']		= $listdesa[$this->session->userdata('username')];
+            
+            $data['desa']		= $this->loc->getLocIdbyDesa($this->session->userdata('location'));
             $data['data']                   = $this->AnalyticsFhwModel->getCountPerForm();
             $this->load->view("header");
             $this->load->view("dataentry/fhw/dataentrysidebar");
@@ -98,8 +106,8 @@ class DataEntry extends CI_Controller{
     
     public function bidanByTanggal(){
         if($this->session->userdata('level')=="fhw"){
-            $listdesa = ['user1'=>'Lekor','user2'=>'Saba','user3'=>'Pendem','user4'=>'Setuta','user5'=>'Jango','user6'=>'Janapria','user8'=>'Ketara','user9'=>'Sengkol','user10'=>'Sengkol','user11'=>'Kawo','user12'=>'Tanak Awu','user13'=>'Pengembur','user14'=>'Segala Anyar'];
-            $data['desa']		= $listdesa[$this->session->userdata('username')];
+            
+            $data['desa']		= $this->loc->getLocIdbyDesa($this->session->userdata('location'));
             $data['mode']                   = $this->uri->segment(4);
             if($this->input->get('start')==null&&$data['mode']==''){
                 $now = date("Y-m-d");
@@ -138,7 +146,11 @@ class DataEntry extends CI_Controller{
                 $data['data'] = $this->AnalyticsModel->getCountPerDayDrill($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
             //else $data['data'] = $this->AnalyticsModel->getCountPerDayByVisitDate($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
             $this->load->view("header");
-            $data['location'] = $this->loc->getAllLoc('bidan');
+            if($this->session->userdata('level')=="supervisor"){
+                $data['location'] = $this->loc->getAllLocSpv('bidan',$this->session->userdata('location'));
+            }else{
+                $data['location'] = $this->loc->getAllLoc('bidan');
+            }
             $this->load->view("dataentry/dataentrysidebar",$data);
             if($data['desa']==""){
                 $this->load->view("dataentry/bidanentrytanggal",$data);
@@ -180,7 +192,7 @@ class DataEntry extends CI_Controller{
         echo json_encode($data);
     }
     public function getfhwbidanByForm($desa,$date){
-        $listdesa = ['user1'=>'Lekor','user2'=>'Saba','user3'=>'Pendem','user4'=>'Setuta','user5'=>'Jango','user6'=>'Janapria','user8'=>'Ketara','user9'=>'Sengkol','user10'=>'Sengkol','user11'=>'Kawo','user12'=>'Tanak Awu','user13'=>'Pengembur','user14'=>'Segala Anyar'];
+        
         $data = $this->AnalyticsFhwModel->getCountPerFormForDrill($desa,$date);
         echo json_encode($data);
     }
@@ -197,7 +209,7 @@ class DataEntry extends CI_Controller{
     public function giziByForm(){
         if($this->session->userdata('level')=="fhw"){
             $listdesa = ['gizi1'=>'Lekor','gizi2'=>'Saba','gizi3'=>'Pendem','gizi4'=>'Setuta','gizi5'=>'Jango','gizi6'=>'Janapria','gizi8'=>'Ketara','gizi9'=>'Sengkol','gizi10'=>'Sengkol','gizi11'=>'Kawo','gizi12'=>'Tanak Awu','gizi13'=>'Pengembur','gizi14'=>'Segala Anyar'];
-            $data['desa']		= $listdesa[$this->session->userdata('username')];
+            $data['desa']		= $this->loc->getLocIdbyDesa($this->session->userdata('location'));
             $data['data']                   = $this->GiziFhwModel->getCountPerForm();
             $this->load->view("header");
             $this->load->view("dataentry/fhw/dataentrysidebar");
@@ -220,7 +232,11 @@ class DataEntry extends CI_Controller{
                 $data['data'] = $this->GiziModel->getCountPerForm($data['kecamatan'],$data['start'],$data['end']);
             //else $data['data'] = $this->GiziModel->getCountPerFormByVisitDate($data['kecamatan'],$data['start'],$data['end']);
             $this->load->view("header");
-            $data['location'] = $this->loc->getAllLoc('gizi');
+            if($this->session->userdata('level')=="supervisor"){
+                $data['location'] = $this->loc->getAllLocSpv('gizi',$this->session->userdata('location'));
+            }else{
+                $data['location'] = $this->loc->getAllLoc('gizi');
+            }
             $this->load->view("dataentry/dataentrysidebar",$data);
             if($data['desa']==""){
                 $this->load->view("dataentry/gizientryform",$data);
@@ -238,7 +254,7 @@ class DataEntry extends CI_Controller{
     public function giziByTanggal(){
         if($this->session->userdata('level')=="fhw"){
             $listdesa = ['gizi1'=>'Lekor','gizi2'=>'Saba','gizi3'=>'Pendem','gizi4'=>'Setuta','gizi5'=>'Jango','gizi6'=>'Janapria','gizi8'=>'Ketara','gizi9'=>'Sengkol','gizi10'=>'Sengkol','gizi11'=>'Kawo','gizi12'=>'Tanak Awu','gizi13'=>'Pengembur','gizi14'=>'Segala Anyar'];
-            $data['desa']		= $listdesa[$this->session->userdata('username')];
+            $data['desa']		= $this->loc->getLocIdbyDesa($this->session->userdata('location'));
             if($this->input->get('start')==null&&$data['mode']==''){
                 $now = date("Y-m-d");
                 $start = date("Y-m-d",  strtotime($now."-29 days"));
@@ -277,7 +293,11 @@ class DataEntry extends CI_Controller{
                 $data['data'] = $this->GiziModel->getCountPerDay($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
             //else $data['data'] = $this->GiziModel->getCountPerDayByVisitDate($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
             $this->load->view("header");
-            $data['location'] = $this->loc->getAllLoc('gizi');
+            if($this->session->userdata('level')=="supervisor"){
+                $data['location'] = $this->loc->getAllLocSpv('gizi',$this->session->userdata('location'));
+            }else{
+                $data['location'] = $this->loc->getAllLoc('gizi');
+            }
             $this->load->view("dataentry/dataentrysidebar",$data);
             if($data['desa']==""){
                 $this->load->view("dataentry/gizientrytanggal",$data);
@@ -337,7 +357,7 @@ class DataEntry extends CI_Controller{
     public function vaksinatorByForm(){
         if($this->session->userdata('level')=="fhw"){
             $listdesa = ['vaksinator1'=>'Lekor','vaksinator2'=>'Saba','vaksinator3'=>'Pendem','vaksinator4'=>'Setuta','vaksinator5'=>'Jango','vaksinator6'=>'Janapria','vaksinator8'=>'Ketara','vaksinator9'=>'Sengkol','vaksinator10'=>'Sengkol','vaksinator11'=>'Kawo','vaksinator12'=>'Tanak Awu','vaksinator13'=>'Pengembur','vaksinator14'=>'Segala Anyar'];
-            $data['desa']		= $listdesa[$this->session->userdata('username')];
+            $data['desa']		= $this->loc->getLocIdbyDesa($this->session->userdata('location'));
             $data['data']                   = $this->VaksinatorFhwModel->getCountPerForm();
             $this->load->view("header");
             $this->load->view("dataentry/fhw/dataentrysidebar");
@@ -355,7 +375,11 @@ class DataEntry extends CI_Controller{
             }
             $data['data']               = $this->VaksinatorModel->getCountPerForm($data['kecamatan'],$data['start'],$data['end']);
             $this->load->view("header");
-            $data['location'] = $this->loc->getAllLoc('vaksinator');
+            if($this->session->userdata('level')=="supervisor"){
+                $data['location'] = $this->loc->getAllLocSpv('vaksinator',$this->session->userdata('location'));
+            }else{
+                $data['location'] = $this->loc->getAllLoc('vaksinator');
+            }
             $this->load->view("dataentry/dataentrysidebar",$data);
             if($data['desa']==""){
                 $this->load->view("dataentry/vaksinatorentryform",$data);
@@ -374,7 +398,7 @@ class DataEntry extends CI_Controller{
     public function vaksinatorByTanggal(){
         if($this->session->userdata('level')=="fhw"){
             $listdesa = ['vaksinator1'=>'Lekor','vaksinator2'=>'Saba','vaksinator3'=>'Pendem','vaksinator4'=>'Setuta','vaksinator5'=>'Jango','vaksinator6'=>'Janapria','vaksinator8'=>'Ketara','vaksinator9'=>'Sengkol','vaksinator10'=>'Sengkol','vaksinator11'=>'Kawo','vaksinator12'=>'Tanak Awu','vaksinator13'=>'Pengembur','vaksinator14'=>'Segala Anyar'];
-            $data['desa']		= $listdesa[$this->session->userdata('username')];
+            $data['desa']		= $this->loc->getLocIdbyDesa($this->session->userdata('location'));
             if($this->input->get('start')==null&&$data['mode']==''){
                 $now = date("Y-m-d");
                 $start = date("Y-m-d",  strtotime($now."-29 days"));
@@ -408,7 +432,11 @@ class DataEntry extends CI_Controller{
             }
             $data['data']                   = $this->VaksinatorModel->getCountPerDay($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
             $this->load->view("header");
-            $data['location'] = $this->loc->getAllLoc('vaksinator');
+            if($this->session->userdata('level')=="supervisor"){
+                $data['location'] = $this->loc->getAllLocSpv('vaksinator',$this->session->userdata('location'));
+            }else{
+                $data['location'] = $this->loc->getAllLoc('vaksinator');
+            }
             $this->load->view("dataentry/dataentrysidebar",$data);
             if($data['desa']==""){
                 $this->load->view("dataentry/vaksinatorentrytanggal",$data);
@@ -417,7 +445,7 @@ class DataEntry extends CI_Controller{
                 if($this->input->get('start')==null&&$data['mode']==''){
                     $now = date("Y-m-d");
                     $start = date("Y-m-d",  strtotime($now."-29 days"));
-                    redirect("dataentry/bidanbytanggal/".$data['kecamatan']."/".$data['desa']."?start=$start&end=$now");
+                    redirect("dataentry/vaksinatorbytanggal/".$data['kecamatan']."/".$data['desa']."?start=$start&end=$now");
                 }else{
                     $data['start'] = $this->input->get('start');
                     $data['end'] = $this->input->get('end');
