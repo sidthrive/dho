@@ -19,6 +19,13 @@ class Login_model extends CI_Model
         $this->db->from('users');
         return $this->db->get()->row();
     }
+    
+    public function validate_user_opensrp($data) {
+        $this->db->where('opensrp_username', $data['username']);
+        $this->db->where('opensrp_password', md5($data['password']));
+        $this->db->from('users');
+        return $this->db->get()->row();
+    }
  
     function __destruct() {
         $this->db->close();
