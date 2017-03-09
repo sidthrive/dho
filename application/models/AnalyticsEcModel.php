@@ -61,15 +61,15 @@ class AnalyticsEcModel extends CI_Model{
         foreach ($tables as $table=>$legend){
             //query tha data
             if($range!=""){
-                $query = $analyticsDB->query("SELECT locationId, eventDate,count(*) as counts from ".$table." where ($location) AND eventDate >= '".$range[0]."' AND eventDate <= '".$range[1]."' group by locationId, eventDate");
+                $query = $analyticsDB->query("SELECT locationId, dateCreated,count(*) as counts from ".$table." where ($location) AND dateCreated >= '".$range[0]."' AND dateCreated <= '".$range[1]."' group by locationId, dateCreated");
             }else{
-                $query = $analyticsDB->query("SELECT locationId, eventDate,count(*) as counts from ".$table." where ($location) AND eventDate >= '".date("Y-m-d",strtotime("-30 days"))."' AND eventDate <= '".date("Y-m-d")."' group by locationId, eventDate");
+                $query = $analyticsDB->query("SELECT locationId, dateCreated,count(*) as counts from ".$table." where ($location) AND dateCreated >= '".date("Y-m-d",strtotime("-30 days"))."' AND dateCreated <= '".date("Y-m-d")."' group by locationId, dateCreated");
             }
             
             foreach ($query->result() as $datas){
                 if(array_key_exists($datas->locationId, $locId)){
                     $data_count                  = $result_data[$locId[$datas->locationId]];
-                    $tgl = explode('T', $datas->eventDate);
+                    $tgl = explode('T', $datas->dateCreated);
                     $tgl = trim($tgl[0]);
                     if(array_key_exists($tgl, $data_count)){
                         $data_count[$tgl] +=$datas->counts;
@@ -151,7 +151,7 @@ class AnalyticsEcModel extends CI_Model{
                 }elseif($table=="kohort_kb_pelayanan"&&$table=="kohort_kb_update"){
                     $query = $analyticsDB->query("SELECT userid, tanggalkunjungan as visitdate,count(*) as counts from ".$table." where (tanggalkunjungan >= '".$range[0]."' and tanggalkunjungan <= '".$range[1]."') group by userid, tanggalkunjungan");
                 }else{
-                    $query = $analyticsDB->query("SELECT  eventDate as visitdate,count(*) as counts from ".$table." where (eventDate >= '".$range[0]."' and eventDate <= '".$range[1]."') group by locationId, eventDate");
+                    $query = $analyticsDB->query("SELECT  dateCreated as visitdate,count(*) as counts from ".$table." where (dateCreated >= '".$range[0]."' and dateCreated <= '".$range[1]."') group by locationId, dateCreated");
                 }
             }else{
                 if($table=="kartu_anc_visit"){
@@ -167,14 +167,14 @@ class AnalyticsEcModel extends CI_Model{
                 }elseif($table=="kohort_kb_pelayanan"&&$table=="kohort_kb_update"){
                     $query = $analyticsDB->query("SELECT userid, tanggalkunjungan as visitdate,count(*) as counts from ".$table." where (tanggalkunjungan >= '".date("Y-m-d",strtotime("-30 days"))."' and tanggalkunjungan <= '".date("Y-m-d")."') group by userid, tanggalkunjungan");
                 }else{
-                    $query = $analyticsDB->query("SELECT  eventDate as visitdate,count(*) as counts from ".$table." where (eventDate >= '".date("Y-m-d",strtotime("-30 days"))."' and eventDate <= '".date("Y-m-d")."') group by locationId, eventDate");
+                    $query = $analyticsDB->query("SELECT  dateCreated as visitdate,count(*) as counts from ".$table." where (dateCreated >= '".date("Y-m-d",strtotime("-30 days"))."' and dateCreated <= '".date("Y-m-d")."') group by locationId, dateCreated");
                 }
             }
             
             foreach ($query->result() as $datas){
                 if(array_key_exists($datas->userid, $locId)){
                     $data_count                  = $result_data[$locId[$datas->userid]];
-                    $tgl = explode('T', $datas->eventDate);
+                    $tgl = explode('T', $datas->dateCreated);
                     $tgl = trim($tgl[0]);
                     if(array_key_exists($tgl, $data_count)){
                         $data_count[$tgl] +=$datas->counts;
@@ -255,9 +255,9 @@ class AnalyticsEcModel extends CI_Model{
         foreach ($tables as $table=>$legend){
             
             if($mode=='Mingguan'){
-                $query = $analyticsDB->query("SELECT locationId, eventDate,count(*) as counts from ".$table." where ($location) AND eventDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 7)?"last Saturday ":"-7 days")."-5 days"))."' AND eventDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"-1 days")))."' group by locationId, eventDate");
+                $query = $analyticsDB->query("SELECT locationId, dateCreated,count(*) as counts from ".$table." where ($location) AND dateCreated >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 7)?"last Saturday ":"-7 days")."-5 days"))."' AND dateCreated <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"-1 days")))."' group by locationId, dateCreated");
             }elseif($mode=='Bulanan'){
-                $query = $analyticsDB->query("SELECT locationId, eventDate,count(*) as counts from ".$table." where ($location) AND eventDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND eventDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by locationId, eventDate");
+                $query = $analyticsDB->query("SELECT locationId, dateCreated,count(*) as counts from ".$table." where ($location) AND dateCreated >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND dateCreated <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by locationId, dateCreated");
             }
             
             foreach ($query->result() as $datas){
@@ -266,7 +266,7 @@ class AnalyticsEcModel extends CI_Model{
                         $week   =   $result_data[$locId[$datas->locationId]];
                         $thisweek   = $week['thisweek'];
                         $lastweek   = $week['lastweek'];
-                        $tgl = explode('T', $datas->eventDate);
+                        $tgl = explode('T', $datas->dateCreated);
                         $tgl = trim($tgl[0]);
                         if(array_key_exists($tgl, $thisweek)){
                             $thisweek[$tgl] +=$datas->counts;
@@ -281,7 +281,7 @@ class AnalyticsEcModel extends CI_Model{
                         $month = $result_data[$locId[$datas->locationId]];
                         $thisyear = $month['thisyear'];
                         $lastyear = $month['lastyear'];
-                        $tgl = explode('T', $datas->eventDate);
+                        $tgl = explode('T', $datas->dateCreated);
                         $tgl = trim($tgl[0]);
                         $m = explode('-', $tgl);
                         array_pop($m);
@@ -345,7 +345,7 @@ class AnalyticsEcModel extends CI_Model{
         foreach ($tables as $table=>$legend){
             //query tha data
             foreach($daterange as $date){
-                $query = $analyticsDB->query("SELECT locationId, eventDate,count(*) as counts from ".$table." where ($location) AND eventDate LIKE '".$date->format("Y-m-d")."%' group by locationId, eventDate");
+                $query = $analyticsDB->query("SELECT locationId, dateCreated,count(*) as counts from ".$table." where ($location) AND dateCreated LIKE '".$date->format("Y-m-d")."%' group by locationId, dateCreated");
                 foreach ($query->result() as $datas){
                     if(array_key_exists($datas->locationId, $locId)){
                         $data_count                  = $result_data[$locId[$datas->locationId]][$date->format("Y-m-d")];
@@ -437,7 +437,7 @@ class AnalyticsEcModel extends CI_Model{
         foreach ($tables as $table=>$legend){
             //query tha data
             foreach($daterange as $date){
-                $query = $analyticsDB->query("SELECT locationId, eventDate,count(*) as counts from ".$table." where ($location) AND eventDate LIKE '".$date->format("Y-m-d")."%' group by locationId, eventDate");
+                $query = $analyticsDB->query("SELECT locationId, dateCreated,count(*) as counts from ".$table." where ($location) AND dateCreated LIKE '".$date->format("Y-m-d")."%' group by locationId, dateCreated");
                     
                 foreach ($query->result() as $datas){
                     if(array_key_exists($datas->locationId, $users)){
@@ -523,7 +523,7 @@ class AnalyticsEcModel extends CI_Model{
 
         foreach ($tables as $table=>$legend){
             //query tha data
-            $query = $analyticsDB->query("SELECT locationId, eventDate,count(*) as counts from ".$table." where ($location) AND eventDate >= '$start' AND eventDate <= '$end' group by locationId, eventDate");
+            $query = $analyticsDB->query("SELECT locationId, dateCreated,count(*) as counts from ".$table." where ($location) AND dateCreated >= '$start' AND dateCreated <= '$end' group by locationId, dateCreated");
             
             foreach ($query->result() as $datas){
                 if(array_key_exists($datas->locationId, $users)){
@@ -569,7 +569,7 @@ class AnalyticsEcModel extends CI_Model{
 
         foreach ($tables as $table=>$legend){
             //query tha data
-            $query = $analyticsDB->query("SELECT locationId, eventDate,count(*) as counts from ".$table." where ($location) AND eventDate >= '$start' AND eventDate <= '$end' group by locationId, eventDate");
+            $query = $analyticsDB->query("SELECT locationId, dateCreated,count(*) as counts from ".$table." where ($location) AND dateCreated >= '$start' AND dateCreated <= '$end' group by locationId, dateCreated");
             
             foreach ($query->result() as $datas){
                 if(array_key_exists($datas->locationId, $users)){
@@ -617,7 +617,7 @@ class AnalyticsEcModel extends CI_Model{
         foreach ($users as $user=>$desa){
             foreach ($tables as $table=>$legend){
                 //query tha data
-                $query3 = $analyticsDB->query("SELECT locationId, eventDate,count(*) as counts from ".$table." where eventDate LIKE '".$date."%' group by locationId, eventDate");
+                $query3 = $analyticsDB->query("SELECT locationId, dateCreated,count(*) as counts from ".$table." where dateCreated LIKE '".$date."%' group by locationId, dateCreated");
                 foreach ($query3->result() as $datas){
                     if(array_key_exists($datas->locationId, $users)){
                         $data_count                  = $result_data[$date];

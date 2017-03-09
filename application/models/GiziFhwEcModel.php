@@ -62,7 +62,7 @@ class GiziFhwEcModel extends CI_Model{
                 }
             }
             else {
-                $query = $giziDB->query("SELECT locationId, baseEntityId, eventDate from ".$table." where (locationId LIKE '%$username%')");
+                $query = $giziDB->query("SELECT locationId, baseEntityId, dateCreated from ".$table." where (locationId LIKE '%$username%')");
                 foreach ($query->result() as $c_data){
                     if(array_key_exists($c_data->baseEntityId, $list_dusun)){
                         $n_dusun = $list_dusun[$c_data->baseEntityId];
@@ -130,7 +130,7 @@ class GiziFhwEcModel extends CI_Model{
                 $query = $giziDB->query("SELECT ".$table.".`locationId`,client_ibu.dusun,count(*) as counts from ".$table." 
                                       left join client_ibu 
                                         on ".$table.".`baseEntityId`=client_ibu.`baseEntityId`
-                                    WHERE (".$table.".locationId LIKE '%$username%')  and ".$table.".eventDate LIKE '".$date."%'
+                                    WHERE (".$table.".locationId LIKE '%$username%')  and ".$table.".dateCreated LIKE '".$date."%'
                                     GROUP BY dusun");
             }else
             $query = $giziDB->query("SELECT ".$table.".`locationId`,client_ibu.dusun,count(*) as counts from ".$table." 
@@ -138,7 +138,7 @@ class GiziFhwEcModel extends CI_Model{
                                         on ".$table.".`baseEntityId`=client_anak.`baseEntityId` 
                                       LEFT JOIN client_ibu
                                         on client_anak.ibuCaseId=client_ibu.baseEntityId
-                                    WHERE (".$table.".locationId LIKE '%$username%') and ".$table.".eventDate LIKE '".$date."%'
+                                    WHERE (".$table.".locationId LIKE '%$username%') and ".$table.".dateCreated LIKE '".$date."%'
                                     GROUP BY dusun");
             foreach ($query->result() as $datas){
                 if(array_key_exists($datas->dusun, $namadusun)){
@@ -210,23 +210,23 @@ class GiziFhwEcModel extends CI_Model{
         
         foreach ($tables as $table=>$legend){
             if($table=='event_gizi_registrasi_gizi'){
-                $query = $giziDB->query("SELECT ".$table.".`locationId`,".$table.".`eventDate`,client_ibu.dusun,count(*) as counts from ".$table." 
+                $query = $giziDB->query("SELECT ".$table.".`locationId`,".$table.".`dateCreated`,client_ibu.dusun,count(*) as counts from ".$table." 
                                       left join client_ibu 
                                         on ".$table.".`baseEntityId`=client_ibu.`baseEntityId`
                                     WHERE (".$table.".locationId LIKE '%$username%')
-                                    GROUP BY dusun,eventDate");
+                                    GROUP BY dusun,dateCreated");
             }else
-            $query = $giziDB->query("SELECT ".$table.".`locationId`,".$table.".`eventDate`,client_ibu.dusun,count(*) as counts from ".$table." 
+            $query = $giziDB->query("SELECT ".$table.".`locationId`,".$table.".`dateCreated`,client_ibu.dusun,count(*) as counts from ".$table." 
                                       left join client_anak 
                                         on ".$table.".`baseEntityId`=client_anak.`baseEntityId` 
                                       LEFT JOIN client_ibu
                                         on client_anak.ibuCaseId=client_ibu.baseEntityId
                                     WHERE (".$table.".locationId LIKE '%$username%')
-                                    GROUP BY dusun,eventDate");
+                                    GROUP BY dusun,dateCreated");
             foreach ($query->result() as $datas){
                 if(array_key_exists($datas->dusun, $namadusun)){
                     $data_count                  = $result_data[$namadusun[$datas->dusun]];
-                    $tgl = explode('T', $datas->eventDate);
+                    $tgl = explode('T', $datas->dateCreated);
                     $tgl = $tgl[0];
                     if(array_key_exists($tgl, $data_count)){
                         $data_count[$tgl] +=$datas->counts;
@@ -235,7 +235,7 @@ class GiziFhwEcModel extends CI_Model{
                 }else{
                     var_dump($datas->dusun);
                     $data_count                  = $result_data["Lainnya"];
-                    $tgl = explode('T', $datas->eventDate);
+                    $tgl = explode('T', $datas->dateCreated);
                     $tgl = $tgl[0];
                     if(array_key_exists($tgl, $data_count)){
                         $data_count[$tgl] +=$datas->counts;
@@ -320,34 +320,34 @@ class GiziFhwEcModel extends CI_Model{
         foreach ($tables as $table=>$legend){
             if($mode=='Mingguan'){
                 if($table=='event_gizi_registrasi_gizi'){
-                    $query = $giziDB->query("SELECT ".$table.".`locationId`,".$table.".`eventDate`,client_ibu.dusun,count(*) as counts from ".$table." 
+                    $query = $giziDB->query("SELECT ".$table.".`locationId`,".$table.".`dateCreated`,client_ibu.dusun,count(*) as counts from ".$table." 
                                           left join client_ibu 
                                             on ".$table.".`baseEntityId`=client_ibu.`baseEntityId`
-                                        WHERE (".$table.".locationId LIKE '%$username%') AND ".$table.".`eventDate` >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND ".$table.".`eventDate` <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."'
-                                        GROUP BY dusun,eventDate");
+                                        WHERE (".$table.".locationId LIKE '%$username%') AND ".$table.".`dateCreated` >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND ".$table.".`dateCreated` <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."'
+                                        GROUP BY dusun,dateCreated");
                 }else
-                $query = $giziDB->query("SELECT ".$table.".`locationId`,".$table.".`eventDate`,client_ibu.dusun,count(*) as counts from ".$table." 
+                $query = $giziDB->query("SELECT ".$table.".`locationId`,".$table.".`dateCreated`,client_ibu.dusun,count(*) as counts from ".$table." 
                                           left join client_anak 
                                             on ".$table.".`baseEntityId`=client_anak.`baseEntityId` 
                                           LEFT JOIN client_ibu
                                             on client_anak.ibuCaseId=client_ibu.baseEntityId
-                                        WHERE (".$table.".locationId LIKE '%$username%')  AND ".$table.".`eventDate` >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND ".$table.".`eventDate` <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."'
-                                        GROUP BY dusun,eventDate");
+                                        WHERE (".$table.".locationId LIKE '%$username%')  AND ".$table.".`dateCreated` >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' AND ".$table.".`dateCreated` <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."'
+                                        GROUP BY dusun,dateCreated");
             }elseif($mode=='Bulanan'){
                 if($table=='event_gizi_registrasi_gizi'){
-                    $query = $giziDB->query("SELECT ".$table.".`locationId`,".$table.".`eventDate`,client_ibu.dusun,count(*) as counts from ".$table." 
+                    $query = $giziDB->query("SELECT ".$table.".`locationId`,".$table.".`dateCreated`,client_ibu.dusun,count(*) as counts from ".$table." 
                                           left join client_ibu 
                                             on ".$table.".`baseEntityId`=client_ibu.`baseEntityId`
-                                        WHERE (".$table.".locationId LIKE '%$username%') AND ".$table.".`eventDate` >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND ".$table.".`eventDate` <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."'
-                                        GROUP BY dusun,eventDate");
+                                        WHERE (".$table.".locationId LIKE '%$username%') AND ".$table.".`dateCreated` >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND ".$table.".`dateCreated` <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."'
+                                        GROUP BY dusun,dateCreated");
                 }else
-                $query = $giziDB->query("SELECT ".$table.".`locationId`,".$table.".`eventDate`,client_ibu.dusun,count(*) as counts from ".$table." 
+                $query = $giziDB->query("SELECT ".$table.".`locationId`,".$table.".`dateCreated`,client_ibu.dusun,count(*) as counts from ".$table." 
                                           left join client_anak 
                                             on ".$table.".`baseEntityId`=client_anak.`baseEntityId` 
                                           LEFT JOIN client_ibu
                                             on client_anak.ibuCaseId=client_ibu.baseEntityId
-                                        WHERE (".$table.".locationId LIKE '%$username%')  AND ".$table.".`eventDate` >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND ".$table.".`eventDate` <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."'
-                                        GROUP BY dusun,eventDate");
+                                        WHERE (".$table.".locationId LIKE '%$username%')  AND ".$table.".`dateCreated` >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND ".$table.".`dateCreated` <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."'
+                                        GROUP BY dusun,dateCreated");
             }
             
             
@@ -357,7 +357,7 @@ class GiziFhwEcModel extends CI_Model{
                         $week   =   $result_data[$namadusun[$datas->dusun]];
                         $thisweek   = $week['thisweek'];
                         $lastweek   = $week['lastweek'];
-                        $tgl = explode('T', $datas->eventDate);
+                        $tgl = explode('T', $datas->dateCreated);
                         $tgl = $tgl[0];
                         if(array_key_exists($tgl, $thisweek)){
                             $thisweek[$tgl] +=$datas->counts;
@@ -372,7 +372,7 @@ class GiziFhwEcModel extends CI_Model{
                         $week   =   $result_data["Lainnya"];
                         $thisweek   = $week['thisweek'];
                         $lastweek   = $week['lastweek'];
-                        $tgl = explode('T', $datas->eventDate);
+                        $tgl = explode('T', $datas->dateCreated);
                         $tgl = $tgl[0];
                         if(array_key_exists($tgl, $thisweek)){
                             $thisweek[$tgl] +=$datas->counts;
@@ -389,7 +389,7 @@ class GiziFhwEcModel extends CI_Model{
                         $month = $result_data[$namadusun[$datas->dusun]];
                         $thisyear = $month['thisyear'];
                         $lastyear = $month['lastyear'];
-                        $tgl = explode('T', $datas->eventDate);
+                        $tgl = explode('T', $datas->dateCreated);
                         $tgl = $tgl[0];
                         $m = explode('-', $tgl);
                         array_pop($m);
@@ -407,7 +407,7 @@ class GiziFhwEcModel extends CI_Model{
                         $month = $result_data["Lainnya"];
                         $thisyear = $month['thisyear'];
                         $lastyear = $month['lastyear'];
-                        $tgl = explode('T', $datas->eventDate);
+                        $tgl = explode('T', $datas->dateCreated);
                         $tgl = $tgl[0];
                         $m = explode('-', $tgl);
                         array_pop($m);

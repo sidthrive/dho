@@ -42,7 +42,7 @@ class AnalyticsFhwEcModel extends CI_Model{
         }
         
         foreach ($table_default as $table=>$legend){
-            $query = $analyticsDB->query("SELECT locationId, baseEntityId, eventDate from ".$table." where (locationId LIKE '%$username%')");
+            $query = $analyticsDB->query("SELECT locationId, baseEntityId, dateCreated from ".$table." where (locationId LIKE '%$username%')");
             foreach ($query->result() as $c_data){
                 $query2 = $analyticsDB->query("SELECT dusun FROM client_ibu where baseEntityId='$c_data->baseEntityId' LIMIT 1");
                 foreach ($query2->result() as $c2_data){
@@ -106,7 +106,7 @@ class AnalyticsFhwEcModel extends CI_Model{
         $result_data = $data;
         
         foreach ($tables as $table=>$legend){
-            $query = $analyticsDB->query("SELECT locationId, baseEntityId, eventDate from ".$table." where (locationId LIKE '%$username%') and eventDate LIKE '".$date."%'");
+            $query = $analyticsDB->query("SELECT locationId, baseEntityId, dateCreated from ".$table." where (locationId LIKE '%$username%') and dateCreated LIKE '".$date."%'");
             foreach ($query->result() as $c_data){
                 $query2 = $analyticsDB->query("SELECT dusun FROM client_ibu where baseEntityId='$c_data->baseEntityId' LIMIT 1");
                 foreach ($query2->result() as $c2_data){
@@ -179,13 +179,13 @@ class AnalyticsFhwEcModel extends CI_Model{
         }
         
         foreach ($tables as $table=>$legend){
-            $query = $analyticsDB->query("SELECT locationId, baseEntityId, eventDate from ".$table." where (locationId LIKE '%$username%')");
+            $query = $analyticsDB->query("SELECT locationId, baseEntityId, dateCreated from ".$table." where (locationId LIKE '%$username%')");
             foreach ($query->result() as $c_data){
                 $query2 = $analyticsDB->query("SELECT dusun FROM client_ibu where baseEntityId='$c_data->baseEntityId' LIMIT 1");
                 foreach ($query2->result() as $c2_data){
                     if(array_key_exists($c2_data->dusun, $namadusun)){
                         $data_count                  = $result_data[$namadusun[$c2_data->dusun]];
-                        $tgl = explode('T', $c_data->eventDate);
+                        $tgl = explode('T', $c_data->dateCreated);
                         $tgl = trim($tgl[0]);
                         if(array_key_exists($tgl, $data_count)){
                             $data_count[$tgl] += 1;;
@@ -276,13 +276,13 @@ class AnalyticsFhwEcModel extends CI_Model{
         
         foreach ($tables as $table=>$legend){
             if($mode=='Mingguan'){
-                $query = $analyticsDB->query("SELECT locationId, baseEntityId, eventDate from ".$table." where (locationId LIKE '%$username%') and (eventDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' and eventDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."')");
+                $query = $analyticsDB->query("SELECT locationId, baseEntityId, dateCreated from ".$table." where (locationId LIKE '%$username%') and (dateCreated >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-5 days"))."' and dateCreated <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")))."')");
             }elseif($mode=='Bulanan'){
-                $query = $analyticsDB->query("SELECT locationId, baseEntityId, eventDate from ".$table." where (locationId LIKE '%$username%') and (eventDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' and eventDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."')");
+                $query = $analyticsDB->query("SELECT locationId, baseEntityId, dateCreated from ".$table." where (locationId LIKE '%$username%') and (dateCreated >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' and dateCreated <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."')");
             }
             foreach ($query->result() as $c_data){
                 $query2 = $analyticsDB->query("SELECT dusun FROM client_ibu where baseEntityId='$c_data->baseEntityId' LIMIT 1");
-                $tgl = explode('T', $c_data->eventDate);
+                $tgl = explode('T', $c_data->dateCreated);
                 $tgl = trim($tgl[0]);
                 foreach ($query2->result() as $c2_data){
                     if($mode=='Mingguan'){

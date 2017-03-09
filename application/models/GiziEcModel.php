@@ -61,15 +61,15 @@ class GiziEcModel extends CI_Model{
             
             //query tha data
             if($range!=""){
-                $query = $giziDB->query("SELECT locationId as userid, eventDate,count(*) as counts from ".$table." where ($location) AND eventDate >= '".$range[0]."' AND eventDate <= '".$range[1]."' group by locationId, eventDate");
+                $query = $giziDB->query("SELECT locationId as userid, dateCreated,count(*) as counts from ".$table." where ($location) AND dateCreated >= '".$range[0]."' AND dateCreated <= '".$range[1]."' group by locationId, dateCreated");
             }else{
-                $query = $giziDB->query("SELECT locationId as userid, eventDate,count(*) as counts from ".$table." where ($location) AND eventDate >= '".date("Y-m-d",strtotime("-30 days"))."' AND eventDate <= '".date("Y-m-d")."' group by locationId, eventDate");
+                $query = $giziDB->query("SELECT locationId as userid, dateCreated,count(*) as counts from ".$table." where ($location) AND dateCreated >= '".date("Y-m-d",strtotime("-30 days"))."' AND dateCreated <= '".date("Y-m-d")."' group by locationId, dateCreated");
             }
             foreach ($query->result() as $datas){
                 $datas->userid = trim($datas->userid);
                 if(array_key_exists($datas->userid, $users)){
                     $data_count                  = $result_data[$users[$datas->userid]];
-                    $tgl = explode('T', $datas->eventDate);
+                    $tgl = explode('T', $datas->dateCreated);
                     $tgl = $tgl[0];
                     if(array_key_exists($tgl, $data_count)){
                         $data_count[$tgl] +=$datas->counts;
@@ -135,15 +135,15 @@ class GiziEcModel extends CI_Model{
         foreach ($tables as $table=>$legend){
             //query tha data
             if($range!=""){
-                $query = $giziDB->query("SELECT locationId as userid, eventDate,count(*) as counts from ".$table." where ($location) AND eventDate >= '".$range[0]."' AND eventDate <= '".$range[1]."' group by locationId, eventDate");
+                $query = $giziDB->query("SELECT locationId as userid, dateCreated,count(*) as counts from ".$table." where ($location) AND dateCreated >= '".$range[0]."' AND dateCreated <= '".$range[1]."' group by locationId, dateCreated");
             }else{
-                $query = $giziDB->query("SELECT locationId as userid, eventDate,count(*) as counts from ".$table." where ($location) AND eventDate >= '".date("Y-m-d",strtotime("-30 days"))."' AND eventDate <= '".date("Y-m-d")."' group by locationId, eventDate");
+                $query = $giziDB->query("SELECT locationId as userid, dateCreated,count(*) as counts from ".$table." where ($location) AND dateCreated >= '".date("Y-m-d",strtotime("-30 days"))."' AND dateCreated <= '".date("Y-m-d")."' group by locationId, dateCreated");
             }
             foreach ($query->result() as $datas){
                 $datas->userid = trim($datas->userid);
                 if(array_key_exists($datas->userid, $users)){
                     $data_count                  = $result_data[$users[$datas->userid]];
-                    $tgl = explode('T', $datas->eventDate);
+                    $tgl = explode('T', $datas->dateCreated);
                     $tgl = $tgl[0];
                     if(array_key_exists($tgl, $data_count)){
                         $data_count[$tgl] +=$datas->counts;
@@ -226,9 +226,9 @@ class GiziEcModel extends CI_Model{
             
             //query tha data
             if($mode=='Mingguan'){
-                $query = $giziDB->query("SELECT locationId as userid, eventDate,count(*) as counts from ".$table." where ($location) AND eventDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 7)?"last Saturday ":"-7 days")."-5 days"))."' AND eventDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"-1 days")))."' group by locationId, eventDate");
+                $query = $giziDB->query("SELECT locationId as userid, dateCreated,count(*) as counts from ".$table." where ($location) AND dateCreated >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 7)?"last Saturday ":"-7 days")."-5 days"))."' AND dateCreated <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"-1 days")))."' group by locationId, dateCreated");
             }elseif($mode=='Bulanan'){
-                $query = $giziDB->query("SELECT locationId as userid, eventDate,count(*) as counts from ".$table." where ($location) AND eventDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND eventDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by locationId, eventDate");
+                $query = $giziDB->query("SELECT locationId as userid, dateCreated,count(*) as counts from ".$table." where ($location) AND dateCreated >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND dateCreated <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by locationId, dateCreated");
             }
             
             foreach ($query->result() as $datas){
@@ -238,7 +238,7 @@ class GiziEcModel extends CI_Model{
                         $week   =   $result_data[$users[$datas->userid]];
                         $thisweek   = $week['thisweek'];
                         $lastweek   = $week['lastweek'];
-                        $tgl = explode('T', $datas->eventDate);
+                        $tgl = explode('T', $datas->dateCreated);
                         $tgl = $tgl[0];
                         if(array_key_exists($tgl, $thisweek)){
                             $thisweek[$tgl] +=$datas->counts;
@@ -253,7 +253,7 @@ class GiziEcModel extends CI_Model{
                         $month = $result_data[$users[$datas->userid]];
                         $thisyear = $month['thisyear'];
                         $lastyear = $month['lastyear'];
-                        $tgl = explode('T', $datas->eventDate);
+                        $tgl = explode('T', $datas->dateCreated);
                         $tgl = $tgl[0];
                         $m = explode('-', $tgl);
                         array_pop($m);
@@ -309,7 +309,7 @@ class GiziEcModel extends CI_Model{
         foreach ($table_default as $table=>$legend){
             
             //query tha data
-            $query = $giziDB->query("SELECT locationId as userid, eventDate,count(*) as counts from ".$table." where ($location) AND eventDate >= '$start' AND eventDate <= '$end' group by locationId, eventDate");
+            $query = $giziDB->query("SELECT locationId as userid, dateCreated,count(*) as counts from ".$table." where ($location) AND dateCreated >= '$start' AND dateCreated <= '$end' group by locationId, dateCreated");
             
             foreach ($query->result() as $datas){
                 $datas->userid = trim($datas->userid);
@@ -363,7 +363,7 @@ class GiziEcModel extends CI_Model{
             }
             
             //query tha data
-            $query = $giziDB->query("SELECT locationId as userid, eventDate,count(*) as counts from ".$table." where ($location) AND eventDate >= '$start' AND eventDate <= '$end' group by locationId, eventDate");
+            $query = $giziDB->query("SELECT locationId as userid, dateCreated,count(*) as counts from ".$table." where ($location) AND dateCreated >= '$start' AND dateCreated <= '$end' group by locationId, dateCreated");
             
             foreach ($query->result() as $datas){
                 $datas->userid = trim($datas->userid);
@@ -414,7 +414,7 @@ class GiziEcModel extends CI_Model{
             
             //query tha data
             reset($users);
-            $query3 = $giziDB->query("SELECT locationId as userid, eventDate,count(*) as counts from ".$table." where eventDate LIKE '".$date."%' group by locationId, eventDate");
+            $query3 = $giziDB->query("SELECT locationId as userid, dateCreated,count(*) as counts from ".$table." where dateCreated LIKE '".$date."%' group by locationId, dateCreated");
             foreach ($query3->result() as $datas){
                 $datas->userid = trim($datas->userid);
                 if(array_key_exists($datas->userid, $users)){
@@ -465,7 +465,7 @@ class GiziEcModel extends CI_Model{
         foreach ($tables as $table=>$legend){
             //query tha data
             reset($users);
-            $query3 = $giziDB->query("SELECT locationId as userid, eventDate,count(*) as counts from ".$table." where eventDate LIKE '".$date."%' group by locationId, eventDate");
+            $query3 = $giziDB->query("SELECT locationId as userid, dateCreated,count(*) as counts from ".$table." where dateCreated LIKE '".$date."%' group by locationId, dateCreated");
             foreach ($query3->result() as $datas){
                 $datas->userid = trim($datas->userid);
                 if(array_key_exists($datas->userid, $users)){
