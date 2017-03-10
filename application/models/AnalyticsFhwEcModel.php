@@ -50,11 +50,12 @@ class AnalyticsFhwEcModel extends CI_Model{
                         $data_count                  = $result_data[$namadusun[$c2_data->dusun]];
                         $data_count[$legend]         += 1;
                         $result_data[$namadusun[$c2_data->dusun]] = $data_count;
-                    }else{
-                        $data_count                  = $result_data["Lainnya"];
-                        $data_count[$legend]         += 1;
-                        $result_data["Lainnya"] = $data_count;
                     }
+//                    else{
+//                        $data_count                  = $result_data["Lainnya"];
+//                        $data_count[$legend]         += 1;
+//                        $result_data["Lainnya"] = $data_count;
+//                    }
                 }
             }
         }
@@ -191,13 +192,16 @@ class AnalyticsFhwEcModel extends CI_Model{
                             $data_count[$tgl] += 1;;
                         }
                         $result_data[$namadusun[$c2_data->dusun]] = $data_count;
-                    }else{
-                        $data_count                  = $result_data["Lainnya"];
-                        if(array_key_exists($tgl, $data_count)){
-                            $data_count[$tgl] += 1;;
-                        }
-                        $result_data["Lainnya"] = $data_count;
                     }
+//                    else{
+//                        $tgl = explode('T', $c_data->dateCreated);
+//                        $tgl = trim($tgl[0]);
+//                        $data_count                  = $result_data["Lainnya"];
+//                        if(array_key_exists($tgl, $data_count)){
+//                            $data_count[$tgl] += 1;;
+//                        }
+//                        $result_data["Lainnya"] = $data_count;
+//                    }
                 }
             }
         }
