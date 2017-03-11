@@ -47,16 +47,11 @@ class BidanEcPwsModel extends CI_Model{
             if(array_key_exists($bumil->baseEntityId, $bumildata)){
                 foreach ($bumildata[$bumil->baseEntityId] as $bum){
                     if($bum->highRiskPregnancyProteinEnergyMalnutrition=="yes"
-                        ||$bum->malariaRisk=="yes"
                         ||$bum->highRiskLabourTBRisk=="yes"
                         ||$bum->HighRiskPregnancyTooManyChildren=="yes"
                         ||$bum->HighRiskPregnancyAbortus=="yes"
                         ||$bum->HighRiskLabourSectionCesareaRecord=="yes"
-                        ||$bum->highRiskSTIBBVs=="yes"
                         ||$bum->highRiskEctopicPregnancy=="yes"
-                        ||$bum->otherRiskMolaHidatidosa=="yes"
-                        ||$bum->otherRiskCongenitalAbnormality=="yes"
-                        ||$bum->otherRiskEarlyWaterbreak=="yes"
                         ||$bum->highRiskCardiovascularDiseaseRecord=="yes"
                         ||$bum->highRiskDidneyDisorder=="yes"
                         ||$bum->highRiskHeartDisorder=="yes"
@@ -120,172 +115,159 @@ class BidanEcPwsModel extends CI_Model{
         $result_index['bulin'] = $this->setArrayIndex($user, 'D', 11);
         $result_index['bufas'] = $this->setArrayIndex($user, 'E', 11);
         
-//        $query = $this->db->query("SELECT userID,baseEntityId,ancDate FROM event_bidan_kunjungan_anc WHERE (ancDate > '$startyear' AND ancDate < '$startdate') AND (ancKe=1 AND kunjunganKe=1) group by baseEntityId")->result();
-//        foreach ($query as $k1){
-//            if(array_key_exists($k1->userID, $user_index)){
-//                if(!$this->isHaveDoneAnc1($k1)){
-//                    $key=array_search($user_index[$k1->userID],$result['desa']);
-//                    $result['cakupan_k1_bulan_lalu'][$key] += 1;
-//                }
-//            }
-//        }
+        $query = $this->db->query("SELECT locationId,baseEntityId,ancDate FROM event_bidan_kunjungan_anc WHERE (ancDate > '$startyear' AND ancDate < '$startdate') AND (ancKe=1 AND kunjunganKe=1) group by baseEntityId")->result();
+        foreach ($query as $k1){
+            if(array_key_exists($k1->locationId, $user_index)){
+                if(!$this->isHaveDoneAnc1($k1)){
+                    $key=array_search($user_index[$k1->locationId],$result['desa']);
+                    $result['cakupan_k1_bulan_lalu'][$key] += 1;
+                }
+            }
+        }
+        
 //        
-//        $query = $this->db->query("SELECT userID,baseEntityId,ancDate FROM event_bidan_kunjungan_anc WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND (ancKe=1 AND kunjunganKe=1) group by baseEntityId")->result();
-//        foreach ($query as $k1){
-//            if(array_key_exists($k1->userID, $user_index)){
-//                if(!$this->isHaveDoneAnc1($k1)){
-//                    $key=array_search($user_index[$k1->userID],$result['desa']);
-//                    $result['cakupan_k1_bulan_ini'][$key] += 1;
-//                }
-//            }
-//        }
+        $query = $this->db->query("SELECT locationId,baseEntityId,ancDate FROM event_bidan_kunjungan_anc WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND (ancKe=1 AND kunjunganKe=1) group by baseEntityId")->result();
+        foreach ($query as $k1){
+            if(array_key_exists($k1->locationId, $user_index)){
+                if(!$this->isHaveDoneAnc1($k1)){
+                    $key=array_search($user_index[$k1->locationId],$result['desa']);
+                    $result['cakupan_k1_bulan_ini'][$key] += 1;
+                }
+            }
+        }
 //        
-//        $query = $this->db->query("SELECT userID,baseEntityId,ancDate FROM event_bidan_kunjungan_anc WHERE (ancDate > '$startyear' AND ancDate < '$startdate') AND ancKe=4 group by baseEntityId")->result();
-//        foreach ($query as $k4){
-//            if(array_key_exists($k4->userID, $user_index)){
-//                if(!$this->isHaveDoneAnc4($k4)){
-//                    $key=array_search($user_index[$k4->userID],$result['desa']);
-//                    $result['cakupan_k4_bulan_lalu'][$key] += 1;
-//                }
-//            }
-//        }
-//        $query = $this->db->query("SELECT userID,baseEntityId,ancDate FROM event_bidan_kunjungan_anc WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND ancKe=4 group by baseEntityId")->result();
-//        foreach ($query as $k4){
-//            if(array_key_exists($k4->userID, $user_index)){
-//                if(!$this->isHaveDoneAnc4($k4)){
-//                    $key=array_search($user_index[$k4->userID],$result['desa']);
-//                    $result['cakupan_k4_bulan_ini'][$key] += 1;
-//                }
-//            }
-//        }
+        $query = $this->db->query("SELECT locationId,baseEntityId,ancDate FROM event_bidan_kunjungan_anc WHERE (ancDate > '$startyear' AND ancDate < '$startdate') AND ancKe=4 group by baseEntityId")->result();
+        foreach ($query as $k4){
+            if(array_key_exists($k4->locationId, $user_index)){
+                if(!$this->isHaveDoneAnc4($k4)){
+                    $key=array_search($user_index[$k4->locationId],$result['desa']);
+                    $result['cakupan_k4_bulan_lalu'][$key] += 1;
+                }
+            }
+        }
+        $query = $this->db->query("SELECT locationId,baseEntityId,ancDate FROM event_bidan_kunjungan_anc WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND ancKe=4 group by baseEntityId")->result();
+        foreach ($query as $k4){
+            if(array_key_exists($k4->locationId, $user_index)){
+                if(!$this->isHaveDoneAnc4($k4)){
+                    $key=array_search($user_index[$k4->locationId],$result['desa']);
+                    $result['cakupan_k4_bulan_ini'][$key] += 1;
+                }
+            }
+        }
 //        
-//        $query = $this->db->query("SELECT userID,baseEntityId,ancDate,highRiskPregnancyProteinEnergyMalnutrition,highRiskPregnancyPIH,highRisklabourFetusNumber,highRiskLabourFetusSize,highRiskLabourFetusMalpresentation FROM event_bidan_kunjungan_anc WHERE (ancDate > '$startyear' AND ancDate < '$startdate')")->result();
-//        $query2 = $this->db->query("SELECT userID,baseEntityId,ancDate,highRiskPregnancyProteinEnergyMalnutrition,highRiskPregnancyPIH,highRisklabourFetusNumber,highRiskLabourFetusSize,highRiskLabourFetusMalpresentation FROM event_bidan_kunjungan_anc ORDER BY ancDate")->result();
-//        $resikos = [];
-//        foreach ($query2 as $q){
-//            if(!array_key_exists($q->baseEntityId, $resikos)){
-//                $resikos[$q->baseEntityId] = [];
-//                array_push($resikos[$q->baseEntityId], $q);
-//            }else{
-//                array_push($resikos[$q->baseEntityId], $q);
-//            }
-//        }
-//        $query2 = $this->db->query("SELECT baseEntityId,"
-//                . "highRiskPregnancyProteinEnergyMalnutrition,"
-//                . "malariaRisk,"
-//                . "highRiskLabourTBRisk,"
-//                . "HighRiskPregnancyTooManyChildren,"
-//                . "HighRiskPregnancyAbortus,"
-//                . "HighRiskLabourSectionCesareaRecord,"
-//                . "highRiskSTIBBVs,"
-//                . "highRiskEctopicPregnancy,"
-//                . "otherRiskMolaHidatidosa,"
-//                . "otherRiskCongenitalAbnormality,"
-//                . "otherRiskEarlyWaterbreak,"
-//                . "highRiskCardiovascularDiseaseRecord,"
-//                . "highRiskDidneyDisorder,"
-//                . "highRiskHeartDisorder,"
-//                . "highRiskAsthma,"
-//                . "highRiskTuberculosis,"
-//                . "highRiskMalaria,"
-//                . "highRiskHIVAIDS FROM kartu_anc_registration")->result();
-//        $bumildata = [];
-//        foreach ($query2 as $q){
-//            if(!array_key_exists($q->baseEntityId, $bumildata)){
-//                $bumildata[$q->baseEntityId] = [];
-//                array_push($bumildata[$q->baseEntityId], $q);
-//            }
-//        }
-//        $bumil = [];
-//        foreach ($query as $resiko){
-//            if(array_key_exists($resiko->userID, $user_index)){
-//                if(!array_key_exists($resiko->baseEntityId, $bumil)){
-//                    if(!$this->isHRP($resiko,$resikos,$bumildata)){
-//                        if($resiko->highRiskPregnancyProteinEnergyMalnutrition=="yes"
-//                        ||$resiko->highRiskPregnancyPIH=="yes"
-//                        ||$resiko->highRisklabourFetusNumber=="yes"
-//                        ||$resiko->highRiskLabourFetusSize=="yes"
-//                        ||$resiko->highRiskLabourFetusMalpresentation=="yes"){
-//                            $key=array_search($user_index[$resiko->userID],$result['desa']);
-//                            $result['cakupan_resiko_bulan_lalu'][$key] += 1;
-//                            $bumil[$resiko->baseEntityId] = 'yes';
-//                        }else{
-//                            if(array_key_exists($resiko->baseEntityId, $bumildata)){
-//                                foreach ($bumildata[$resiko->baseEntityId] as $bum){
-//                                    if($bum->highRiskPregnancyProteinEnergyMalnutrition=="yes"
-//                                        ||$bum->malariaRisk=="yes"
-//                                        ||$bum->highRiskLabourTBRisk=="yes"
-//                                        ||$bum->HighRiskPregnancyTooManyChildren=="yes"
-//                                        ||$bum->HighRiskPregnancyAbortus=="yes"
-//                                        ||$bum->HighRiskLabourSectionCesareaRecord=="yes"
-//                                        ||$bum->highRiskSTIBBVs=="yes"
-//                                        ||$bum->highRiskEctopicPregnancy=="yes"
-//                                        ||$bum->otherRiskMolaHidatidosa=="yes"
-//                                        ||$bum->otherRiskCongenitalAbnormality=="yes"
-//                                        ||$bum->otherRiskEarlyWaterbreak=="yes"
-//                                        ||$bum->highRiskCardiovascularDiseaseRecord=="yes"
-//                                        ||$bum->highRiskDidneyDisorder=="yes"
-//                                        ||$bum->highRiskHeartDisorder=="yes"
-//                                        ||$bum->highRiskAsthma=="yes"
-//                                        ||$bum->highRiskTuberculosis=="yes"
-//                                        ||$bum->highRiskMalaria=="yes"
-//                                        ||$bum->highRiskHIVAIDS=="yes"){
-//                                        $key=array_search($user_index[$resiko->userID],$result['desa']);
-//                                        $result['cakupan_resiko_bulan_lalu'][$key] += 1;
-//                                        $bumil[$resiko->baseEntityId] = 'yes';
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        $query = $this->db->query("SELECT userID,baseEntityId,ancDate,highRiskPregnancyProteinEnergyMalnutrition,highRiskPregnancyPIH,highRisklabourFetusNumber,highRiskLabourFetusSize,highRiskLabourFetusMalpresentation FROM event_bidan_kunjungan_anc WHERE (ancDate > '$startdate' AND ancDate < '$enddate')")->result();
-//        foreach ($query as $resiko){
-//            if(array_key_exists($resiko->userID, $user_index)){
-//                if(!array_key_exists($resiko->baseEntityId, $bumil)){
-//                    if(!$this->isHRP($resiko,$resikos,$bumildata)){
-//                        if($resiko->highRiskPregnancyProteinEnergyMalnutrition=="yes"
-//                        ||$resiko->highRiskPregnancyPIH=="yes"
-//                        ||$resiko->highRisklabourFetusNumber=="yes"
-//                        ||$resiko->highRiskLabourFetusSize=="yes"
-//                        ||$resiko->highRiskLabourFetusMalpresentation=="yes"){
-//                            $key=array_search($user_index[$resiko->userID],$result['desa']);
-//                            $result['cakupan_resiko_bulan_ini'][$key] += 1;
-//                            $bumil[$resiko->baseEntityId] = 'yes';
-//                        }else{
-//                            if(array_key_exists($resiko->baseEntityId, $bumildata)){
-//                                foreach ($bumildata[$resiko->baseEntityId] as $bum){
-//                                    if($bum->highRiskPregnancyProteinEnergyMalnutrition=="yes"
-//                                        ||$bum->malariaRisk=="yes"
-//                                        ||$bum->highRiskLabourTBRisk=="yes"
-//                                        ||$bum->HighRiskPregnancyTooManyChildren=="yes"
-//                                        ||$bum->HighRiskPregnancyAbortus=="yes"
-//                                        ||$bum->HighRiskLabourSectionCesareaRecord=="yes"
-//                                        ||$bum->highRiskSTIBBVs=="yes"
-//                                        ||$bum->highRiskEctopicPregnancy=="yes"
-//                                        ||$bum->otherRiskMolaHidatidosa=="yes"
-//                                        ||$bum->otherRiskCongenitalAbnormality=="yes"
-//                                        ||$bum->otherRiskEarlyWaterbreak=="yes"
-//                                        ||$bum->highRiskCardiovascularDiseaseRecord=="yes"
-//                                        ||$bum->highRiskDidneyDisorder=="yes"
-//                                        ||$bum->highRiskHeartDisorder=="yes"
-//                                        ||$bum->highRiskAsthma=="yes"
-//                                        ||$bum->highRiskTuberculosis=="yes"
-//                                        ||$bum->highRiskMalaria=="yes"
-//                                        ||$bum->highRiskHIVAIDS=="yes"){
-//                                        $key=array_search($user_index[$resiko->userID],$result['desa']);
-//                                        $result['cakupan_resiko_bulan_ini'][$key] += 1;
-//                                        $bumil[$resiko->baseEntityId] = 'yes';
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
+        $query = $this->db->query("SELECT locationId,baseEntityId,ancDate,highRiskPregnancyProteinEnergyMalnutrition,highRiskPregnancyPIH,highRisklabourFetusNumber,highRiskLabourFetusSize,highRiskLabourFetusMalpresentation FROM event_bidan_kunjungan_anc WHERE (ancDate > '$startyear' AND ancDate < '$startdate')")->result();
+        $query2 = $this->db->query("SELECT locationId,baseEntityId,ancDate,highRiskPregnancyProteinEnergyMalnutrition,highRiskPregnancyPIH,highRisklabourFetusNumber,highRiskLabourFetusSize,highRiskLabourFetusMalpresentation FROM event_bidan_kunjungan_anc ORDER BY ancDate")->result();
+        $resikos = [];
+        foreach ($query2 as $q){
+            if(!array_key_exists($q->baseEntityId, $resikos)){
+                $resikos[$q->baseEntityId] = [];
+                array_push($resikos[$q->baseEntityId], $q);
+            }else{
+                array_push($resikos[$q->baseEntityId], $q);
+            }
+        }
+        
+        $query2 = $this->db->query("SELECT baseEntityId,"
+                . "highRiskPregnancyProteinEnergyMalnutrition,"
+                . "highRiskLabourTBRisk,"
+                . "HighRiskPregnancyTooManyChildren,"
+                . "HighRiskPregnancyAbortus,"
+                . "HighRiskLabourSectionCesareaRecord,"
+                . "highRiskEctopicPregnancy,"
+                . "highRiskCardiovascularDiseaseRecord,"
+                . "highRiskDidneyDisorder,"
+                . "highRiskHeartDisorder,"
+                . "highRiskAsthma,"
+                . "highRiskTuberculosis,"
+                . "highRiskMalaria,"
+                . "highRiskHIVAIDS FROM event_bidan_tambah_anc")->result();
+        $bumildata = [];
+        foreach ($query2 as $q){
+            if(!array_key_exists($q->baseEntityId, $bumildata)){
+                $bumildata[$q->baseEntityId] = [];
+                array_push($bumildata[$q->baseEntityId], $q);
+            }
+        }
+        $bumil = [];
+        foreach ($query as $resiko){
+            if(array_key_exists($resiko->locationId, $user_index)){
+                if(!array_key_exists($resiko->baseEntityId, $bumil)){
+                    if(!$this->isHRP($resiko,$resikos,$bumildata)){
+                        if($resiko->highRiskPregnancyProteinEnergyMalnutrition=="yes"
+                        ||$resiko->highRiskPregnancyPIH=="yes"
+                        ||$resiko->highRisklabourFetusNumber=="yes"
+                        ||$resiko->highRiskLabourFetusSize=="yes"
+                        ||$resiko->highRiskLabourFetusMalpresentation=="yes"){
+                            $key=array_search($user_index[$resiko->locationId],$result['desa']);
+                            $result['cakupan_resiko_bulan_lalu'][$key] += 1;
+                            $bumil[$resiko->baseEntityId] = 'yes';
+                        }else{
+                            if(array_key_exists($resiko->baseEntityId, $bumildata)){
+                                foreach ($bumildata[$resiko->baseEntityId] as $bum){
+                                    if($bum->highRiskPregnancyProteinEnergyMalnutrition=="yes"
+                                        ||$bum->highRiskLabourTBRisk=="yes"
+                                        ||$bum->HighRiskPregnancyTooManyChildren=="yes"
+                                        ||$bum->HighRiskPregnancyAbortus=="yes"
+                                        ||$bum->HighRiskLabourSectionCesareaRecord=="yes"
+                                        ||$bum->highRiskEctopicPregnancy=="yes"
+                                        ||$bum->highRiskCardiovascularDiseaseRecord=="yes"
+                                        ||$bum->highRiskDidneyDisorder=="yes"
+                                        ||$bum->highRiskHeartDisorder=="yes"
+                                        ||$bum->highRiskAsthma=="yes"
+                                        ||$bum->highRiskTuberculosis=="yes"
+                                        ||$bum->highRiskMalaria=="yes"
+                                        ||$bum->highRiskHIVAIDS=="yes"){
+                                        $key=array_search($user_index[$resiko->locationId],$result['desa']);
+                                        $result['cakupan_resiko_bulan_lalu'][$key] += 1;
+                                        $bumil[$resiko->baseEntityId] = 'yes';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        $query = $this->db->query("SELECT locationId,baseEntityId,ancDate,highRiskPregnancyProteinEnergyMalnutrition,highRiskPregnancyPIH,highRisklabourFetusNumber,highRiskLabourFetusSize,highRiskLabourFetusMalpresentation FROM event_bidan_kunjungan_anc WHERE (ancDate > '$startdate' AND ancDate < '$enddate')")->result();
+        foreach ($query as $resiko){
+            if(array_key_exists($resiko->locationId, $user_index)){
+                if(!array_key_exists($resiko->baseEntityId, $bumil)){
+                    if(!$this->isHRP($resiko,$resikos,$bumildata)){
+                        if($resiko->highRiskPregnancyProteinEnergyMalnutrition=="yes"
+                        ||$resiko->highRiskPregnancyPIH=="yes"
+                        ||$resiko->highRisklabourFetusNumber=="yes"
+                        ||$resiko->highRiskLabourFetusSize=="yes"
+                        ||$resiko->highRiskLabourFetusMalpresentation=="yes"){
+                            $key=array_search($user_index[$resiko->locationId],$result['desa']);
+                            $result['cakupan_resiko_bulan_ini'][$key] += 1;
+                            $bumil[$resiko->baseEntityId] = 'yes';
+                        }else{
+                            if(array_key_exists($resiko->baseEntityId, $bumildata)){
+                                foreach ($bumildata[$resiko->baseEntityId] as $bum){
+                                    if($bum->highRiskPregnancyProteinEnergyMalnutrition=="yes"
+                                        ||$bum->highRiskLabourTBRisk=="yes"
+                                        ||$bum->HighRiskPregnancyTooManyChildren=="yes"
+                                        ||$bum->HighRiskPregnancyAbortus=="yes"
+                                        ||$bum->HighRiskLabourSectionCesareaRecord=="yes"
+                                        ||$bum->highRiskEctopicPregnancy=="yes"
+                                        ||$bum->highRiskCardiovascularDiseaseRecord=="yes"
+                                        ||$bum->highRiskDidneyDisorder=="yes"
+                                        ||$bum->highRiskHeartDisorder=="yes"
+                                        ||$bum->highRiskAsthma=="yes"
+                                        ||$bum->highRiskTuberculosis=="yes"
+                                        ||$bum->highRiskMalaria=="yes"
+                                        ||$bum->highRiskHIVAIDS=="yes"){
+                                        $key=array_search($user_index[$resiko->locationId],$result['desa']);
+                                        $result['cakupan_resiko_bulan_ini'][$key] += 1;
+                                        $bumil[$resiko->baseEntityId] = 'yes';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
         
         $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_ibu1.xlsx",$result,$result_index);
     }
@@ -335,41 +317,41 @@ class BidanEcPwsModel extends CI_Model{
         $result_index['bumil'] = $this->setArrayIndex($user, 'C', 11);
         $result_index['bulin'] = $this->setArrayIndex($user, 'D', 11);
         $result_index['bufas'] = $this->setArrayIndex($user, 'E', 11);
-//        
-//        $query2 = $this->db->query("SELECT baseEntityId,ancDate,komplikasidalamKehamilan FROM event_bidan_kunjungan_anc ORDER BY ancDate")->result();
-//        $komplikasi = [];
-//        foreach ($query2 as $q){
-//            if(!array_key_exists($q->baseEntityId, $komplikasi)){
-//                $komplikasi[$q->baseEntityId] = [];
-//                array_push($komplikasi[$q->baseEntityId], $q);
-//            }else{
-//                array_push($komplikasi[$q->baseEntityId], $q);
-//            }
-//        }
-//        
-//        $query = $this->db->query("SELECT userID,baseEntityId,ancDate,komplikasidalamKehamilan FROM event_bidan_kunjungan_anc WHERE (ancDate > '$startyear' AND ancDate < '$startdate')")->result();
-//        foreach ($query as $k1){
-//            if(array_key_exists($k1->userID, $user_index)){
-//                if(!$this->isHaveKomplikasiBefore($k1,$komplikasi)){
-//                    if($k1->komplikasidalamKehamilan!=''&&$k1->komplikasidalamKehamilan!='None'&&$k1->komplikasidalamKehamilan!='tidak_ada_komplikasi'){
-//                        $key=array_search($user_index[$k1->userID],$result['desa']);
-//                        $result['komplikasi_bulan_lalu'][$key] += 1;
-//                    }
-//                }
-//            }
-//        }
-//        
-//        $query = $this->db->query("SELECT userID,baseEntityId,ancDate,komplikasidalamKehamilan FROM event_bidan_kunjungan_anc WHERE (ancDate > '$startdate' AND ancDate < '$enddate')")->result();
-//        foreach ($query as $k1){
-//            if(array_key_exists($k1->userID, $user_index)){
-//                if(!$this->isHaveKomplikasiBefore($k1,$komplikasi)){
-//                    if($k1->komplikasidalamKehamilan!=''&&$k1->komplikasidalamKehamilan!='None'&&$k1->komplikasidalamKehamilan!='tidak_ada_komplikasi'){
-//                        $key=array_search($user_index[$k1->userID],$result['desa']);
-//                        $result['komplikasi_bulan_ini'][$key] += 1;
-//                    }
-//                }
-//            }
-//        }
+        
+        $query2 = $this->db->query("SELECT baseEntityId,ancDate,komplikasidalamKehamilan FROM event_bidan_kunjungan_anc ORDER BY ancDate")->result();
+        $komplikasi = [];
+        foreach ($query2 as $q){
+            if(!array_key_exists($q->baseEntityId, $komplikasi)){
+                $komplikasi[$q->baseEntityId] = [];
+                array_push($komplikasi[$q->baseEntityId], $q);
+            }else{
+                array_push($komplikasi[$q->baseEntityId], $q);
+            }
+        }
+        
+        $query = $this->db->query("SELECT locationId,baseEntityId,ancDate,komplikasidalamKehamilan FROM event_bidan_kunjungan_anc WHERE (ancDate > '$startyear' AND ancDate < '$startdate')")->result();
+        foreach ($query as $k1){
+            if(array_key_exists($k1->locationId, $user_index)){
+                if(!$this->isHaveKomplikasiBefore($k1,$komplikasi)){
+                    if($k1->komplikasidalamKehamilan!=''&&$k1->komplikasidalamKehamilan!='None'&&$k1->komplikasidalamKehamilan!='tidak_ada_komplikasi'){
+                        $key=array_search($user_index[$k1->locationId],$result['desa']);
+                        $result['komplikasi_bulan_lalu'][$key] += 1;
+                    }
+                }
+            }
+        }
+        
+        $query = $this->db->query("SELECT locationId,baseEntityId,ancDate,komplikasidalamKehamilan FROM event_bidan_kunjungan_anc WHERE (ancDate > '$startdate' AND ancDate < '$enddate')")->result();
+        foreach ($query as $k1){
+            if(array_key_exists($k1->locationId, $user_index)){
+                if(!$this->isHaveKomplikasiBefore($k1,$komplikasi)){
+                    if($k1->komplikasidalamKehamilan!=''&&$k1->komplikasidalamKehamilan!='None'&&$k1->komplikasidalamKehamilan!='tidak_ada_komplikasi'){
+                        $key=array_search($user_index[$k1->locationId],$result['desa']);
+                        $result['komplikasi_bulan_ini'][$key] += 1;
+                    }
+                }
+            }
+        }
         
         $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_ibu2.xlsx",$result,$result_index);
     }
@@ -416,84 +398,46 @@ class BidanEcPwsModel extends CI_Model{
         $result_index['bumil'] = $this->setArrayIndex($user, 'C', 11);
         $result_index['bulin'] = $this->setArrayIndex($user, 'D', 11);
         $result_index['bufas'] = $this->setArrayIndex($user, 'E', 11);
-//        
-//        $datapersalinan= $this->db->query("SELECT * FROM kartu_pnc_dokumentasi_persalinan WHERE tanggalLahirAnak > '$startyear' AND tanggalLahirAnak < '$startdate'")->result();
-//        foreach ($datapersalinan as $dsalin){
-//            if(array_key_exists($dsalin->userID, $user_index)){
-//                $key=array_search($user_index[$dsalin->userID],$result['desa']);
-//                if($dsalin->penolong=="bidan"||$dsalin->penolong=="dr.spesialis"||$dsalin->penolong=="dr.umum"||$dsalin->penolong=="lain-lain"){
-//                    if($dsalin->jenisKelamin=='laki'){
-//                        $result['linakes_L_bulan_lalu'][$key] += 1;
-//                    }elseif($dsalin->jenisKelamin=='perempuan'){
-//                        $result['linakes_P_bulan_lalu'][$key] += 1;
-//                    }
-//                }else{
-//                    if($dsalin->jenisKelamin=='laki'){
-//                        $result['nolinakes_L_bulan_lalu'][$key] += 1;
-//                    }elseif($dsalin->jenisKelamin=='perempuan'){
-//                        $result['nolinakes_P_bulan_lalu'][$key] += 1;
-//                    }
-//                }
-//            }
-//        }
-//        $datapersalinan= $this->db->query("SELECT * FROM kartu_pnc_regitration_oa WHERE tanggalLahir > '$startyear' AND tanggalLahir < '$startdate'")->result();
-//        foreach ($datapersalinan as $dsalin){
-//            if(array_key_exists($dsalin->userID, $user_index)){
-//                $key=array_search($user_index[$dsalin->userID],$result['desa']);
-//                if($dsalin->penolong=="bidan"||$dsalin->penolong=="dr.spesialis"||$dsalin->penolong=="dr.umum"||$dsalin->penolong=="lain-lain"){
-//                    if($dsalin->jenisKelamin=='laki'){
-//                        $result['linakes_L_bulan_lalu'][$key] += 1;
-//                    }elseif($dsalin->jenisKelamin=='perempuan'){
-//                        $result['linakes_P_bulan_lalu'][$key] += 1;
-//                    }
-//                }else{
-//                    if($dsalin->jenisKelamin=='laki'){
-//                        $result['nolinakes_L_bulan_lalu'][$key] += 1;
-//                    }elseif($dsalin->jenisKelamin=='perempuan'){
-//                        $result['nolinakes_P_bulan_lalu'][$key] += 1;
-//                    }
-//                }
-//            }
-//        }
-//        
-//        $datapersalinan= $this->db->query("SELECT * FROM kartu_pnc_dokumentasi_persalinan WHERE tanggalLahirAnak > '$startdate' AND tanggalLahirAnak < '$enddate'")->result();
-//        foreach ($datapersalinan as $dsalin){
-//            if(array_key_exists($dsalin->userID, $user_index)){
-//                $key=array_search($user_index[$dsalin->userID],$result['desa']);
-//                if($dsalin->penolong=="bidan"||$dsalin->penolong=="dr.spesialis"||$dsalin->penolong=="dr.umum"||$dsalin->penolong=="lain-lain"){
-//                    if($dsalin->jenisKelamin=='laki'){
-//                        $result['linakes_L_bulan_ini'][$key] += 1;
-//                    }elseif($dsalin->jenisKelamin=='perempuan'){
-//                        $result['linakes_P_bulan_ini'][$key] += 1;
-//                    }
-//                }else{
-//                    if($dsalin->jenisKelamin=='laki'){
-//                        $result['nolinakes_L_bulan_ini'][$key] += 1;
-//                    }elseif($dsalin->jenisKelamin=='perempuan'){
-//                        $result['nolinakes_P_bulan_ini'][$key] += 1;
-//                    }
-//                }
-//            }
-//        }
-//        $datapersalinan= $this->db->query("SELECT * FROM kartu_pnc_regitration_oa WHERE tanggalLahir > '$startdate' AND tanggalLahir < '$enddate'")->result();
-//        foreach ($datapersalinan as $dsalin){
-//            if(array_key_exists($dsalin->userID, $user_index)){
-//                $key=array_search($user_index[$dsalin->userID],$result['desa']);
-//                if($dsalin->penolong=="bidan"||$dsalin->penolong=="dr.spesialis"||$dsalin->penolong=="dr.umum"||$dsalin->penolong=="lain-lain"){
-//                    if($dsalin->jenisKelamin=='laki'){
-//                        $result['linakes_L_bulan_ini'][$key] += 1;
-//                    }elseif($dsalin->jenisKelamin=='perempuan'){
-//                        $result['linakes_P_bulan_ini'][$key] += 1;
-//                    }
-//                }else{
-//                    if($dsalin->jenisKelamin=='laki'){
-//                        $result['nolinakes_L_bulan_ini'][$key] += 1;
-//                    }elseif($dsalin->jenisKelamin=='perempuan'){
-//                        $result['nolinakes_P_bulan_ini'][$key] += 1;
-//                    }
-//                }
-//            }
-//        }
+        
+        $datapersalinan= $this->db->query("SELECT event_bidan_dokumentasi_persalinan.* , client_anak.birthDate, client_anak.gender FROM event_bidan_dokumentasi_persalinan,client_anak WHERE event_bidan_dokumentasi_persalinan.baseEntityId = client_anak.ibuCaseId AND birthDate  > '$startyear' AND birthDate  < '$startdate'")->result();
+        foreach ($datapersalinan as $dsalin){
+            if(array_key_exists($dsalin->locationId, $user_index)){
+                $key=array_search($user_index[$dsalin->locationId],$result['desa']);
+                if($dsalin->penolong=="bidan"||$dsalin->penolong=="dr.spesialis"||$dsalin->penolong=="dr.umum"||$dsalin->penolong=="lain-lain"){
+                    if($dsalin->gender=='male'){
+                        $result['linakes_L_bulan_lalu'][$key] += 1;
+                    }elseif($dsalin->gender=='female'){
+                        $result['linakes_P_bulan_lalu'][$key] += 1;
+                    }
+                }else{
+                    if($dsalin->gender=='male'){
+                        $result['nolinakes_L_bulan_lalu'][$key] += 1;
+                    }elseif($dsalin->gender=='female'){
+                        $result['nolinakes_P_bulan_lalu'][$key] += 1;
+                    }
+                }
+            }
+        }
+        
+        $datapersalinan= $this->db->query("SELECT event_bidan_dokumentasi_persalinan.* , client_anak.birthDate, client_anak.gender FROM event_bidan_dokumentasi_persalinan,client_anak WHERE event_bidan_dokumentasi_persalinan.baseEntityId = client_anak.ibuCaseId AND birthDate > '$startdate' AND birthDate < '$enddate'")->result();
+        foreach ($datapersalinan as $dsalin){
+            if(array_key_exists($dsalin->locationId, $user_index)){
+                $key=array_search($user_index[$dsalin->locationId],$result['desa']);
+                if($dsalin->penolong=="bidan"||$dsalin->penolong=="dr.spesialis"||$dsalin->penolong=="dr.umum"||$dsalin->penolong=="lain-lain"){
+                    if($dsalin->gender=='male'){
+                        $result['linakes_L_bulan_ini'][$key] += 1;
+                    }elseif($dsalin->gender=='female'){
+                        $result['linakes_P_bulan_ini'][$key] += 1;
+                    }
+                }else{
+                    if($dsalin->gender=='male'){
+                        $result['nolinakes_L_bulan_ini'][$key] += 1;
+                    }elseif($dsalin->gender=='female'){
+                        $result['nolinakes_P_bulan_ini'][$key] += 1;
+                    }
+                }
+            }
+        }
        
         $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_ibu3.xlsx",$result,$result_index);
     }
@@ -532,60 +476,42 @@ class BidanEcPwsModel extends CI_Model{
         $result_index['bumil'] = $this->setArrayIndex($user, 'C', 11);
         $result_index['bulin'] = $this->setArrayIndex($user, 'D', 11);
         $result_index['bufas'] = $this->setArrayIndex($user, 'E', 11);
-//        
-//        $datapersalinan= $this->db->query("SELECT * FROM kartu_pnc_dokumentasi_persalinan WHERE tanggalLahirAnak > '$startyear' AND tanggalLahirAnak < '$startdate'")->result();
-//        foreach ($datapersalinan as $dsalin){
-//            if(array_key_exists($dsalin->userID, $user_index)){
-//                $key=array_search($user_index[$dsalin->userID],$result['desa']);
-//                if($dsalin->tempatBersalin=="podok_bersalin_desa"||$dsalin->tempatBersalin=="pusat_kesehatan_masyarakat_pembantu"||$dsalin->tempatBersalin=="pusat_kesehatan_masyarakat"||$dsalin->tempatBersalin=="rumah_bersalin"||$dsalin->tempatBersalin=="rumah_sakit_ibu_dan_anak"||$dsalin->tempatBersalin=="rumah_sakit"||$dsalin->tempatBersalin=="rumah_sakit_orang_dengan_hiv_aids"){
-//                    $result['fasilitas_bulan_lalu'][$key] += 1;
-//                }
-//            }
-//        }
-//        $datapersalinan= $this->db->query("SELECT * FROM kartu_pnc_regitration_oa WHERE tanggalLahir > '$startyear' AND tanggalLahir < '$startdate'")->result();
-//        foreach ($datapersalinan as $dsalin){
-//            if(array_key_exists($dsalin->userID, $user_index)){
-//                $key=array_search($user_index[$dsalin->userID],$result['desa']);
-//                if($dsalin->tempatBersalin=="podok_bersalin_desa"||$dsalin->tempatBersalin=="pusat_kesehatan_masyarakat_pembantu"||$dsalin->tempatBersalin=="pusat_kesehatan_masyarakat"||$dsalin->tempatBersalin=="rumah_bersalin"||$dsalin->tempatBersalin=="rumah_sakit_ibu_dan_anak"||$dsalin->tempatBersalin=="rumah_sakit"||$dsalin->tempatBersalin=="rumah_sakit_orang_dengan_hiv_aids"){
-//                    $result['fasilitas_bulan_lalu'][$key] += 1;
-//                }
-//            }
-//        }
-//        
-//        $datavisit = $this->db->query("SELECT * FROM kartu_pnc_visit WHERE (referenceDate > '$startyear' AND referenceDate < '$startdate') AND hariKeKF='kf4' group by baseEntityId")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $user_index)){
-//                $key=array_search($user_index[$dvisit->userID],$result['desa']);
-//                $result['k_nifas_bulan_ini'][$key] += 1;
-//            }
-//        }
-//        
-//        $datapersalinan= $this->db->query("SELECT * FROM kartu_pnc_dokumentasi_persalinan WHERE tanggalLahirAnak > '$startdate' AND tanggalLahirAnak < '$enddate'")->result();
-//        foreach ($datapersalinan as $dsalin){
-//            if(array_key_exists($dsalin->userID, $user_index)){
-//                $key=array_search($user_index[$dsalin->userID],$result['desa']);
-//                if($dsalin->tempatBersalin=="podok_bersalin_desa"||$dsalin->tempatBersalin=="pusat_kesehatan_masyarakat_pembantu"||$dsalin->tempatBersalin=="pusat_kesehatan_masyarakat"||$dsalin->tempatBersalin=="rumah_bersalin"||$dsalin->tempatBersalin=="rumah_sakit_ibu_dan_anak"||$dsalin->tempatBersalin=="rumah_sakit"||$dsalin->tempatBersalin=="rumah_sakit_orang_dengan_hiv_aids"){
-//                    $result['fasilitas_bulan_ini'][$key] += 1;
-//                }
-//            }
-//        }
-//        $datapersalinan= $this->db->query("SELECT * FROM kartu_pnc_regitration_oa WHERE tanggalLahir > '$startdate' AND tanggalLahir < '$enddate'")->result();
-//        foreach ($datapersalinan as $dsalin){
-//            if(array_key_exists($dsalin->userID, $user_index)){
-//                $key=array_search($user_index[$dsalin->userID],$result['desa']);
-//                if($dsalin->tempatBersalin=="podok_bersalin_desa"||$dsalin->tempatBersalin=="pusat_kesehatan_masyarakat_pembantu"||$dsalin->tempatBersalin=="pusat_kesehatan_masyarakat"||$dsalin->tempatBersalin=="rumah_bersalin"||$dsalin->tempatBersalin=="rumah_sakit_ibu_dan_anak"||$dsalin->tempatBersalin=="rumah_sakit"||$dsalin->tempatBersalin=="rumah_sakit_orang_dengan_hiv_aids"){
-//                    $result['fasilitas_bulan_ini'][$key] += 1;
-//                }
-//            }
-//        }
-//        
-//        $datavisit = $this->db->query("SELECT * FROM kartu_pnc_visit WHERE (referenceDate > '$startdate' AND referenceDate < '$enddate') AND hariKeKF='kf4' group by baseEntityId")->result();
-//        foreach ($datavisit as $dvisit){
-//            if(array_key_exists($dvisit->userID, $user_index)){
-//                $key=array_search($user_index[$dvisit->userID],$result['desa']);
-//                $result['k_nifas_bulan_ini'][$key] += 1;
-//            }
-//        }
+        
+        $datapersalinan= $this->db->query("SELECT event_bidan_dokumentasi_persalinan.* , client_anak.birthDate, client_anak.gender FROM event_bidan_dokumentasi_persalinan,client_anak WHERE event_bidan_dokumentasi_persalinan.baseEntityId = client_anak.ibuCaseId AND birthDate  > '$startyear' AND birthDate  < '$startdate'")->result();
+        foreach ($datapersalinan as $dsalin){
+            if(array_key_exists($dsalin->locationId, $user_index)){
+                $key=array_search($user_index[$dsalin->locationId],$result['desa']);
+                if($dsalin->tempatBersalin=="podok_bersalin_desa"||$dsalin->tempatBersalin=="pusat_kesehatan_masyarakat_pembantu"||$dsalin->tempatBersalin=="pusat_kesehatan_masyarakat"||$dsalin->tempatBersalin=="rumah_bersalin"||$dsalin->tempatBersalin=="rumah_sakit_ibu_dan_anak"||$dsalin->tempatBersalin=="rumah_sakit"||$dsalin->tempatBersalin=="rumah_sakit_orang_dengan_hiv_aids"){
+                    $result['fasilitas_bulan_lalu'][$key] += 1;
+                }
+            }
+        }
+        
+        $datavisit = $this->db->query("SELECT * FROM event_bidan_kunjungan_pnc WHERE (PNCDate > '$startyear' AND PNCDate < '$startdate') AND hariKeKF='kf4' group by baseEntityId")->result();
+        foreach ($datavisit as $dvisit){
+            if(array_key_exists($dvisit->locationId, $user_index)){
+                $key=array_search($user_index[$dvisit->locationId],$result['desa']);
+                $result['k_nifas_bulan_ini'][$key] += 1;
+            }
+        }
+        
+        $datapersalinan= $this->db->query("SELECT event_bidan_dokumentasi_persalinan.* , client_anak.birthDate, client_anak.gender FROM event_bidan_dokumentasi_persalinan,client_anak WHERE event_bidan_dokumentasi_persalinan.baseEntityId = client_anak.ibuCaseId AND birthDate > '$startdate' AND birthDate < '$enddate'")->result();
+        foreach ($datapersalinan as $dsalin){
+            if(array_key_exists($dsalin->locationId, $user_index)){
+                $key=array_search($user_index[$dsalin->locationId],$result['desa']);
+                if($dsalin->tempatBersalin=="podok_bersalin_desa"||$dsalin->tempatBersalin=="pusat_kesehatan_masyarakat_pembantu"||$dsalin->tempatBersalin=="pusat_kesehatan_masyarakat"||$dsalin->tempatBersalin=="rumah_bersalin"||$dsalin->tempatBersalin=="rumah_sakit_ibu_dan_anak"||$dsalin->tempatBersalin=="rumah_sakit"||$dsalin->tempatBersalin=="rumah_sakit_orang_dengan_hiv_aids"){
+                    $result['fasilitas_bulan_ini'][$key] += 1;
+                }
+            }
+        }
+        
+        $datavisit = $this->db->query("SELECT * FROM event_bidan_kunjungan_pnc WHERE (PNCDate > '$startdate' AND PNCDate < '$enddate') AND hariKeKF='kf4' group by baseEntityId")->result();
+        foreach ($datavisit as $dvisit){
+            if(array_key_exists($dvisit->locationId, $user_index)){
+                $key=array_search($user_index[$dvisit->locationId],$result['desa']);
+                $result['k_nifas_bulan_ini'][$key] += 1;
+            }
+        }
         
         
         $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_ibu4.xlsx",$result,$result_index);
@@ -636,43 +562,43 @@ class BidanEcPwsModel extends CI_Model{
         $result_index['bumil'] = $this->setArrayIndex($user, 'C', 11);
         $result_index['bulin'] = $this->setArrayIndex($user, 'D', 11);
         $result_index['bufas'] = $this->setArrayIndex($user, 'E', 11);
-//        
-//        $query2 = $this->db->query("SELECT baseEntityId,laboratoriumPeriksaHbAnemia,highRiskPregnancyAnemia FROM event_bidan_kunjungan_anc_labTest")->result();
-//        $datalabs = [];
-//        foreach ($query2 as $q){
-//            if(!array_key_exists($q->baseEntityId, $datalabs)){
-//                $datalabs[$q->baseEntityId] = [];
-//                array_push($datalabs[$q->baseEntityId], $q);
-//            }else{
-//                array_push($datalabs[$q->baseEntityId], $q);
-//            }
-//        }
-//        
-//        $dataibu = $this->db->query("SELECT * FROM kartu_anc_registration WHERE (referenceDate > '$startyear' AND referenceDate < '$startdate')")->result();
-//        foreach ($dataibu as $ibu){
-//            if(array_key_exists($ibu->userID, $user_index)){
-//                $key=array_search($user_index[$ibu->userID],$result['desa']);
-//                if($this->isAnemia($ibu,$datalabs)){
-//                    $result['anemia_bulan_lalu'][$key] += 1;
-//                }
-//                if($ibu->highRiskPregnancyProteinEnergyMalnutrition=="yes"){
-//                    $result['kek_bulan_lalu'][$key] += 1;
-//                }
-//            }
-//        }
-//        
-//        $dataibu = $this->db->query("SELECT * FROM kartu_anc_registration WHERE (referenceDate > '$startdate' AND referenceDate < '$enddate')")->result();
-//        foreach ($dataibu as $ibu){
-//            if(array_key_exists($ibu->userID, $user_index)){
-//                $key=array_search($user_index[$ibu->userID],$result['desa']);
-//                if($this->isAnemia($ibu,$datalabs)){
-//                    $result['anemia_bulan_ini'][$key] += 1;
-//                }
-//                if($ibu->highRiskPregnancyProteinEnergyMalnutrition=="yes"){
-//                    $result['kek_bulan_ini'][$key] += 1;
-//                }
-//            }
-//        }
+        
+        $query2 = $this->db->query("SELECT baseEntityId,laboratoriumPeriksaHbAnemia,highRiskPregnancyAnemia FROM event_bidan_kunjungan_anc_lab_test")->result();
+        $datalabs = [];
+        foreach ($query2 as $q){
+            if(!array_key_exists($q->baseEntityId, $datalabs)){
+                $datalabs[$q->baseEntityId] = [];
+                array_push($datalabs[$q->baseEntityId], $q);
+            }else{
+                array_push($datalabs[$q->baseEntityId], $q);
+            }
+        }
+        
+        $dataibu = $this->db->query("SELECT * FROM event_bidan_tambah_anc WHERE (referenceDate > '$startyear' AND referenceDate < '$startdate')")->result();
+        foreach ($dataibu as $ibu){
+            if(array_key_exists($ibu->locationId, $user_index)){
+                $key=array_search($user_index[$ibu->locationId],$result['desa']);
+                if($this->isAnemia($ibu,$datalabs)){
+                    $result['anemia_bulan_lalu'][$key] += 1;
+                }
+                if($ibu->highRiskPregnancyProteinEnergyMalnutrition=="yes"){
+                    $result['kek_bulan_lalu'][$key] += 1;
+                }
+            }
+        }
+        
+        $dataibu = $this->db->query("SELECT * FROM event_bidan_tambah_anc WHERE (referenceDate > '$startdate' AND referenceDate < '$enddate')")->result();
+        foreach ($dataibu as $ibu){
+            if(array_key_exists($ibu->locationId, $user_index)){
+                $key=array_search($user_index[$ibu->locationId],$result['desa']);
+                if($this->isAnemia($ibu,$datalabs)){
+                    $result['anemia_bulan_ini'][$key] += 1;
+                }
+                if($ibu->highRiskPregnancyProteinEnergyMalnutrition=="yes"){
+                    $result['kek_bulan_ini'][$key] += 1;
+                }
+            }
+        }
         
         $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_ibu5.xlsx",$result,$result_index);
     }
@@ -754,6 +680,7 @@ class BidanEcPwsModel extends CI_Model{
 //            //$this->session->set_flashdata('file', '<div class="alert alert-danger">Tidak ada data '.$form.' untuk bulan '.$month.'</div>');
 //            //redirect("laporan/downloadbidanpws");
 //        }
+        //var_dump($result);exit;
         $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_".$form.".xlsx",$result,$result_index);
     }
     
