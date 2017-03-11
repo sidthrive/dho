@@ -44,10 +44,14 @@ class PHPExcelModel extends CI_Model{
         }
         $kec = explode(" ",$data['kecamatan'][0]);
         $kecamatan = end($kec);
+        $prev = prev($kec);
+        while(!(count($prev)==0||$prev==':')){
+            $kecamatan = $prev.'_'.$kecamatan;
+            $prev = prev($kec);
+        }
         $bt = explode(" ",$data['bulan'][0]);
         $tahun = end($bt);
         $bulan = prev($bt);
-        
         $savedFileName = 'PWS-'.strtoupper($data['form'][0]).'-'.strtoupper($kecamatan).'-'.strtoupper($bulan).'-'.strtoupper($tahun).'.xlsx';
         
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
