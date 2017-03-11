@@ -211,51 +211,51 @@ class Laporan extends CI_Controller{
     private function download_fhw($year,$month,$form){
         $user = $this->session->userdata('username');
         $this->load->model('PHPExcelModel');
-        $this->load->model('PWSFhwModel');
+        $this->load->model('PWSEcFhwModel');
         if($form=="KIA1"){
-            $this->PWSFhwModel->kia1($user,$year,$month,$form);
+            $this->PWSEcFhwModel->kia1($user,$year,$month,$form);
         }elseif($form=="KIA2"){
-            $this->PWSFhwModel->kia2($user,$year,$month,$form);
+            $this->PWSEcFhwModel->kia2($user,$year,$month,$form);
         }elseif($form=="KIA3"){
-            $this->PWSFhwModel->kia3($user,$year,$month,$form);
+            $this->PWSEcFhwModel->kia3($user,$year,$month,$form);
         }elseif($form=="KIA4"){
-            $this->PWSFhwModel->kia4($user,$year,$month,$form);
+            $this->PWSEcFhwModel->kia4($user,$year,$month,$form);
         }elseif($form=="KIA5"){
-            $this->PWSFhwModel->kia5($user,$year,$month,$form);
+            $this->PWSEcFhwModel->kia5($user,$year,$month,$form);
         }elseif(strpos($form,'bayi')!==false){
-            $this->PWSFhwModel->bayi($user, $year, $month, $form);
+            $this->PWSEcFhwModel->bayi($user, $year, $month, $form);
         }elseif(strpos($form,'balita')!==false){
-            $this->PWSFhwModel->balita($user, $year, $month, $form);
+            $this->PWSEcFhwModel->balita($user, $year, $month, $form);
         }elseif(strpos($form,'anak')!==false){
-            $this->PWSFhwModel->anak($user, $year, $month, $form);
+            $this->PWSEcFhwModel->anak($user, $year, $month, $form);
         }elseif($form=="neonatal1"){
-            $this->PWSFhwModel->neonatal1($user,$year,$month,$form);
+            $this->PWSEcFhwModel->neonatal1($user,$year,$month,$form);
         }elseif($form=="neonatal2"){
-            $this->PWSFhwModel->neonatal2($user,$year,$month,$form);
+            $this->PWSEcFhwModel->neonatal2($user,$year,$month,$form);
         }elseif($form=="neonatal3"){
-            $this->PWSFhwModel->neonatal3($user,$year,$month,$form);
+            $this->PWSEcFhwModel->neonatal3($user,$year,$month,$form);
         }elseif($form=="neonatal4"){
-            $this->PWSFhwModel->neonatal4($user,$year,$month,$form);
+            $this->PWSEcFhwModel->neonatal4($user,$year,$month,$form);
         }elseif($form=="neonatal5"){
-            $this->PWSFhwModel->neonatal5($user,$year,$month,$form);
+            $this->PWSEcFhwModel->neonatal5($user,$year,$month,$form);
         }elseif($form=="kb1"){
-            $this->PWSFhwModel->kb1($user,$year,$month,$form);
+            $this->PWSEcFhwModel->kb1($user,$year,$month,$form);
         }elseif($form=="kb2"){
-            $this->PWSFhwModel->kb2($user,$year,$month,$form);
+            $this->PWSEcFhwModel->kb2($user,$year,$month,$form);
         }elseif($form=="kb3"){
-            $this->PWSFhwModel->kb3($user,$year,$month,$form);
+            $this->PWSEcFhwModel->kb3($user,$year,$month,$form);
         }elseif($form=="kb4"){
-            $this->PWSFhwModel->kb4($user,$year,$month,$form);
+            $this->PWSEcFhwModel->kb4($user,$year,$month,$form);
         }elseif($form=="kb5"){
-            $this->PWSFhwModel->kb5($user,$year,$month,$form);
+            $this->PWSEcFhwModel->kb5($user,$year,$month,$form);
         }elseif($form=="amp"){
-            $this->PWSFhwModel->maternal($user,$year,$month,$form);
+            $this->PWSEcFhwModel->maternal($user,$year,$month,$form);
         }elseif($form=="akb"){
-            $this->PWSFhwModel->akb($user,$year,$month,$form);
+            $this->PWSEcFhwModel->akb($user,$year,$month,$form);
         }elseif($form=="kih"){
-            $this->PWSFhwModel->kih($user,$year,$month,$form);
+            $this->PWSEcFhwModel->kih($user,$year,$month,$form);
         }elseif($form=="p4k"){
-            $this->PWSFhwModel->p4k($user,$year,$month,$form);
+            $this->PWSEcFhwModel->p4k($user,$year,$month,$form);
         }
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
