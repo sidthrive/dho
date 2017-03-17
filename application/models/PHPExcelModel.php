@@ -63,6 +63,43 @@ class PHPExcelModel extends CI_Model{
         
     }
     
+    public function createNewPwsXLS($filename,$data,$index){
+        $file = APPPATH.$filename;
+        $this->load->library('PHPExcell');
+        //print_r($data);
+        $fileObject = PHPExcel_IOFactory::load($file);
+        foreach ($data['data'] as $ws=>$d){
+            $fileObject->setActiveSheetIndexByName($ws);
+        
+            foreach ($d as $key1=>$cell){
+                foreach ($cell as $key2=>$value){
+                    if(isset($index[$key1][$key2]))
+                        $fileObject->getActiveSheet()->setCellValue($index[$key1][$key2], $value);
+                }
+            }
+        }
+        
+        $kec = explode(" ",$data['kecamatan'][0]);
+        $kecamatan = end($kec);
+        $prev = prev($kec);
+        while(!(count($prev)==0||$prev==':')){
+            $kecamatan = $prev.'_'.$kecamatan;
+            $prev = prev($kec);
+        }
+        $bt = explode(" ",$data['bulan'][0]);
+        $tahun = end($bt);
+        $bulan = prev($bt);
+        $savedFileName = 'PWS-'.strtoupper($data['form'][0]).'-'.strtoupper($kecamatan).'-'.strtoupper($bulan).'-'.strtoupper($tahun).'.xlsx';
+        
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="'.$savedFileName.'"'); 
+        header('Cache-Control: max-age=0');
+
+        $saveContainer = PHPExcel_IOFactory::createWriter($fileObject,'Excel2007');
+        $saveContainer->save('php://output');
+        
+    }
+    
     private function readXLS($filePath){
         $file = APPPATH.$filePath;
         $this->load->library('PHPExcell');
