@@ -161,16 +161,8 @@ class Laporan extends CI_Controller{
             $month  = $this->input->post('month');
             $form   = $this->input->post('formtype');
 
-            if($form=="KIA1"){
-                $this->BidanEcPwsModel->kia1($kec,$year,$month,$form);
-            }elseif($form=="KIA2"){
-                $this->BidanEcPwsModel->kia2($kec,$year,$month,$form);
-            }elseif($form=="KIA3"){
-                $this->BidanEcPwsModel->kia3($kec,$year,$month,$form);
-            }elseif($form=="KIA4"){
-                $this->BidanEcPwsModel->kia4($kec,$year,$month,$form);
-            }elseif($form=="KIA5"){
-                $this->BidanEcPwsModel->kia5($kec,$year,$month,$form);
+            if($form=="KIA"){
+                $this->BidanEcPwsModel->kia($kec,$year,$month,$form);
             }elseif(strpos($form,'bayi')!==false){
                 $this->BidanEcPwsModel->bayi($kec, $year, $month, $form);
             }elseif(strpos($form,'balita')!==false){
