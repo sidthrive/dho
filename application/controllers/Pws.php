@@ -76,6 +76,7 @@ class Pws extends CI_Controller{
     }
     
     public function kia(){
+        $time_start = microtime(true);
         $bulan_map = [1=>'januari','februari','maret','april','mei','juni','juli','agustus','september','oktober','november','desember'];
         $loc = $this->loc->getAllLoc('bidan');
         $kec = [];
@@ -87,6 +88,9 @@ class Pws extends CI_Controller{
         foreach ($kec as $kecamatan){
             $this->do_kia($kecamatan, $year, $bulan_map[$month]);
         }
+        $time_end = microtime(true);
+        $time = $time_end - $time_start;
+        var_dump('Execution time : ' . $time . ' seconds');
     }
     
     public function kia_all(){
