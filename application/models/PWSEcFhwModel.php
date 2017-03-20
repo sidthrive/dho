@@ -165,7 +165,7 @@ class PWSEcFhwModel extends CI_Model{
         $all_data = $pwsdb->query("SELECT * FROM kia WHERE tahun='$year' AND ($loc) AND ($bln)")->result();
         $data = [];
         foreach ($all_data as $d){
-            $lo = explode('desa_', $d->location);
+            $lo = explode('dusun_', $d->location);
             $l = ucwords(str_replace('_', ' ', $lo[1]));
             $data[$d->bulan][$l][$d->field_name] = $d->value;
         }
