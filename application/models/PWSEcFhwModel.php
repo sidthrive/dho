@@ -122,10 +122,14 @@ class PWSEcFhwModel extends CI_Model{
         $result['form'] = array($form);
         $result['desa'] = array("DESA    :  ".strtoupper($desa));
         $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
+        $result['data']['DATA A']['judul'] = ["REKAPITULASI PWS IBU - KIA DESA ".strtoupper($desa)];
+        $result['data']['DATA A']['header'] = ["DUSUN"];
         $result['data']['DATA A']['dusun'] = $dusun;
         $result['data']['DATA A']['bumil'] = array_fill(0,count($dusun),0);
         $result['data']['DATA A']['bulin'] = array_fill(0,count($dusun),0);
         
+        $result_index['judul']= ["A1"];
+        $result_index['header']= ["B5"];
         $result_index['dusun']= $this->setArrayIndex($dusun, 'B', 6);
         $result_index['bumil'] = $this->setArrayIndex($dusun, 'C', 6);
         $result_index['bulin'] = $this->setArrayIndex($dusun, 'E', 6);

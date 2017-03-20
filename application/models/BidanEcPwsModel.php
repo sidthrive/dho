@@ -95,10 +95,14 @@ class BidanEcPwsModel extends CI_Model{
         $result['form'] = array($form);
         $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
         $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
+        $result['data']['DATA A']['judul'] = ["REKAPITULASI PWS IBU - KIA KECAMATAN ".strtoupper($kec)];
+        $result['data']['DATA A']['header'] = ["DESA"];
         $result['data']['DATA A']['desa'] = $user;
         $result['data']['DATA A']['bumil'] = array_fill(0,count($user),0);
         $result['data']['DATA A']['bulin'] = array_fill(0,count($user),0);
         
+        $result_index['judul']= ["A1"];
+        $result_index['header']= ["B5"];
         $result_index['desa']= $this->setArrayIndex($user, 'B', 6);
         $result_index['bumil'] = $this->setArrayIndex($user, 'C', 6);
         $result_index['bulin'] = $this->setArrayIndex($user, 'E', 6);
