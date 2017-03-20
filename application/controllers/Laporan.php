@@ -204,16 +204,8 @@ class Laporan extends CI_Controller{
         $user = $this->session->userdata('username');
         $this->load->model('PHPExcelModel');
         $this->load->model('PWSEcFhwModel');
-        if($form=="KIA1"){
-            $this->PWSEcFhwModel->kia1($user,$year,$month,$form);
-        }elseif($form=="KIA2"){
-            $this->PWSEcFhwModel->kia2($user,$year,$month,$form);
-        }elseif($form=="KIA3"){
-            $this->PWSEcFhwModel->kia3($user,$year,$month,$form);
-        }elseif($form=="KIA4"){
-            $this->PWSEcFhwModel->kia4($user,$year,$month,$form);
-        }elseif($form=="KIA5"){
-            $this->PWSEcFhwModel->kia5($user,$year,$month,$form);
+        if($form=="KIA"){
+            $this->PWSEcFhwModel->kia($user,$year,$month,$form);
         }elseif(strpos($form,'bayi')!==false){
             $this->PWSEcFhwModel->bayi($user, $year, $month, $form);
         }elseif(strpos($form,'balita')!==false){

@@ -27,11 +27,7 @@
                     <option value="desember">Desember</option>
                 </select>
                 <select name="formtype" style="width:120px;" class="form-control-static">
-                    <option value="KIA1" selected>KIA Ibu 1</option>
-                    <option value="KIA2">KIA Ibu 2</option>
-                    <option value="KIA3">KIA Ibu 3</option>
-                    <option value="KIA4">KIA Ibu 4</option>
-                    <option value="KIA5">KIA Ibu 5</option>
+                    <option value="KIA" selected>KIA Ibu</option>
                     <option value="bayi_1">Bayi 1</option>
                     <option value="bayi_2">Bayi 2</option>
                     <option value="bayi_3">Bayi 3</option>
