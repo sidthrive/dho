@@ -99,14 +99,12 @@ class BidanEcPwsModel extends CI_Model{
         $result['data']['DATA A']['bumil'] = array_fill(0,count($user),0);
         $result['data']['DATA A']['bulin'] = array_fill(0,count($user),0);
         
-        $result_index['kecamatan'] = array("A2");
-        $result_index['bulan'] = array("A5");
         $result_index['desa']= $this->setArrayIndex($user, 'B', 6);
         $result_index['bumil'] = $this->setArrayIndex($user, 'C', 6);
         $result_index['bulin'] = $this->setArrayIndex($user, 'E', 6);
         
         $pwsdb = $this->load->database('pws', TRUE);
-        $loc = 'kec_'.strtoupper($kec);
+        $loc = 'kec_'.strtolower($kec);
         $target = $pwsdb->query("SELECT * FROM target WHERE loc_parent='$loc' AND tahun='$year'")->result();
         foreach ($target as $t){
             $lo = explode('desa_', $t->location);
