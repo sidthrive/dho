@@ -92,9 +92,6 @@ class BidanEcPwsModel extends CI_Model{
             $user_index   = $this->loc->getLocId($kec);
         }
         
-        $result['form'] = array($form);
-        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
-        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
         $result['data']['DATA A']['judul'] = ["REKAPITULASI PWS IBU - KIA KECAMATAN ".strtoupper($kec)];
         $result['data']['DATA A']['header'] = ["DESA"];
         $result['data']['DATA A']['desa'] = $user;
@@ -188,17 +185,8 @@ class BidanEcPwsModel extends CI_Model{
             }
         }
         
-        $kec = explode(" ",$result['kecamatan'][0]);
-        $kecamatan = end($kec);
-        $prev = prev($kec);
-        while(!(count($prev)==0||$prev==':')){
-            $kecamatan = $prev.'_'.$kecamatan;
-            $prev = prev($kec);
-        }
-        $bt = explode(" ",$result['bulan'][0]);
-        $tahun = end($bt);
-        $bulan = prev($bt);
-        $savedFileName = 'PWS-'.strtoupper($result['form'][0]).'-'.strtoupper($kecamatan).'-'.strtoupper($bulan).'-'.strtoupper($tahun).'.xlsx';
+        $kecamatan = strtoupper(str_replace(' ', '_', $kec));
+        $savedFileName = 'PWS-'.strtoupper($form).'-'.strtoupper($kecamatan).'-'.strtoupper($month).'-'.strtoupper($year).'.xlsx';
         
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="'.$savedFileName.'"'); 
@@ -226,9 +214,6 @@ class BidanEcPwsModel extends CI_Model{
             $user_index   = $this->loc->getLocId($kec);
         }
         
-        $result['form'] = array($form);
-        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
-        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
         $result['data']['DATA A']['judul'] = ["REKAPITULASI PWS ANAK - KIA KECAMATAN ".strtoupper($kec)];
         $result['data']['DATA A']['header'] = ["DESA"];
         $result['data']['DATA A']['desa'] = $user;
@@ -322,17 +307,8 @@ class BidanEcPwsModel extends CI_Model{
             }
         }
         
-        $kec = explode(" ",$result['kecamatan'][0]);
-        $kecamatan = end($kec);
-        $prev = prev($kec);
-        while(!(count($prev)==0||$prev==':')){
-            $kecamatan = $prev.'_'.$kecamatan;
-            $prev = prev($kec);
-        }
-        $bt = explode(" ",$result['bulan'][0]);
-        $tahun = end($bt);
-        $bulan = prev($bt);
-        $savedFileName = 'PWS-'.strtoupper($result['form'][0]).'-'.strtoupper($kecamatan).'-'.strtoupper($bulan).'-'.strtoupper($tahun).'.xlsx';
+        $kecamatan = strtoupper(str_replace(' ', '_', $kec));
+        $savedFileName = 'PWS-'.strtoupper($form).'-'.strtoupper($kecamatan).'-'.strtoupper($month).'-'.strtoupper($year).'.xlsx';
         
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="'.$savedFileName.'"'); 
@@ -359,9 +335,6 @@ class BidanEcPwsModel extends CI_Model{
             $user_index   = $this->loc->getLocId($kec);
         }
         
-        $result['form'] = array($form);
-        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
-        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
         $result['data']['DATA A']['judul'] = ["KECAMATAN ".strtoupper($kec)];
         $result['data']['DATA A']['header'] = ["DESA"];
         $result['data']['DATA A']['desa'] = $user;
@@ -442,17 +415,8 @@ class BidanEcPwsModel extends CI_Model{
             }
         }
         
-        $kec = explode(" ",$result['kecamatan'][0]);
-        $kecamatan = end($kec);
-        $prev = prev($kec);
-        while(!(count($prev)==0||$prev==':')){
-            $kecamatan = $prev.'_'.$kecamatan;
-            $prev = prev($kec);
-        }
-        $bt = explode(" ",$result['bulan'][0]);
-        $tahun = end($bt);
-        $bulan = prev($bt);
-        $savedFileName = 'PWS-'.strtoupper($result['form'][0]).'-'.strtoupper($kecamatan).'-'.strtoupper($bulan).'-'.strtoupper($tahun).'.xlsx';
+        $kecamatan = strtoupper(str_replace(' ', '_', $kec));
+        $savedFileName = 'PWS-'.strtoupper($form).'-'.strtoupper($kecamatan).'-'.strtoupper($month).'-'.strtoupper($year).'.xlsx';
         
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="'.$savedFileName.'"'); 
@@ -479,9 +443,6 @@ class BidanEcPwsModel extends CI_Model{
             $user_index   = $this->loc->getLocId($kec);
         }
         
-        $result['form'] = array($form);
-        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
-        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
         $result['data']['DATA A']['judul'] = ["KECAMATAN ".strtoupper($kec)];
         $result['data']['DATA A']['header'] = ["DESA"];
         $result['data']['DATA A']['desa'] = $user;
@@ -562,17 +523,8 @@ class BidanEcPwsModel extends CI_Model{
             }
         }
         
-        $kec = explode(" ",$result['kecamatan'][0]);
-        $kecamatan = end($kec);
-        $prev = prev($kec);
-        while(!(count($prev)==0||$prev==':')){
-            $kecamatan = $prev.'_'.$kecamatan;
-            $prev = prev($kec);
-        }
-        $bt = explode(" ",$result['bulan'][0]);
-        $tahun = end($bt);
-        $bulan = prev($bt);
-        $savedFileName = 'PWS-'.strtoupper($result['form'][0]).'-'.strtoupper($kecamatan).'-'.strtoupper($bulan).'-'.strtoupper($tahun).'.xlsx';
+        $kecamatan = strtoupper(str_replace(' ', '_', $kec));
+        $savedFileName = 'PWS-'.strtoupper($form).'-'.strtoupper($kecamatan).'-'.strtoupper($month).'-'.strtoupper($year).'.xlsx';
         
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="'.$savedFileName.'"'); 
@@ -599,9 +551,6 @@ class BidanEcPwsModel extends CI_Model{
             $user_index   = $this->loc->getLocId($kec);
         }
         
-        $result['form'] = array($form);
-        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
-        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
         $result['data']['Sheet1']['judul'] = ["KECAMATAN ".strtoupper($kec)];
         $result['data']['Perdarahan']['header'] = ["DESA"];
         $result['data']['Perdarahan']['desa'] = $user;
@@ -682,17 +631,8 @@ class BidanEcPwsModel extends CI_Model{
             }
         }
         
-        $kec = explode(" ",$result['kecamatan'][0]);
-        $kecamatan = end($kec);
-        $prev = prev($kec);
-        while(!(count($prev)==0||$prev==':')){
-            $kecamatan = $prev.'_'.$kecamatan;
-            $prev = prev($kec);
-        }
-        $bt = explode(" ",$result['bulan'][0]);
-        $tahun = end($bt);
-        $bulan = prev($bt);
-        $savedFileName = 'PWS-'.strtoupper($result['form'][0]).'-'.strtoupper($kecamatan).'-'.strtoupper($bulan).'-'.strtoupper($tahun).'.xlsx';
+        $kecamatan = strtoupper(str_replace(' ', '_', $kec));
+        $savedFileName = 'PWS-'.strtoupper($form).'-'.strtoupper($kecamatan).'-'.strtoupper($month).'-'.strtoupper($year).'.xlsx';
         
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="'.$savedFileName.'"'); 
@@ -719,9 +659,6 @@ class BidanEcPwsModel extends CI_Model{
             $user_index   = $this->loc->getLocId($kec);
         }
         
-        $result['form'] = array($form);
-        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
-        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
         $result['data']['DATA A']['judul'] = ["KECAMATAN ".strtoupper($kec)];
         $result['data']['DATA A']['header'] = ["DESA"];
         $result['data']['DATA A']['desa'] = $user;
@@ -802,17 +739,8 @@ class BidanEcPwsModel extends CI_Model{
             }
         }
         
-        $kec = explode(" ",$result['kecamatan'][0]);
-        $kecamatan = end($kec);
-        $prev = prev($kec);
-        while(!(count($prev)==0||$prev==':')){
-            $kecamatan = $prev.'_'.$kecamatan;
-            $prev = prev($kec);
-        }
-        $bt = explode(" ",$result['bulan'][0]);
-        $tahun = end($bt);
-        $bulan = prev($bt);
-        $savedFileName = 'PWS-'.strtoupper($result['form'][0]).'-'.strtoupper($kecamatan).'-'.strtoupper($bulan).'-'.strtoupper($tahun).'.xlsx';
+        $kecamatan = strtoupper(str_replace(' ', '_', $kec));
+        $savedFileName = 'PWS-'.strtoupper($form).'-'.strtoupper($kecamatan).'-'.strtoupper($month).'-'.strtoupper($year).'.xlsx';
         
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="'.$savedFileName.'"'); 
@@ -839,9 +767,6 @@ class BidanEcPwsModel extends CI_Model{
             $user_index   = $this->loc->getLocId($kec);
         }
         
-        $result['form'] = array($form);
-        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
-        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
         $result['data']['DATA A']['judul'] = ["PEMANTAUAN WILAYAH SETEMPAT (PWS) KECAMATAN ".strtoupper($kec)." TAHUN ".$year];
         $result['data']['DATA A']['header'] = ["DESA"];
         $result['data']['DATA A']['desa'] = $user;
@@ -935,17 +860,8 @@ class BidanEcPwsModel extends CI_Model{
             }
         }
         
-        $kec = explode(" ",$result['kecamatan'][0]);
-        $kecamatan = end($kec);
-        $prev = prev($kec);
-        while(!(count($prev)==0||$prev==':')){
-            $kecamatan = $prev.'_'.$kecamatan;
-            $prev = prev($kec);
-        }
-        $bt = explode(" ",$result['bulan'][0]);
-        $tahun = end($bt);
-        $bulan = prev($bt);
-        $savedFileName = 'PWS-'.strtoupper($result['form'][0]).'-'.strtoupper($kecamatan).'-'.strtoupper($bulan).'-'.strtoupper($tahun).'.xlsx';
+        $kecamatan = strtoupper(str_replace(' ', '_', $kec));
+        $savedFileName = 'PWS-'.strtoupper($form).'-'.strtoupper($kecamatan).'-'.strtoupper($month).'-'.strtoupper($year).'.xlsx';
         
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="'.$savedFileName.'"'); 

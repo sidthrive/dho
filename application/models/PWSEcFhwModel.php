@@ -119,9 +119,6 @@ class PWSEcFhwModel extends CI_Model{
         
         $dusun = array_values($this->loc->getDusun($desa));
         $user_index = $this->loc->getDusunTypo($desa);
-        $result['form'] = array($form);
-        $result['desa'] = array("DESA    :  ".strtoupper($desa));
-        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
         $result['data']['DATA A']['judul'] = ["REKAPITULASI PWS IBU - KIA DESA ".strtoupper($desa)];
         $result['data']['DATA A']['header'] = ["DUSUN"];
         $result['data']['DATA A']['dusun'] = $dusun;
@@ -215,17 +212,8 @@ class PWSEcFhwModel extends CI_Model{
             }
         }
         
-        $kec = explode(" ",$result['desa'][0]);
-        $kecamatan = end($kec);
-        $prev = prev($kec);
-        while(!(count($prev)==0||$prev==':')){
-            $kecamatan = $prev.'_'.$kecamatan;
-            $prev = prev($kec);
-        }
-        $bt = explode(" ",$result['bulan'][0]);
-        $tahun = end($bt);
-        $bulan = prev($bt);
-        $savedFileName = 'PWS-'.strtoupper($result['form'][0]).'-'.strtoupper($kecamatan).'-'.strtoupper($bulan).'-'.strtoupper($tahun).'.xlsx';
+        $desa = strtoupper(str_replace(' ', '_', $desa));
+        $savedFileName = 'PWS-'.strtoupper($form).'-'.strtoupper($desa).'-'.strtoupper($month).'-'.strtoupper($year).'.xlsx';
         
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="'.$savedFileName.'"'); 
@@ -249,9 +237,6 @@ class PWSEcFhwModel extends CI_Model{
         
         $dusun = array_values($this->loc->getDusun($desa));
         $user_index = $this->loc->getDusunTypo($desa);
-        $result['form'] = array($form);
-        $result['desa'] = array("DESA    :  ".strtoupper($desa));
-        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
         $result['data']['DATA A']['judul'] = ["REKAPITULASI PWS IBU - KIA DESA ".strtoupper($desa)];
         $result['data']['DATA A']['header'] = ["DUSUN"];
         $result['data']['DATA A']['dusun'] = $dusun;
@@ -345,17 +330,8 @@ class PWSEcFhwModel extends CI_Model{
             }
         }
         
-        $kec = explode(" ",$result['desa'][0]);
-        $kecamatan = end($kec);
-        $prev = prev($kec);
-        while(!(count($prev)==0||$prev==':')){
-            $kecamatan = $prev.'_'.$kecamatan;
-            $prev = prev($kec);
-        }
-        $bt = explode(" ",$result['bulan'][0]);
-        $tahun = end($bt);
-        $bulan = prev($bt);
-        $savedFileName = 'PWS-'.strtoupper($result['form'][0]).'-'.strtoupper($kecamatan).'-'.strtoupper($bulan).'-'.strtoupper($tahun).'.xlsx';
+        $desa = strtoupper(str_replace(' ', '_', $desa));
+        $savedFileName = 'PWS-'.strtoupper($form).'-'.strtoupper($desa).'-'.strtoupper($month).'-'.strtoupper($year).'.xlsx';
         
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="'.$savedFileName.'"'); 
@@ -378,9 +354,6 @@ class PWSEcFhwModel extends CI_Model{
         
         $dusun = array_values($this->loc->getDusun($desa));
         $user_index = $this->loc->getDusunTypo($desa);
-        $result['form'] = array($form);
-        $result['desa'] = array("DESA    :  ".strtoupper($desa));
-        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
         $result['data']['DATA A']['judul'] = ["PEMANTAUAN WILAYAH SETEMPAT (PWS) DESA ".strtoupper($desa)." TAHUN ".$year];
         $result['data']['DATA A']['header'] = ["DUSUN"];
         $result['data']['DATA A']['dusun'] = $dusun;
@@ -474,17 +447,8 @@ class PWSEcFhwModel extends CI_Model{
             }
         }
         
-        $kec = explode(" ",$result['desa'][0]);
-        $kecamatan = end($kec);
-        $prev = prev($kec);
-        while(!(count($prev)==0||$prev==':')){
-            $kecamatan = $prev.'_'.$kecamatan;
-            $prev = prev($kec);
-        }
-        $bt = explode(" ",$result['bulan'][0]);
-        $tahun = end($bt);
-        $bulan = prev($bt);
-        $savedFileName = 'PWS-'.strtoupper($result['form'][0]).'-'.strtoupper($kecamatan).'-'.strtoupper($bulan).'-'.strtoupper($tahun).'.xlsx';
+        $desa = strtoupper(str_replace(' ', '_', $desa));
+        $savedFileName = 'PWS-'.strtoupper($form).'-'.strtoupper($desa).'-'.strtoupper($month).'-'.strtoupper($year).'.xlsx';
         
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="'.$savedFileName.'"'); 
@@ -507,9 +471,6 @@ class PWSEcFhwModel extends CI_Model{
         
         $dusun = array_values($this->loc->getDusun($desa));
         $user_index = $this->loc->getDusunTypo($desa);
-        $result['form'] = array($form);
-        $result['desa'] = array("DESA    :  ".strtoupper($desa));
-        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
         $result['data']['DATA A']['judul'] = ["DESA ".strtoupper($desa)];
         $result['data']['DATA A']['header'] = ["DUSUN"];
         $result['data']['DATA A']['dusun'] = $dusun;
@@ -590,17 +551,8 @@ class PWSEcFhwModel extends CI_Model{
             }
         }
         
-        $kec = explode(" ",$result['desa'][0]);
-        $kecamatan = end($kec);
-        $prev = prev($kec);
-        while(!(count($prev)==0||$prev==':')){
-            $kecamatan = $prev.'_'.$kecamatan;
-            $prev = prev($kec);
-        }
-        $bt = explode(" ",$result['bulan'][0]);
-        $tahun = end($bt);
-        $bulan = prev($bt);
-        $savedFileName = 'PWS-'.strtoupper($result['form'][0]).'-'.strtoupper($kecamatan).'-'.strtoupper($bulan).'-'.strtoupper($tahun).'.xlsx';
+        $desa = strtoupper(str_replace(' ', '_', $desa));
+        $savedFileName = 'PWS-'.strtoupper($form).'-'.strtoupper($desa).'-'.strtoupper($month).'-'.strtoupper($year).'.xlsx';
         
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="'.$savedFileName.'"'); 
@@ -623,9 +575,6 @@ class PWSEcFhwModel extends CI_Model{
         
         $dusun = array_values($this->loc->getDusun($desa));
         $user_index = $this->loc->getDusunTypo($desa);
-        $result['form'] = array($form);
-        $result['desa'] = array("DESA    :  ".strtoupper($desa));
-        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
         $result['data']['DATA A']['judul'] = ["DESA ".strtoupper($desa)];
         $result['data']['DATA A']['header'] = ["DUSUN"];
         $result['data']['DATA A']['dusun'] = $dusun;
@@ -706,17 +655,8 @@ class PWSEcFhwModel extends CI_Model{
             }
         }
         
-        $kec = explode(" ",$result['desa'][0]);
-        $kecamatan = end($kec);
-        $prev = prev($kec);
-        while(!(count($prev)==0||$prev==':')){
-            $kecamatan = $prev.'_'.$kecamatan;
-            $prev = prev($kec);
-        }
-        $bt = explode(" ",$result['bulan'][0]);
-        $tahun = end($bt);
-        $bulan = prev($bt);
-        $savedFileName = 'PWS-'.strtoupper($result['form'][0]).'-'.strtoupper($kecamatan).'-'.strtoupper($bulan).'-'.strtoupper($tahun).'.xlsx';
+        $desa = strtoupper(str_replace(' ', '_', $desa));
+        $savedFileName = 'PWS-'.strtoupper($form).'-'.strtoupper($desa).'-'.strtoupper($month).'-'.strtoupper($year).'.xlsx';
         
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="'.$savedFileName.'"'); 
@@ -822,17 +762,8 @@ class PWSEcFhwModel extends CI_Model{
             }
         }
         
-        $kec = explode(" ",$result['desa'][0]);
-        $kecamatan = end($kec);
-        $prev = prev($kec);
-        while(!(count($prev)==0||$prev==':')){
-            $kecamatan = $prev.'_'.$kecamatan;
-            $prev = prev($kec);
-        }
-        $bt = explode(" ",$result['bulan'][0]);
-        $tahun = end($bt);
-        $bulan = prev($bt);
-        $savedFileName = 'PWS-'.strtoupper($result['form'][0]).'-'.strtoupper($kecamatan).'-'.strtoupper($bulan).'-'.strtoupper($tahun).'.xlsx';
+        $desa = strtoupper(str_replace(' ', '_', $desa));
+        $savedFileName = 'PWS-'.strtoupper($form).'-'.strtoupper($desa).'-'.strtoupper($month).'-'.strtoupper($year).'.xlsx';
         
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="'.$savedFileName.'"'); 
@@ -855,9 +786,7 @@ class PWSEcFhwModel extends CI_Model{
         
         $dusun = array_values($this->loc->getDusun($desa));
         $user_index = $this->loc->getDusunTypo($desa);
-        $result['form'] = array($form);
-        $result['desa'] = array("DESA    :  ".strtoupper($desa));
-        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
+        
         $result['data']['Sheet1']['judul'] = ["DESA ".strtoupper($desa)];
         $result['data']['Perdarahan']['header'] = ["DUSUN"];
         $result['data']['Perdarahan']['dusun'] = $dusun;
@@ -938,17 +867,8 @@ class PWSEcFhwModel extends CI_Model{
             }
         }
         
-        $kec = explode(" ",$result['desa'][0]);
-        $kecamatan = end($kec);
-        $prev = prev($kec);
-        while(!(count($prev)==0||$prev==':')){
-            $kecamatan = $prev.'_'.$kecamatan;
-            $prev = prev($kec);
-        }
-        $bt = explode(" ",$result['bulan'][0]);
-        $tahun = end($bt);
-        $bulan = prev($bt);
-        $savedFileName = 'PWS-'.strtoupper($result['form'][0]).'-'.strtoupper($kecamatan).'-'.strtoupper($bulan).'-'.strtoupper($tahun).'.xlsx';
+        $desa = strtoupper(str_replace(' ', '_', $desa));
+        $savedFileName = 'PWS-'.strtoupper($form).'-'.strtoupper($desa).'-'.strtoupper($month).'-'.strtoupper($year).'.xlsx';
         
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="'.$savedFileName.'"'); 
