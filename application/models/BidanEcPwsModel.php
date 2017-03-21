@@ -209,33 +209,145 @@ class BidanEcPwsModel extends CI_Model{
         
     }
     
-    private function isHaveKomplikasiBefore($bumil,$komplikasi){
-        if(array_key_exists($bumil->baseEntityId, $komplikasi)){
-            foreach ($komplikasi[$bumil->baseEntityId] as $visit){
-                $thisanc = date("Y-m-d", strtotime($visit->ancDate));
-                $bumilanc = date("Y-m-d", strtotime($bumil->ancDate));
-                if($thisanc<$bumilanc){
-                    if($visit->komplikasidalamKehamilan!=''&&$visit->komplikasidalamKehamilan!='None'&&$visit->komplikasidalamKehamilan!='tidak_ada_komplikasi'){
-                        return true;
+    public function anak($kec,$year,$month,$form){
+        $bulan_map = ['januari'=>1,'februari'=>2,'maret'=>3,'april'=>4,'mei'=>5,'juni'=>6,'juli'=>7,'agustus'=>8,'september'=>9,'oktober'=>10,'november'=>11,'desember'=>12];
+        $bulan_col = ['januari'=>'D','februari'=>'E','maret'=>'F','april'=>'G','mei'=>'H','juni'=>'I','juli'=>'J','agustus'=>'K','september'=>'L','oktober'=>'M','november'=>'N','desember'=>'O'];
+        $startyear = date("Y-m",  strtotime($year.'-1'));
+        $startdate = date("Y-m",  strtotime($year.'-'.$bulan_map[$month]));
+        $enddate = date("Y-m", strtotime($startdate." +1 months"));
+        $user   = array();
+        $result = array();
+        $namefile = "";
+        if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
+            $user = $this->ec->getDesaPwsSpv('bidan',$this->session->userdata('location'));
+            $user_index   = $this->loc->getLocId($this->session->userdata('location'));
+        }else{
+            $user = $this->ec->getDesaPwsSpv('bidan',$kec);
+            $user_index   = $this->loc->getLocId($kec);
+        }
+        
+        $result['form'] = array($form);
+        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
+        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
+        $result['data']['DATA A']['judul'] = ["REKAPITULASI PWS ANAK - KIA KECAMATAN ".strtoupper($kec)];
+        $result['data']['DATA A']['header'] = ["DESA"];
+        $result['data']['DATA A']['desa'] = $user;
+        $result['data']['DATA A']['bayi'] = array_fill(0,count($user),0);
+        $result['data']['DATA A']['balita'] = array_fill(0,count($user),0);
+        
+        $result_index['judul']= ["A1"];
+        $result_index['header']= ["B5"];
+        $result_index['desa']= $this->setArrayIndex($user, 'B', 6);
+        $result_index['bayi'] = $this->setArrayIndex($user, 'C', 6);
+        $result_index['balita'] = $this->setArrayIndex($user, 'E', 6);
+        
+        $pwsdb = $this->load->database('pws', TRUE);
+        $loc = 'kec_'.strtolower($kec);
+        $target = $pwsdb->query("SELECT * FROM target WHERE loc_parent='$loc' AND tahun='$year'")->result();
+        foreach ($target as $t){
+            $lo = explode('desa_', $t->location);
+            $l = ucwords(str_replace('_', ' ', $lo[1]));
+            $key = array_search($l, $user);
+            $result['data']['DATA A']['bayi'][$key] = $t->bayi;
+            $result['data']['DATA A']['balita'][$key] = $t->balita;
+        }
+        $loc = "";
+        foreach ($user as $u){
+            $desa = 'desa_'.strtolower(str_replace(' ', '_', $u));
+            if($u==end($user)){
+                $loc = $loc."location='$desa'";
+            }else{
+                $loc = $loc."location='$desa' OR ";
+            }
+        }
+        $bln = "";
+        foreach ($bulan_map as $b=>$n){
+            if($b==$month){
+                $bln = $bln."bulan='$b'";
+                break;
+            }else{
+                $bln = $bln."bulan='$b' OR ";
+            }
+        }
+        $all_data = $pwsdb->query("SELECT * FROM anak WHERE tahun='$year' AND ($loc) AND ($bln)")->result();
+        $data = [];
+        foreach ($all_data as $d){
+            $lo = explode('desa_', $d->location);
+            $l = ucwords(str_replace('_', ' ', $lo[1]));
+            $data[$d->bulan][$l][$d->field_name] = $d->value;
+        }
+        
+        $file = APPPATH."download/new_pws/pws_anak.xlsx";
+        $this->load->library('PHPExcell');
+        $fileObject = PHPExcel_IOFactory::load($file);
+        
+        foreach ($result['data'] as $ws=>$d){
+            $fileObject->setActiveSheetIndexByName($ws);
+
+            foreach ($d as $key1=>$cell){
+                foreach ($cell as $key2=>$value){
+                    if(isset($result_index[$key1][$key2]))
+                        $fileObject->getActiveSheet()->setCellValue($result_index[$key1][$key2], $value);
+                }
+            }
+        }
+        
+        foreach ($data as $bln=>$d){
+            $result_index['cakupan_k1_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 7);
+            $result_index['cakupan_k4_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 38);
+            $result_index['cakupan_resiko_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 69);
+            $result_index['komplikasi_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 98);
+            $result_index['komplikasi_tertangani_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 127);
+            $result_index['linakes_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 157);
+            $result_index['nolinakes_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 188);
+            $result_index['fasilitas_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 219);
+            $result_index['k_nifas_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 252);
+            $result_index['anemia_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 283);
+            $result_index['kek_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 314);
+            foreach ($d as $desa=>$d2){
+                $key = array_search($desa, $user);
+                foreach ($d2 as $k=>$v){
+                    $result['data']['DATA'][$k][$key] = $v;
+                }
+            }
+            foreach ($result['data'] as $ws=>$d){
+                $fileObject->setActiveSheetIndexByName($ws);
+
+                foreach ($d as $key1=>$cell){
+                    foreach ($cell as $key2=>$value){
+                        if(isset($result_index[$key1][$key2]))
+                            $fileObject->getActiveSheet()->setCellValue($result_index[$key1][$key2], $value);
                     }
                 }
             }
         }
-        return false;
-    }
-    
-    private function isAnemia($bumil,$datalabs){
-        if(array_key_exists($bumil->baseEntityId, $datalabs)){
-            foreach ($datalabs[$bumil->baseEntityId] as $data){
-                if($data->laboratoriumPeriksaHbAnemia=='positif'||$data->highRiskPregnancyAnemia=='yes'){
-                    return true;
-                }
-            }
+        
+        $kec = explode(" ",$result['kecamatan'][0]);
+        $kecamatan = end($kec);
+        $prev = prev($kec);
+        while(!(count($prev)==0||$prev==':')){
+            $kecamatan = $prev.'_'.$kecamatan;
+            $prev = prev($kec);
         }
-        return false;
+        $bt = explode(" ",$result['bulan'][0]);
+        $tahun = end($bt);
+        $bulan = prev($bt);
+        $savedFileName = 'PWS-'.strtoupper($result['form'][0]).'-'.strtoupper($kecamatan).'-'.strtoupper($bulan).'-'.strtoupper($tahun).'.xlsx';
+        
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="'.$savedFileName.'"'); 
+        header('Cache-Control: max-age=0');
+
+        $saveContainer = PHPExcel_IOFactory::createWriter($fileObject,'Excel2007');
+        $saveContainer->save('php://output');
     }
     
     public function bayi($kec,$year,$month,$form){
+        $bulan_map = ['januari'=>1,'februari'=>2,'maret'=>3,'april'=>4,'mei'=>5,'juni'=>6,'juli'=>7,'agustus'=>8,'september'=>9,'oktober'=>10,'november'=>11,'desember'=>12];
+        $bulan_col = ['januari'=>'D','februari'=>'E','maret'=>'F','april'=>'G','mei'=>'H','juni'=>'I','juli'=>'J','agustus'=>'K','september'=>'L','oktober'=>'M','november'=>'N','desember'=>'O'];
+        $startyear = date("Y-m",  strtotime($year.'-1'));
+        $startdate = date("Y-m",  strtotime($year.'-'.$bulan_map[$month]));
+        $enddate = date("Y-m", strtotime($startdate." +1 months"));
         $user   = array();
         $result = array();
         $namefile = "";
@@ -246,77 +358,116 @@ class BidanEcPwsModel extends CI_Model{
             $user = $this->ec->getDesaPwsSpv('bidan',$kec);
             $user_index   = $this->loc->getLocId($kec);
         }
-        $namefile .= "_".$month."_".$kec.".xls";
+        
         $result['form'] = array($form);
         $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
         $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
-        $result['desa'] = $user;
-        $result['kasus1_L_bulan_ini'] = array_fill(0,count($user),0);
-        $result['kasus1_P_bulan_ini'] = array_fill(0,count($user),0);
-        $result['kasus1_L_komulatif'] = array_fill(0,count($user),0);
-        $result['kasus1_P_komulatif'] = array_fill(0,count($user),0);
-        $result['mati1_L_bulan_ini'] = array_fill(0,count($user),0);
-        $result['mati1_P_bulan_ini'] = array_fill(0,count($user),0);
-        $result['mati1_L_komulatif'] = array_fill(0,count($user),0);
-        $result['mati1_P_komulatif'] = array_fill(0,count($user),0);
+        $result['data']['DATA A']['judul'] = ["KECAMATAN ".strtoupper($kec)];
+        $result['data']['DATA A']['header'] = ["DESA"];
+        $result['data']['DATA A']['desa'] = $user;
         
-        $result['kasus2_L_bulan_ini'] = array_fill(0,count($user),0);
-        $result['kasus2_P_bulan_ini'] = array_fill(0,count($user),0);
-        $result['kasus2_L_komulatif'] = array_fill(0,count($user),0);
-        $result['kasus2_P_komulatif'] = array_fill(0,count($user),0);
-        $result['mati2_L_bulan_ini'] = array_fill(0,count($user),0);
-        $result['mati2_P_bulan_ini'] = array_fill(0,count($user),0);
-        $result['mati2_L_komulatif'] = array_fill(0,count($user),0);
-        $result['mati2_P_komulatif'] = array_fill(0,count($user),0);
+        $result_index['judul']= ["A2"];
+        $result_index['header']= ["B17"];
+        $result_index['desa']= $this->setArrayIndex($user, 'B', 18);
         
-        $result_index['kecamatan'] = array("A2");
-        $result_index['bulan'] = array("A5");
-        $result_index['desa']=$this->setArrayIndex($user, 'B', 12);
-        $result_index['kasus1_L_bulan_ini']=$this->setArrayIndex($user, 'C', 12);
-        $result_index['kasus1_P_bulan_ini']=$this->setArrayIndex($user, 'D', 12);
-        $result_index['kasus1_L_komulatif']=$this->setArrayIndex($user, 'F', 12);
-        $result_index['kasus1_P_komulatif']=$this->setArrayIndex($user, 'G', 12);
-        $result_index['mati1_L_bulan_ini']=$this->setArrayIndex($user, 'I', 12);
-        $result_index['mati1_P_bulan_ini']=$this->setArrayIndex($user, 'J', 12);
-        $result_index['mati1_L_komulatif']=$this->setArrayIndex($user, 'L', 12);
-        $result_index['mati1_P_komulatif']=$this->setArrayIndex($user, 'M', 12);
+        $pwsdb = $this->load->database('pws', TRUE);
+        $loc = "";
+        foreach ($user as $u){
+            $desa = 'desa_'.strtolower(str_replace(' ', '_', $u));
+            if($u==end($user)){
+                $loc = $loc."location='$desa'";
+            }else{
+                $loc = $loc."location='$desa' OR ";
+            }
+        }
+        $bln = "";
+        foreach ($bulan_map as $b=>$n){
+            if($b==$month){
+                $bln = $bln."bulan='$b'";
+                break;
+            }else{
+                $bln = $bln."bulan='$b' OR ";
+            }
+        }
+        $all_data = $pwsdb->query("SELECT * FROM bayi WHERE tahun='$year' AND ($loc) AND ($bln)")->result();
+        $data = [];
+        foreach ($all_data as $d){
+            $lo = explode('desa_', $d->location);
+            $l = ucwords(str_replace('_', ' ', $lo[1]));
+            $data[$d->bulan][$l][$d->field_name] = $d->value;
+        }
         
-        $result_index['kasus2_L_bulan_ini']=$this->setArrayIndex($user, 'O', 12);
-        $result_index['kasus2_P_bulan_ini']=$this->setArrayIndex($user, 'P', 12);
-        $result_index['kasus2_L_komulatif']=$this->setArrayIndex($user, 'R', 12);
-        $result_index['kasus2_P_komulatif']=$this->setArrayIndex($user, 'S', 12);
-        $result_index['mati2_L_bulan_ini']=$this->setArrayIndex($user, 'U', 12);
-        $result_index['mati2_P_bulan_ini']=$this->setArrayIndex($user, 'V', 12);
-        $result_index['mati2_L_komulatif']=$this->setArrayIndex($user, 'X', 12);
-        $result_index['mati2_P_komulatif']=$this->setArrayIndex($user, 'Y', 12);
+        $file = APPPATH."download/new_pws/pws_bayi.xlsx";
+        $this->load->library('PHPExcell');
+        $fileObject = PHPExcel_IOFactory::load($file);
         
-//        try{
-//            $dataanemia = $this->PHPExcelModel->getCellRange('download/pws/cakupan_bumil_anemia'.$namefile,'A2:E8');
-//            $datakek = $this->PHPExcelModel->getCellRange('download/pws/cakupan_bumil_kek'.$namefile,'A2:E8');
-//
-//            foreach ($dataanemia as $anemia){
-//                if(array_search($anemia['C'],$result['desa'])>=0){
-//                    $key=array_search($anemia['C'],$result['desa']);
-//                    $result['anemia_bulan_lalu'][$key] += (int)$anemia['B'];
-//                    $result['anemia_bulan_ini'][$key] += (int)$anemia['E'];
-//                }
-//            }
-//            foreach ($datakek as $kek){
-//                if(array_search($kek['C'],$result['desa'])>=0){
-//                    $key=array_search($kek['C'],$result['desa']);
-//                    $result['kek_bulan_lalu'][$key] += (int)$kek['B'];
-//                    $result['kek_bulan_ini'][$key] += (int)$kek['E'];
-//                }
-//            }
-//        } catch (Exception $ex) {
-//            //$this->session->set_flashdata('file', '<div class="alert alert-danger">Tidak ada data '.$form.' untuk bulan '.$month.'</div>');
-//            //redirect("laporan/downloadbidanpws");
-//        }
-        //var_dump($result);exit;
-        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_".$form.".xlsx",$result,$result_index);
+        foreach ($result['data'] as $ws=>$d){
+            $fileObject->setActiveSheetIndexByName($ws);
+
+            foreach ($d as $key1=>$cell){
+                foreach ($cell as $key2=>$value){
+                    if(isset($result_index[$key1][$key2]))
+                        $fileObject->getActiveSheet()->setCellValue($result_index[$key1][$key2], $value);
+                }
+            }
+        }
+        
+        foreach ($data as $bln=>$d){
+            $result_index['cakupan_k1_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 7);
+            $result_index['cakupan_k4_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 38);
+            $result_index['cakupan_resiko_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 69);
+            $result_index['komplikasi_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 98);
+            $result_index['komplikasi_tertangani_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 127);
+            $result_index['linakes_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 157);
+            $result_index['nolinakes_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 188);
+            $result_index['fasilitas_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 219);
+            $result_index['k_nifas_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 252);
+            $result_index['anemia_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 283);
+            $result_index['kek_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 314);
+            foreach ($d as $desa=>$d2){
+                $key = array_search($desa, $user);
+                foreach ($d2 as $k=>$v){
+                    $result['data']['DATA'][$k][$key] = $v;
+                }
+            }
+            foreach ($result['data'] as $ws=>$d){
+                $fileObject->setActiveSheetIndexByName($ws);
+
+                foreach ($d as $key1=>$cell){
+                    foreach ($cell as $key2=>$value){
+                        if(isset($result_index[$key1][$key2]))
+                            $fileObject->getActiveSheet()->setCellValue($result_index[$key1][$key2], $value);
+                    }
+                }
+            }
+        }
+        
+        $kec = explode(" ",$result['kecamatan'][0]);
+        $kecamatan = end($kec);
+        $prev = prev($kec);
+        while(!(count($prev)==0||$prev==':')){
+            $kecamatan = $prev.'_'.$kecamatan;
+            $prev = prev($kec);
+        }
+        $bt = explode(" ",$result['bulan'][0]);
+        $tahun = end($bt);
+        $bulan = prev($bt);
+        $savedFileName = 'PWS-'.strtoupper($result['form'][0]).'-'.strtoupper($kecamatan).'-'.strtoupper($bulan).'-'.strtoupper($tahun).'.xlsx';
+        
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="'.$savedFileName.'"'); 
+        header('Cache-Control: max-age=0');
+
+        $saveContainer = PHPExcel_IOFactory::createWriter($fileObject,'Excel2007');
+        $saveContainer->save('php://output');
     }
     
     public function balita($kec,$year,$month,$form){
+        $bulan_map = ['januari'=>1,'februari'=>2,'maret'=>3,'april'=>4,'mei'=>5,'juni'=>6,'juli'=>7,'agustus'=>8,'september'=>9,'oktober'=>10,'november'=>11,'desember'=>12];
+        $bulan_col = ['januari'=>'D','februari'=>'E','maret'=>'F','april'=>'G','mei'=>'H','juni'=>'I','juli'=>'J','agustus'=>'K','september'=>'L','oktober'=>'M','november'=>'N','desember'=>'O'];
+        $startyear = date("Y-m",  strtotime($year.'-1'));
+        $startdate = date("Y-m",  strtotime($year.'-'.$bulan_map[$month]));
+        $enddate = date("Y-m", strtotime($startdate." +1 months"));
         $user   = array();
         $result = array();
         $namefile = "";
@@ -327,76 +478,116 @@ class BidanEcPwsModel extends CI_Model{
             $user = $this->ec->getDesaPwsSpv('bidan',$kec);
             $user_index   = $this->loc->getLocId($kec);
         }
-        $namefile .= "_".$month."_".$kec.".xls";
+        
         $result['form'] = array($form);
         $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
         $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
-        $result['desa'] = $user;
-        $result['kasus1_L_bulan_ini'] = array_fill(0,count($user),0);
-        $result['kasus1_P_bulan_ini'] = array_fill(0,count($user),0);
-        $result['kasus1_L_komulatif'] = array_fill(0,count($user),0);
-        $result['kasus1_P_komulatif'] = array_fill(0,count($user),0);
-        $result['mati1_L_bulan_ini'] = array_fill(0,count($user),0);
-        $result['mati1_P_bulan_ini'] = array_fill(0,count($user),0);
-        $result['mati1_L_komulatif'] = array_fill(0,count($user),0);
-        $result['mati1_P_komulatif'] = array_fill(0,count($user),0);
+        $result['data']['DATA A']['judul'] = ["KECAMATAN ".strtoupper($kec)];
+        $result['data']['DATA A']['header'] = ["DESA"];
+        $result['data']['DATA A']['desa'] = $user;
         
-        $result['kasus2_L_bulan_ini'] = array_fill(0,count($user),0);
-        $result['kasus2_P_bulan_ini'] = array_fill(0,count($user),0);
-        $result['kasus2_L_komulatif'] = array_fill(0,count($user),0);
-        $result['kasus2_P_komulatif'] = array_fill(0,count($user),0);
-        $result['mati2_L_bulan_ini'] = array_fill(0,count($user),0);
-        $result['mati2_P_bulan_ini'] = array_fill(0,count($user),0);
-        $result['mati2_L_komulatif'] = array_fill(0,count($user),0);
-        $result['mati2_P_komulatif'] = array_fill(0,count($user),0);
+        $result_index['judul']= ["A2"];
+        $result_index['header']= ["B17"];
+        $result_index['desa']= $this->setArrayIndex($user, 'B', 18);
         
-        $result_index['kecamatan'] = array("A2");
-        $result_index['bulan'] = array("A5");
-        $result_index['desa']=$this->setArrayIndex($user, 'B', 12);
-        $result_index['kasus1_L_bulan_ini']=$this->setArrayIndex($user, 'C', 12);
-        $result_index['kasus1_P_bulan_ini']=$this->setArrayIndex($user, 'D', 12);
-        $result_index['kasus1_L_komulatif']=$this->setArrayIndex($user, 'F', 12);
-        $result_index['kasus1_P_komulatif']=$this->setArrayIndex($user, 'G', 12);
-        $result_index['mati1_L_bulan_ini']=$this->setArrayIndex($user, 'I', 12);
-        $result_index['mati1_P_bulan_ini']=$this->setArrayIndex($user, 'J', 12);
-        $result_index['mati1_L_komulatif']=$this->setArrayIndex($user, 'L', 12);
-        $result_index['mati1_P_komulatif']=$this->setArrayIndex($user, 'M', 12);
+        $pwsdb = $this->load->database('pws', TRUE);
+        $loc = "";
+        foreach ($user as $u){
+            $desa = 'desa_'.strtolower(str_replace(' ', '_', $u));
+            if($u==end($user)){
+                $loc = $loc."location='$desa'";
+            }else{
+                $loc = $loc."location='$desa' OR ";
+            }
+        }
+        $bln = "";
+        foreach ($bulan_map as $b=>$n){
+            if($b==$month){
+                $bln = $bln."bulan='$b'";
+                break;
+            }else{
+                $bln = $bln."bulan='$b' OR ";
+            }
+        }
+        $all_data = $pwsdb->query("SELECT * FROM balita WHERE tahun='$year' AND ($loc) AND ($bln)")->result();
+        $data = [];
+        foreach ($all_data as $d){
+            $lo = explode('desa_', $d->location);
+            $l = ucwords(str_replace('_', ' ', $lo[1]));
+            $data[$d->bulan][$l][$d->field_name] = $d->value;
+        }
         
-        $result_index['kasus2_L_bulan_ini']=$this->setArrayIndex($user, 'O', 12);
-        $result_index['kasus2_P_bulan_ini']=$this->setArrayIndex($user, 'P', 12);
-        $result_index['kasus2_L_komulatif']=$this->setArrayIndex($user, 'R', 12);
-        $result_index['kasus2_P_komulatif']=$this->setArrayIndex($user, 'S', 12);
-        $result_index['mati2_L_bulan_ini']=$this->setArrayIndex($user, 'U', 12);
-        $result_index['mati2_P_bulan_ini']=$this->setArrayIndex($user, 'V', 12);
-        $result_index['mati2_L_komulatif']=$this->setArrayIndex($user, 'X', 12);
-        $result_index['mati2_P_komulatif']=$this->setArrayIndex($user, 'Y', 12);
+        $file = APPPATH."download/new_pws/pws_balita.xlsx";
+        $this->load->library('PHPExcell');
+        $fileObject = PHPExcel_IOFactory::load($file);
         
-//        try{
-//            $dataanemia = $this->PHPExcelModel->getCellRange('download/pws/cakupan_bumil_anemia'.$namefile,'A2:E8');
-//            $datakek = $this->PHPExcelModel->getCellRange('download/pws/cakupan_bumil_kek'.$namefile,'A2:E8');
-//
-//            foreach ($dataanemia as $anemia){
-//                if(array_search($anemia['C'],$result['desa'])>=0){
-//                    $key=array_search($anemia['C'],$result['desa']);
-//                    $result['anemia_bulan_lalu'][$key] += (int)$anemia['B'];
-//                    $result['anemia_bulan_ini'][$key] += (int)$anemia['E'];
-//                }
-//            }
-//            foreach ($datakek as $kek){
-//                if(array_search($kek['C'],$result['desa'])>=0){
-//                    $key=array_search($kek['C'],$result['desa']);
-//                    $result['kek_bulan_lalu'][$key] += (int)$kek['B'];
-//                    $result['kek_bulan_ini'][$key] += (int)$kek['E'];
-//                }
-//            }
-//        } catch (Exception $ex) {
-//            //$this->session->set_flashdata('file', '<div class="alert alert-danger">Tidak ada data '.$form.' untuk bulan '.$month.'</div>');
-//            //redirect("laporan/downloadbidanpws");
-//        }
-        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_".$form.".xlsx",$result,$result_index);
+        foreach ($result['data'] as $ws=>$d){
+            $fileObject->setActiveSheetIndexByName($ws);
+
+            foreach ($d as $key1=>$cell){
+                foreach ($cell as $key2=>$value){
+                    if(isset($result_index[$key1][$key2]))
+                        $fileObject->getActiveSheet()->setCellValue($result_index[$key1][$key2], $value);
+                }
+            }
+        }
+        
+        foreach ($data as $bln=>$d){
+            $result_index['cakupan_k1_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 7);
+            $result_index['cakupan_k4_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 38);
+            $result_index['cakupan_resiko_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 69);
+            $result_index['komplikasi_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 98);
+            $result_index['komplikasi_tertangani_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 127);
+            $result_index['linakes_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 157);
+            $result_index['nolinakes_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 188);
+            $result_index['fasilitas_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 219);
+            $result_index['k_nifas_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 252);
+            $result_index['anemia_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 283);
+            $result_index['kek_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 314);
+            foreach ($d as $desa=>$d2){
+                $key = array_search($desa, $user);
+                foreach ($d2 as $k=>$v){
+                    $result['data']['DATA'][$k][$key] = $v;
+                }
+            }
+            foreach ($result['data'] as $ws=>$d){
+                $fileObject->setActiveSheetIndexByName($ws);
+
+                foreach ($d as $key1=>$cell){
+                    foreach ($cell as $key2=>$value){
+                        if(isset($result_index[$key1][$key2]))
+                            $fileObject->getActiveSheet()->setCellValue($result_index[$key1][$key2], $value);
+                    }
+                }
+            }
+        }
+        
+        $kec = explode(" ",$result['kecamatan'][0]);
+        $kecamatan = end($kec);
+        $prev = prev($kec);
+        while(!(count($prev)==0||$prev==':')){
+            $kecamatan = $prev.'_'.$kecamatan;
+            $prev = prev($kec);
+        }
+        $bt = explode(" ",$result['bulan'][0]);
+        $tahun = end($bt);
+        $bulan = prev($bt);
+        $savedFileName = 'PWS-'.strtoupper($result['form'][0]).'-'.strtoupper($kecamatan).'-'.strtoupper($bulan).'-'.strtoupper($tahun).'.xlsx';
+        
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="'.$savedFileName.'"'); 
+        header('Cache-Control: max-age=0');
+
+        $saveContainer = PHPExcel_IOFactory::createWriter($fileObject,'Excel2007');
+        $saveContainer->save('php://output');
     }
     
     public function maternal($kec,$year,$month,$form){
+        $bulan_map = ['januari'=>1,'februari'=>2,'maret'=>3,'april'=>4,'mei'=>5,'juni'=>6,'juli'=>7,'agustus'=>8,'september'=>9,'oktober'=>10,'november'=>11,'desember'=>12];
+        $bulan_col = ['januari'=>'D','februari'=>'E','maret'=>'F','april'=>'G','mei'=>'H','juni'=>'I','juli'=>'J','agustus'=>'K','september'=>'L','oktober'=>'M','november'=>'N','desember'=>'O'];
+        $startyear = date("Y-m",  strtotime($year.'-1'));
+        $startdate = date("Y-m",  strtotime($year.'-'.$bulan_map[$month]));
+        $enddate = date("Y-m", strtotime($startdate." +1 months"));
         $user   = array();
         $result = array();
         $namefile = "";
@@ -407,18 +598,116 @@ class BidanEcPwsModel extends CI_Model{
             $user = $this->ec->getDesaPwsSpv('bidan',$kec);
             $user_index   = $this->loc->getLocId($kec);
         }
-        $namefile .= "_".$month."_".$kec.".xls";
+        
         $result['form'] = array($form);
         $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
         $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
-        $result['desa'] = $user;
-        $result_index['kecamatan'] = array("A2");
-        $result_index['bulan'] = array("A5");
+        $result['data']['Sheet1']['judul'] = ["KECAMATAN ".strtoupper($kec)];
+        $result['data']['Perdarahan']['header'] = ["DESA"];
+        $result['data']['Perdarahan']['desa'] = $user;
         
-        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_amp.xlsx",$result,$result_index);
+        $result_index['judul']= ["F5"];
+        $result_index['header']= ["B5"];
+        $result_index['desa']= $this->setArrayIndex($user, 'B', 7);
+        
+        $pwsdb = $this->load->database('pws', TRUE);
+        $loc = "";
+        foreach ($user as $u){
+            $desa = 'desa_'.strtolower(str_replace(' ', '_', $u));
+            if($u==end($user)){
+                $loc = $loc."location='$desa'";
+            }else{
+                $loc = $loc."location='$desa' OR ";
+            }
+        }
+        $bln = "";
+        foreach ($bulan_map as $b=>$n){
+            if($b==$month){
+                $bln = $bln."bulan='$b'";
+                break;
+            }else{
+                $bln = $bln."bulan='$b' OR ";
+            }
+        }
+        $all_data = $pwsdb->query("SELECT * FROM maternal WHERE tahun='$year' AND ($loc) AND ($bln)")->result();
+        $data = [];
+        foreach ($all_data as $d){
+            $lo = explode('desa_', $d->location);
+            $l = ucwords(str_replace('_', ' ', $lo[1]));
+            $data[$d->bulan][$l][$d->field_name] = $d->value;
+        }
+        
+        $file = APPPATH."download/new_pws/pws_ibu.xlsx";
+        $this->load->library('PHPExcell');
+        $fileObject = PHPExcel_IOFactory::load($file);
+        
+        foreach ($result['data'] as $ws=>$d){
+            $fileObject->setActiveSheetIndexByName($ws);
+
+            foreach ($d as $key1=>$cell){
+                foreach ($cell as $key2=>$value){
+                    if(isset($result_index[$key1][$key2]))
+                        $fileObject->getActiveSheet()->setCellValue($result_index[$key1][$key2], $value);
+                }
+            }
+        }
+        
+        foreach ($data as $bln=>$d){
+            $result_index['cakupan_k1_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 7);
+            $result_index['cakupan_k4_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 38);
+            $result_index['cakupan_resiko_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 69);
+            $result_index['komplikasi_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 98);
+            $result_index['komplikasi_tertangani_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 127);
+            $result_index['linakes_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 157);
+            $result_index['nolinakes_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 188);
+            $result_index['fasilitas_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 219);
+            $result_index['k_nifas_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 252);
+            $result_index['anemia_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 283);
+            $result_index['kek_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 314);
+            foreach ($d as $desa=>$d2){
+                $key = array_search($desa, $user);
+                foreach ($d2 as $k=>$v){
+                    $result['data']['DATA'][$k][$key] = $v;
+                }
+            }
+            foreach ($result['data'] as $ws=>$d){
+                $fileObject->setActiveSheetIndexByName($ws);
+
+                foreach ($d as $key1=>$cell){
+                    foreach ($cell as $key2=>$value){
+                        if(isset($result_index[$key1][$key2]))
+                            $fileObject->getActiveSheet()->setCellValue($result_index[$key1][$key2], $value);
+                    }
+                }
+            }
+        }
+        
+        $kec = explode(" ",$result['kecamatan'][0]);
+        $kecamatan = end($kec);
+        $prev = prev($kec);
+        while(!(count($prev)==0||$prev==':')){
+            $kecamatan = $prev.'_'.$kecamatan;
+            $prev = prev($kec);
+        }
+        $bt = explode(" ",$result['bulan'][0]);
+        $tahun = end($bt);
+        $bulan = prev($bt);
+        $savedFileName = 'PWS-'.strtoupper($result['form'][0]).'-'.strtoupper($kecamatan).'-'.strtoupper($bulan).'-'.strtoupper($tahun).'.xlsx';
+        
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="'.$savedFileName.'"'); 
+        header('Cache-Control: max-age=0');
+
+        $saveContainer = PHPExcel_IOFactory::createWriter($fileObject,'Excel2007');
+        $saveContainer->save('php://output');
     }
     
-    public function neonatal1($kec,$year,$month,$form){
+    public function neonatal($kec,$year,$month,$form){
+        $bulan_map = ['januari'=>1,'februari'=>2,'maret'=>3,'april'=>4,'mei'=>5,'juni'=>6,'juli'=>7,'agustus'=>8,'september'=>9,'oktober'=>10,'november'=>11,'desember'=>12];
+        $bulan_col = ['januari'=>'D','februari'=>'E','maret'=>'F','april'=>'G','mei'=>'H','juni'=>'I','juli'=>'J','agustus'=>'K','september'=>'L','oktober'=>'M','november'=>'N','desember'=>'O'];
+        $startyear = date("Y-m",  strtotime($year.'-1'));
+        $startdate = date("Y-m",  strtotime($year.'-'.$bulan_map[$month]));
+        $enddate = date("Y-m", strtotime($startdate." +1 months"));
         $user   = array();
         $result = array();
         $namefile = "";
@@ -429,18 +718,116 @@ class BidanEcPwsModel extends CI_Model{
             $user = $this->ec->getDesaPwsSpv('bidan',$kec);
             $user_index   = $this->loc->getLocId($kec);
         }
-        $namefile .= "_".$month."_".$kec.".xls";
+        
         $result['form'] = array($form);
         $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
         $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
-        $result['desa'] = $user;
-        $result_index['kecamatan'] = array("A2");
-        $result_index['bulan'] = array("A5");
+        $result['data']['DATA A']['judul'] = ["KECAMATAN ".strtoupper($kec)];
+        $result['data']['DATA A']['header'] = ["DESA"];
+        $result['data']['DATA A']['desa'] = $user;
         
-        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_neonatal_1.xlsx",$result,$result_index);
+        $result_index['judul']= ["A2"];
+        $result_index['header']= ["B17"];
+        $result_index['desa']= $this->setArrayIndex($user, 'B', 18);
+        
+        $pwsdb = $this->load->database('pws', TRUE);
+        $loc = "";
+        foreach ($user as $u){
+            $desa = 'desa_'.strtolower(str_replace(' ', '_', $u));
+            if($u==end($user)){
+                $loc = $loc."location='$desa'";
+            }else{
+                $loc = $loc."location='$desa' OR ";
+            }
+        }
+        $bln = "";
+        foreach ($bulan_map as $b=>$n){
+            if($b==$month){
+                $bln = $bln."bulan='$b'";
+                break;
+            }else{
+                $bln = $bln."bulan='$b' OR ";
+            }
+        }
+        $all_data = $pwsdb->query("SELECT * FROM neonatal WHERE tahun='$year' AND ($loc) AND ($bln)")->result();
+        $data = [];
+        foreach ($all_data as $d){
+            $lo = explode('desa_', $d->location);
+            $l = ucwords(str_replace('_', ' ', $lo[1]));
+            $data[$d->bulan][$l][$d->field_name] = $d->value;
+        }
+        
+        $file = APPPATH."download/new_pws/pws_neonatal.xlsx";
+        $this->load->library('PHPExcell');
+        $fileObject = PHPExcel_IOFactory::load($file);
+        
+        foreach ($result['data'] as $ws=>$d){
+            $fileObject->setActiveSheetIndexByName($ws);
+
+            foreach ($d as $key1=>$cell){
+                foreach ($cell as $key2=>$value){
+                    if(isset($result_index[$key1][$key2]))
+                        $fileObject->getActiveSheet()->setCellValue($result_index[$key1][$key2], $value);
+                }
+            }
+        }
+        
+        foreach ($data as $bln=>$d){
+            $result_index['cakupan_k1_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 7);
+            $result_index['cakupan_k4_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 38);
+            $result_index['cakupan_resiko_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 69);
+            $result_index['komplikasi_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 98);
+            $result_index['komplikasi_tertangani_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 127);
+            $result_index['linakes_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 157);
+            $result_index['nolinakes_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 188);
+            $result_index['fasilitas_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 219);
+            $result_index['k_nifas_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 252);
+            $result_index['anemia_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 283);
+            $result_index['kek_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 314);
+            foreach ($d as $desa=>$d2){
+                $key = array_search($desa, $user);
+                foreach ($d2 as $k=>$v){
+                    $result['data']['DATA'][$k][$key] = $v;
+                }
+            }
+            foreach ($result['data'] as $ws=>$d){
+                $fileObject->setActiveSheetIndexByName($ws);
+
+                foreach ($d as $key1=>$cell){
+                    foreach ($cell as $key2=>$value){
+                        if(isset($result_index[$key1][$key2]))
+                            $fileObject->getActiveSheet()->setCellValue($result_index[$key1][$key2], $value);
+                    }
+                }
+            }
+        }
+        
+        $kec = explode(" ",$result['kecamatan'][0]);
+        $kecamatan = end($kec);
+        $prev = prev($kec);
+        while(!(count($prev)==0||$prev==':')){
+            $kecamatan = $prev.'_'.$kecamatan;
+            $prev = prev($kec);
+        }
+        $bt = explode(" ",$result['bulan'][0]);
+        $tahun = end($bt);
+        $bulan = prev($bt);
+        $savedFileName = 'PWS-'.strtoupper($result['form'][0]).'-'.strtoupper($kecamatan).'-'.strtoupper($bulan).'-'.strtoupper($tahun).'.xlsx';
+        
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="'.$savedFileName.'"'); 
+        header('Cache-Control: max-age=0');
+
+        $saveContainer = PHPExcel_IOFactory::createWriter($fileObject,'Excel2007');
+        $saveContainer->save('php://output');
     }
     
-    public function neonatal2($kec,$year,$month,$form){
+    public function kb($kec,$year,$month,$form){
+        $bulan_map = ['januari'=>1,'februari'=>2,'maret'=>3,'april'=>4,'mei'=>5,'juni'=>6,'juli'=>7,'agustus'=>8,'september'=>9,'oktober'=>10,'november'=>11,'desember'=>12];
+        $bulan_col = ['januari'=>'D','februari'=>'E','maret'=>'F','april'=>'G','mei'=>'H','juni'=>'I','juli'=>'J','agustus'=>'K','september'=>'L','oktober'=>'M','november'=>'N','desember'=>'O'];
+        $startyear = date("Y-m",  strtotime($year.'-1'));
+        $startdate = date("Y-m",  strtotime($year.'-'.$bulan_map[$month]));
+        $enddate = date("Y-m", strtotime($startdate." +1 months"));
         $user   = array();
         $result = array();
         $namefile = "";
@@ -451,257 +838,121 @@ class BidanEcPwsModel extends CI_Model{
             $user = $this->ec->getDesaPwsSpv('bidan',$kec);
             $user_index   = $this->loc->getLocId($kec);
         }
-        $namefile .= "_".$month."_".$kec.".xls";
+        
         $result['form'] = array($form);
         $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
         $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
-        $result['desa'] = $user;
-        $result_index['kecamatan'] = array("A2");
-        $result_index['bulan'] = array("A5");
+        $result['data']['DATA A']['judul'] = ["PEMANTAUAN WILAYAH SETEMPAT (PWS) KECAMATAN ".strtoupper($kec)." TAHUN ".$year];
+        $result['data']['DATA A']['header'] = ["DESA"];
+        $result['data']['DATA A']['desa'] = $user;
+        $result['data']['DATA A']['pus'] = array_fill(0,count($user),0);
+        $result['data']['DATA A']['pus4t'] = array_fill(0,count($user),0);
         
-        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_neonatal_2.xlsx",$result,$result_index);
-    }
-    
-    public function neonatal3($kec,$year,$month,$form){
-        $user   = array();
-        $result = array();
-        $namefile = "";
-        if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
-            $user = $this->ec->getDesaPwsSpv('bidan',$this->session->userdata('location'));
-            $user_index   = $this->loc->getLocId($this->session->userdata('location'));
-        }else{
-            $user = $this->ec->getDesaPwsSpv('bidan',$kec);
-            $user_index   = $this->loc->getLocId($kec);
+        $result_index['judul']= ["A2"];
+        $result_index['header']= ["B5"];
+        $result_index['desa']= $this->setArrayIndex($user, 'B', 7);
+        $result_index['pus'] = $this->setArrayIndex($user, 'C', 7);
+        $result_index['pus4t'] = $this->setArrayIndex($user, 'D', 7);
+        
+        $pwsdb = $this->load->database('pws', TRUE);
+        $loc = 'kec_'.strtolower($kec);
+        $target = $pwsdb->query("SELECT * FROM target WHERE loc_parent='$loc' AND tahun='$year'")->result();
+        foreach ($target as $t){
+            $lo = explode('desa_', $t->location);
+            $l = ucwords(str_replace('_', ' ', $lo[1]));
+            $key = array_search($l, $user);
+            $result['data']['DATA A']['pus'][$key] = $t->pus;
+            $result['data']['DATA A']['pus4t'][$key] = $t->pus4t;
         }
-        $namefile .= "_".$month."_".$kec.".xls";
-        $result['form'] = array($form);
-        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
-        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
-        $result['desa'] = $user;
-        $result_index['kecamatan'] = array("A2");
-        $result_index['bulan'] = array("A5");
-        
-        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_neonatal_3.xlsx",$result,$result_index);
-    }
-    
-    public function neonatal4($kec,$year,$month,$form){
-        $user   = array();
-        $result = array();
-        $namefile = "";
-        if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
-            $user = $this->ec->getDesaPwsSpv('bidan',$this->session->userdata('location'));
-            $user_index   = $this->loc->getLocId($this->session->userdata('location'));
-        }else{
-            $user = $this->ec->getDesaPwsSpv('bidan',$kec);
-            $user_index   = $this->loc->getLocId($kec);
+        $loc = "";
+        foreach ($user as $u){
+            $desa = 'desa_'.strtolower(str_replace(' ', '_', $u));
+            if($u==end($user)){
+                $loc = $loc."location='$desa'";
+            }else{
+                $loc = $loc."location='$desa' OR ";
+            }
         }
-        $namefile .= "_".$month."_".$kec.".xls";
-        $result['form'] = array($form);
-        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
-        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
-        $result['desa'] = $user;
-        $result_index['kecamatan'] = array("A2");
-        $result_index['bulan'] = array("A5");
-        
-        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_neonatal_4.xlsx",$result,$result_index);
-    }
-    
-    public function neonatal5($kec,$year,$month,$form){
-        $user   = array();
-        $result = array();
-        $namefile = "";
-        if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
-            $user = $this->ec->getDesaPwsSpv('bidan',$this->session->userdata('location'));
-            $user_index   = $this->loc->getLocId($this->session->userdata('location'));
-        }else{
-            $user = $this->ec->getDesaPwsSpv('bidan',$kec);
-            $user_index   = $this->loc->getLocId($kec);
+        $bln = "";
+        foreach ($bulan_map as $b=>$n){
+            if($b==$month){
+                $bln = $bln."bulan='$b'";
+                break;
+            }else{
+                $bln = $bln."bulan='$b' OR ";
+            }
         }
-        $namefile .= "_".$month."_".$kec.".xls";
-        $result['form'] = array($form);
-        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
-        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
-        $result['desa'] = $user;
-        $result_index['kecamatan'] = array("A2");
-        $result_index['bulan'] = array("A5");
-        
-        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_neonatal_5.xlsx",$result,$result_index);
-    }
-    
-    public function kb1($kec,$year,$month,$form){
-        $user   = array();
-        $result = array();
-        $namefile = "";
-        if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
-            $user = $this->ec->getDesaPwsSpv('bidan',$this->session->userdata('location'));
-            $user_index   = $this->loc->getLocId($this->session->userdata('location'));
-        }else{
-            $user = $this->ec->getDesaPwsSpv('bidan',$kec);
-            $user_index   = $this->loc->getLocId($kec);
+        $all_data = $pwsdb->query("SELECT * FROM kb WHERE tahun='$year' AND ($loc) AND ($bln)")->result();
+        $data = [];
+        foreach ($all_data as $d){
+            $lo = explode('desa_', $d->location);
+            $l = ucwords(str_replace('_', ' ', $lo[1]));
+            $data[$d->bulan][$l][$d->field_name] = $d->value;
         }
-        $namefile .= "_".$month."_".$kec.".xls";
-        $result['form'] = array($form);
-        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
-        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
-        $result['desa'] = $user;
-        $result_index['kecamatan'] = array("A2");
-        $result_index['bulan'] = array("A5");
         
-        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_kb_1.xlsx",$result,$result_index);
-    }
-    
-    public function kb2($kec,$year,$month,$form){
-        $user   = array();
-        $result = array();
-        $namefile = "";
-        if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
-            $user = $this->ec->getDesaPwsSpv('bidan',$this->session->userdata('location'));
-            $user_index   = $this->loc->getLocId($this->session->userdata('location'));
-        }else{
-            $user = $this->ec->getDesaPwsSpv('bidan',$kec);
-            $user_index   = $this->loc->getLocId($kec);
+        $file = APPPATH."download/new_pws/pws_kb.xlsx";
+        $this->load->library('PHPExcell');
+        $fileObject = PHPExcel_IOFactory::load($file);
+        
+        foreach ($result['data'] as $ws=>$d){
+            $fileObject->setActiveSheetIndexByName($ws);
+
+            foreach ($d as $key1=>$cell){
+                foreach ($cell as $key2=>$value){
+                    if(isset($result_index[$key1][$key2]))
+                        $fileObject->getActiveSheet()->setCellValue($result_index[$key1][$key2], $value);
+                }
+            }
         }
-        $namefile .= "_".$month."_".$kec.".xls";
-        $result['form'] = array($form);
-        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
-        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
-        $result['desa'] = $user;
-        $result_index['kecamatan'] = array("A2");
-        $result_index['bulan'] = array("A5");
         
-        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_kb_2.xlsx",$result,$result_index);
-    }
-    
-    public function kb3($kec,$year,$month,$form){
-        $user   = array();
-        $result = array();
-        $namefile = "";
-        if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
-            $user = $this->ec->getDesaPwsSpv('bidan',$this->session->userdata('location'));
-            $user_index   = $this->loc->getLocId($this->session->userdata('location'));
-        }else{
-            $user = $this->ec->getDesaPwsSpv('bidan',$kec);
-            $user_index   = $this->loc->getLocId($kec);
+        foreach ($data as $bln=>$d){
+            $result_index['cakupan_k1_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 7);
+            $result_index['cakupan_k4_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 38);
+            $result_index['cakupan_resiko_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 69);
+            $result_index['komplikasi_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 98);
+            $result_index['komplikasi_tertangani_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 127);
+            $result_index['linakes_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 157);
+            $result_index['nolinakes_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 188);
+            $result_index['fasilitas_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 219);
+            $result_index['k_nifas_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 252);
+            $result_index['anemia_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 283);
+            $result_index['kek_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 314);
+            foreach ($d as $desa=>$d2){
+                $key = array_search($desa, $user);
+                foreach ($d2 as $k=>$v){
+                    $result['data']['DATA'][$k][$key] = $v;
+                }
+            }
+            foreach ($result['data'] as $ws=>$d){
+                $fileObject->setActiveSheetIndexByName($ws);
+
+                foreach ($d as $key1=>$cell){
+                    foreach ($cell as $key2=>$value){
+                        if(isset($result_index[$key1][$key2]))
+                            $fileObject->getActiveSheet()->setCellValue($result_index[$key1][$key2], $value);
+                    }
+                }
+            }
         }
-        $namefile .= "_".$month."_".$kec.".xls";
-        $result['form'] = array($form);
-        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
-        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
-        $result['desa'] = $user;
-        $result_index['kecamatan'] = array("A2");
-        $result_index['bulan'] = array("A5");
         
-        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_kb_3.xlsx",$result,$result_index);
-    }
-    
-    public function kb4($kec,$year,$month,$form){
-        $user   = array();
-        $result = array();
-        $namefile = "";
-        if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
-            $user = $this->ec->getDesaPwsSpv('bidan',$this->session->userdata('location'));
-            $user_index   = $this->loc->getLocId($this->session->userdata('location'));
-        }else{
-            $user = $this->ec->getDesaPwsSpv('bidan',$kec);
-            $user_index   = $this->loc->getLocId($kec);
+        $kec = explode(" ",$result['kecamatan'][0]);
+        $kecamatan = end($kec);
+        $prev = prev($kec);
+        while(!(count($prev)==0||$prev==':')){
+            $kecamatan = $prev.'_'.$kecamatan;
+            $prev = prev($kec);
         }
-        $namefile .= "_".$month."_".$kec.".xls";
-        $result['form'] = array($form);
-        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
-        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
-        $result['desa'] = $user;
-        $result_index['kecamatan'] = array("A2");
-        $result_index['bulan'] = array("A5");
+        $bt = explode(" ",$result['bulan'][0]);
+        $tahun = end($bt);
+        $bulan = prev($bt);
+        $savedFileName = 'PWS-'.strtoupper($result['form'][0]).'-'.strtoupper($kecamatan).'-'.strtoupper($bulan).'-'.strtoupper($tahun).'.xlsx';
         
-        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_kb_4.xlsx",$result,$result_index);
-    }
-    
-    public function kb5($kec,$year,$month,$form){
-        $user   = array();
-        $result = array();
-        $namefile = "";
-        if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
-            $user = $this->ec->getDesaPwsSpv('bidan',$this->session->userdata('location'));
-            $user_index   = $this->loc->getLocId($this->session->userdata('location'));
-        }else{
-            $user = $this->ec->getDesaPwsSpv('bidan',$kec);
-            $user_index   = $this->loc->getLocId($kec);
-        }
-        $namefile .= "_".$month."_".$kec.".xls";
-        $result['form'] = array($form);
-        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
-        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
-        $result['desa'] = $user;
-        $result_index['kecamatan'] = array("A2");
-        $result_index['bulan'] = array("A5");
-        
-        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_kb_5.xlsx",$result,$result_index);
-    }
-    
-    public function akb($kec,$year,$month,$form){
-        $user   = array();
-        $result = array();
-        $namefile = "";
-        if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
-            $user = $this->ec->getDesaPwsSpv('bidan',$this->session->userdata('location'));
-            $user_index   = $this->loc->getLocId($this->session->userdata('location'));
-        }else{
-            $user = $this->ec->getDesaPwsSpv('bidan',$kec);
-            $user_index   = $this->loc->getLocId($kec);
-        }
-        $namefile .= "_".$month."_".$kec.".xls";
-        $result['form'] = array($form);
-        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
-        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
-        $result['desa'] = $user;
-        $result_index['kecamatan'] = array("A2");
-        $result_index['bulan'] = array("A5");
-        
-        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_akb.xlsx",$result,$result_index);
-    }
-    
-    public function kih($kec,$year,$month,$form){
-        $user   = array();
-        $result = array();
-        $namefile = "";
-        if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
-            $user = $this->ec->getDesaPwsSpv('bidan',$this->session->userdata('location'));
-            $user_index   = $this->loc->getLocId($this->session->userdata('location'));
-        }else{
-            $user = $this->ec->getDesaPwsSpv('bidan',$kec);
-            $user_index   = $this->loc->getLocId($kec);
-        }
-        $namefile .= "_".$month."_".$kec.".xls";
-        $result['form'] = array($form);
-        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
-        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
-        $result['desa'] = $user;
-        $result_index['kecamatan'] = array("A2");
-        $result_index['bulan'] = array("A5");
-        
-        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_kih.xlsx",$result,$result_index);
-    }
-    
-    public function p4k($kec,$year,$month,$form){
-        $user   = array();
-        $result = array();
-        $namefile = "";
-        if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
-            $user = $this->ec->getDesaPwsSpv('bidan',$this->session->userdata('location'));
-            $user_index   = $this->loc->getLocId($this->session->userdata('location'));
-        }else{
-            $user = $this->ec->getDesaPwsSpv('bidan',$kec);
-            $user_index   = $this->loc->getLocId($kec);
-        }
-        $namefile .= "_".$month."_".$kec.".xls";
-        $result['form'] = array($form);
-        $result['kecamatan'] = array("PUSKESMAS    :  ".strtoupper($kec));
-        $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
-        $result['desa'] = $user;
-        $result_index['kecamatan'] = array("A2");
-        $result_index['bulan'] = array("A5");
-        
-        $this->PHPExcelModel->createPwsXLS("download/pws_template/template_pws_p4k.xlsx",$result,$result_index);
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="'.$savedFileName.'"'); 
+        header('Cache-Control: max-age=0');
+
+        $saveContainer = PHPExcel_IOFactory::createWriter($fileObject,'Excel2007');
+        $saveContainer->save('php://output');
     }
     
     
