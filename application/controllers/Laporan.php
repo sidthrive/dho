@@ -167,34 +167,14 @@ class Laporan extends CI_Controller{
                 $this->BidanEcPwsModel->bayi($kec, $year, $month, $form);
             }elseif(strpos($form,'balita')!==false){
                 $this->BidanEcPwsModel->balita($kec, $year, $month, $form);
-            }elseif($form=="neonatal1"){
-                $this->BidanEcPwsModel->neonatal1($kec,$year,$month,$form);
-            }elseif($form=="neonatal2"){
-                $this->BidanEcPwsModel->neonatal2($kec,$year,$month,$form);
-            }elseif($form=="neonatal3"){
-                $this->BidanEcPwsModel->neonatal3($kec,$year,$month,$form);
-            }elseif($form=="neonatal4"){
-                $this->BidanEcPwsModel->neonatal4($kec,$year,$month,$form);
-            }elseif($form=="neonatal5"){
-                $this->BidanEcPwsModel->neonatal5($kec,$year,$month,$form);
-            }elseif($form=="kb1"){
-                $this->BidanEcPwsModel->kb1($kec,$year,$month,$form);
-            }elseif($form=="kb2"){
-                $this->BidanEcPwsModel->kb2($kec,$year,$month,$form);
-            }elseif($form=="kb3"){
-                $this->BidanEcPwsModel->kb3($kec,$year,$month,$form);
-            }elseif($form=="kb4"){
-                $this->BidanEcPwsModel->kb4($kec,$year,$month,$form);
-            }elseif($form=="kb5"){
-                $this->BidanEcPwsModel->kb5($kec,$year,$month,$form);
-            }elseif($form=="amp"){
+            }elseif(strpos($form,'anak')!==false){
+                $this->BidanEcPwsModel->anak($kec, $year, $month, $form);
+            }elseif($form=="neonatal"){
+                $this->BidanEcPwsModel->neonatal($kec,$year,$month,$form);
+            }elseif($form=="kb"){
+                $this->BidanEcPwsModel->kb($kec,$year,$month,$form);
+            }elseif($form=="maternal"){
                 $this->BidanEcPwsModel->maternal($kec,$year,$month,$form);
-            }elseif($form=="akb"){
-                $this->BidanEcPwsModel->akb($kec,$year,$month,$form);
-            }elseif($form=="kih"){
-                $this->BidanEcPwsModel->kih($kec,$year,$month,$form);
-            }elseif($form=="p4k"){
-                $this->BidanEcPwsModel->p4k($kec,$year,$month,$form);
             }
         }
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
@@ -212,34 +192,12 @@ class Laporan extends CI_Controller{
             $this->PWSEcFhwModel->balita($user, $year, $month, $form);
         }elseif(strpos($form,'anak')!==false){
             $this->PWSEcFhwModel->anak($user, $year, $month, $form);
-        }elseif($form=="neonatal1"){
-            $this->PWSEcFhwModel->neonatal1($user,$year,$month,$form);
-        }elseif($form=="neonatal2"){
-            $this->PWSEcFhwModel->neonatal2($user,$year,$month,$form);
-        }elseif($form=="neonatal3"){
-            $this->PWSEcFhwModel->neonatal3($user,$year,$month,$form);
-        }elseif($form=="neonatal4"){
-            $this->PWSEcFhwModel->neonatal4($user,$year,$month,$form);
-        }elseif($form=="neonatal5"){
-            $this->PWSEcFhwModel->neonatal5($user,$year,$month,$form);
-        }elseif($form=="kb1"){
-            $this->PWSEcFhwModel->kb1($user,$year,$month,$form);
-        }elseif($form=="kb2"){
-            $this->PWSEcFhwModel->kb2($user,$year,$month,$form);
-        }elseif($form=="kb3"){
-            $this->PWSEcFhwModel->kb3($user,$year,$month,$form);
-        }elseif($form=="kb4"){
-            $this->PWSEcFhwModel->kb4($user,$year,$month,$form);
-        }elseif($form=="kb5"){
-            $this->PWSEcFhwModel->kb5($user,$year,$month,$form);
-        }elseif($form=="amp"){
+        }elseif($form=="neonatal"){
+            $this->PWSEcFhwModel->neonatal($user,$year,$month,$form);
+        }elseif($form=="kb"){
+            $this->PWSEcFhwModel->kb($user,$year,$month,$form);
+        }elseif($form=="maternal"){
             $this->PWSEcFhwModel->maternal($user,$year,$month,$form);
-        }elseif($form=="akb"){
-            $this->PWSEcFhwModel->akb($user,$year,$month,$form);
-        }elseif($form=="kih"){
-            $this->PWSEcFhwModel->kih($user,$year,$month,$form);
-        }elseif($form=="p4k"){
-            $this->PWSEcFhwModel->p4k($user,$year,$month,$form);
         }
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }

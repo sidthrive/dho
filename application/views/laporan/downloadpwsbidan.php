@@ -33,28 +33,12 @@
                 </select>
                 <select name="formtype" style="width:120px;" class="form-control-static">
                     <option value="KIA" selected>KIA Ibu</option>
-                    <option value="bayi_1">Bayi 1</option>
-                    <option value="bayi_2">Bayi 2</option>
-                    <option value="bayi_3">Bayi 3</option>
-                    <option value="bayi_4">Bayi 4</option>
-                    <option value="balita_1">Balita 1</option>
-                    <option value="balita_2">Balita 2</option>
-                    <option value="balita_3">Balita 3</option>
-                    <option value="balita_4">Balita 4</option>
-                    <option value="neonatal1">Neonatal 1</option>
-                    <option value="neonatal2">Neonatal 2</option>
-                    <option value="neonatal3">Neonatal 3</option>
-                    <option value="neonatal4">Neonatal 4</option>
-                    <option value="neonatal5">Neonatal 5</option>
-                    <option value="kb1">KB 1</option>
-                    <option value="kb2">KB 2</option>
-                    <option value="kb3">KB 3</option>
-                    <option value="kb4">KB 4</option>
-                    <option value="kb5">KB 5</option>
-                    <option value="amp">Maternal</option>
-                    <option value="akb">Analisa Kematian Bayi</option>
-                    <option value="kih">Kelas Ibu Hamil</option>
-                    <option value="p4k">P4K</option>
+                    <option value="anak">KIA ANAK</option>
+                    <option value="kb">KB</option>
+                    <option value="bayi">Laporan Kasus Kesakitan dan Kematian Bayi</option>
+                    <option value="balita">Laporan Kasus Kesakitan dan Kematian Balita</option>
+                    <option value="neonatal">Laporan Kasus Kesakitan dan Kematian Neonatal</option>
+                    <option value="maternal">Laporan Kasus Kesakitan dan Kematian Ibu</option>
                 </select>
             </div>
             <br/>
