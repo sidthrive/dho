@@ -330,7 +330,10 @@ class BidanEcPwsModel extends CI_Model{
     
     public function bayi($kec,$year,$month,$form){
         $bulan_map = ['januari'=>1,'februari'=>2,'maret'=>3,'april'=>4,'mei'=>5,'juni'=>6,'juli'=>7,'agustus'=>8,'september'=>9,'oktober'=>10,'november'=>11,'desember'=>12];
-        $bulan_col = ['januari'=>'D','februari'=>'E','maret'=>'F','april'=>'G','mei'=>'H','juni'=>'I','juli'=>'J','agustus'=>'K','september'=>'L','oktober'=>'M','november'=>'N','desember'=>'O'];
+        $bulan_col_K_L = ['januari'=>'C','februari'=>'G','maret'=>'K','april'=>'O','mei'=>'S','juni'=>'W','juli'=>'AA','agustus'=>'AE','september'=>'AI','oktober'=>'AM','november'=>'AQ','desember'=>'AU'];
+        $bulan_col_K_P = ['januari'=>'D','februari'=>'H','maret'=>'L','april'=>'P','mei'=>'T','juni'=>'X','juli'=>'AB','agustus'=>'AF','september'=>'AJ','oktober'=>'AN','november'=>'AR','desember'=>'AV'];
+        $bulan_col_M_L = ['januari'=>'E','februari'=>'I','maret'=>'M','april'=>'Q','mei'=>'U','juni'=>'Y','juli'=>'AC','agustus'=>'AG','september'=>'AK','oktober'=>'AO','november'=>'AS','desember'=>'AW'];
+        $bulan_col_M_P = ['januari'=>'F','februari'=>'J','maret'=>'N','april'=>'R','mei'=>'V','juni'=>'Z','juli'=>'AD','agustus'=>'AH','september'=>'AL','oktober'=>'AP','november'=>'AT','desember'=>'AX'];
         $startyear = date("Y-m",  strtotime($year.'-1'));
         $startdate = date("Y-m",  strtotime($year.'-'.$bulan_map[$month]));
         $enddate = date("Y-m", strtotime($startdate." +1 months"));
@@ -396,17 +399,38 @@ class BidanEcPwsModel extends CI_Model{
         }
         
         foreach ($data as $bln=>$d){
-            $result_index['cakupan_k1_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 7);
-            $result_index['cakupan_k4_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 38);
-            $result_index['cakupan_resiko_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 69);
-            $result_index['komplikasi_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 98);
-            $result_index['komplikasi_tertangani_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 127);
-            $result_index['linakes_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 157);
-            $result_index['nolinakes_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 188);
-            $result_index['fasilitas_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 219);
-            $result_index['k_nifas_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 252);
-            $result_index['anemia_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 283);
-            $result_index['kek_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 314);
+            $result_index['pneumonia_kasus_L'] = $this->setArrayIndex($user, $bulan_col_K_L[$bln], 10);
+            $result_index['pneumonia_kasus_P'] = $this->setArrayIndex($user, $bulan_col_K_P[$bln], 10);
+            $result_index['pneumonia_mati_L'] = $this->setArrayIndex($user, $bulan_col_M_L[$bln], 10);
+            $result_index['pneumonia_mati_P'] = $this->setArrayIndex($user, $bulan_col_M_P[$bln], 10);
+            $result_index['diare_kasus_L'] = $this->setArrayIndex($user, $bulan_col_K_L[$bln], 52);
+            $result_index['diare_kasus_P'] = $this->setArrayIndex($user, $bulan_col_K_P[$bln], 52);
+            $result_index['diare_mati_L'] = $this->setArrayIndex($user, $bulan_col_M_L[$bln], 52);
+            $result_index['diare_mati_P'] = $this->setArrayIndex($user, $bulan_col_M_P[$bln], 52);
+            $result_index['tetanus_n_kasus_L'] = $this->setArrayIndex($user, $bulan_col_K_L[$bln], 94);
+            $result_index['tetanus_n_kasus_P'] = $this->setArrayIndex($user, $bulan_col_K_P[$bln], 94);
+            $result_index['tetanus_n_mati_L'] = $this->setArrayIndex($user, $bulan_col_M_L[$bln], 94);
+            $result_index['tetanus_n_mati_P'] = $this->setArrayIndex($user, $bulan_col_M_P[$bln], 94);
+            $result_index['saraf_kasus_L'] = $this->setArrayIndex($user, $bulan_col_K_L[$bln], 136);
+            $result_index['saraf_kasus_P'] = $this->setArrayIndex($user, $bulan_col_K_P[$bln], 136);
+            $result_index['saraf_mati_L'] = $this->setArrayIndex($user, $bulan_col_M_L[$bln], 136);
+            $result_index['saraf_mati_P'] = $this->setArrayIndex($user, $bulan_col_M_P[$bln], 136);
+            $result_index['malaria_kasus_L'] = $this->setArrayIndex($user, $bulan_col_K_L[$bln], 178);
+            $result_index['malaria_kasus_P'] = $this->setArrayIndex($user, $bulan_col_K_P[$bln], 178);
+            $result_index['malaria_mati_L'] = $this->setArrayIndex($user, $bulan_col_M_L[$bln], 178);
+            $result_index['malaria_mati_P'] = $this->setArrayIndex($user, $bulan_col_M_P[$bln], 178);
+            $result_index['tb_kasus_L'] = $this->setArrayIndex($user, $bulan_col_K_L[$bln], 220);
+            $result_index['tb_kasus_P'] = $this->setArrayIndex($user, $bulan_col_K_P[$bln], 220);
+            $result_index['tb_mati_L'] = $this->setArrayIndex($user, $bulan_col_M_L[$bln], 220);
+            $result_index['tb_mati_P'] = $this->setArrayIndex($user, $bulan_col_M_P[$bln], 220);
+            $result_index['demam_kasus_L'] = $this->setArrayIndex($user, $bulan_col_K_L[$bln], 262);
+            $result_index['demam_kasus_P'] = $this->setArrayIndex($user, $bulan_col_K_P[$bln], 262);
+            $result_index['demam_mati_L'] = $this->setArrayIndex($user, $bulan_col_M_L[$bln], 262);
+            $result_index['demam_mati_P'] = $this->setArrayIndex($user, $bulan_col_M_P[$bln], 262);
+            $result_index['lainlain_kasus_L'] = $this->setArrayIndex($user, $bulan_col_K_L[$bln], 304);
+            $result_index['lainlain_kasus_P'] = $this->setArrayIndex($user, $bulan_col_K_P[$bln], 304);
+            $result_index['lainlain_mati_L'] = $this->setArrayIndex($user, $bulan_col_M_L[$bln], 304);
+            $result_index['lainlain_mati_P'] = $this->setArrayIndex($user, $bulan_col_M_P[$bln], 304);
             foreach ($d as $desa=>$d2){
                 $key = array_search($desa, $user);
                 foreach ($d2 as $k=>$v){
@@ -438,7 +462,10 @@ class BidanEcPwsModel extends CI_Model{
     
     public function balita($kec,$year,$month,$form){
         $bulan_map = ['januari'=>1,'februari'=>2,'maret'=>3,'april'=>4,'mei'=>5,'juni'=>6,'juli'=>7,'agustus'=>8,'september'=>9,'oktober'=>10,'november'=>11,'desember'=>12];
-        $bulan_col = ['januari'=>'D','februari'=>'E','maret'=>'F','april'=>'G','mei'=>'H','juni'=>'I','juli'=>'J','agustus'=>'K','september'=>'L','oktober'=>'M','november'=>'N','desember'=>'O'];
+        $bulan_col_K_L = ['januari'=>'C','februari'=>'G','maret'=>'K','april'=>'O','mei'=>'S','juni'=>'W','juli'=>'AA','agustus'=>'AE','september'=>'AI','oktober'=>'AM','november'=>'AQ','desember'=>'AU'];
+        $bulan_col_K_P = ['januari'=>'D','februari'=>'H','maret'=>'L','april'=>'P','mei'=>'T','juni'=>'X','juli'=>'AB','agustus'=>'AF','september'=>'AJ','oktober'=>'AN','november'=>'AR','desember'=>'AV'];
+        $bulan_col_M_L = ['januari'=>'E','februari'=>'I','maret'=>'M','april'=>'Q','mei'=>'U','juni'=>'Y','juli'=>'AC','agustus'=>'AG','september'=>'AK','oktober'=>'AO','november'=>'AS','desember'=>'AW'];
+        $bulan_col_M_P = ['januari'=>'F','februari'=>'J','maret'=>'N','april'=>'R','mei'=>'V','juni'=>'Z','juli'=>'AD','agustus'=>'AH','september'=>'AL','oktober'=>'AP','november'=>'AT','desember'=>'AX'];
         $startyear = date("Y-m",  strtotime($year.'-1'));
         $startdate = date("Y-m",  strtotime($year.'-'.$bulan_map[$month]));
         $enddate = date("Y-m", strtotime($startdate." +1 months"));
@@ -504,17 +531,38 @@ class BidanEcPwsModel extends CI_Model{
         }
         
         foreach ($data as $bln=>$d){
-            $result_index['cakupan_k1_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 7);
-            $result_index['cakupan_k4_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 38);
-            $result_index['cakupan_resiko_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 69);
-            $result_index['komplikasi_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 98);
-            $result_index['komplikasi_tertangani_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 127);
-            $result_index['linakes_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 157);
-            $result_index['nolinakes_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 188);
-            $result_index['fasilitas_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 219);
-            $result_index['k_nifas_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 252);
-            $result_index['anemia_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 283);
-            $result_index['kek_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 314);
+            $result_index['pneumonia_kasus_L'] = $this->setArrayIndex($user, $bulan_col_K_L[$bln], 10);
+            $result_index['pneumonia_kasus_P'] = $this->setArrayIndex($user, $bulan_col_K_P[$bln], 10);
+            $result_index['pneumonia_mati_L'] = $this->setArrayIndex($user, $bulan_col_M_L[$bln], 10);
+            $result_index['pneumonia_mati_P'] = $this->setArrayIndex($user, $bulan_col_M_P[$bln], 10);
+            $result_index['diare_kasus_L'] = $this->setArrayIndex($user, $bulan_col_K_L[$bln], 52);
+            $result_index['diare_kasus_P'] = $this->setArrayIndex($user, $bulan_col_K_P[$bln], 52);
+            $result_index['diare_mati_L'] = $this->setArrayIndex($user, $bulan_col_M_L[$bln], 52);
+            $result_index['diare_mati_P'] = $this->setArrayIndex($user, $bulan_col_M_P[$bln], 52);
+            $result_index['malaria_kasus_L'] = $this->setArrayIndex($user, $bulan_col_K_L[$bln], 94);
+            $result_index['malaria_kasus_P'] = $this->setArrayIndex($user, $bulan_col_K_P[$bln], 94);
+            $result_index['malaria_mati_L'] = $this->setArrayIndex($user, $bulan_col_M_L[$bln], 94);
+            $result_index['malaria_mati_P'] = $this->setArrayIndex($user, $bulan_col_M_P[$bln], 94);
+            $result_index['campak_kasus_L'] = $this->setArrayIndex($user, $bulan_col_K_L[$bln], 136);
+            $result_index['campak_kasus_P'] = $this->setArrayIndex($user, $bulan_col_K_P[$bln], 136);
+            $result_index['campak_mati_L'] = $this->setArrayIndex($user, $bulan_col_M_L[$bln], 136);
+            $result_index['campak_mati_P'] = $this->setArrayIndex($user, $bulan_col_M_P[$bln], 136);
+            $result_index['demam_kasus_L'] = $this->setArrayIndex($user, $bulan_col_K_L[$bln], 178);
+            $result_index['demam_kasus_P'] = $this->setArrayIndex($user, $bulan_col_K_P[$bln], 178);
+            $result_index['demam_mati_L'] = $this->setArrayIndex($user, $bulan_col_M_L[$bln], 178);
+            $result_index['demam_mati_P'] = $this->setArrayIndex($user, $bulan_col_M_P[$bln], 178);
+            $result_index['difteri_kasus_L'] = $this->setArrayIndex($user, $bulan_col_K_L[$bln], 220);
+            $result_index['difteri_kasus_P'] = $this->setArrayIndex($user, $bulan_col_K_P[$bln], 220);
+            $result_index['difteri_mati_L'] = $this->setArrayIndex($user, $bulan_col_M_L[$bln], 220);
+            $result_index['difteri_mati_P'] = $this->setArrayIndex($user, $bulan_col_M_P[$bln], 220);
+            $result_index['giziburuk_kasus_L'] = $this->setArrayIndex($user, $bulan_col_K_L[$bln], 262);
+            $result_index['giziburuk_kasus_P'] = $this->setArrayIndex($user, $bulan_col_K_P[$bln], 262);
+            $result_index['giziburuk_mati_L'] = $this->setArrayIndex($user, $bulan_col_M_L[$bln], 262);
+            $result_index['giziburuk_mati_P'] = $this->setArrayIndex($user, $bulan_col_M_P[$bln], 262);
+            $result_index['lainlain_kasus_L'] = $this->setArrayIndex($user, $bulan_col_K_L[$bln], 304);
+            $result_index['lainlain_kasus_P'] = $this->setArrayIndex($user, $bulan_col_K_P[$bln], 304);
+            $result_index['lainlain_mati_L'] = $this->setArrayIndex($user, $bulan_col_M_L[$bln], 304);
+            $result_index['lainlain_mati_P'] = $this->setArrayIndex($user, $bulan_col_M_P[$bln], 304);
             foreach ($d as $desa=>$d2){
                 $key = array_search($desa, $user);
                 foreach ($d2 as $k=>$v){
@@ -546,7 +594,8 @@ class BidanEcPwsModel extends CI_Model{
     
     public function maternal($kec,$year,$month,$form){
         $bulan_map = ['januari'=>1,'februari'=>2,'maret'=>3,'april'=>4,'mei'=>5,'juni'=>6,'juli'=>7,'agustus'=>8,'september'=>9,'oktober'=>10,'november'=>11,'desember'=>12];
-        $bulan_col = ['januari'=>'D','februari'=>'E','maret'=>'F','april'=>'G','mei'=>'H','juni'=>'I','juli'=>'J','agustus'=>'K','september'=>'L','oktober'=>'M','november'=>'N','desember'=>'O'];
+        $bulan_col_K =  ['januari'=>'C','februari'=>'E','maret'=>'G','april'=>'I','mei'=>'K','juni'=>'M','juli'=>'O','agustus'=>'Q','september'=>'S','oktober'=>'U','november'=>'W','desember'=>'Y'];
+        $bulan_col_M =  ['januari'=>'D','februari'=>'F','maret'=>'H','april'=>'J','mei'=>'L','juni'=>'N','juli'=>'P','agustus'=>'R','september'=>'T','oktober'=>'V','november'=>'X','desember'=>'Z'];
         $startyear = date("Y-m",  strtotime($year.'-1'));
         $startdate = date("Y-m",  strtotime($year.'-'.$bulan_map[$month]));
         $enddate = date("Y-m", strtotime($startdate." +1 months"));
@@ -611,22 +660,62 @@ class BidanEcPwsModel extends CI_Model{
             }
         }
         
+        $temp['Perdarahan']['hamil_muda_K'] = array_fill(0,count($user),1);
+        $temp['Perdarahan']['hamil_muda_M'] = array_fill(0,count($user),1);
+        $temp['Perdarahan']['apb_K'] = array_fill(0,count($user),1);
+        $temp['Perdarahan']['apb_M'] = array_fill(0,count($user),1);
+        $temp['Perdarahan']['hpp_K'] = array_fill(0,count($user),1);
+        $temp['Perdarahan']['hpp_M'] = array_fill(0,count($user),1);
+        $temp['Infeksi']['kpd_K'] = array_fill(0,count($user),1);
+        $temp['Infeksi']['kpd_M'] = array_fill(0,count($user),1);
+        $temp['Infeksi']['partus_lama_K'] = array_fill(0,count($user),1);
+        $temp['Infeksi']['partus_lama_M'] = array_fill(0,count($user),1);
+        $temp['Infeksi']['partus_kasep_K'] = array_fill(0,count($user),1);
+        $temp['Infeksi']['partus_kasep_M'] = array_fill(0,count($user),1);
+        $temp['Infeksi']['sepsis_puerpuralis_K'] = array_fill(0,count($user),1);
+        $temp['Infeksi']['sepsis_puerpuralis_M'] = array_fill(0,count($user),1);
+        $temp['HDK']['hipertensi_kronis_K'] = array_fill(0,count($user),1);
+        $temp['HDK']['hipertensi_kronis_M'] = array_fill(0,count($user),1);
+        $temp['HDK']['hipertensi_protein_K'] = array_fill(0,count($user),1);
+        $temp['HDK']['hipertensi_protein_M'] = array_fill(0,count($user),1);
+        $temp['HDK']['eklamsia_K'] = array_fill(0,count($user),1);
+        $temp['HDK']['eklamsia_M'] = array_fill(0,count($user),1);
+        $temp['PM-PTM']['menular_K'] = array_fill(0,count($user),1);
+        $temp['PM-PTM']['menular_M'] = array_fill(0,count($user),1);  
+        $temp['PM-PTM']['tidak_menular_K'] = array_fill(0,count($user),1);
+        $temp['PM-PTM']['tidak_menular_M'] = array_fill(0,count($user),1);
+        
         foreach ($data as $bln=>$d){
-            $result_index['cakupan_k1_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 7);
-            $result_index['cakupan_k4_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 38);
-            $result_index['cakupan_resiko_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 69);
-            $result_index['komplikasi_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 98);
-            $result_index['komplikasi_tertangani_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 127);
-            $result_index['linakes_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 157);
-            $result_index['nolinakes_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 188);
-            $result_index['fasilitas_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 219);
-            $result_index['k_nifas_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 252);
-            $result_index['anemia_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 283);
-            $result_index['kek_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 314);
+            $result_index['hamil_muda_K'] = $this->setArrayIndex($user, $bulan_col_K[$bln], 7);
+            $result_index['hamil_muda_M'] = $this->setArrayIndex($user, $bulan_col_M[$bln], 7);
+            $result_index['apb_K'] = $this->setArrayIndex($user, $bulan_col_K[$bln], 45);
+            $result_index['apb_M'] = $this->setArrayIndex($user, $bulan_col_M[$bln], 45);
+            $result_index['hpp_K'] = $this->setArrayIndex($user, $bulan_col_K[$bln], 83);
+            $result_index['hpp_M'] = $this->setArrayIndex($user, $bulan_col_M[$bln], 83);
+            $result_index['kpd_K'] = $this->setArrayIndex($user, $bulan_col_K[$bln], 7);
+            $result_index['kpd_M'] = $this->setArrayIndex($user, $bulan_col_M[$bln], 7);
+            $result_index['partus_lama_K'] = $this->setArrayIndex($user, $bulan_col_K[$bln], 44);
+            $result_index['partus_lama_M'] = $this->setArrayIndex($user, $bulan_col_M[$bln], 44);
+            $result_index['partus_kasep_K'] = $this->setArrayIndex($user, $bulan_col_K[$bln], 81);
+            $result_index['partus_kasep_M'] = $this->setArrayIndex($user, $bulan_col_M[$bln], 81);
+            $result_index['sepsis_puerpuralis_K'] = $this->setArrayIndex($user, $bulan_col_K[$bln], 118);
+            $result_index['sepsis_puerpuralis_M'] = $this->setArrayIndex($user, $bulan_col_M[$bln], 118);
+            $result_index['hipertensi_kronis_K'] = $this->setArrayIndex($user, $bulan_col_K[$bln], 7);
+            $result_index['hipertensi_kronis_M'] = $this->setArrayIndex($user, $bulan_col_M[$bln], 7);
+            $result_index['hipertensi_protein_K'] = $this->setArrayIndex($user, $bulan_col_K[$bln], 44);
+            $result_index['hipertensi_protein_M'] = $this->setArrayIndex($user, $bulan_col_M[$bln], 44);
+            $result_index['eklamsia_K'] = $this->setArrayIndex($user, $bulan_col_K[$bln], 81);
+            $result_index['eklamsia_M'] = $this->setArrayIndex($user, $bulan_col_M[$bln], 81);
+            $result_index['menular_K'] = $this->setArrayIndex($user, $bulan_col_K[$bln], 7);
+            $result_index['menular_M'] = $this->setArrayIndex($user, $bulan_col_M[$bln], 7);  
+            $result_index['tidak_menular_K'] = $this->setArrayIndex($user, $bulan_col_K[$bln], 44);
+            $result_index['tidak_menular_M'] = $this->setArrayIndex($user, $bulan_col_M[$bln], 44); 
             foreach ($d as $desa=>$d2){
                 $key = array_search($desa, $user);
-                foreach ($d2 as $k=>$v){
-                    $result['data']['DATA'][$k][$key] = $v;
+                foreach($temp as $nm=>$val){
+                    foreach ($val as $a=>$b){
+                        $result['data'][$nm][$a][$key] = $data[$bln][$desa][$a];
+                    }
                 }
             }
             foreach ($result['data'] as $ws=>$d){
@@ -654,7 +743,12 @@ class BidanEcPwsModel extends CI_Model{
     
     public function neonatal($kec,$year,$month,$form){
         $bulan_map = ['januari'=>1,'februari'=>2,'maret'=>3,'april'=>4,'mei'=>5,'juni'=>6,'juli'=>7,'agustus'=>8,'september'=>9,'oktober'=>10,'november'=>11,'desember'=>12];
-        $bulan_col = ['januari'=>'D','februari'=>'E','maret'=>'F','april'=>'G','mei'=>'H','juni'=>'I','juli'=>'J','agustus'=>'K','september'=>'L','oktober'=>'M','november'=>'N','desember'=>'O'];
+        $bulan_col_K_L =  ['januari'=>'C','februari'=>'I','maret'=>'O','april'=>'U','mei'=>'AA','juni'=>'AG','juli'=>'AM','agustus'=>'AS','september'=>'AY','oktober'=>'BE','november'=>'BK','desember'=>'BQ'];
+        $bulan_col_K_P =  ['januari'=>'D','februari'=>'J','maret'=>'P','april'=>'V','mei'=>'AB','juni'=>'AH','juli'=>'AN','agustus'=>'AT','september'=>'AZ','oktober'=>'BF','november'=>'BL','desember'=>'BR'];
+        $bulan_col_M1_L = ['januari'=>'E','februari'=>'K','maret'=>'Q','april'=>'W','mei'=>'AC','juni'=>'AI','juli'=>'AO','agustus'=>'AU','september'=>'BA','oktober'=>'BG','november'=>'BM','desember'=>'BS'];
+        $bulan_col_M1_P = ['januari'=>'F','februari'=>'L','maret'=>'R','april'=>'X','mei'=>'AD','juni'=>'AJ','juli'=>'AP','agustus'=>'AV','september'=>'BB','oktober'=>'BH','november'=>'BN','desember'=>'BT'];
+        $bulan_col_M2_L = ['januari'=>'G','februari'=>'M','maret'=>'S','april'=>'Y','mei'=>'AE','juni'=>'AK','juli'=>'AQ','agustus'=>'AW','september'=>'BC','oktober'=>'BI','november'=>'BO','desember'=>'BU'];
+        $bulan_col_M2_P = ['januari'=>'H','februari'=>'N','maret'=>'T','april'=>'Z','mei'=>'AF','juni'=>'AL','juli'=>'AR','agustus'=>'AX','september'=>'BD','oktober'=>'BJ','november'=>'BP','desember'=>'BV'];
         $startyear = date("Y-m",  strtotime($year.'-1'));
         $startdate = date("Y-m",  strtotime($year.'-'.$bulan_map[$month]));
         $enddate = date("Y-m", strtotime($startdate." +1 months"));
@@ -720,17 +814,48 @@ class BidanEcPwsModel extends CI_Model{
         }
         
         foreach ($data as $bln=>$d){
-            $result_index['cakupan_k1_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 7);
-            $result_index['cakupan_k4_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 38);
-            $result_index['cakupan_resiko_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 69);
-            $result_index['komplikasi_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 98);
-            $result_index['komplikasi_tertangani_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 127);
-            $result_index['linakes_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 157);
-            $result_index['nolinakes_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 188);
-            $result_index['fasilitas_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 219);
-            $result_index['k_nifas_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 252);
-            $result_index['anemia_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 283);
-            $result_index['kek_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 314);
+            $result_index['bblr_kasus_L'] = $this->setArrayIndex($user, $bulan_col_K_L[$bln], 10);
+            $result_index['bblr_kasus_P'] = $this->setArrayIndex($user, $bulan_col_K_P[$bln], 10);
+            $result_index['bblr_mati1_L'] = $this->setArrayIndex($user, $bulan_col_M1_L[$bln], 10);
+            $result_index['bblr_mati1_P'] = $this->setArrayIndex($user, $bulan_col_M1_P[$bln], 10);
+            $result_index['bblr_mati2_L'] = $this->setArrayIndex($user, $bulan_col_M2_L[$bln], 10);
+            $result_index['bblr_mati2_P'] = $this->setArrayIndex($user, $bulan_col_M2_P[$bln], 10);
+            $result_index['asfiksia_kasus_L'] = $this->setArrayIndex($user, $bulan_col_K_L[$bln], 45);
+            $result_index['asfiksia_kasus_P'] = $this->setArrayIndex($user, $bulan_col_K_P[$bln], 45);
+            $result_index['asfiksia_mati1_L'] = $this->setArrayIndex($user, $bulan_col_M1_L[$bln], 45);
+            $result_index['asfiksia_mati1_P'] = $this->setArrayIndex($user, $bulan_col_M1_P[$bln], 45);
+            $result_index['asfiksia_mati2_L'] = $this->setArrayIndex($user, $bulan_col_M2_L[$bln], 45);
+            $result_index['asfiksia_mati2_P'] = $this->setArrayIndex($user, $bulan_col_M2_P[$bln], 45);
+            $result_index['ikterus_kasus_L'] = $this->setArrayIndex($user, $bulan_col_K_L[$bln], 80);
+            $result_index['ikterus_kasus_P'] = $this->setArrayIndex($user, $bulan_col_K_P[$bln], 80);
+            $result_index['ikterus_mati1_L'] = $this->setArrayIndex($user, $bulan_col_M1_L[$bln], 80);
+            $result_index['ikterus_mati1_P'] = $this->setArrayIndex($user, $bulan_col_M1_P[$bln], 80);
+            $result_index['ikterus_mati2_L'] = $this->setArrayIndex($user, $bulan_col_M2_L[$bln], 80);
+            $result_index['ikterus_mati2_P'] = $this->setArrayIndex($user, $bulan_col_M2_P[$bln], 80);
+            $result_index['tetanus_kasus_L'] = $this->setArrayIndex($user, $bulan_col_K_L[$bln], 115);
+            $result_index['tetanus_kasus_P'] = $this->setArrayIndex($user, $bulan_col_K_P[$bln], 115);
+            $result_index['tetanus_mati1_L'] = $this->setArrayIndex($user, $bulan_col_M1_L[$bln], 115);
+            $result_index['tetanus_mati1_P'] = $this->setArrayIndex($user, $bulan_col_M1_P[$bln], 115);
+            $result_index['tetanus_mati2_L'] = $this->setArrayIndex($user, $bulan_col_M2_L[$bln], 115);
+            $result_index['tetanus_mati2_P'] = $this->setArrayIndex($user, $bulan_col_M2_P[$bln], 115);
+            $result_index['sepsis_kasus_L'] = $this->setArrayIndex($user, $bulan_col_K_L[$bln], 150);
+            $result_index['sepsis_kasus_P'] = $this->setArrayIndex($user, $bulan_col_K_P[$bln], 150);
+            $result_index['sepsis_mati1_L'] = $this->setArrayIndex($user, $bulan_col_M1_L[$bln], 150);
+            $result_index['sepsis_mati1_P'] = $this->setArrayIndex($user, $bulan_col_M1_P[$bln], 150);
+            $result_index['sepsis_mati2_L'] = $this->setArrayIndex($user, $bulan_col_M2_L[$bln], 150);
+            $result_index['sepsis_mati2_P'] = $this->setArrayIndex($user, $bulan_col_M2_P[$bln], 150);
+            $result_index['kelainan_kasus_L'] = $this->setArrayIndex($user, $bulan_col_K_L[$bln], 185);
+            $result_index['kelainan_kasus_P'] = $this->setArrayIndex($user, $bulan_col_K_P[$bln], 185);
+            $result_index['kelainan_mati1_L'] = $this->setArrayIndex($user, $bulan_col_M1_L[$bln], 185);
+            $result_index['kelainan_mati1_P'] = $this->setArrayIndex($user, $bulan_col_M1_P[$bln], 185);
+            $result_index['kelainan_mati2_L'] = $this->setArrayIndex($user, $bulan_col_M2_L[$bln], 185);
+            $result_index['kelainan_mati2_P'] = $this->setArrayIndex($user, $bulan_col_M2_P[$bln], 185);
+            $result_index['lainlain_kasus_L'] = $this->setArrayIndex($user, $bulan_col_K_L[$bln], 220);
+            $result_index['lainlain_kasus_P'] = $this->setArrayIndex($user, $bulan_col_K_P[$bln], 220);
+            $result_index['lainlain_mati1_L'] = $this->setArrayIndex($user, $bulan_col_M1_L[$bln], 220);
+            $result_index['lainlain_mati1_P'] = $this->setArrayIndex($user, $bulan_col_M1_P[$bln], 220);
+            $result_index['lainlain_mati2_L'] = $this->setArrayIndex($user, $bulan_col_M2_L[$bln], 220);
+            $result_index['lainlain_mati2_P'] = $this->setArrayIndex($user, $bulan_col_M2_P[$bln], 220);
             foreach ($d as $desa=>$d2){
                 $key = array_search($desa, $user);
                 foreach ($d2 as $k=>$v){
@@ -762,7 +887,18 @@ class BidanEcPwsModel extends CI_Model{
     
     public function kb($kec,$year,$month,$form){
         $bulan_map = ['januari'=>1,'februari'=>2,'maret'=>3,'april'=>4,'mei'=>5,'juni'=>6,'juli'=>7,'agustus'=>8,'september'=>9,'oktober'=>10,'november'=>11,'desember'=>12];
-        $bulan_col = ['januari'=>'D','februari'=>'E','maret'=>'F','april'=>'G','mei'=>'H','juni'=>'I','juli'=>'J','agustus'=>'K','september'=>'L','oktober'=>'M','november'=>'N','desember'=>'O'];
+        $bulan_col_PKB['4t'] =      ['januari'=>'D','februari'=>'I','maret'=>'N','april'=>'S','mei'=>'X', 'juni'=>'AC','juli'=>'AH','agustus'=>'AM','september'=>'AR','oktober'=>'AW','november'=>'BB','desember'=>'BG'];
+        $bulan_col_PKB['komp'] =    ['januari'=>'E','februari'=>'J','maret'=>'O','april'=>'T','mei'=>'Y', 'juni'=>'AD','juli'=>'AI','agustus'=>'AN','september'=>'AS','oktober'=>'AX','november'=>'BC','desember'=>'BH'];
+        $bulan_col_PKB['gagal'] =   ['januari'=>'F','februari'=>'K','maret'=>'P','april'=>'U','mei'=>'Z', 'juni'=>'AE','juli'=>'AJ','agustus'=>'AO','september'=>'AT','oktober'=>'AY','november'=>'BD','desember'=>'BI'];
+        $bulan_col_PKB['do'] =      ['januari'=>'G','februari'=>'L','maret'=>'Q','april'=>'V','mei'=>'AA','juni'=>'AF','juli'=>'AK','agustus'=>'AP','september'=>'AU','oktober'=>'AZ','november'=>'BE','desember'=>'BJ'];
+        
+        $bulan_col_KBA['kond'] =    ['januari'=>'C','februari'=>'J','maret'=>'Q','april'=>'X', 'mei'=>'AE','juni'=>'AL','juli'=>'AS','agustus'=>'AZ','september'=>'BG','oktober'=>'BN','november'=>'BU','desember'=>'CB'];
+        $bulan_col_KBA['pil'] =     ['januari'=>'D','februari'=>'K','maret'=>'R','april'=>'Y', 'mei'=>'AF','juni'=>'AM','juli'=>'AT','agustus'=>'BA','september'=>'BH','oktober'=>'BO','november'=>'BV','desember'=>'CC'];
+        $bulan_col_KBA['sunt'] =    ['januari'=>'E','februari'=>'L','maret'=>'S','april'=>'Z', 'mei'=>'AG','juni'=>'AN','juli'=>'AU','agustus'=>'BB','september'=>'BI','oktober'=>'BP','november'=>'BW','desember'=>'CD'];
+        $bulan_col_KBA['akdr'] =    ['januari'=>'F','februari'=>'M','maret'=>'T','april'=>'AA','mei'=>'AH','juni'=>'AO','juli'=>'AV','agustus'=>'BC','september'=>'BJ','oktober'=>'BQ','november'=>'BX','desember'=>'CE'];
+        $bulan_col_KBA['impl'] =    ['januari'=>'G','februari'=>'N','maret'=>'U','april'=>'AB','mei'=>'AI','juni'=>'AP','juli'=>'AW','agustus'=>'BD','september'=>'BK','oktober'=>'BR','november'=>'BY','desember'=>'CF'];
+        $bulan_col_KBA['mow'] =     ['januari'=>'H','februari'=>'O','maret'=>'V','april'=>'AC','mei'=>'AJ','juni'=>'AQ','juli'=>'AX','agustus'=>'BE','september'=>'BL','oktober'=>'BS','november'=>'BZ','desember'=>'CG'];
+        $bulan_col_KBA['mop'] =     ['januari'=>'I','februari'=>'P','maret'=>'W','april'=>'AD','mei'=>'AK','juni'=>'AR','juli'=>'AY','agustus'=>'BF','september'=>'BM','oktober'=>'BT','november'=>'CA','desember'=>'CH'];
         $startyear = date("Y-m",  strtotime($year.'-1'));
         $startdate = date("Y-m",  strtotime($year.'-'.$bulan_map[$month]));
         $enddate = date("Y-m", strtotime($startdate." +1 months"));
@@ -841,17 +977,24 @@ class BidanEcPwsModel extends CI_Model{
         }
         
         foreach ($data as $bln=>$d){
-            $result_index['cakupan_k1_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 7);
-            $result_index['cakupan_k4_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 38);
-            $result_index['cakupan_resiko_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 69);
-            $result_index['komplikasi_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 98);
-            $result_index['komplikasi_tertangani_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 127);
-            $result_index['linakes_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 157);
-            $result_index['nolinakes_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 188);
-            $result_index['fasilitas_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 219);
-            $result_index['k_nifas_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 252);
-            $result_index['anemia_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 283);
-            $result_index['kek_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$bln], 314);
+            $result_index['pelayanan_kb_4t']=$this->setArrayIndex($user, $bulan_col_PKB['4t'][$bln], 8);
+            $result_index['pelayanan_kb_komp']=$this->setArrayIndex($user, $bulan_col_PKB['komp'][$bln], 8);
+            $result_index['pelayanan_kb_gagal']=$this->setArrayIndex($user, $bulan_col_PKB['gagal'][$bln], 8);
+            $result_index['pelayanan_kb_do']=$this->setArrayIndex($user, $bulan_col_PKB['do'][$bln], 8);
+            $result_index['kb_aktif_kond']=$this->setArrayIndex($user, $bulan_col_KBA['kond'][$bln], 39);
+            $result_index['kb_aktif_pil']=$this->setArrayIndex($user, $bulan_col_KBA['pil'][$bln], 39);
+            $result_index['kb_aktif_sunt']=$this->setArrayIndex($user, $bulan_col_KBA['sunt'][$bln], 39);
+            $result_index['kb_aktif_akdr']=$this->setArrayIndex($user, $bulan_col_KBA['akdr'][$bln], 39);
+            $result_index['kb_aktif_impl']=$this->setArrayIndex($user, $bulan_col_KBA['impl'][$bln], 39);
+            $result_index['kb_aktif_mow']=$this->setArrayIndex($user, $bulan_col_KBA['mow'][$bln], 39);
+            $result_index['kb_aktif_mop']=$this->setArrayIndex($user, $bulan_col_KBA['mop'][$bln], 39);
+            $result_index['kb_pasca_salin_kond']=$this->setArrayIndex($user, $bulan_col_KBA['kond'][$bln], 70);
+            $result_index['kb_pasca_salin_pil']=$this->setArrayIndex($user, $bulan_col_KBA['pil'][$bln], 70);
+            $result_index['kb_pasca_salin_sunt']=$this->setArrayIndex($user, $bulan_col_KBA['sunt'][$bln], 70);
+            $result_index['kb_pasca_salin_akdr']=$this->setArrayIndex($user, $bulan_col_KBA['akdr'][$bln], 70);
+            $result_index['kb_pasca_salin_impl']=$this->setArrayIndex($user, $bulan_col_KBA['impl'][$bln], 70);
+            $result_index['kb_pasca_salin_mow']=$this->setArrayIndex($user, $bulan_col_KBA['mow'][$bln], 70);
+            $result_index['kb_pasca_salin_mop']=$this->setArrayIndex($user, $bulan_col_KBA['mop'][$bln], 70);
             foreach ($d as $desa=>$d2){
                 $key = array_search($desa, $user);
                 foreach ($d2 as $k=>$v){
