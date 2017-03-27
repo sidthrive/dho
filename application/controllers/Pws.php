@@ -148,6 +148,80 @@ class Pws extends CI_Controller{
         var_dump('Execution time : ' . $time . ' seconds');
         
     }
+    
+    public function anak(){
+        set_time_limit(3600);
+        $time_start = microtime(true);
+        $bulan_map = [1=>'januari','februari','maret','april','mei','juni','juli','agustus','september','oktober','november','desember'];
+        $loc = $this->loc->getAllLoc('bidan');
+        $kec = [];
+        foreach ($loc as $k=>$d){
+            array_push($kec, $k);
+        }
+        $year = date("Y",  strtotime("-1 day"));
+        $month = date("n",  strtotime("-1 day"));
+        foreach ($kec as $kecamatan){
+            $this->do_anak($kecamatan, $year, $bulan_map[$month]);
+            $desas   = $this->loc->getLocId($kecamatan);
+            foreach ($desas as $desa){
+                $this->do_anak_dusun($desa, $year, $bulan_map[$month]);
+            }
+        }
+        $time_end = microtime(true);
+        $time = $time_end - $time_start;
+        var_dump('Execution time : ' . $time . ' seconds');
+    }
+    
+    public function anak_my($month,$year){
+        set_time_limit(3600);
+        $time_start = microtime(true);
+        $bulan_map = [1=>'januari','februari','maret','april','mei','juni','juli','agustus','september','oktober','november','desember'];
+        $loc = $this->loc->getAllLoc('bidan');
+        $kec = [];
+        foreach ($loc as $k=>$d){
+            array_push($kec, $k);
+        }
+        
+        foreach ($kec as $kecamatan){
+            $this->do_anak($kecamatan, $year, $bulan_map[$month]);
+            $desas   = $this->loc->getLocId($kecamatan);
+            foreach ($desas as $desa){
+                $this->do_anak_dusun($desa, $year, $bulan_map[$month]);
+            }
+        }
+        $time_end = microtime(true);
+        $time = $time_end - $time_start;
+        var_dump('Execution time : ' . $time . ' seconds');
+    }
+    
+    public function anak_all(){
+        set_time_limit(3600);
+        $time_start = microtime(true);
+        $bulan_map = [1=>'januari','februari','maret','april','mei','juni','juli','agustus','september','oktober','november','desember'];
+        $loc = $this->loc->getAllLoc('bidan');
+        $kec = [];
+        foreach ($loc as $k=>$d){
+            array_push($kec, $k);
+        }
+        $year = date("Y",  strtotime("-1 day"));
+        $month = date("n",  strtotime("-1 day"));
+        foreach ($bulan_map as $bln){
+            var_dump('bulan '.$bln.' start');
+            foreach ($kec as $kecamatan){
+                $this->do_anak($kecamatan, $year, $bulan_map[$month]);
+                $desas   = $this->loc->getLocId($kecamatan);
+                foreach ($desas as $desa){
+                    $this->do_anak_dusun($desa, $year, $bulan_map[$month]);
+                }
+                var_dump($kecamatan.' bulan '.$bln.' done');
+            }
+            var_dump('bulan '.$bln.' done');
+        }
+        $time_end = microtime(true);
+        $time = $time_end - $time_start;
+        var_dump('Execution time : ' . $time . ' seconds');
+        
+    }
 
 
     private function do_kia($kec,$year,$month){
@@ -796,6 +870,168 @@ class Pws extends CI_Controller{
                 }
             }
         }
+    }
+    
+    private function do_anak($kec,$year,$month){
+        $bulan_map = ['januari'=>1,'februari'=>2,'maret'=>3,'april'=>4,'mei'=>5,'juni'=>6,'juli'=>7,'agustus'=>8,'september'=>9,'oktober'=>10,'november'=>11,'desember'=>12];
+        $bulan_col_L = ['januari'=>'C','februari'=>'E','maret'=>'G','april'=>'I','mei'=>'K','juni'=>'M','juli'=>'O','agustus'=>'Q','september'=>'S','oktober'=>'U','november'=>'W','desember'=>'Y'];
+        $bulan_col_P = ['januari'=>'D','februari'=>'F','maret'=>'H','april'=>'J','mei'=>'L','juni'=>'N','juli'=>'P','agustus'=>'R','september'=>'T','oktober'=>'V','november'=>'X','desember'=>'Z'];
+        $startyear = date("Y-m",  strtotime($year.'-1'));
+        $startdate = date("Y-m",  strtotime($year.'-'.$bulan_map[$month]));
+        $enddate = date("Y-m", strtotime($startdate." +1 months"));
+        $user   = array();
+        $result = array();
+        $namefile = "";
+        if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
+            $user = $this->ec->getDesaPwsSpv('bidan',$this->session->userdata('location'));
+            $user_index   = $this->loc->getLocId($this->session->userdata('location'));
+        }else{
+            $user = $this->ec->getDesaPwsSpv('bidan',$kec);
+            $user_index   = $this->loc->getLocId($kec);
+        }
+        $result['data']['DATA A']['desa'] = $user;
+        $result['data']['DATA']['kunjungan_neonatal_I_L'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['kunjungan_neonatal_I_P'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['kunjungan_neonatal_III_L'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['kunjungan_neonatal_III_P'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['komplikasi_noenatal_ditemukan_L'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['komplikasi_noenatal_ditemukan_P'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['komplikasi_noenatal_tertangani_L'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['komplikasi_noenatal_tertangani_P'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['kunjugan_bayi_I_L'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['kunjugan_bayi_I_P'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['kunjugan_bayi_IV_L'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['kunjugan_bayi_IV_P'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['kunjugan_balita_I_L'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['kunjugan_balita_I_P'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['kunjugan_balita_II_L'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['kunjugan_balita_II_P'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['pelayanan_balita_sakit_L'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['pelayanan_balita_sakit_P'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['pelayanan_balita_sakit_MTBS_L'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['pelayanan_balita_sakit_MTBS_P'] = array_fill(0,count($user),0);
         
+        
+        $result_index['kunjungan_neonatal_I_L']=$this->setArrayIndex($user, $bulan_col_L[$month], 8);
+        $result_index['kunjungan_neonatal_I_P']=$this->setArrayIndex($user, $bulan_col_P[$month], 8);
+        $result_index['kunjungan_neonatal_III_L']=$this->setArrayIndex($user, $bulan_col_L[$month], 41);
+        $result_index['kunjungan_neonatal_III_P']=$this->setArrayIndex($user, $bulan_col_P[$month], 41);
+        $result_index['komplikasi_noenatal_ditemukan_L']=$this->setArrayIndex($user, $bulan_col_L[$month], 74);
+        $result_index['komplikasi_noenatal_ditemukan_P']=$this->setArrayIndex($user, $bulan_col_P[$month], 74);
+        $result_index['komplikasi_noenatal_tertangani_L']=$this->setArrayIndex($user, $bulan_col_L[$month], 107);
+        $result_index['komplikasi_noenatal_tertangani_P']=$this->setArrayIndex($user, $bulan_col_P[$month], 107);
+        $result_index['kunjugan_bayi_I_L']=$this->setArrayIndex($user, $bulan_col_L[$month], 140);
+        $result_index['kunjugan_bayi_I_P']=$this->setArrayIndex($user, $bulan_col_P[$month], 140);
+        $result_index['kunjugan_bayi_IV_L']=$this->setArrayIndex($user, $bulan_col_L[$month], 173);
+        $result_index['kunjugan_bayi_IV_P']=$this->setArrayIndex($user, $bulan_col_P[$month], 173);
+        $result_index['kunjugan_balita_I_L']=$this->setArrayIndex($user, $bulan_col_L[$month], 206);
+        $result_index['kunjugan_balita_I_P']=$this->setArrayIndex($user, $bulan_col_P[$month], 206);
+        $result_index['kunjugan_balita_II_L']=$this->setArrayIndex($user, $bulan_col_L[$month], 239);
+        $result_index['kunjugan_balita_II_P']=$this->setArrayIndex($user, $bulan_col_P[$month], 239);
+        $result_index['pelayanan_balita_sakit_L']=$this->setArrayIndex($user, $bulan_col_L[$month], 272);
+        $result_index['pelayanan_balita_sakit_P']=$this->setArrayIndex($user, $bulan_col_P[$month], 272);
+        $result_index['pelayanan_balita_sakit_MTBS_L']=$this->setArrayIndex($user, $bulan_col_L[$month], 305);
+        $result_index['pelayanan_balita_sakit_MTBS_P']=$this->setArrayIndex($user, $bulan_col_P[$month], 305);
+        
+        
+        
+        
+        $pwsdb = $this->load->database('pws', TRUE);
+        $cek_id = $pwsdb->query("SELECT id FROM anak")->result();
+        $ids = [];
+        foreach ($cek_id as $cek){
+            $ids[$cek->id] = TRUE;
+        }
+        foreach ($user as $i=>$u){
+            $desa = 'desa_'.strtolower(str_replace(' ', '_', $u));
+            foreach ($result['data']['DATA'] as $x=>$d){
+                $id = $desa.$year.$month.$x;
+                var_dump($id."=".$d[$i]);
+                if(array_key_exists($id, $ids)){
+                    $pwsdb->query("UPDATE anak SET value='$d[$i]' WHERE id='$id'");
+                }else{
+                    $pwsdb->query("INSERT INTO anak VALUES('$id','$desa','$year','$month','$x',0)");
+                }
+            }
+        }
+    }
+    
+    private function do_anak_dusun($desa,$year,$month){
+        $bulan_map = ['januari'=>1,'februari'=>2,'maret'=>3,'april'=>4,'mei'=>5,'juni'=>6,'juli'=>7,'agustus'=>8,'september'=>9,'oktober'=>10,'november'=>11,'desember'=>12];
+        $bulan_col_L = ['januari'=>'C','februari'=>'E','maret'=>'G','april'=>'I','mei'=>'K','juni'=>'M','juli'=>'O','agustus'=>'Q','september'=>'S','oktober'=>'U','november'=>'W','desember'=>'Y'];
+        $bulan_col_P = ['januari'=>'D','februari'=>'F','maret'=>'H','april'=>'J','mei'=>'L','juni'=>'N','juli'=>'P','agustus'=>'R','september'=>'T','oktober'=>'V','november'=>'X','desember'=>'Z'];
+        $startyear = date("Y-m",  strtotime($year.'-1'));
+        $startdate = date("Y-m",  strtotime($year.'-'.$bulan_map[$month]));
+        $enddate = date("Y-m", strtotime($startdate." +1 months"));
+        $user   = array();
+        $result = array();
+        $namefile = "";
+        $user = array_values($this->loc->getDusun($desa));
+        $user_index = $this->loc->getDusunTypo($desa);
+        $result['data']['DATA A']['dusun'] = $user;
+        
+        $result['data']['DATA']['kunjungan_neonatal_I_L'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['kunjungan_neonatal_I_P'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['kunjungan_neonatal_III_L'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['kunjungan_neonatal_III_P'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['komplikasi_noenatal_ditemukan_L'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['komplikasi_noenatal_ditemukan_P'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['komplikasi_noenatal_tertangani_L'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['komplikasi_noenatal_tertangani_P'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['kunjugan_bayi_I_L'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['kunjugan_bayi_I_P'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['kunjugan_bayi_IV_L'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['kunjugan_bayi_IV_P'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['kunjugan_balita_I_L'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['kunjugan_balita_I_P'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['kunjugan_balita_II_L'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['kunjugan_balita_II_P'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['pelayanan_balita_sakit_L'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['pelayanan_balita_sakit_P'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['pelayanan_balita_sakit_MTBS_L'] = array_fill(0,count($user),0);
+        $result['data']['DATA']['pelayanan_balita_sakit_MTBS_P'] = array_fill(0,count($user),0);
+        
+        
+        $result_index['kunjungan_neonatal_I_L']=$this->setArrayIndex($user, $bulan_col_L[$month], 8);
+        $result_index['kunjungan_neonatal_I_P']=$this->setArrayIndex($user, $bulan_col_P[$month], 8);
+        $result_index['kunjungan_neonatal_III_L']=$this->setArrayIndex($user, $bulan_col_L[$month], 41);
+        $result_index['kunjungan_neonatal_III_P']=$this->setArrayIndex($user, $bulan_col_P[$month], 41);
+        $result_index['komplikasi_noenatal_ditemukan_L']=$this->setArrayIndex($user, $bulan_col_L[$month], 74);
+        $result_index['komplikasi_noenatal_ditemukan_P']=$this->setArrayIndex($user, $bulan_col_P[$month], 74);
+        $result_index['komplikasi_noenatal_tertangani_L']=$this->setArrayIndex($user, $bulan_col_L[$month], 107);
+        $result_index['komplikasi_noenatal_tertangani_P']=$this->setArrayIndex($user, $bulan_col_P[$month], 107);
+        $result_index['kunjugan_bayi_I_L']=$this->setArrayIndex($user, $bulan_col_L[$month], 140);
+        $result_index['kunjugan_bayi_I_P']=$this->setArrayIndex($user, $bulan_col_P[$month], 140);
+        $result_index['kunjugan_bayi_IV_L']=$this->setArrayIndex($user, $bulan_col_L[$month], 173);
+        $result_index['kunjugan_bayi_IV_P']=$this->setArrayIndex($user, $bulan_col_P[$month], 173);
+        $result_index['kunjugan_balita_I_L']=$this->setArrayIndex($user, $bulan_col_L[$month], 206);
+        $result_index['kunjugan_balita_I_P']=$this->setArrayIndex($user, $bulan_col_P[$month], 206);
+        $result_index['kunjugan_balita_II_L']=$this->setArrayIndex($user, $bulan_col_L[$month], 239);
+        $result_index['kunjugan_balita_II_P']=$this->setArrayIndex($user, $bulan_col_P[$month], 239);
+        $result_index['pelayanan_balita_sakit_L']=$this->setArrayIndex($user, $bulan_col_L[$month], 272);
+        $result_index['pelayanan_balita_sakit_P']=$this->setArrayIndex($user, $bulan_col_P[$month], 272);
+        $result_index['pelayanan_balita_sakit_MTBS_L']=$this->setArrayIndex($user, $bulan_col_L[$month], 305);
+        $result_index['pelayanan_balita_sakit_MTBS_P']=$this->setArrayIndex($user, $bulan_col_P[$month], 305);
+        
+        
+        
+        $pwsdb = $this->load->database('pws', TRUE);
+        $cek_id = $pwsdb->query("SELECT id FROM anak")->result();
+        $ids = [];
+        foreach ($cek_id as $cek){
+            $ids[$cek->id] = TRUE;
+        }
+        foreach ($user as $i=>$u){
+            $desa = 'dusun_'.strtolower(str_replace(' ', '_', $u));
+            foreach ($result['data']['DATA'] as $x=>$d){
+                $id = $desa.$year.$month.$x;
+                var_dump($id."=".$d[$i]);
+                if(array_key_exists($id, $ids)){
+                    $pwsdb->query("UPDATE anak SET value='$d[$i]' WHERE id='$id'");
+                }else{
+                    $pwsdb->query("INSERT INTO anak VALUES('$id','$desa','$year','$month','$x',0)");
+                }
+            }
+        }
     }
 }
