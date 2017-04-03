@@ -22,6 +22,7 @@ class Login extends CI_Controller
                 $data = [
                     'id_user' => $result->id_user,
                     'username' => $result->username,
+                    'location' => $result->location,
                     'level' => $result->level,
                     'tipe' => $result->tipe,
                     'last_login' => $result->last_login,
@@ -41,5 +42,39 @@ class Login extends CI_Controller
         }
  
         $this->load->view("login");
+    }
+    
+    public function auth(){
+        if (!isset($_SERVER['PHP_AUTH_USER'])) {
+            header('WWW-Authenticate: Basic realm="My Realm"');
+            header('HTTP/1.0 401 Unauthorized');
+            $this->load->view('errors/error_auth');
+        } else {
+            $u['username'] = $_SERVER['PHP_AUTH_USER'];
+            $u['password'] = $_SERVER['PHP_AUTH_PW'];
+            $result = $this->login->validate_user_opensrp($u);
+            if(!empty($result)) {
+                $data = [
+                    'id_user' => $result->id_user,
+                    'username' => $result->username,
+                    'location' => $result->location,
+                    'level' => $result->level,
+                    'tipe' => $result->tipe,
+                    'last_login' => $result->last_login,
+                    'admin_valid' => true
+                ];
+ 
+                $this->session->set_userdata($data);
+                $this->db->query("UPDATE users SET last_login=current_timestamp WHERE id_user = '".$result->id_user."'");
+                $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
+                if($this->input->post('url')!=""){
+                    redirect($this->input->post('url'));
+                }else redirect('welcome');
+            } else {
+                header('WWW-Authenticate: Basic realm="My Realm"');
+                header('HTTP/1.0 401 Unauthorized');
+                die('Admin access turned off');
+            }
+        }
     }
 }

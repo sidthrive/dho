@@ -405,7 +405,7 @@ class DataEntry extends CI_Controller{
                 if($this->input->get('start')==null&&$data['mode']==''){
                     $now = date("Y-m-d");
                     $start = date("Y-m-d",  strtotime($now."-29 days"));
-                    redirect("dataentry/bidanbytanggal/".$data['kecamatan']."/".$data['desa']."?start=$start&end=$now");
+                    redirect("dataentry/vaksinatorbytanggal/".$data['kecamatan']."/".$data['desa']."?start=$start&end=$now");
                 }else{
                     $data['start'] = $this->input->get('start');
                     $data['end'] = $this->input->get('end');

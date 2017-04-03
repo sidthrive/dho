@@ -8,6 +8,8 @@ class Laporan extends CI_Controller{
             $this->session->set_flashdata('url', $this->uri->uri_string);
             redirect('login');
         }
+        $this->load->model('LocationModel','loc');
+        $this->load->model('CakupanModel','ec');
     }
     
     public function index(){
@@ -147,55 +149,27 @@ class Laporan extends CI_Controller{
             $this->download_fhw($year,$month,$form);
         }else{
             $this->load->model('PHPExcelModel');
-            $this->load->model('BidanPwsModel');
+            $this->load->model('BidanNewPwsModel');
 
             $kec    = $this->input->post('kecamatan');
             $year   = $this->input->post('year');
             $month  = $this->input->post('month');
             $form   = $this->input->post('formtype');
 
-            if($form=="KIA1"){
-                $this->BidanPwsModel->kia1($kec,$year,$month,$form);
-            }elseif($form=="KIA2"){
-                $this->BidanPwsModel->kia2($kec,$year,$month,$form);
-            }elseif($form=="KIA3"){
-                $this->BidanPwsModel->kia3($kec,$year,$month,$form);
-            }elseif($form=="KIA4"){
-                $this->BidanPwsModel->kia4($kec,$year,$month,$form);
-            }elseif($form=="KIA5"){
-                $this->BidanPwsModel->kia5($kec,$year,$month,$form);
+            if($form=="KIA"){
+                $this->BidanNewPwsModel->kia($kec,$year,$month,$form);
             }elseif(strpos($form,'bayi')!==false){
-                $this->BidanPwsModel->bayi($kec, $year, $month, $form);
+                $this->BidanNewPwsModel->bayi($kec, $year, $month, $form);
             }elseif(strpos($form,'balita')!==false){
-                $this->BidanPwsModel->balita($kec, $year, $month, $form);
-            }elseif($form=="neonatal1"){
-                $this->BidanPwsModel->neonatal1($kec,$year,$month,$form);
-            }elseif($form=="neonatal2"){
-                $this->BidanPwsModel->neonatal2($kec,$year,$month,$form);
-            }elseif($form=="neonatal3"){
-                $this->BidanPwsModel->neonatal3($kec,$year,$month,$form);
-            }elseif($form=="neonatal4"){
-                $this->BidanPwsModel->neonatal4($kec,$year,$month,$form);
-            }elseif($form=="neonatal5"){
-                $this->BidanPwsModel->neonatal5($kec,$year,$month,$form);
-            }elseif($form=="kb1"){
-                $this->BidanPwsModel->kb1($kec,$year,$month,$form);
-            }elseif($form=="kb2"){
-                $this->BidanPwsModel->kb2($kec,$year,$month,$form);
-            }elseif($form=="kb3"){
-                $this->BidanPwsModel->kb3($kec,$year,$month,$form);
-            }elseif($form=="kb4"){
-                $this->BidanPwsModel->kb4($kec,$year,$month,$form);
-            }elseif($form=="kb5"){
-                $this->BidanPwsModel->kb5($kec,$year,$month,$form);
-            }elseif($form=="amp"){
-                $this->BidanPwsModel->maternal($kec,$year,$month,$form);
-            }elseif($form=="akb"){
-                $this->BidanPwsModel->akb($kec,$year,$month,$form);
-            }elseif($form=="kih"){
-                $this->BidanPwsModel->kih($kec,$year,$month,$form);
-            }elseif($form=="p4k"){
-                $this->BidanPwsModel->p4k($kec,$year,$month,$form);
+                $this->BidanNewPwsModel->balita($kec, $year, $month, $form);
+            }elseif(strpos($form,'anak')!==false){
+                $this->BidanNewPwsModel->anak($kec, $year, $month, $form);
+            }elseif($form=="neonatal"){
+                $this->BidanNewPwsModel->neonatal($kec,$year,$month,$form);
+            }elseif($form=="kb"){
+                $this->BidanNewPwsModel->kb($kec,$year,$month,$form);
+            }elseif($form=="maternal"){
+                $this->BidanNewPwsModel->maternal($kec,$year,$month,$form);
             }
         }
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
@@ -204,51 +178,21 @@ class Laporan extends CI_Controller{
     private function download_fhw($year,$month,$form){
         $user = $this->session->userdata('username');
         $this->load->model('PHPExcelModel');
-        $this->load->model('PWSFhwModel');
-        if($form=="KIA1"){
-            $this->PWSFhwModel->kia1($user,$year,$month,$form);
-        }elseif($form=="KIA2"){
-            $this->PWSFhwModel->kia2($user,$year,$month,$form);
-        }elseif($form=="KIA3"){
-            $this->PWSFhwModel->kia3($user,$year,$month,$form);
-        }elseif($form=="KIA4"){
-            $this->PWSFhwModel->kia4($user,$year,$month,$form);
-        }elseif($form=="KIA5"){
-            $this->PWSFhwModel->kia5($user,$year,$month,$form);
+        $this->load->model('PWSNewFhwModel');
+        if($form=="KIA"){
+            $this->PWSNewFhwModel->kia($user,$year,$month,$form);
         }elseif(strpos($form,'bayi')!==false){
-            $this->PWSFhwModel->bayi($user, $year, $month, $form);
+            $this->PWSNewFhwModel->bayi($user, $year, $month, $form);
         }elseif(strpos($form,'balita')!==false){
-            $this->PWSFhwModel->balita($user, $year, $month, $form);
+            $this->PWSNewFhwModel->balita($user, $year, $month, $form);
         }elseif(strpos($form,'anak')!==false){
-            $this->PWSFhwModel->anak($user, $year, $month, $form);
-        }elseif($form=="neonatal1"){
-            $this->PWSFhwModel->neonatal1($user,$year,$month,$form);
-        }elseif($form=="neonatal2"){
-            $this->PWSFhwModel->neonatal2($user,$year,$month,$form);
-        }elseif($form=="neonatal3"){
-            $this->PWSFhwModel->neonatal3($user,$year,$month,$form);
-        }elseif($form=="neonatal4"){
-            $this->PWSFhwModel->neonatal4($user,$year,$month,$form);
-        }elseif($form=="neonatal5"){
-            $this->PWSFhwModel->neonatal5($user,$year,$month,$form);
-        }elseif($form=="kb1"){
-            $this->PWSFhwModel->kb1($user,$year,$month,$form);
-        }elseif($form=="kb2"){
-            $this->PWSFhwModel->kb2($user,$year,$month,$form);
-        }elseif($form=="kb3"){
-            $this->PWSFhwModel->kb3($user,$year,$month,$form);
-        }elseif($form=="kb4"){
-            $this->PWSFhwModel->kb4($user,$year,$month,$form);
-        }elseif($form=="kb5"){
-            $this->PWSFhwModel->kb5($user,$year,$month,$form);
-        }elseif($form=="amp"){
-            $this->PWSFhwModel->maternal($user,$year,$month,$form);
-        }elseif($form=="akb"){
-            $this->PWSFhwModel->akb($user,$year,$month,$form);
-        }elseif($form=="kih"){
-            $this->PWSFhwModel->kih($user,$year,$month,$form);
-        }elseif($form=="p4k"){
-            $this->PWSFhwModel->p4k($user,$year,$month,$form);
+            $this->PWSNewFhwModel->anak($user, $year, $month, $form);
+        }elseif($form=="neonatal"){
+            $this->PWSNewFhwModel->neonatal($user,$year,$month,$form);
+        }elseif($form=="kb"){
+            $this->PWSNewFhwModel->kb($user,$year,$month,$form);
+        }elseif($form=="maternal"){
+            $this->PWSNewFhwModel->maternal($user,$year,$month,$form);
         }
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }

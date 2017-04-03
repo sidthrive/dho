@@ -204,7 +204,7 @@ class GiziFhwModel extends CI_Model{
         return $result_data;
     }
     
-    public function getCountPerDay($desa="",$mode=""){
+    public function getCountPerDay($desa="",$mode="",$range=""){
         if($mode!=""){
             return self::getCountPerMode($desa,$mode);
         }
