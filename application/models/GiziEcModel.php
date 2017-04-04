@@ -15,16 +15,16 @@ class GiziEcModel extends CI_Model{
         }
         date_default_timezone_set("Asia/Makassar"); 
         $giziDB = $this->load->database('analytics', TRUE);
-        $query  = $giziDB->query("SHOW TABLES FROM ec_analytics");
+        $query  = $giziDB->query("SHOW TABLES FROM gen_analytics");
         $table_default = $this->Table->getTable('gizi');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
-            if($table->Tables_in_ec_analytics[0]=='c'||$table->Tables_in_ec_analytics[0]=='_'){
+            if($table->Tables_in_gen_analytics[0]=='c'||$table->Tables_in_gen_analytics[0]=='_'){
                 continue;
             }else {
-                if(array_key_exists($table->Tables_in_ec_analytics, $table_default)){
-                    $tables[$table->Tables_in_ec_analytics]=$table_default[$table->Tables_in_ec_analytics];
+                if(array_key_exists($table->Tables_in_gen_analytics, $table_default)){
+                    $tables[$table->Tables_in_gen_analytics]=$table_default[$table->Tables_in_gen_analytics];
                 }
                 
             }
@@ -90,16 +90,16 @@ class GiziEcModel extends CI_Model{
         }
         date_default_timezone_set("Asia/Makassar"); 
         $giziDB = $this->load->database('analytics', TRUE);
-        $query  = $giziDB->query("SHOW TABLES FROM ec_analytics");
+        $query  = $giziDB->query("SHOW TABLES FROM gen_analytics");
         $table_default = $this->Table->getTable('gizi');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
-            if($table->Tables_in_ec_analytics[0]=='c'||$table->Tables_in_ec_analytics[0]=='_'){
+            if($table->Tables_in_gen_analytics[0]=='c'||$table->Tables_in_gen_analytics[0]=='_'){
                 continue;
             }else {
-                if(array_key_exists($table->Tables_in_ec_analytics, $table_default)){
-                    $tables[$table->Tables_in_ec_analytics]=$table_default[$table->Tables_in_ec_analytics];
+                if(array_key_exists($table->Tables_in_gen_analytics, $table_default)){
+                    $tables[$table->Tables_in_gen_analytics]=$table_default[$table->Tables_in_gen_analytics];
                 }
                 
             }
@@ -160,16 +160,16 @@ class GiziEcModel extends CI_Model{
     public function getCountPerMode($kecamatan="",$mode="Mingguan"){
         date_default_timezone_set("Asia/Makassar"); 
         $giziDB = $this->load->database('analytics', TRUE);
-        $query  = $giziDB->query("SHOW TABLES FROM ec_analytics");
+        $query  = $giziDB->query("SHOW TABLES FROM gen_analytics");
         $table_default = $this->Table->getTable('gizi');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
-            if($table->Tables_in_ec_analytics[0]=='c'||$table->Tables_in_ec_analytics[0]=='_'){
+            if($table->Tables_in_gen_analytics[0]=='c'||$table->Tables_in_gen_analytics[0]=='_'){
                 continue;
             }else {
-                if(array_key_exists($table->Tables_in_ec_analytics, $table_default)){
-                    $tables[$table->Tables_in_ec_analytics]=$table_default[$table->Tables_in_ec_analytics];
+                if(array_key_exists($table->Tables_in_gen_analytics, $table_default)){
+                    $tables[$table->Tables_in_gen_analytics]=$table_default[$table->Tables_in_gen_analytics];
                 }
                 
             }
@@ -279,16 +279,16 @@ class GiziEcModel extends CI_Model{
     public function getCountPerForm($kecamatan="",$start,$end){
         $end = date("Y-m-d",  strtotime($end." +1 day"));
         $giziDB = $this->load->database('analytics', TRUE);
-        $query  = $giziDB->query("SHOW TABLES FROM ec_analytics");
+        $query  = $giziDB->query("SHOW TABLES FROM gen_analytics");
         $table_default = $this->Table->getTable('gizi');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
-            if($table->Tables_in_ec_analytics[0]=='c'||$table->Tables_in_ec_analytics[0]=='_'){
+            if($table->Tables_in_gen_analytics[0]=='c'||$table->Tables_in_gen_analytics[0]=='_'){
                 continue;
             }else {
-                if(array_key_exists($table->Tables_in_ec_analytics, $table_default)){
-                    $tables[$table->Tables_in_ec_analytics]=$table_default[$table->Tables_in_ec_analytics];
+                if(array_key_exists($table->Tables_in_gen_analytics, $table_default)){
+                    $tables[$table->Tables_in_gen_analytics]=$table_default[$table->Tables_in_gen_analytics];
                 }
             }
         }
@@ -327,16 +327,16 @@ class GiziEcModel extends CI_Model{
     public function getCountPerFormByVisitDate($kecamatan="",$start,$end){
         $end = date("Y-m-d",  strtotime($end." +1 day"));
         $giziDB = $this->load->database('analytics', TRUE);
-        $query  = $giziDB->query("SHOW TABLES FROM ec_analytics");
+        $query  = $giziDB->query("SHOW TABLES FROM gen_analytics");
         $table_default = $this->Table->getTable('gizi');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
-            if($table->Tables_in_ec_analytics[0]=='c'||$table->Tables_in_ec_analytics[0]=='_'){
+            if($table->Tables_in_gen_analytics[0]=='c'||$table->Tables_in_gen_analytics[0]=='_'){
                 continue;
             }else {
-                if(array_key_exists($table->Tables_in_ec_analytics, $table_default)){
-                    $tables[$table->Tables_in_ec_analytics]=$table_default[$table->Tables_in_ec_analytics];
+                if(array_key_exists($table->Tables_in_gen_analytics, $table_default)){
+                    $tables[$table->Tables_in_gen_analytics]=$table_default[$table->Tables_in_gen_analytics];
                 }
             }
         }
@@ -380,14 +380,14 @@ class GiziEcModel extends CI_Model{
     
     public function getCountPerFormForDrill($desa="",$date=""){
         $giziDB = $this->load->database('analytics', TRUE);
-        $query  = $giziDB->query("SHOW TABLES FROM ec_analytics");
+        $query  = $giziDB->query("SHOW TABLES FROM gen_analytics");
         $table_default = $this->Table->getTable('gizi');
         $tabindex = $this->Table->getTableIndex('gizi');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
-            if(array_key_exists($table->Tables_in_ec_analytics, $table_default)){
-                $tables[$table->Tables_in_ec_analytics]=$table_default[$table->Tables_in_ec_analytics];
+            if(array_key_exists($table->Tables_in_gen_analytics, $table_default)){
+                $tables[$table->Tables_in_gen_analytics]=$table_default[$table->Tables_in_gen_analytics];
             }
         }
         
@@ -433,14 +433,14 @@ class GiziEcModel extends CI_Model{
     
     public function getCountPerFormByVisitDateForDrill($desa="",$date=""){
         $giziDB = $this->load->database('analytics', TRUE);
-        $query  = $giziDB->query("SHOW TABLES FROM ec_analytics");
+        $query  = $giziDB->query("SHOW TABLES FROM gen_analytics");
         $table_default = $this->Table->getTable('gizi');
         $tabindex = $this->Table->getTableIndex('gizi');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
-            if(array_key_exists($table->Tables_in_ec_analytics, $table_default)){
-                $tables[$table->Tables_in_ec_analytics]=$table_default[$table->Tables_in_ec_analytics];
+            if(array_key_exists($table->Tables_in_gen_analytics, $table_default)){
+                $tables[$table->Tables_in_gen_analytics]=$table_default[$table->Tables_in_gen_analytics];
             }
         }
         

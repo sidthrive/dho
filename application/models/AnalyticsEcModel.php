@@ -15,17 +15,17 @@ class AnalyticsEcModel extends CI_Model{
         }
         date_default_timezone_set("Asia/Makassar"); 
         $analyticsDB = $this->load->database('analytics', TRUE);
-        $query  = $analyticsDB->query("SHOW TABLES FROM ec_analytics");
+        $query  = $analyticsDB->query("SHOW TABLES FROM gen_analytics");
         
         $table_default = $this->Table->getTable('bidan');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
-            if($table->Tables_in_ec_analytics[0]=='c'||$table->Tables_in_ec_analytics[0]=='_'){
+            if($table->Tables_in_gen_analytics[0]=='c'||$table->Tables_in_gen_analytics[0]=='_'){
                 continue;
             }else {
-                if(array_key_exists($table->Tables_in_ec_analytics, $table_default)){
-                    $tables[$table->Tables_in_ec_analytics]=$table_default[$table->Tables_in_ec_analytics];
+                if(array_key_exists($table->Tables_in_gen_analytics, $table_default)){
+                    $tables[$table->Tables_in_gen_analytics]=$table_default[$table->Tables_in_gen_analytics];
                 }
                 
             }
@@ -90,16 +90,16 @@ class AnalyticsEcModel extends CI_Model{
         }
         date_default_timezone_set("Asia/Makassar"); 
         $analyticsDB = $this->load->database('analytics', TRUE);
-        $query  = $analyticsDB->query("SHOW TABLES FROM ec_analytics");
+        $query  = $analyticsDB->query("SHOW TABLES FROM gen_analytics");
         $table_default = $this->Table->getTable('bidan');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
-            if($table->Tables_in_ec_analytics[0]=='c'||$table->Tables_in_ec_analytics[0]=='_'){
+            if($table->Tables_in_gen_analytics[0]=='c'||$table->Tables_in_gen_analytics[0]=='_'){
                 continue;
             }else {
-                if(array_key_exists($table->Tables_in_ec_analytics, $table_default)){
-                    $tables[$table->Tables_in_ec_analytics]=$table_default[$table->Tables_in_ec_analytics];
+                if(array_key_exists($table->Tables_in_gen_analytics, $table_default)){
+                    $tables[$table->Tables_in_gen_analytics]=$table_default[$table->Tables_in_gen_analytics];
                 }
                 
             }
@@ -191,16 +191,16 @@ class AnalyticsEcModel extends CI_Model{
     public function getCountPerMode($kecamatan="",$mode="Mingguan"){
         date_default_timezone_set("Asia/Makassar"); 
         $analyticsDB = $this->load->database('analytics', TRUE);
-        $query  = $analyticsDB->query("SHOW TABLES FROM ec_analytics");
+        $query  = $analyticsDB->query("SHOW TABLES FROM gen_analytics");
         $table_default = $this->Table->getTable('bidan');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
-            if($table->Tables_in_ec_analytics[0]=='c'||$table->Tables_in_ec_analytics[0]=='_'){
+            if($table->Tables_in_gen_analytics[0]=='c'||$table->Tables_in_gen_analytics[0]=='_'){
                 continue;
             }else {
-                if(array_key_exists($table->Tables_in_ec_analytics, $table_default)){
-                    $tables[$table->Tables_in_ec_analytics]=$table_default[$table->Tables_in_ec_analytics];
+                if(array_key_exists($table->Tables_in_gen_analytics, $table_default)){
+                    $tables[$table->Tables_in_gen_analytics]=$table_default[$table->Tables_in_gen_analytics];
                 }
                 
             }
@@ -314,7 +314,7 @@ class AnalyticsEcModel extends CI_Model{
         $this->load->library('PHPExcell');
         
         $analyticsDB = $this->load->database('analytics', TRUE);
-        $query  = $analyticsDB->query("SHOW TABLES FROM ec_analytics");
+        $query  = $analyticsDB->query("SHOW TABLES FROM gen_analytics");
         
         $table_default = $this->Table->getTable('bidan');
         $table_name = $this->Table->getTableName('bidan');
@@ -322,8 +322,8 @@ class AnalyticsEcModel extends CI_Model{
         $tables = array();
         
         foreach ($query->result() as $table){
-            if(array_key_exists($table->Tables_in_ec_analytics, $table_default)){
-                $tables[$table->Tables_in_ec_analytics]=$table_default[$table->Tables_in_ec_analytics];
+            if(array_key_exists($table->Tables_in_gen_analytics, $table_default)){
+                $tables[$table->Tables_in_gen_analytics]=$table_default[$table->Tables_in_gen_analytics];
             }
         }
         
@@ -495,15 +495,15 @@ class AnalyticsEcModel extends CI_Model{
         $end = date("Y-m-d",  strtotime($end." +1 day"));
         
         $analyticsDB = $this->load->database('analytics', TRUE);
-        $query  = $analyticsDB->query("SHOW TABLES FROM ec_analytics");
+        $query  = $analyticsDB->query("SHOW TABLES FROM gen_analytics");
             
         $table_default = $this->Table->getTable('bidan');
         //retrieve the tables name
         $tables = array();
         
         foreach ($query->result() as $table){
-            if(array_key_exists($table->Tables_in_ec_analytics, $table_default)){
-                $tables[$table->Tables_in_ec_analytics]=$table_default[$table->Tables_in_ec_analytics];
+            if(array_key_exists($table->Tables_in_gen_analytics, $table_default)){
+                $tables[$table->Tables_in_gen_analytics]=$table_default[$table->Tables_in_gen_analytics];
             }
         }
         
@@ -541,15 +541,15 @@ class AnalyticsEcModel extends CI_Model{
         $end = date("Y-m-d",  strtotime($end." +1 day"));
         
         $analyticsDB = $this->load->database('analytics', TRUE);
-        $query  = $analyticsDB->query("SHOW TABLES FROM ec_analytics");
+        $query  = $analyticsDB->query("SHOW TABLES FROM gen_analytics");
         
         $table_default = $this->Table->getTable('bidan');
         //retrieve the tables name
         $tables = array();
         
         foreach ($query->result() as $table){
-            if(array_key_exists($table->Tables_in_ec_analytics, $table_default)){
-                $tables[$table->Tables_in_ec_analytics]=$table_default[$table->Tables_in_ec_analytics];
+            if(array_key_exists($table->Tables_in_gen_analytics, $table_default)){
+                $tables[$table->Tables_in_gen_analytics]=$table_default[$table->Tables_in_gen_analytics];
             }
         }
         
@@ -585,14 +585,14 @@ class AnalyticsEcModel extends CI_Model{
     
     public function getCountPerFormForDrill($desa="",$date=""){
         $analyticsDB = $this->load->database('analytics', TRUE);
-        $query  = $analyticsDB->query("SHOW TABLES FROM ec_analytics");
+        $query  = $analyticsDB->query("SHOW TABLES FROM gen_analytics");
         $table_default = $this->Table->getTable('bidan');
         $tabindex = $this->Table->getTableIndex('bidan');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
-            if(array_key_exists($table->Tables_in_ec_analytics, $table_default)){
-                $tables[$table->Tables_in_ec_analytics]=$table_default[$table->Tables_in_ec_analytics];
+            if(array_key_exists($table->Tables_in_gen_analytics, $table_default)){
+                $tables[$table->Tables_in_gen_analytics]=$table_default[$table->Tables_in_gen_analytics];
             }
         }
         

@@ -15,14 +15,14 @@ class VaksinatorEcModel extends CI_Model{
         }
         date_default_timezone_set("Asia/Makassar"); 
         $vaksinatorDB = $this->load->database('analytics', TRUE);
-        $query  = $vaksinatorDB->query("SHOW TABLES FROM ec_analytics");
+        $query  = $vaksinatorDB->query("SHOW TABLES FROM gen_analytics");
         
         $table_default = $this->Table->getTable('vaksinator');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
-            if(array_key_exists($table->Tables_in_ec_analytics, $table_default)){
-                $tables[$table->Tables_in_ec_analytics]=$table_default[$table->Tables_in_ec_analytics];
+            if(array_key_exists($table->Tables_in_gen_analytics, $table_default)){
+                $tables[$table->Tables_in_gen_analytics]=$table_default[$table->Tables_in_gen_analytics];
             }
         }
         
@@ -80,13 +80,13 @@ class VaksinatorEcModel extends CI_Model{
     public function getCountPerMode($kecamatan="",$mode="Mingguan"){
         date_default_timezone_set("Asia/Makassar"); 
         $vaksinatorDB = $this->load->database('analytics', TRUE);
-        $query  = $vaksinatorDB->query("SHOW TABLES FROM ec_analytics");
+        $query  = $vaksinatorDB->query("SHOW TABLES FROM gen_analytics");
         $table_default = $this->Table->getTable('vaksinator');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
-            if(array_key_exists($table->Tables_in_ec_analytics, $table_default)){
-                $tables[$table->Tables_in_ec_analytics]=$table_default[$table->Tables_in_ec_analytics];
+            if(array_key_exists($table->Tables_in_gen_analytics, $table_default)){
+                $tables[$table->Tables_in_gen_analytics]=$table_default[$table->Tables_in_gen_analytics];
             }
         }
         
@@ -194,13 +194,13 @@ class VaksinatorEcModel extends CI_Model{
     public function getCountPerForm($kecamatan="",$start,$end){
         $end = date("Y-m-d",  strtotime($end." +1 day"));
         $vaksinatorDB = $this->load->database('analytics', TRUE);
-        $query  = $vaksinatorDB->query("SHOW TABLES FROM ec_analytics");
+        $query  = $vaksinatorDB->query("SHOW TABLES FROM gen_analytics");
         $table_default = $this->Table->getTable('vaksinator');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
-            if(array_key_exists($table->Tables_in_ec_analytics, $table_default)){
-                $tables[$table->Tables_in_ec_analytics]=$table_default[$table->Tables_in_ec_analytics];
+            if(array_key_exists($table->Tables_in_gen_analytics, $table_default)){
+                $tables[$table->Tables_in_gen_analytics]=$table_default[$table->Tables_in_gen_analytics];
             }
         }
         
@@ -236,14 +236,14 @@ class VaksinatorEcModel extends CI_Model{
     
     public function getCountPerFormForDrill($desa="",$date=""){
         $vaksinatorDB = $this->load->database('analytics', TRUE);
-        $query  = $vaksinatorDB->query("SHOW TABLES FROM ec_analytics");
+        $query  = $vaksinatorDB->query("SHOW TABLES FROM gen_analytics");
         $table_default = $this->Table->getTable('vaksinator');
         $tabindex = $this->Table->getTableIndex('vaksinator');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
-            if(array_key_exists($table->Tables_in_ec_analytics, $table_default)){
-                $tables[$table->Tables_in_ec_analytics]=$table_default[$table->Tables_in_ec_analytics];
+            if(array_key_exists($table->Tables_in_gen_analytics, $table_default)){
+                $tables[$table->Tables_in_gen_analytics]=$table_default[$table->Tables_in_gen_analytics];
             }
         }
         
