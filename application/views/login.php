@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>DHO Report Login</title>
+    <title>GEN Report Login</title>
     <script type="text/javascript">
         $('.message a').click(function(){
            $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
