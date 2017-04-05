@@ -11,7 +11,7 @@
             </select>
         </div><br><br>
         <div>
-            <form class="form" action="<?php echo site_url()."dataentry/gizibyform/".$kecamatan?>" method="get">
+            <form class="form" action="<?php echo site_url()."dataentry/sdidtkbyform/".$kecamatan?>" method="get">
                 <label class="col-sm-2 control-label">Periode: </label>
                 <input type="date" name="start" class="form-control-static" value="<?=$start?>"/>
                 <input type="date" name="end" class="form-control-static" value="<?=$end?>"/>
@@ -54,9 +54,9 @@
             var newmode = $( "#date option:selected" ).attr("id");
             if(datemode!=newmode){
                 if(newmode=="subdate"){
-                    window.location.href = "<?=base_url()."dataentry/gizibyform/".$kecamatan."?start=".$start."&end=".$end."&by=subdate"?>";
+                    window.location.href = "<?=base_url()."dataentry/sdidtkbyform/".$kecamatan."?start=".$start."&end=".$end."&by=subdate"?>";
                 }else if(newmode=="visdate"){
-                    window.location.href = "<?=base_url()."dataentry/gizibyform/".$kecamatan."?start=".$start."&end=".$end."&by=visdate"?>";
+                    window.location.href = "<?=base_url()."dataentry/sdidtkbyform/".$kecamatan."?start=".$start."&end=".$end."&by=visdate"?>";
                 }
             }
         });    

@@ -57,9 +57,7 @@ class DataEntry extends CI_Controller{
                 $data['end'] = $this->input->get('end');
                 $old_data = $this->input->get('old');
             }$data['datemode'] = $by;
-            //if($by=="subdate") 
                 $data['data'] = $this->AnalyticsModel->getCountPerForm($data['kecamatan'],$data['start'],$data['end']);
-            //else $data['data'] = $this->AnalyticsModel->getCountPerFormByVisitDate($data['kecamatan'],$data['start'],$data['end']);
             $this->load->view("header");
             if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
                 $data['location'] = $this->loc->getAllLocSpv('bidan',$this->session->userdata('location'));
@@ -140,9 +138,7 @@ class DataEntry extends CI_Controller{
                 $data['end'] = $this->input->get('end');
             }
             $data['datemode'] = $by;
-            //if($by=="subdate") 
                 $data['data'] = $this->AnalyticsModel->getCountPerDayDrill($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
-            //else $data['data'] = $this->AnalyticsModel->getCountPerDayByVisitDate($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
             $this->load->view("header");
             if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
                 $data['location'] = $this->loc->getAllLocSpv('bidan',$this->session->userdata('location'));
@@ -214,7 +210,7 @@ class DataEntry extends CI_Controller{
             $this->load->view("dataentry/fhw/sdidtkentryform",$data);
             $this->load->view("footer");
         }else{
-            $data['kecamatan']		= $this->uri->segment(3);
+            $data['kecamatan']		= str_replace('%20',' ',$this->uri->segment(3));
             $data['desa']		= str_replace('%20', ' ', $this->uri->segment(4));
             if($this->input->get('start')==null&&$data['desa']==""){
                 if($this->input->get('by')==null)$by = "subdate";else $by = $this->input->get('by');
@@ -226,9 +222,7 @@ class DataEntry extends CI_Controller{
                 $data['end'] = $this->input->get('end');
             }
             $data['datemode'] = $by;
-            //if($by=="subdate") 
                 $data['data'] = $this->SdidtkModel->getCountPerForm($data['kecamatan'],$data['start'],$data['end']);
-            //else $data['data'] = $this->SdidtkModel->getCountPerFormByVisitDate($data['kecamatan'],$data['start'],$data['end']);
             $this->load->view("header");
             if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
                 $data['location'] = $this->loc->getAllLocSpv('sdidtk',$this->session->userdata('location'));
@@ -268,7 +262,7 @@ class DataEntry extends CI_Controller{
             $this->load->view("dataentry/fhw/sdidtkentrytanggal",$data);
             $this->load->view("footer");
         }else{
-            $data['kecamatan']		= $this->uri->segment(3);
+            $data['kecamatan']		= str_replace('%20',' ',$this->uri->segment(3));
             $data['mode']                   = $this->uri->segment(4);
             if($data['mode']!="Bulanan"&&$data['mode']!="Mingguan"){
                 $data['desa']		= str_replace('%20', ' ', $this->uri->segment(4));
@@ -287,9 +281,7 @@ class DataEntry extends CI_Controller{
                 $data['end'] = $this->input->get('end');
             }
             $data['datemode'] = $by;
-            //if($by=="subdate") 
-                $data['data'] = $this->SdidtkModel->getCountPerDay($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
-            //else $data['data'] = $this->SdidtkModel->getCountPerDayByVisitDate($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
+                $data['data'] = $this->SdidtkModel->getCountPerDayDrill($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
             $this->load->view("header");
             if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
                 $data['location'] = $this->loc->getAllLocSpv('sdidtk',$this->session->userdata('location'));
