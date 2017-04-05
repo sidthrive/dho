@@ -21,16 +21,16 @@ class LocationModel extends CI_Model{
             "Kota Bima"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
             "Kabupaten Dompu"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'')),
         "sdidtk"=>array(
-            "Kota Mataram"=>array(),
-            "Kabupaten Lombok Barat"=>array(),
-            "Kabupaten Lombok Tengah"=>array(),
-            "Kabupaten Lombok Timur"=>array(),
-            "Kabupaten Lombok Utara"=>array(),
-            "Kabupaten Sumbawa"=>array(),
-            "Kabupaten Sumbawa Barat"=>array(),
-            "Kabupaten Bima"=>array(),
-            "Kota Bima"=>array(),
-            "Kabupaten Dompu"=>array())
+            "Kota Mataram"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
+            "Kabupaten Lombok Barat"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
+            "Kabupaten Lombok Tengah"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
+            "Kabupaten Lombok Timur"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
+            "Kabupaten Lombok Utara"=>array('user1'=>'Santong','user2'=>'Sesait','user3'=>'Pendua','user4'=>'Bentek','user5'=>'Gondang','user6'=>'Genggelang','user7'=>'Rempek','user8'=>'Sambik Bangkol','user9'=>'Pemenang Barat','user10'=>'Pemenang Timur'),
+            "Kabupaten Sumbawa"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
+            "Kabupaten Sumbawa Barat"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
+            "Kabupaten Bima"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
+            "Kota Bima"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
+            "Kabupaten Dompu"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''))
         ];
     
     private $loc_id = [
