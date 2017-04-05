@@ -126,13 +126,13 @@
                                 ?>
                                 <div class="panel panel-default panel-collapse">
                                     <a data-parent="#sdidtk_menu" href="<?php echo site_url() ."dataentry/sdidtkbyform/".$kec?>">
-                                    <div <?=($this->uri->segment(2)=='sdidtkbyform'&&$this->uri->segment(3)==$kec)?' style="background-color:#909090"':''?> class="panel-heading">
+                                    <div <?=($this->uri->segment(2)=='sdidtkbyform'&&str_replace('%20',' ',$this->uri->segment(3))==$kec)?' style="background-color:#909090"':''?> class="panel-heading">
                                         <h4 class="panel-title">
                                              <?=$kec?>
                                         </h4>
                                     </div>
                                     </a>
-                                    <?php if($this->uri->segment(2)=='sdidtkbyform'&&$this->uri->segment(3)==$kec){ ?>
+                                    <?php if($this->uri->segment(2)=='sdidtkbyform'&&str_replace('%20',' ',$this->uri->segment(3))==$kec){ ?>
                                     <div class="panel panel-default">
                                         <?php foreach($desas as $user => $desa){
                                         ?>
@@ -164,13 +164,13 @@
                                 ?>
                                 <div class="panel panel-default panel-collapse">
                                     <a data-parent="#sdidtk_menu" href="<?php echo site_url() ."dataentry/sdidtkbytanggal/".$kec?>">
-                                    <div class="panel-heading"<?=($this->uri->segment(2)=='sdidtkbytanggal'&&$this->uri->segment(3)==$kec)?' style="background-color:#909090"':''?>>
+                                    <div class="panel-heading"<?=($this->uri->segment(2)=='sdidtkbytanggal'&&str_replace('%20',' ',$this->uri->segment(3))==$kec)?' style="background-color:#909090"':''?>>
                                         <h4 class="panel-title">
                                              <?=$kec?>
                                         </h4>
                                     </div>
                                     </a>
-                                    <?php if($this->uri->segment(2)=='sdidtkbytanggal'&&$this->uri->segment(3)==$kec){ ?>
+                                    <?php if($this->uri->segment(2)=='sdidtkbytanggal'&&str_replace('%20',' ',$this->uri->segment(3))==$kec){ ?>
                                     <div class="panel panel-default">
                                         <?php foreach($desas as $user => $desa){
                                         ?>
