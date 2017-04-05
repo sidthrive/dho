@@ -10,48 +10,58 @@ class LocationModel extends CI_Model{
     
     private $loc = [
         "bidan"=>array(
-            "Darek"=>array('nouser1'=>'Pandan Indah','user26'=>'Serage','user22'=>'Teduh'),
-            "Pengadang"=>array('user30'=>'Gerantung','nouser1'=>'Jurang Jaler','nouser2'=>'Pengadang'),
-            "Kopang"=>array('user21'=>'Aik Bual','user25'=>'Kopang Rembiga','user29'=>'Montong Gamang'),
-            "Mantang"=>array('nouser1'=>'Barabali','user24'=>'Mantang','user23'=>'Presak','nouser2'=>'Tampak Siring'),
-            "Mujur"=>array('nouser1'=>'Mujur','nouser2'=>'Sukaraja'),
-            "Puyung"=>array('nouser1'=>'Dasan Ketujur','user27'=>'Gemel'),
-            "Ubung"=>array('user20'=>'Batu Tulis','user28'=>'Labulia','nouser1'=>'Ubung')),
-        "vaksinator"=>array(
-            "Darek"=>array('nouser1'=>'Pandan Indah','vaksin26'=>'Serage','nouser2'=>'Teduh'),
-            "Pengadang"=>array('vaksin30'=>'Gerantung','nouser1'=>'Jurang Jaler','nouser2'=>'Pengadang'),
-            "Kopang"=>array('vaksin21'=>'Aik Bual','vaksin25'=>'Kopang Rembiga','vaksin29'=>'Montong Gamang'),
-            "Mantang"=>array('nouser1'=>'Barabali','nouser2'=>'Mantang','vaksin23'=>'Presak','nouser3'=>'Tampak Siring'),
-            "Mujur"=>array('nouser1'=>'Mujur','nouser2'=>'Sukaraja'),
-            "Puyung"=>array('nouser1'=>'Dasan Ketujur','nouser2'=>'Gemel'),
-            "Ubung"=>array('vaksin20'=>'Batu Tulis','nouser1'=>'Labulia','nouser2'=>'Ubung')),
-        "gizi"=>array(
-            "Darek"=>array('nouser1'=>'Pandan Indah','gizi26'=>'Serage','nouser2'=>'Teduh'),
-            "Pengadang"=>array('gizi30'=>'Gerantung','nouser1'=>'Jurang Jaler','nouser2'=>'Pengadang'),
-            "Kopang"=>array('gizi21'=>'Aik Bual','gizi25'=>'Kopang Rembiga','gizi29'=>'Montong Gamang'),
-            "Mantang"=>array('nouser1'=>'Barabali','nouser2'=>'Mantang','gizi23'=>'Presak','nouser3'=>'Tampak Siring'),
-            "Mujur"=>array('nouser1'=>'Mujur','nouser2'=>'Sukaraja'),
-            "Puyung"=>array('nouser1'=>'Dasan Ketujur','nouser2'=>'Gemel'),
-            "Ubung"=>array('gizi20'=>'Batu Tulis','nouser1'=>'Labulia','nouser2'=>'Ubung'))
+            "Kota Mataram"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
+            "Kabupaten Lombok Barat"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
+            "Kabupaten Lombok Tengah"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
+            "Kabupaten Lombok Timur"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
+            "Kabupaten Lombok Utara"=>array('user1'=>'Santong','user2'=>'Sesait','user3'=>'Pendua','user4'=>'Bentek','user5'=>'Gondang','user6'=>'Genggelang','user7'=>'Rempek','user8'=>'Sambik Bangkol','user9'=>'Pemenang Barat','user10'=>'Pemenang Timur'),
+            "Kabupaten Sumbawa"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
+            "Kabupaten Sumbawa Barat"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
+            "Kabupaten Bima"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
+            "Kota Bima"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
+            "Kabupaten Dompu"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'')),
+        "sdidtk"=>array(
+            "Kota Mataram"=>array(),
+            "Kabupaten Lombok Barat"=>array(),
+            "Kabupaten Lombok Tengah"=>array(),
+            "Kabupaten Lombok Timur"=>array(),
+            "Kabupaten Lombok Utara"=>array(),
+            "Kabupaten Sumbawa"=>array(),
+            "Kabupaten Sumbawa Barat"=>array(),
+            "Kabupaten Bima"=>array(),
+            "Kota Bima"=>array(),
+            "Kabupaten Dompu"=>array())
         ];
     
     private $loc_id = [
-            "Darek"=>array('Pandan Indah'=>'Pandan Indah','Serage'=>'Serage','Teduh'=>'Teduh'),
-            "Pengadang"=>array('Gerantung'=>'Gerantung','Jurang Jaler'=>'Jurang Jaler','Pengadang'=>'Pengadang'),
-            "Kopang"=>array('Aik Bual'=>'Aik Bual','Kopang Rembiga'=>'Kopang Rembiga','Montong Gamang'=>'Montong Gamang'),
-            "Mantang"=>array('Barabali'=>'Barabali','Mantang.'=>'Mantang','Presak.'=>'Presak','Tampak Siring'=>'Tampak Siring'),
-            "Mujur"=>array('Mujur'=>'Mujur','Sukaraja'=>'Sukaraja'),
-            "Puyung"=>array('Dasan Ketujur'=>'Dasan Ketujur','Gemel'=>'Gemel'),
-            "Ubung"=>array('Batu Tulis'=>'Batu Tulis','Labulia'=>'Labulia','Ubung'=>'Ubung')
+            "Kota Mataram"=>array(),
+            "Kabupaten Lombok Barat"=>array(),
+            "Kabupaten Lombok Tengah"=>array(),
+            "Kabupaten Lombok Timur"=>array(),
+            "Kabupaten Lombok Utara"=>array('Santong'=>'Santong','Sesait'=>'Sesait','Pendua'=>'Pendua','Bentek'=>'Bentek','Gondang'=>'Gondang','Genggelang'=>'Genggelang','Rempek'=>'Rempek','Sambik Bangkol'=>'Sambik Bangkol','Pemenang Barat'=>'Pemenang Barat','Pemenang Timur'=>'Pemenang Timur'),
+            "Kabupaten Sumbawa"=>array(),
+            "Kabupaten Sumbawa Barat"=>array(),
+            "Kabupaten Bima"=>array(),
+            "Kota Bima"=>array(),
+            "Kabupaten Dompu"=>array()
         ];
     
     private $int_loc_id = [
             "bidan"=>array('Serage'=>'Serage','Teduh'=>'Teduh','Gerantung'=>'Gerantung','Kopang Rembiga'=>'Kopang Rembiga','Montong Gamang'=>'Montong Gamang','Mantang.'=>'Mantang','Presak.'=>'Presak','Gemel'=>'Gemel','Batu Tulis'=>'Batu Tulis','Labulia'=>'Labulia'),
-            "gizi"=>array('Serage'=>'Serage','Gerantung'=>'Gerantung','Kopang Rembiga'=>'Kopang Rembiga','Montong Gamang'=>'Montong Gamang','Presak.'=>'Presak','Batu Tulis'=>'Batu Tulis'),
-            "vaksinator"=>array('Serage'=>'Serage','Gerantung'=>'Gerantung','Kopang Rembiga'=>'Kopang Rembiga','Montong Gamang'=>'Montong Gamang','Presak.'=>'Presak','Batu Tulis'=>'Batu Tulis')
+            "sdidtk"=>array('Serage'=>'Serage','Gerantung'=>'Gerantung','Kopang Rembiga'=>'Kopang Rembiga','Montong Gamang'=>'Montong Gamang','Presak.'=>'Presak','Batu Tulis'=>'Batu Tulis')
         ];
     
     private $dusun = [
+        'Santong'=>array(1=>'Temposodo','Sempakok','Cempaka','Santong Timur','Santong Barat','Subak Pepulu','Suka Damai','Waker','Santong Asli','Gubuk Baru','Santong Tengah','Mekar Sari'),
+        'Sesait'=>array(1=>'Sumur Pande Tengah','Sumur Pande Lauk','Sumur Pande Daya','Bat Pawang','Kebalon','Lokok Are','Batu Jompang','Pansor Tengah','Pansor Daya','Sumur Jiri','Lk Strang','Tk Benak','Santong Mulia','Oman Rot','Sesait','Pansor Lauk'),
+        'Pendua'=>array(1=>'Lokok Senggol','Lokok Bata','Pendua Lauk','Pendua Daya','Sentul'),
+        'Bentek'=>array(1=>'Goa','Dasan Baro','Dasan Bangket','Todo Lauk','Todo Daya','Buani','Orong Luk','Karang Lendang','Lenek','Pasiran','Baru','Kakong','Serungga','Batu Ringgit','Selelos','Sengaran'),
+        'Gondang'=>array(1=>'Karang Kates','Lekok Utara','Lekok Timur','Lekok Selatan','Lekok Tenggara','Karang Bedil','Karang Amor','Karang Pendagi','Lokok Gitak','Karang Anyar','Gondang Timur','Jeliti','Besari'),
+        'Genggelang'=>array(1=>'Papak I','Papak II','Karang Krakas','Karang Jurang','Sembaro','Lendang Bagian','Karang Kendal','Kerurak','Sankukun','Bulan Semu','Penjor','Kertaraharja','Gitak Demung','Gangga','Senara','Dasan Sambik','Lias','Monggal Atas','Monggal Bawah','Paok Rempek','Tempos Kujur'),
+        'Rempek'=>array(1=>'Lempenge','Montong Pall','Jelitong','Kuripan','Telaga Maluku','Bat Koloh','Atas Telabah','Sejuik','Gelumpang','Duria','Rempek Barat','Rempek Timur','Soloh Bawah','Soloh Atas','Pancor Getah','Pawang Busur','Busur','Tuan Ani'),
+        'Sambik Bangkol'=>array(1=>'Papanda Bawah','Sambik Bangkol','Oman Telaga','Luk Barat','Luk Timur','Klongkong,','Jugil','Senjajak,','Kopong Sebangun,','Beririjarak','Papanda Atas'),
+        'Pemenang Barat'=>array(1=>'Karang Desa','Karang Subagan','Karang Gelebek','Karang Pangsor','Telaga Wareng','Menggala','Krujuk','Bentek','Telok Kombal','Sumur Mual'),
+        'Pemenang Timur'=>array(1=>'Karang Petak','Karang Montong Lauk','Karang Montong Daye','Karang Baro','Karang Bedil','Tebango','Tr Tanak Ampar','Tr Lauk','Tr Tengah','Tr Daye','Tr Timur','Koloh Tanjung','Muara Putat','Karang Bangket','Tebango Bolot'),
         'Pandan Indah'=>array(1=>'Aik kerit','Bolor gejek','kelambi 1','kelambi 2','Kreak','Mangkoneng','Nangker','Panggongan','Rege','Sukalalem'),
         'Serage'=>array(1=>'Beberik','Belenje','Bt. salang','Lekong jae','Mapasan','Rurut','Semaye','Sulung'),
         'Teduh'=>array(1=>'Jati','Montong putik','Pengengat','Pengolah','Teduh.'),
@@ -75,6 +85,16 @@ class LocationModel extends CI_Model{
     ];
     
     private $dusun_typo = [
+        'Santong'=>array('Temposodo'=>'Temposodo','Sempakok'=>'Sempakok','Cempaka'=>'Cempaka','Santong Timur'=>'Santong Timur','Santong Barat'=>'Santong Barat','Subak Pepulu'=>'Subak Pepulu','Suka Damai'=>'Suka Damai','Waker'=>'Waker','Santong Asli'=>'Santong Asli','Gubuk Baru'=>'Gubuk Baru','Santong Tengah'=>'Santong Tengah','Mekar Sari'=>'Mekar Sari'),
+        'Sesait'=>array('Sumur Pande Tengah'=>'Sumur Pande Tengah','Sumur Pande Lauk'=>'Sumur Pande Lauk','Sumur Pande Daya'=>'Sumur Pande Daya','Bat Pawang'=>'Bat Pawang','Kebalon'=>'Kebalon','Lokok Are'=>'Lokok Are','Batu Jompang'=>'Batu Jompang','Pansor Tengah'=>'Pansor Tengah','Pansor Daya'=>'Pansor Daya','Sumur Jiri'=>'Sumur Jiri','Lk Strang'=>'Lk Strang','Tk Benak'=>'Tk Benak','Santong Mulia'=>'Santong Mulia','Oman Rot'=>'Oman Rot','Sesait'=>'Sesait','Pansor Lauk'=>'Pansor Lauk'),
+        'Pendua'=>array('Lokok Senggol'=>'Lokok Senggol','Lokok Bata'=>'Lokok Bata','Pendua Lauk'=>'Pendua Lauk','Pendua Daya'=>'Pendua Daya','Sentul'=>'Sentul'),
+        'Bentek'=>array('Goa'=>'Goa','Dasan Baro'=>'Dasan Baro','Dasan Bangket'=>'Dasan Bangket','Todo Lauk'=>'Todo Lauk','Todo Daya'=>'Todo Daya','Buani'=>'Buani','Orong Luk'=>'Orong Luk','Karang Lendang'=>'Karang Lendang','Lenek'=>'Lenek','Pasiran'=>'Pasiran','Baru'=>'Baru','Kakong'=>'Kakong','Serungga'=>'Serungga','Batu Ringgit'=>'Batu Ringgit','Selelos'=>'Selelos','Sengaran'=>'Sengaran'),
+        'Gondang'=>array('Karang Kates'=>'Karang Kates','Lekok Utara'=>'Lekok Utara','Lekok Timur'=>'Lekok Timur','Lekok Selatan'=>'Lekok Selatan','Lekok Tenggara'=>'Lekok Tenggara','Karang Bedil'=>'Karang Bedil','Karang Amor'=>'Karang Amor','Karang Pendag'=>'Karang Pendagi','Lokok Gitak'=>'Lokok Gitak','Karang Anyar'=>'Karang Anyar','Gondang Timur'=>'Gondang Timur','Jeliti'=>'Jeliti','Besari'=>'Besari'),
+        'Genggelang'=>array('Papak I'=>'Papak I','Papak II'=>'Papak II','Karang Krakas'=>'Karang Krakas','Karang Jurang'=>'Karang Jurang','Sembaro'=>'Sembaro','Lendang Bagian'=>'Lendang Bagian','Karang Kendal'=>'Karang Kendal','Kerurak'=>'Kerurak','Sankukun'=>'Sankukun','Bulan Semu'=>'Bulan Semu','Penjor'=>'Penjor','Kertaraharja'=>'Kertaraharja','Gitak Demung'=>'Gitak Demung','Gangga'=>'Gangga','Senara'=>'Senara','Dasan Sambik'=>'Dasan Sambik','Lias'=>'Lias','Monggal Atas'=>'Monggal Atas','Monggal Bawah'=>'Monggal Bawah','Paok Rempek'=>'Paok Rempek','Tempos Kujur'=>'Tempos Kujur'),
+        'Rempek'=>array('Lempenge'=>'Lempenge','Montong Pall'=>'Montong Pall','Jelitong'=>'Jelitong','Kuripan'=>'Kuripan','Telaga Maluku'=>'Telaga Maluku','Bat Koloh'=>'Bat Koloh','Atas Telabah'=>'Atas Telabah','Sejuik'=>'Sejuik','Gelumpang'=>'Gelumpang','Duria'=>'Duria','Rempek Barat'=>'Rempek Barat','Rempek Timur'=>'Rempek Timur','Soloh Bawah'=>'Soloh Bawah','Soloh Atas'=>'Soloh Atas','Pancor Getah'=>'Pancor Getah','Pawang Busur'=>'Pawang Busur','Busur'=>'Busur','Tuan Ani'=>'Tuan Ani'),
+        'Sambik Bangkol'=>array('Papanda Bawah'=>'Papanda Bawah','Sambik Bangkol'=>'Sambik Bangkol','Oman Telaga'=>'Oman Telaga','Luk Barat'=>'Luk Barat','Luk Timur'=>'Luk Timur','Klongkong'=>'Klongkong','Jugil'=>'Jugil','Senjajak'=>'Senjajak','Kopong Sebangun'=>'Kopong Sebangun','Beririjarak'=>'Beririjarak','Papanda Atas'=>'Papanda Atas'),
+        'Pemenang Barat'=>array('Karang Desa'=>'Karang Desa','Karang Subagan'=>'Karang Subagan','Karang Gelebek'=>'Karang Gelebek','Karang Pangsor'=>'Karang Pangsor','Telaga Wareng'=>'Telaga Wareng','Menggala'=>'Menggala','Krujuk'=>'Krujuk','Bentek'=>'Bentek','Telok Kombal'=>'Telok Kombal','Sumur Mual'=>'Sumur Mual'),
+        'Pemenang Timur'=>array('Karang Petak'=>'Karang Petak','Karang Montong Lauk'=>'Karang Montong Lauk','Karang Montong Daye'=>'Karang Montong Daye','Karang Baro'=>'Karang Baro','Karang Bedil'=>'Karang Bedil','Tebango'=>'Tebango','Tr Tanak Ampar'=>'Tr Tanak Ampar','Tr Lauk'=>'Tr Lauk','Tr Tengah'=>'Tr Tengah','Tr Daye'=>'Tr Daye','Tr Timur'=>'Tr Timur','Koloh Tanjung'=>'Koloh Tanjung','Muara Putat'=>'Muara Putat','Karang Bangket'=>'Karang Bangket','Tebango Bolot'=>'Tebango Bolot'),
         'Pandan Indah'=>array('Aik kerit'=>'Aik kerit','Bolor gejek'=>'Bolor gejek','kelambi 1'=>'kelambi 1','kelambi 2'=>'kelambi 2','Kreak'=>'Kreak','Mangkoneng'=>'Mangkoneng','Nangker'=>'Nangker','Panggongan'=>'Panggongan','Rege'=>'Rege','Sukalalem'=>'Sukalalem'),
         'Serage'=>array('Beberik'=>'Beberik','Belenje'=>'Belenje','Bt. salang'=>'Bt salang','Lekong jae'=>'Lekong jae','Mapasan'=>'Mapasan','Rurut'=>'Rurut','Semaye'=>'Semaye','Sulung'=>'Sulung'),
         'Teduh'=>array('Jati'=>'Jati','Montong putik'=>'Montong putik','Pengengat'=>'Pengengat','Pengolah'=>'Pengolah','Teduh.'=>'Teduh','Teduh'=>'Teduh'),
@@ -106,6 +126,7 @@ class LocationModel extends CI_Model{
     }
     
     public function getLocId($kec){
+        //$kec = str_replace('%20',' ',$kec);
         return $this->loc_id[$kec];
     }
     
