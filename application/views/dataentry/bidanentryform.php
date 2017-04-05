@@ -1,7 +1,7 @@
     <div id="content">
         <div id="text" style="text-align: center;">
             <h3>Total Entri tiap Form</h3>
-            <h3>Puskesmas <?=$kecamatan?></h3>
+            <h3><?=$kecamatan?></h3>
         </div><br><br>
         <div>
             <span>Tampilkan Berdasarkan : </span><select id="date">
