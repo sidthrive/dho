@@ -94,27 +94,5 @@
                 </div>
             </div>
             <?php } ?>
-            <?php if($this->session->userdata('tipe')=="gizi"||$this->session->userdata('tipe')=="all"){ ?>
-            <div class="panel panel-default">
-                <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        Gizi
-                    </h4>
-                </div>
-                </a>
-            </div>
-            <?php } ?>
-            <?php if($this->session->userdata('tipe')=="vaksinator"||$this->session->userdata('tipe')=="all"){ ?>
-            <div class="panel panel-default">
-                <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        Vaksinator
-                    </h4>
-                </div>
-                </a>
-            </div>
-            <?php } ?>
         </div>
     </div>
