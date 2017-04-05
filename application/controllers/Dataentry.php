@@ -11,10 +11,8 @@ class DataEntry extends CI_Controller{
         $this->load->model('AnalyticsFhwEcModel','AnalyticsFhwModel');
         $this->load->model('LocationModel','loc');
         $this->load->model('AnalyticsEcModel','AnalyticsModel');
-        $this->load->model('SdidtkEcModel','SdidtkModel');
-        $this->load->model('SdidtkFhwEcModel','SdidtkFhwModel');
-        $this->load->model('VaksinatorFhwEcModel','VaksinatorFhwModel');
-        $this->load->model('VaksinatorEcModel','VaksinatorModel');
+        $this->load->model('SdidtkModel','SdidtkModel');
+        $this->load->model('SdidtkFhwModel','SdidtkFhwModel');
     }
     
     public function index(){
