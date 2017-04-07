@@ -78,7 +78,7 @@ class PWSNewFhwModel extends CI_Model{
         $data = [];
         foreach ($all_data as $d){
             $lo = explode('dusun_', $d->location);
-            $l = ucwords(str_replace('_', ' ', $lo[1]));
+            $l = str_replace('Ii', 'II', str_replace('Iii', 'III', ucwords(str_replace('_', ' ', $lo[1]))));
             $data[$d->bulan][$l][$d->field_name] = $d->value;
         }
         
