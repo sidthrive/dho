@@ -103,7 +103,7 @@ class PWSEcFhwModel extends CI_Model{
         $target = $pwsdb->query("SELECT * FROM target WHERE loc_parent='$loc' AND tahun='$year'")->result();
         foreach ($target as $t){
             $lo = explode('desa_', $t->location);
-            $l = ucwords(str_replace('_', ' ', $lo[1]));
+            $l = str_replace('Ii', 'II', str_replace('Iii', 'III', ucwords(str_replace('_', ' ', $lo[1]))));
             $key = array_search($l, $dusun);
             $result['data']['DATA A']['bumil'][$key] = $t->bumil;
             $result['data']['DATA A']['bulin'][$key] = $t->bulin;
@@ -130,7 +130,7 @@ class PWSEcFhwModel extends CI_Model{
         $data = [];
         foreach ($all_data as $d){
             $lo = explode('dusun_', $d->location);
-            $l = ucwords(str_replace('_', ' ', $lo[1]));
+            $l = str_replace('Ii', 'II', str_replace('Iii', 'III', ucwords(str_replace('_', ' ', $lo[1]))));
             $data[$d->bulan][$l][$d->field_name] = $d->value;
         }
         
@@ -222,7 +222,7 @@ class PWSEcFhwModel extends CI_Model{
         $target = $pwsdb->query("SELECT * FROM target WHERE loc_parent='$loc' AND tahun='$year'")->result();
         foreach ($target as $t){
             $lo = explode('desa_', $t->location);
-            $l = ucwords(str_replace('_', ' ', $lo[1]));
+            $l = str_replace('Ii', 'II', str_replace('Iii', 'III', ucwords(str_replace('_', ' ', $lo[1]))));
             $key = array_search($l, $dusun);
             $result['data']['DATA A']['bayi'][$key] = $t->bayi;
             $result['data']['DATA A']['balita'][$key] = $t->balita;
@@ -249,7 +249,7 @@ class PWSEcFhwModel extends CI_Model{
         $data = [];
         foreach ($all_data as $d){
             $lo = explode('dusun_', $d->location);
-            $l = ucwords(str_replace('_', ' ', $lo[1]));
+            $l = str_replace('Ii', 'II', str_replace('Iii', 'III', ucwords(str_replace('_', ' ', $lo[1]))));
             $data[$d->bulan][$l][$d->field_name] = $d->value;
         }
         
@@ -359,7 +359,7 @@ class PWSEcFhwModel extends CI_Model{
         $target = $pwsdb->query("SELECT * FROM target WHERE loc_parent='$loc' AND tahun='$year'")->result();
         foreach ($target as $t){
             $lo = explode('desa_', $t->location);
-            $l = ucwords(str_replace('_', ' ', $lo[1]));
+            $l = str_replace('Ii', 'II', str_replace('Iii', 'III', ucwords(str_replace('_', ' ', $lo[1]))));
             $key = array_search($l, $dusun);
             $result['data']['DATA A']['bayi'][$key] = $t->bayi;
             $result['data']['DATA A']['balita'][$key] = $t->balita;
@@ -386,7 +386,7 @@ class PWSEcFhwModel extends CI_Model{
         $data = [];
         foreach ($all_data as $d){
             $lo = explode('dusun_', $d->location);
-            $l = ucwords(str_replace('_', ' ', $lo[1]));
+            $l = str_replace('Ii', 'II', str_replace('Iii', 'III', ucwords(str_replace('_', ' ', $lo[1]))));
             $data[$d->bulan][$l][$d->field_name] = $d->value;
         }
         
@@ -500,7 +500,7 @@ class PWSEcFhwModel extends CI_Model{
         $data = [];
         foreach ($all_data as $d){
             $lo = explode('dusun_', $d->location);
-            $l = ucwords(str_replace('_', ' ', $lo[1]));
+            $l = str_replace('Ii', 'II', str_replace('Iii', 'III', ucwords(str_replace('_', ' ', $lo[1]))));
             $data[$d->bulan][$l][$d->field_name] = $d->value;
         }
         
@@ -628,7 +628,7 @@ class PWSEcFhwModel extends CI_Model{
         $data = [];
         foreach ($all_data as $d){
             $lo = explode('dusun_', $d->location);
-            $l = ucwords(str_replace('_', ' ', $lo[1]));
+            $l = str_replace('Ii', 'II', str_replace('Iii', 'III', ucwords(str_replace('_', ' ', $lo[1]))));
             $data[$d->bulan][$l][$d->field_name] = $d->value;
         }
         
@@ -761,7 +761,7 @@ class PWSEcFhwModel extends CI_Model{
         $data = [];
         foreach ($all_data as $d){
             $lo = explode('dusun_', $d->location);
-            $l = ucwords(str_replace('_', ' ', $lo[1]));
+            $l = str_replace('Ii', 'II', str_replace('Iii', 'III', ucwords(str_replace('_', ' ', $lo[1]))));
             $data[$d->bulan][$l][$d->field_name] = $d->value;
         }
         
@@ -898,7 +898,7 @@ class PWSEcFhwModel extends CI_Model{
         $data = [];
         foreach ($all_data as $d){
             $lo = explode('dusun_', $d->location);
-            $l = ucwords(str_replace('_', ' ', $lo[1]));
+            $l = str_replace('Ii', 'II', str_replace('Iii', 'III', ucwords(str_replace('_', ' ', $lo[1]))));
             $data[$d->bulan][$l][$d->field_name] = $d->value;
         }
         
