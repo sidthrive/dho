@@ -117,7 +117,7 @@ class LocationModel extends CI_Model{
         $location = '';
         foreach ($locId as $loc=>$id){
             $location .= "locationId LIKE '%$loc%'";
-            if($loc!=  end($locId)) $location .= " OR ";
+            if($id!=  end($locId)) $location .= " OR ";
         }
         return $location;
     }

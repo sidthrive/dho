@@ -8,13 +8,14 @@ class DataEntry extends CI_Controller{
             $this->session->set_flashdata('url', $this->uri->uri_string);
             redirect('login');
         }
-        $this->load->model('AnalyticsFhwEcModel','AnalyticsFhwModel');
         $this->load->model('LocationModel','loc');
+        $this->load->model('AnalyticsFhwEcModel','AnalyticsFhwModel');
         $this->load->model('AnalyticsEcModel','AnalyticsModel');
         $this->load->model('GiziEcModel','GiziModel');
         $this->load->model('GiziFhwEcModel','GiziFhwModel');
         $this->load->model('VaksinatorFhwEcModel','VaksinatorFhwModel');
         $this->load->model('VaksinatorEcModel','VaksinatorModel');
+        $this->load->model('OnTimeSubmissionModel','OnTimeSubmissionModel');
     }
     
     public function index(){
@@ -195,6 +196,58 @@ class DataEntry extends CI_Controller{
         
         $data = $this->AnalyticsFhwModel->getCountPerFormForDrill($desa,$date);
         echo json_encode($data);
+    }
+    
+    public function bidanOnTimeSubmission(){
+        if($this->session->userdata('level')=="fhw"){
+            
+            $data['desa']		= $this->session->userdata('location');
+            $data['mode']                   = $this->uri->segment(4);
+            if($this->input->get('start')==null&&$data['mode']==''){
+                $now = date("Y-m-d");
+                $start = date("Y-m-d",  strtotime($now."-29 days"));
+                redirect("dataentry/bidanontimesubmission/?start=$start&end=$now");
+            }else{
+                $data['start'] = $this->input->get('start');
+                $data['end'] = $this->input->get('end');
+            }
+            $data['data']                   = $this->AnalyticsFhwModel->getCountPerDay($data['desa'],$data['mode'],array($data['start'],$data['end']));
+            $this->load->view("header");
+            $this->load->view("dataentry/fhw/dataentrysidebar");
+            $this->load->view("dataentry/fhw/bidanontimesubmission",$data);
+            $this->load->view("footer");
+        }else{
+            $data['kecamatan']		= $this->uri->segment(3);
+            $data['mode']                   = $this->uri->segment(4);
+            if($data['mode']!="Bulanan"&&$data['mode']!="Mingguan"){
+                $data['desa']		= str_replace('%20', ' ', $this->uri->segment(4));
+                $data['mode']                   = $this->uri->segment(5);
+            }else{
+                $data['desa']		= "";
+            }
+            if($this->input->get('start')==null&&$data['desa']==""&&$data['mode']==''){
+                if($this->input->get('by')==null)$by = "subdate";else $by = $this->input->get('by');
+                $now = date("Y-m-d");
+                $start = date("Y-m-d",  strtotime($now."-29 days"));
+                redirect("dataentry/bidanontimesubmission/".$data['kecamatan']."?start=$start&end=$now&by=$by");
+            }else{
+                $by = $this->input->get('by');
+                $data['start'] = $this->input->get('start');
+                $data['end'] = $this->input->get('end');
+            }
+            $data['datemode'] = $by;
+            $data['data'] = $this->OnTimeSubmissionModel->getOnTimeSubmission($data['kecamatan'],array($data['start'],$data['end']));
+            $this->load->view("header");
+            if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
+                $data['location'] = $this->loc->getAllLocSpv('bidan',$this->session->userdata('location'));
+            }else{
+                $data['location'] = $this->loc->getAllLoc('bidan');
+            }
+            $this->load->view("dataentry/dataentrysidebar",$data);
+            $this->load->view("dataentry/bidanontimesubmission",$data);
+            $this->load->view("footer");
+        }
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function gizi(){
