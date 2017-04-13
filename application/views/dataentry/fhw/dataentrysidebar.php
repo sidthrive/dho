@@ -77,6 +77,15 @@
                         </div>
                         </a>
                     </div>
+                    <div class="panel panel-default">
+                        <a data-parent="#gizis" href="<?php echo site_url() ."dataentry/giziontimesubmission"?>">
+                        <div class="panel-heading" <?=($this->uri->segment(2)=='giziontimesubmission')?' style="background-color:#909090"':''?>>
+                            <h4 class="panel-title">
+                                On Time Submission
+                            </h4>
+                        </div>
+                        </a>
+                    </div>
                 </div>
             </div>
             <?php } ?>
@@ -104,6 +113,15 @@
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 Total Entry Tiap Tanggal
+                            </h4>
+                        </div>
+                        </a>
+                    </div>
+                    <div class="panel panel-default">
+                        <a data-parent="#vaksinators" href="<?php echo site_url() ."dataentry/vaksinatorontimesubmission"?>">
+                        <div class="panel-heading" <?=($this->uri->segment(2)=='vaksinatorontimesubmission')?' style="background-color:#909090"':''?>>
+                            <h4 class="panel-title">
+                                On Time Submission
                             </h4>
                         </div>
                         </a>

@@ -209,7 +209,7 @@ class DataEntry extends CI_Controller{
                 $data['start'] = $this->input->get('start');
                 $data['end'] = $this->input->get('end');
             }
-            $data['data']                   = $this->OnTimeSubmissionModel->getOnTimeFormDesa($data['desa'],array($data['start'],$data['end']));
+            $data['data']                   = $this->OnTimeSubmissionModel->getOnTimeFormDesa($data['desa'],array($data['start'],$data['end']),'bidan');
             $this->load->view("header");
             $this->load->view("dataentry/fhw/dataentrysidebar");
             $this->load->view("dataentry/fhw/bidanontimesubmission",$data);
@@ -224,7 +224,7 @@ class DataEntry extends CI_Controller{
                 $data['start'] = $this->input->get('start');
                 $data['end'] = $this->input->get('end');
             }
-            $data['data'] = $this->OnTimeSubmissionModel->getOnTimeSubmission($data['mode'],array($data['start'],$data['end']));
+            $data['data'] = $this->OnTimeSubmissionModel->getOnTimeSubmission($data['mode'],array($data['start'],$data['end']),'bidan');
             $this->load->view("header");
             if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
                 $data['location'] = $this->loc->getAllLocSpv('bidan',$this->session->userdata('location'));
@@ -355,6 +355,46 @@ class DataEntry extends CI_Controller{
                 $data['data']           = $this->GiziFhwModel->getCountPerDay($data['desa'],$data['mode'],array($data['start'],$data['end']));
                 $this->load->view("dataentry/fhw/gizientrytanggal",$data);
             }
+            $this->load->view("footer");
+        }
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
+    }
+    
+    public function giziOnTimeSubmission(){
+        if($this->session->userdata('level')=="fhw"){
+            $data['desa']		= $this->session->userdata('location');
+            if($this->input->get('start')==null){
+                $now = date("Y-m-d");
+                $start = date("Y-m-d",  strtotime($now."-29 days"));
+                redirect("dataentry/giziontimesubmission?start=$start&end=$now");
+            }else{
+                $data['start'] = $this->input->get('start');
+                $data['end'] = $this->input->get('end');
+            }
+            $data['data']                   = $this->OnTimeSubmissionModel->getOnTimeFormDesa($data['desa'],array($data['start'],$data['end']),'gizi');
+            $this->load->view("header");
+            $this->load->view("dataentry/fhw/dataentrysidebar");
+            $this->load->view("dataentry/fhw/giziontimesubmission",$data);
+            $this->load->view("footer");
+        }else{
+            $data['mode']		= $this->uri->segment(3);
+            if($this->input->get('start')==null){
+                $now = date("Y-m-d");
+                $start = date("Y-m-d",  strtotime($now."-29 days"));
+                redirect("dataentry/giziontimesubmission/".$data['mode']."?start=$start&end=$now");
+            }else{
+                $data['start'] = $this->input->get('start');
+                $data['end'] = $this->input->get('end');
+            }
+            $data['data'] = $this->OnTimeSubmissionModel->getOnTimeSubmission($data['mode'],array($data['start'],$data['end']),'gizi');
+            $this->load->view("header");
+            if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
+                $data['location'] = $this->loc->getAllLocSpv('gizi',$this->session->userdata('location'));
+            }else{
+                $data['location'] = $this->loc->getAllLoc('gizi');
+            }
+            $this->load->view("dataentry/dataentrysidebar",$data);
+            $this->load->view("dataentry/giziontimesubmission",$data);
             $this->load->view("footer");
         }
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
@@ -494,6 +534,46 @@ class DataEntry extends CI_Controller{
                 $data['data']           = $this->VaksinatorFhwModel->getCountPerDay($data['desa'],$data['mode'],array($data['start'],$data['end']));
                 $this->load->view("dataentry/fhw/vaksinatorentrytanggal",$data);
             }
+            $this->load->view("footer");
+        }
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
+    }
+    
+    public function vaksinOnTimeSubmission(){
+        if($this->session->userdata('level')=="fhw"){
+            $data['desa']		= $this->session->userdata('location');
+            if($this->input->get('start')==null){
+                $now = date("Y-m-d");
+                $start = date("Y-m-d",  strtotime($now."-29 days"));
+                redirect("dataentry/vaksinontimesubmission?start=$start&end=$now");
+            }else{
+                $data['start'] = $this->input->get('start');
+                $data['end'] = $this->input->get('end');
+            }
+            $data['data']                   = $this->OnTimeSubmissionModel->getOnTimeFormDesa($data['desa'],array($data['start'],$data['end']),'vaksinator');
+            $this->load->view("header");
+            $this->load->view("dataentry/fhw/dataentrysidebar");
+            $this->load->view("dataentry/fhw/vaksinontimesubmission",$data);
+            $this->load->view("footer");
+        }else{
+            $data['mode']		= $this->uri->segment(3);
+            if($this->input->get('start')==null){
+                $now = date("Y-m-d");
+                $start = date("Y-m-d",  strtotime($now."-29 days"));
+                redirect("dataentry/vaksinontimesubmission/".$data['mode']."?start=$start&end=$now");
+            }else{
+                $data['start'] = $this->input->get('start');
+                $data['end'] = $this->input->get('end');
+            }
+            $data['data'] = $this->OnTimeSubmissionModel->getOnTimeSubmission($data['mode'],array($data['start'],$data['end']),'vaksinator');
+            $this->load->view("header");
+            if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
+                $data['location'] = $this->loc->getAllLocSpv('vaksinator',$this->session->userdata('location'));
+            }else{
+                $data['location'] = $this->loc->getAllLoc('vaksinator');
+            }
+            $this->load->view("dataentry/dataentrysidebar",$data);
+            $this->load->view("dataentry/vaksinontimesubmission",$data);
             $this->load->view("footer");
         }
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);

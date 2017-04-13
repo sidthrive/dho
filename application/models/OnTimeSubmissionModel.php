@@ -9,48 +9,48 @@ class OnTimeSubmissionModel extends CI_Model{
         $this->load->model('AnalyticsEcTableModel','Table');
     }
     
-    public function getOnTimeSubmission($mode="",$range=""){
+    public function getOnTimeSubmission($mode="",$range="",$fhw){
         if($mode=="daily"){
-            return $this->getDailyOnTime($range);
+            return $this->getDailyOnTime($range,$fhw);
         }else{
-            return $this->getWeeklyOnTime($range);
+            return $this->getWeeklyOnTime($range,$fhw);
         }
     }
     
-    public function getDailyOnTime($range=""){
-        $location = $this->loc->getIntLocId('bidan');
+    public function getDailyOnTime($range="",$fhw){
+        $location = $this->loc->getIntLocId($fhw);
         $result_data = array();
         $result_data['daily'] = array();
         foreach ($location as $user=>$desa){
-            $result_data['daily'][$desa] = $this->getDailyOnTimeDesa([$user=>$desa], $range);
+            $result_data['daily'][$desa] = $this->getDailyOnTimeDesa([$user=>$desa], $range,$fhw);
         }
-        $detail = $this->getOnTimeForm("daily",$range);
+        $detail = $this->getOnTimeForm("daily",$range,$fhw);
         foreach ($detail as $x=>$d){
             $result_data[$x] = $d;
         }
         return $result_data;
     }
     
-    public function getWeeklyOnTime($range=""){
-        $location = $this->loc->getIntLocId('bidan');
+    public function getWeeklyOnTime($range="",$fhw){
+        $location = $this->loc->getIntLocId($fhw);
         $result_data = array();
         $result_data['daily'] = array();
         foreach ($location as $user=>$desa){
-            $result_data['daily'][$desa] = $this->getWeeklyOnTimeDesa([$user=>$desa], $range);
+            $result_data['daily'][$desa] = $this->getWeeklyOnTimeDesa([$user=>$desa], $range,$fhw);
         }
-        $detail = $this->getOnTimeForm("weekly",$range);
+        $detail = $this->getOnTimeForm("weekly",$range,$fhw);
         foreach ($detail as $x=>$d){
             $result_data[$x] = $d;
         }
         return $result_data;
     }
     
-    public function getDailyOnTimeDesa($location="",$range=""){
+    public function getDailyOnTimeDesa($location="",$range="",$fhw){
         date_default_timezone_set("Asia/Makassar"); 
         $analyticsDB = $this->load->database('analytics', TRUE);
         $query  = $analyticsDB->query("SHOW TABLES FROM ec_analytics");
         
-        $table_default = $this->Table->getTable('bidan');
+        $table_default = $this->Table->getTable($fhw);
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
@@ -75,7 +75,7 @@ class OnTimeSubmissionModel extends CI_Model{
             
             foreach ($query->result() as $datas){
                 if(array_key_exists($datas->locationId, $location)){
-                    if($this->isOnTime($table,$datas)){
+                    if($this->isOnTime($table,$datas,$fhw)){
                         $ontime +=1;
                     }
                     $total +=1;
@@ -89,36 +89,52 @@ class OnTimeSubmissionModel extends CI_Model{
     }
     
     
-    private function isOnTime($table,$data){
+    private function isOnTime($table,$data,$fhw){
         $clientdate = explode(" ",$data->clientVersionSubmissionDate);
-        if($table=='event_bidan_kohort_kunjungan_bayi_perbulan'||$table=='event_bidan_kunjungan_balita'||$table=='event_bidan_kunjungan_neonatal'){
-            if($data->tanggalKunjunganBayiPerbulan==$clientdate[0]) return true;
-        }elseif($table=='event_bidan_kohort_pelayanan_kb'){
-            if($data->tanggalkunjungan==$clientdate[0]) return true;
-        }elseif($table=='event_bidan_kunjungan_anc'){
-            if($data->ancDate==$clientdate[0]) return true;
-        }elseif($table=='event_bidan_kunjungan_pnc'){
-            if($data->PNCDate==$clientdate[0]) return true;
-        }elseif($table=='event_bidan_rencana_persalinan'){
-            if($data->tanggalRencanaPersalinan==$clientdate[0]) return true;
-        }elseif($table=='event_bidan_tambah_bayi'){
-            if($data->tanggalPendaftaran==$clientdate[0]) return true;
-        }elseif($table=='event_bidan_tambah_kb'){
-            if($data->tanggalPeriksa==$clientdate[0]) return true;
-        }elseif($table=='event_bidan_kunjungan_anc_integrasi'||$table=='event_bidan_kunjungan_anc_lab_test'||$table=='event_bidan_tambah_anc'){
-            if($data->referenceDate==$clientdate[0]) return true;
-        }else{
-            if($data->dateCreated==$clientdate[0]) return true;
+        if($fhw=='bidan'){
+            if($table=='event_bidan_kohort_kunjungan_bayi_perbulan'||$table=='event_bidan_kunjungan_balita'||$table=='event_bidan_kunjungan_neonatal'){
+                if($data->tanggalKunjunganBayiPerbulan==$clientdate[0]) return true;
+            }elseif($table=='event_bidan_kohort_pelayanan_kb'){
+                if($data->tanggalkunjungan==$clientdate[0]) return true;
+            }elseif($table=='event_bidan_kunjungan_anc'){
+                if($data->ancDate==$clientdate[0]) return true;
+            }elseif($table=='event_bidan_kunjungan_pnc'){
+                if($data->PNCDate==$clientdate[0]) return true;
+            }elseif($table=='event_bidan_rencana_persalinan'){
+                if($data->tanggalRencanaPersalinan==$clientdate[0]) return true;
+            }elseif($table=='event_bidan_tambah_bayi'){
+                if($data->tanggalPendaftaran==$clientdate[0]) return true;
+            }elseif($table=='event_bidan_tambah_kb'){
+                if($data->tanggalPeriksa==$clientdate[0]) return true;
+            }elseif($table=='event_bidan_kunjungan_anc_integrasi'||$table=='event_bidan_kunjungan_anc_lab_test'||$table=='event_bidan_tambah_anc'){
+                if($data->referenceDate==$clientdate[0]) return true;
+            }else{
+                if($data->dateCreated==$clientdate[0]) return true;
+            }
+        }
+        elseif($fhw=='gizi'){
+            if($table=='event_gizi_kunjungan_gizi'){
+                if($data->tanggalPenimbangan==$clientdate[0]) return true;
+            }else{
+                if($data->dateCreated==$clientdate[0]) return true;
+            }
+        }
+        elseif($fhw=='vaksinator'){
+            if($table=='event_bidan_kohort_pelayanan_kb'){
+                if($data->tanggalkunjungan==$clientdate[0]) return true;
+            }else{
+                if($data->dateCreated==$clientdate[0]) return true;
+            }
         }
         return false;
     }
     
-    public function getWeeklyOnTimeDesa($location="",$range=""){
+    public function getWeeklyOnTimeDesa($location="",$range="",$fhw){
         date_default_timezone_set("Asia/Makassar"); 
         $analyticsDB = $this->load->database('analytics', TRUE);
         $query  = $analyticsDB->query("SHOW TABLES FROM ec_analytics");
         
-        $table_default = $this->Table->getTable('bidan');
+        $table_default = $this->Table->getTable($fhw);
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
@@ -144,7 +160,7 @@ class OnTimeSubmissionModel extends CI_Model{
             
             foreach ($query->result() as $datas){
                 if(array_key_exists($datas->locationId, $location)){
-                    if($this->isWeeklyOnTime($table,$datas)){
+                    if($this->isWeeklyOnTime($table,$datas,$fhw)){
                         $ontime +=1;
                     }
                     $total +=1;
@@ -157,25 +173,41 @@ class OnTimeSubmissionModel extends CI_Model{
         else return (float)number_format(100*$ontime/$total,2);
     }
     
-    private function isWeeklyOnTime($table,$data){
+    private function isWeeklyOnTime($table,$data,$fhw){
         $clientdate = explode(" ",$data->clientVersionSubmissionDate);
         $cdate = date_create($clientdate[0]);
-        if($table=='event_bidan_kohort_kunjungan_bayi_perbulan'||$table=='event_bidan_kunjungan_balita'||$table=='event_bidan_kunjungan_neonatal'){
-            $eventdate = explode(" ",$data->tanggalKunjunganBayiPerbulan);
-        }elseif($table=='event_bidan_kohort_pelayanan_kb'){
-            $eventdate = explode(" ",$data->tanggalkunjungan);
-        }elseif($table=='event_bidan_kunjungan_anc'){
-            $eventdate = explode(" ",$data->ancDate);
-        }elseif($table=='event_bidan_kunjungan_pnc'){
-            $eventdate = explode(" ",$data->PNCDate);
-        }elseif($table=='event_bidan_tambah_bayi'){
-            $eventdate = explode(" ",$data->tanggalPendaftaran);
-        }elseif($table=='event_bidan_tambah_kb'){
-            $eventdate = explode(" ",$data->tanggalPeriksa);
-        }elseif($table=='event_bidan_kunjungan_anc_integrasi'||$table=='event_bidan_kunjungan_anc_lab_test'||$table=='event_bidan_tambah_anc'){
-            $eventdate = explode(" ",$data->referenceDate);
-        }else{
-            $eventdate = explode(" ",$data->dateCreated);
+        if($fhw=='bidan'){
+            if($table=='event_bidan_kohort_kunjungan_bayi_perbulan'||$table=='event_bidan_kunjungan_balita'||$table=='event_bidan_kunjungan_neonatal'){
+                $eventdate = explode(" ",$data->tanggalKunjunganBayiPerbulan);
+            }elseif($table=='event_bidan_kohort_pelayanan_kb'){
+                $eventdate = explode(" ",$data->tanggalkunjungan);
+            }elseif($table=='event_bidan_kunjungan_anc'){
+                $eventdate = explode(" ",$data->ancDate);
+            }elseif($table=='event_bidan_kunjungan_pnc'){
+                $eventdate = explode(" ",$data->PNCDate);
+            }elseif($table=='event_bidan_tambah_bayi'){
+                $eventdate = explode(" ",$data->tanggalPendaftaran);
+            }elseif($table=='event_bidan_tambah_kb'){
+                $eventdate = explode(" ",$data->tanggalPeriksa);
+            }elseif($table=='event_bidan_kunjungan_anc_integrasi'||$table=='event_bidan_kunjungan_anc_lab_test'||$table=='event_bidan_tambah_anc'){
+                $eventdate = explode(" ",$data->referenceDate);
+            }else{
+                $eventdate = explode(" ",$data->dateCreated);
+            }
+        }
+        elseif($fhw=='gizi'){
+            if($table=='event_bidan_kohort_pelayanan_kb'){
+                $eventdate = explode(" ",$data->tanggalkunjungan);
+            }else{
+                $eventdate = explode(" ",$data->dateCreated);
+            }
+        }
+        elseif($fhw=='vaksinator'){
+            if($table=='event_bidan_kohort_pelayanan_kb'){
+                $eventdate = explode(" ",$data->tanggalkunjungan);
+            }else{
+                $eventdate = explode(" ",$data->dateCreated);
+            }
         }
         if($eventdate[0]=="NULL") return false;
         $evdate = date_create($eventdate[0]);
@@ -185,12 +217,12 @@ class OnTimeSubmissionModel extends CI_Model{
     }
     
     //buat desa
-    public function getOnTimeForm($mode="",$range=""){
+    public function getOnTimeForm($mode="",$range="",$fhw){
         date_default_timezone_set("Asia/Makassar"); 
         $analyticsDB = $this->load->database('analytics', TRUE);
         $query  = $analyticsDB->query("SHOW TABLES FROM ec_analytics");
         
-        $table_default = $this->Table->getTable('bidan');
+        $table_default = $this->Table->getTable($fhw);
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
@@ -204,7 +236,7 @@ class OnTimeSubmissionModel extends CI_Model{
             }
         }
         
-        $locId = $this->loc->getIntLocId("bidan");$location = $this->loc->getLocIdQuery($locId);
+        $locId = $this->loc->getIntLocId($fhw);$location = $this->loc->getLocIdQuery($locId);
         
         //make result array from the tables name
         $result_data = array();
@@ -227,11 +259,11 @@ class OnTimeSubmissionModel extends CI_Model{
                     $data_count                  = $result_data[$locId[$datas->locationId]];
                     $data_count2                 = $deno[$locId[$datas->locationId]];
                     if($mode=='daily'){
-                        if($this->isOnTime($table,$datas)){
+                        if($this->isOnTime($table,$datas,$fhw)){
                             $data_count[$table_default[$table]] +=1;
                         }
                     }else{
-                        if($this->isWeeklyOnTime($table,$datas)){
+                        if($this->isWeeklyOnTime($table,$datas,$fhw)){
                             $data_count[$table_default[$table]] +=1;
                         }
                     }
@@ -255,12 +287,12 @@ class OnTimeSubmissionModel extends CI_Model{
     }
     
     
-    public function getOnTimeFormDesa($desa,$range){
+    public function getOnTimeFormDesa($desa,$range,$fhw){
         date_default_timezone_set("Asia/Makassar"); 
         $analyticsDB = $this->load->database('analytics', TRUE);
         $query  = $analyticsDB->query("SHOW TABLES FROM ec_analytics");
         
-        $table_default = $this->Table->getTable('bidan');
+        $table_default = $this->Table->getTable($fhw);
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
@@ -307,10 +339,10 @@ class OnTimeSubmissionModel extends CI_Model{
                     $data_weekly                 = $result_data['weekly'];
                     $data_denum                  = $deno;
                     
-                    if($this->isOnTime($table,$datas)){
+                    if($this->isOnTime($table,$datas,$fhw)){
                         $data_daily[$table_default[$table]] +=1;
                     }
-                    if($this->isWeeklyOnTime($table,$datas)){
+                    if($this->isWeeklyOnTime($table,$datas,$fhw)){
                         $data_weekly[$table_default[$table]] +=1;
                     }
                     
