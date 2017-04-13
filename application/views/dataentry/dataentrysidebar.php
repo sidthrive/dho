@@ -19,7 +19,7 @@
                     </h4>
                 </div>
                 </a>
-                <div id="bidan_menu" class="panel-collapse collapse<?=($this->uri->segment(2)=='bidanbyform'||$this->uri->segment(2)=='bidanbytanggal')?' in':''?>">
+                <div id="bidan_menu" class="panel-collapse collapse<?=($this->uri->segment(2)=='bidanbyform'||$this->uri->segment(2)=='bidanbytanggal'||$this->uri->segment(2)=='bidanontimesubmission')?' in':''?>">
                     <div class="panel-group" id="accordion2" style="padding-left: 30px;margin-bottom: 0;">
                         <div class="panel panel-default">
                             <a data-toggle="collapse" data-parent="#accordion2" href="#by_form">
@@ -97,6 +97,37 @@
                                 <?php } ?>
                             </div>
                         </div>
+                        <?php if($this->session->userdata('tipe')=="all"){ ?>
+                        <div class="panel panel-default">
+                            <a data-toggle="collapse" data-parent="#accordion2" href="#ontime">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    On Time Submission
+                                </h4>
+                            </div>
+                            </a>
+                            <div id="ontime" class="panel-collapse collapse<?=$this->uri->segment(2)=='bidanontimesubmission'?' in':''?>">
+                                <div class="panel panel-default panel-collapse">
+                                    <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanontimesubmission/daily"?>">
+                                    <div class="panel-heading"<?=($this->uri->segment(2)=='bidanontimesubmission'&&$this->uri->segment(3)=='daily')?' style="background-color:#909090"':''?>>
+                                        <h4 class="panel-title">
+                                            Daily On Time
+                                        </h4>
+                                    </div>
+                                    </a>
+                                </div>
+                                <div class="panel panel-default panel-collapse">
+                                    <a data-parent="#bidan_menu" href="<?php echo site_url() ."dataentry/bidanontimesubmission/weekly"?>">
+                                    <div class="panel-heading"<?=($this->uri->segment(2)=='bidanontimesubmission'&&$this->uri->segment(3)=='weekly')?' style="background-color:#909090"':''?>>
+                                        <h4 class="panel-title">
+                                            Weekly On Time
+                                        </h4>
+                                    </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <?php }?>
                     </div>
                 </div>
             </div>
