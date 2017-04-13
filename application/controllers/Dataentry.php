@@ -200,43 +200,31 @@ class DataEntry extends CI_Controller{
     
     public function bidanOnTimeSubmission(){
         if($this->session->userdata('level')=="fhw"){
-            
             $data['desa']		= $this->session->userdata('location');
-            $data['mode']                   = $this->uri->segment(4);
-            if($this->input->get('start')==null&&$data['mode']==''){
+            if($this->input->get('start')==null){
                 $now = date("Y-m-d");
                 $start = date("Y-m-d",  strtotime($now."-29 days"));
-                redirect("dataentry/bidanontimesubmission/?start=$start&end=$now");
+                redirect("dataentry/bidanontimesubmission?start=$start&end=$now");
             }else{
                 $data['start'] = $this->input->get('start');
                 $data['end'] = $this->input->get('end');
             }
-            $data['data']                   = $this->AnalyticsFhwModel->getCountPerDay($data['desa'],$data['mode'],array($data['start'],$data['end']));
+            $data['data']                   = $this->OnTimeSubmissionModel->getOnTimeFormDesa($data['desa'],array($data['start'],$data['end']));
             $this->load->view("header");
             $this->load->view("dataentry/fhw/dataentrysidebar");
             $this->load->view("dataentry/fhw/bidanontimesubmission",$data);
             $this->load->view("footer");
         }else{
-            $data['kecamatan']		= $this->uri->segment(3);
-            $data['mode']                   = $this->uri->segment(4);
-            if($data['mode']!="Bulanan"&&$data['mode']!="Mingguan"){
-                $data['desa']		= str_replace('%20', ' ', $this->uri->segment(4));
-                $data['mode']                   = $this->uri->segment(5);
-            }else{
-                $data['desa']		= "";
-            }
-            if($this->input->get('start')==null&&$data['desa']==""&&$data['mode']==''){
-                if($this->input->get('by')==null)$by = "subdate";else $by = $this->input->get('by');
+            $data['mode']		= $this->uri->segment(3);
+            if($this->input->get('start')==null){
                 $now = date("Y-m-d");
                 $start = date("Y-m-d",  strtotime($now."-29 days"));
-                redirect("dataentry/bidanontimesubmission/".$data['kecamatan']."?start=$start&end=$now&by=$by");
+                redirect("dataentry/bidanontimesubmission/".$data['mode']."?start=$start&end=$now");
             }else{
-                $by = $this->input->get('by');
                 $data['start'] = $this->input->get('start');
                 $data['end'] = $this->input->get('end');
             }
-            $data['datemode'] = $by;
-            $data['data'] = $this->OnTimeSubmissionModel->getOnTimeSubmission($data['kecamatan'],array($data['start'],$data['end']));
+            $data['data'] = $this->OnTimeSubmissionModel->getOnTimeSubmission($data['mode'],array($data['start'],$data['end']));
             $this->load->view("header");
             if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
                 $data['location'] = $this->loc->getAllLocSpv('bidan',$this->session->userdata('location'));

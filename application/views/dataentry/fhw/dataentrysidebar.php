@@ -18,21 +18,30 @@
                     </h4>
                 </div>
                 </a>
-                <div id="bidan_menu" class="panel-collapse collapse<?=($this->uri->segment(2)=='bidanbyform'||$this->uri->segment(2)=='bidanbytanggal')?' in':''?>">
-                    <div class="panel panel-default" <?=($this->uri->segment(2)=='bidanbyform')?' style="background-color:#909090"':''?>>
+                <div id="bidan_menu" class="panel-collapse collapse<?=($this->uri->segment(2)=='bidanbyform'||$this->uri->segment(2)=='bidanbytanggal'||$this->uri->segment(2)=='bidanontimesubmission')?' in':''?>">
+                    <div class="panel panel-default">
                         <a data-parent="#bidans" href="<?php echo site_url() ."dataentry/bidanbyform"?>">
-                        <div class="panel-heading">
+                        <div class="panel-heading" <?=($this->uri->segment(2)=='bidanbyform')?' style="background-color:#909090"':''?>>
                             <h4 class="panel-title">
                                 Total Entry Tiap From
                             </h4>
                         </div>
                         </a>
                     </div>
-                    <div class="panel panel-default" <?=($this->uri->segment(2)=='bidanbytanggal')?' style="background-color:#909090"':''?>>
+                    <div class="panel panel-default">
                         <a data-parent="#bidans" href="<?php echo site_url() ."dataentry/bidanbytanggal"?>">
-                        <div class="panel-heading">
+                        <div class="panel-heading" <?=($this->uri->segment(2)=='bidanbytanggal')?' style="background-color:#909090"':''?>>
                             <h4 class="panel-title">
                                 Total Entry Tiap Tanggal
+                            </h4>
+                        </div>
+                        </a>
+                    </div>
+                    <div class="panel panel-default">
+                        <a data-parent="#bidans" href="<?php echo site_url() ."dataentry/bidanontimesubmission"?>">
+                        <div class="panel-heading" <?=($this->uri->segment(2)=='bidanontimesubmission')?' style="background-color:#909090"':''?>>
+                            <h4 class="panel-title">
+                                On Time Submission
                             </h4>
                         </div>
                         </a>

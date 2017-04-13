@@ -71,11 +71,7 @@ class OnTimeSubmissionModel extends CI_Model{
         
         foreach ($tables as $table=>$legend){
             //query tha data
-            if($range!=""){
-                $query = $analyticsDB->query("SELECT * from ".$table." where ($locations) AND dateCreated >= '".$range[0]."' AND dateCreated <= '".$range[1]."'");
-            }else{
-                $query = $analyticsDB->query("SELECT * from ".$table." where ($locations) AND dateCreated >= '".date("Y-m-d",strtotime("-30 days"))."' AND dateCreated <= '".date("Y-m-d")."'");
-            }
+            $query = $analyticsDB->query("SELECT * from ".$table." where ($locations) AND dateCreated >= '".$range[0]."' AND dateCreated <= '".$range[1]."'");
             
             foreach ($query->result() as $datas){
                 if(array_key_exists($datas->locationId, $location)){
@@ -143,11 +139,8 @@ class OnTimeSubmissionModel extends CI_Model{
         
         foreach ($tables as $table=>$legend){
             //query tha data
-            if($range!=""){
-                $query = $analyticsDB->query("SELECT * from ".$table." where ($locations) AND dateCreated >= '".$range[0]."' AND dateCreated <= '".$range[1]."'");
-            }else{
-                $query = $analyticsDB->query("SELECT * from ".$table." where ($locations) AND dateCreated >= '".date("Y-m-d",strtotime("-30 days"))."' AND dateCreated <= '".date("Y-m-d")."'");
-            }
+            $query = $analyticsDB->query("SELECT * from ".$table." where ($locations) AND dateCreated >= '".$range[0]."' AND dateCreated <= '".$range[1]."'");
+            
             
             foreach ($query->result() as $datas){
                 if(array_key_exists($datas->locationId, $location)){
@@ -175,8 +168,6 @@ class OnTimeSubmissionModel extends CI_Model{
             $eventdate = explode(" ",$data->ancDate);
         }elseif($table=='event_bidan_kunjungan_pnc'){
             $eventdate = explode(" ",$data->PNCDate);
-        }elseif($table=='event_bidan_rencana_persalinan'){
-            $eventdate = explode(" ",$data->tanggalRencanaPersalinan);
         }elseif($table=='event_bidan_tambah_bayi'){
             $eventdate = explode(" ",$data->tanggalPendaftaran);
         }elseif($table=='event_bidan_tambah_kb'){
@@ -229,11 +220,7 @@ class OnTimeSubmissionModel extends CI_Model{
         
         foreach ($tables as $table=>$legend){
             //query tha data
-            if($range!=""){
-                $query = $analyticsDB->query("SELECT * from ".$table." where ($location) AND dateCreated >= '".$range[0]."' AND dateCreated <= '".$range[1]."'");
-            }else{
-                $query = $analyticsDB->query("SELECT * from ".$table." where ($location) AND dateCreated >= '".date("Y-m-d",strtotime("-30 days"))."' AND dateCreated <= '".date("Y-m-d")."'");
-            }
+            $query = $analyticsDB->query("SELECT * from ".$table." where ($location) AND dateCreated >= '".$range[0]."' AND dateCreated <= '".$range[1]."'");
             
             foreach ($query->result() as $datas){
                 if(array_key_exists($datas->locationId, $locId)){
@@ -267,4 +254,82 @@ class OnTimeSubmissionModel extends CI_Model{
         return $result_data;
     }
     
+    
+    public function getOnTimeFormDesa($desa,$range){
+        date_default_timezone_set("Asia/Makassar"); 
+        $analyticsDB = $this->load->database('analytics', TRUE);
+        $query  = $analyticsDB->query("SHOW TABLES FROM ec_analytics");
+        
+        $table_default = $this->Table->getTable('bidan');
+        //retrieve the tables name
+        $tables = array();
+        foreach ($query->result() as $table){
+            if($table->Tables_in_ec_analytics[0]=='c'||$table->Tables_in_ec_analytics[0]=='_'){
+                continue;
+            }else {
+                if(array_key_exists($table->Tables_in_ec_analytics, $table_default)){
+                    $tables[$table->Tables_in_ec_analytics]=$table_default[$table->Tables_in_ec_analytics];
+                }
+                
+            }
+        }
+        $locId = $this->loc->getLocIdAndDesabyDesa($desa);
+        $location = $this->loc->getLocIdQuery($locId);
+        
+        //make result array from the tables name
+        $result_data = array();
+        foreach ($locId as $user=>$desa){
+            $data = array();
+            foreach ($table_default as $t=>$tn){
+                $data[$tn] = 0;
+            }
+            $result_data = $data;
+        }
+        $deno = $result_data;
+        
+        $result_data = array();
+        foreach ($locId as $user=>$desa){
+            $data = array();
+            foreach ($table_default as $t=>$tn){
+                $data[$tn] = 0;
+            }
+            $result_data['daily'] = $data;
+            $result_data['weekly'] = $data;
+        }
+        
+        foreach ($tables as $table=>$legend){
+            //query tha data
+            $query = $analyticsDB->query("SELECT * from ".$table." where ($location) AND dateCreated >= '".$range[0]."' AND dateCreated <= '".$range[1]."'");
+            
+            foreach ($query->result() as $datas){
+                if(array_key_exists($datas->locationId, $locId)){
+                    $data_daily                  = $result_data['daily'];
+                    $data_weekly                 = $result_data['weekly'];
+                    $data_denum                  = $deno;
+                    
+                    if($this->isOnTime($table,$datas)){
+                        $data_daily[$table_default[$table]] +=1;
+                    }
+                    if($this->isWeeklyOnTime($table,$datas)){
+                        $data_weekly[$table_default[$table]] +=1;
+                    }
+                    
+                    $data_denum[$table_default[$table]] +=1;
+                    $result_data['daily'] = $data_daily;
+                    $result_data['weekly'] = $data_weekly;
+                    $deno = $data_denum;
+                }
+                
+            }
+        }
+        
+        foreach ($result_data as $mode=>$res){
+            foreach ($res as $form=>$value){
+                if($deno[$form]==0)continue;
+                $result_data[$mode][$form] = (float)number_format(100*$result_data[$mode][$form]/$deno[$form],2);
+            }
+        }
+        
+        return $result_data;
+    }
 }
