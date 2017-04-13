@@ -18,9 +18,9 @@
             <?php foreach($data as $user => $form){
             ?>
             <br>
-            <div title="Desa <?=ucwords($user)?>">
+            <div title="<?=ucwords($user)?>">
                     <div id="">
-                        <center><span style="font-size:16px; font-family:'Droid Sans',Arial,Verdana,sans-serif;"><strong><?=ucwords($this->uri->segment(3));?> On Time</strong>
+                        <center><span style="font-size:16px; font-family:'Droid Sans',Arial,Verdana,sans-serif;"><strong><?=ucwords($user);?> On Time</strong>
                         <!-- START Script Block for Chart -->
                         <div id="<?=str_replace(' ', '_', $user);?>" align="center">
                         </div>
