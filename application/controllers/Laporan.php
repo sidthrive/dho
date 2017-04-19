@@ -93,11 +93,11 @@ class Laporan extends CI_Controller{
         }else{
             $this->load->model('MmnModel');
             if($data['mode']=='bulan_ini'){
-                $data['xlsForm']=$this->MmnModel->cakupanBulanIni();
+                $data['xlsForm']=$this->MmnModel->cakupanBulanIni($data['kab']);
             }elseif($data['mode']=='akumulatif'){
-                $data['xlsForm']=$this->MmnModel->cakupanAkumulatif();
+                $data['xlsForm']=$this->MmnModel->cakupanAkumulatif($data['kab']);
             }elseif($data['mode']=='semua_bulan'){
-                $data['xlsForm']=$this->MmnModel->semuabulan();
+                $data['xlsForm']=$this->MmnModel->semuabulan($data['kab']);
             }
         }
         

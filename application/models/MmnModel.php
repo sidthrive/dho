@@ -10,12 +10,12 @@ class MmnModel extends CI_Model{
         $this->db = $this->load->database('analytics', TRUE);
     }
     
-    public function cakupanBulanIni(){
+    public function cakupanBulanIni($kab){
         $xlsForm = [];
-        $user = $this->ec->getCakupanContainer('bidan');
-        $form = $user;
-        foreach ($form as $x=>$f){
-            $form[$x] = rand(15, 30);
+        $form = [];
+        $desas = $this->loc->getLocId($kab);
+        foreach ($desas as $dt=>$dn){
+            $form[$dn] = rand(15, 30);
         }
 //        var_dump($form);exit;
         $series1['page']='mmn';
@@ -29,12 +29,12 @@ class MmnModel extends CI_Model{
         
     }
     
-    public function cakupanAkumulatif(){
+    public function cakupanAkumulatif($kab){
         $xlsForm = [];
-        $user = $this->ec->getCakupanContainer('bidan');
-        $form = $user;
-        foreach ($form as $x=>$f){
-            $form[$x] = rand(15, 30);
+        $form = [];
+        $desas = $this->loc->getLocId($kab);
+        foreach ($desas as $dt=>$dn){
+            $form[$dn] = rand(15, 30);
         }
 //        var_dump($form);exit;
         $series1['page']='mmn';
@@ -47,7 +47,7 @@ class MmnModel extends CI_Model{
         return $xlsForm;
     }
     
-    public function semuabulan(){
+    public function semuabulan($kab){
         $bulan_map = ['januari'=>1,'februari'=>2,'maret'=>3,'april'=>4,'mei'=>5,'juni'=>6,'juli'=>7,'agustus'=>8,'september'=>9,'oktober'=>10,'november'=>11,'desember'=>12];
         $form = [];
         foreach ($bulan_map as $bln=>$num){
