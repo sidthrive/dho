@@ -14,7 +14,8 @@ class Laporan extends CI_Controller{
     
     public function index(){
         $this->load->view('header');
-        $this->load->view('laporan/laporansidebar');
+        $data['location'] = $this->loc->getAllLoc('bidan');
+        $this->load->view('laporan/laporansidebar',$data);
         $this->load->view('laporan/laporanmainpage');
         $this->load->view('footer');
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
@@ -64,85 +65,46 @@ class Laporan extends CI_Controller{
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
-    public function cakupanGizi(){
-        $this->load->model('GiziEcCakupanModel');
-        if($this->input->get('b')==null){
-            $bulan_map = [1=>'januari',2=>'februari',3=>'maret',4=>'april',5=>'mei',6=>'juni',7=>'juli',8=>'agustus',9=>'september',10=>'oktober',11=>'november',12=>'desember'];
-            $b = date("n");
-            $t = date("Y");
-            redirect("laporan/cakupangizi?b=$bulan_map[$b]&t=$t");
+    public function gen(){
+        if($this->input->get('mode')==null){
+            $data['mode'] = "bulan_ini";
+            redirect("laporan/gen/".$this->uri->segment(3)."?mode=".$data['mode']);
         }else{
-            $dataXLS['bulan'] = $this->input->get('b');
-            $dataXLS['tahun'] = $this->input->get('t');
+            if($this->input->get('mode')=="semua_bulan"&&$this->input->get('desa')==null){
+                $data['kab'] = str_replace("%20"," ",$this->uri->segment(3));
+                $data['desas'] = $this->loc->getLocId($data['kab']);
+                $data['mode'] = $this->input->get('mode');
+                $data['desa'] = reset($data['desas']);
+                redirect("laporan/gen/".$this->uri->segment(3)."?mode=".$data['mode']."&desa=".reset($data['desas']));
+            }else{
+                $data['mode'] = $this->input->get('mode');
+                $data['desa'] = $this->input->get('desa');
+            }
         }
-        $dataXLS['xlsForm']=$this->GiziEcCakupanModel->cakupanBulanIni($dataXLS['bulan'],$dataXLS['tahun']);
-        $this->load->view("header");
-        $this->load->view("laporan/laporansidebar");
-        $this->load->view("laporan/statusgizi",$dataXLS, false);
-        $this->load->view("footer");
-        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
-    }
-    
-    public function downloadGiziPWS(){
-        $this->load->view("header");
-        $this->load->view("laporan/laporansidebar");
-        $this->load->view("laporan/downloadpwsgizi");
-        $this->load->view("footer");
-        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
-    }
-    
-    public function downloadpwsgizi(){
-        $kecamatan   = $this->input->post('kecamatan');
-        $year   = $this->input->post('year');
-        $month  = $this->input->post('month');
-        $this->load->model('GiziPwsModel');
-        $this->GiziPwsModel->pwsBulanIni($month,$year,$kecamatan);
-        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
-    }
-    
-    public function cakupanpwsvaksinator(){
-        $this->load->model('VaksinatorEcCakupanModel');
-        $xlsForm = [];
-        $mode = $this->uri->segment(3);
-        $header = "";
-        if($mode=="bulanini"){
-            $header = "Bulan Ini";
-            $xlsForm = $this->VaksinatorEcCakupanModel->cakupanBulanIni();
-        }elseif($mode=="akumulatifbulanini"){
-            $header = "Akumulasi Sampai Bulan Ini";
-            $xlsForm = $this->VaksinatorEcCakupanModel->akumulasiBulanIni();
-        }elseif($mode=="bulaninivsbulanlalu"){
-            $header = "Bulan Ini vs Bulan Lalu";
-            $xlsForm = $this->VaksinatorEcCakupanModel->bulanIniVsBulanLalu();
-        }elseif($mode=="tahuninivstahunlalu"){
-            $header = "Tahun Ini vs Tahun Lalu";
-            $bulan = $this->uri->segment(4);
-            $xlsForm = $this->VaksinatorEcCakupanModel->tahunIniVsTahunLalu($bulan);
+        
+        $data['kab'] = str_replace("%20"," ",$this->uri->segment(3));
+        $data['desas'] = $this->loc->getLocId($data['kab']);
+        
+        if($this->session->userdata('level')=="fhw"){
+            $this->load->model('BidanEcFhwCakupanModel');
+            $data['xlsForm']=$this->MmnModel->cakupanBulanIni();
+        }else{
+            $this->load->model('MmnModel');
+            if($data['mode']=='bulan_ini'){
+                $data['xlsForm']=$this->MmnModel->cakupanBulanIni();
+            }elseif($data['mode']=='akumulatif'){
+                $data['xlsForm']=$this->MmnModel->cakupanAkumulatif();
+            }elseif($data['mode']=='semua_bulan'){
+                $data['xlsForm']=$this->MmnModel->semuabulan();
+            }
         }
-        $dataXLS['xlsForm']=$xlsForm;
-        $dataXLS['header']=$header;
+        
+        $data['location'] = $this->loc->getAllLoc('bidan');
+        
         $this->load->view("header");
-        $this->load->view("laporan/laporansidebar");
-        $this->load->view("laporan/cakupanpwsvaksinator",$dataXLS, false);
+        $this->load->view("laporan/laporansidebar",$data);
+        $this->load->view("laporan/mmn",$data);
         $this->load->view("footer");
-        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
-    }
-    
-    public function downloadvaksinatorPWS(){
-        $this->load->view("header");
-        $this->load->view("laporan/laporansidebar");
-        $this->load->view("laporan/downloadpwsjurim");
-        $this->load->view("footer");
-        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
-    }
-    
-    public function downloadpwsvaksinator(){
-        $kecamatan   = $this->input->post('kecamatan');
-        $year   = $this->input->post('year');
-        $month  = $this->input->post('month');
-        $form  = $this->input->post('form');
-        $this->load->model('VaksinatorPwsModel');
-        $this->VaksinatorPwsModel->pwsBulanIni($month,$year,$kecamatan,$form);
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     

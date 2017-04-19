@@ -37,7 +37,7 @@ additional bootstrap import for sidebar collapse style
                 <img src="<?php echo base_url() ?>assets/images/opensrp.png" alt="" align="left" style="padding-right: 10px;"/>-->
             </div>
             <div id="head" class="center">
-                <h1>PHO Report</h1>
+                <h1>GEN Report</h1>
                 <h3 style="margin-top: 5px;">Dinas Kesehatan Provinsi NTB</h3>
 <!--                <h3 style="margin-top: 5px;">Summit Institute of Development</h3>-->
             </div>

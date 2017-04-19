@@ -40,5 +40,31 @@
                 </div>
             </div>
             <?php } ?>
+            <?php if($this->session->userdata('tipe')=="bidan"||$this->session->userdata('tipe')=="all"){ ?>
+            <div class="panel panel-default" id="mmns">
+                <a data-toggle="collapse" data-parent="#accordion" href="#mmn_menu">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        GEN
+                    </h4>
+                </div>
+                </a>
+                <div id="mmn_menu" class="panel-collapse collapse<?=($this->uri->segment(2)=='gen')?' in':''?>">
+                    <?php
+                    foreach($location as $kec=>$desas){
+                    ?>
+                    <div class="panel panel-default panel-collapse">
+                        <a data-parent="#mmn_menu" href="<?php echo site_url() ."laporan/gen/".$kec?>">
+                        <div <?=($this->uri->segment(2)=='gen'&&str_replace('%20',' ',$this->uri->segment(3))==$kec)?' style="background-color:#909090"':''?> class="panel-heading">
+                            <h4 class="panel-title">
+                                 <?=$kec?>
+                            </h4>
+                        </div>
+                        </a>
+                    </div>
+                    <?php } ?>
+                </div>
+            </div>
+            <?php } ?>
         </div>
     </div>

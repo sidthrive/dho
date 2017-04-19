@@ -10,40 +10,40 @@ class LocationModel extends CI_Model{
     
     private $loc = [
         "bidan"=>array(
-            "Kota Mataram"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
-            "Kabupaten Lombok Barat"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
-            "Kabupaten Lombok Tengah"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
-            "Kabupaten Lombok Timur"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
+            "Kota Mataram"=>array('user1'=>'Karang Pule','user2'=>'Jempong Baru','user3'=>'Tanjung Karang','user4'=>'Ampenan Selatan','user5'=>'Banjar','user6'=>'Kekalek Jaya','user7'=>'Tanjung Karang Permai','user8'=>'Pejeruk','user9'=>'Kebun Sari','user10'=>'Pejarakan Karya'),
+            "Kabupaten Lombok Barat"=>array('user1'=>'Bengkel','user2'=>'Merembu','user3'=>'Bagik Polak Barat','user4'=>'Bagik Polak Timur','user5'=>'Telagawaru','user6'=>'Labuapi','user7'=>'Rumak','user8'=>'Banyumulek','user9'=>'Lelede','user10'=>'Dasan Baru'),
+            "Kabupaten Lombok Tengah"=>array('user1'=>'Presak','user2'=>'Teduh','user3'=>'Kopang Rembige','user4'=>'Montong Gamang','user5'=>'Serage','user6'=>'Gerantung','user7'=>'Batu Tulis','user8'=>'Pengenjek','user9'=>'Tanah Beak','user10'=>'Sengkerang'),
+            "Kabupaten Lombok Timur"=>array('user1'=>'Lendang Belo','user2'=>'Lendang Nangka Utara','user3'=>'Pringgabaya','user4'=>'Sembalun','user5'=>'Sembalun Bumbung','user6'=>'Wanasaba','user7'=>'Mamben Daya','user8'=>'Masbagik Utara Baru','user9'=>'Jero Gunung','user10'=>'Sukarara'),
             "Kabupaten Lombok Utara"=>array('user1'=>'Santong','user2'=>'Sesait','user3'=>'Pendua','user4'=>'Bentek','user5'=>'Gondang','user6'=>'Genggelang','user7'=>'Rempek','user8'=>'Sambik Bangkol','user9'=>'Pemenang Barat','user10'=>'Pemenang Timur'),
-            "Kabupaten Sumbawa"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
-            "Kabupaten Sumbawa Barat"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
-            "Kabupaten Bima"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
-            "Kota Bima"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
-            "Kabupaten Dompu"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'')),
+            "Kabupaten Sumbawa"=>array('user1'=>'Pekat','user2'=>'Jorok','user3'=>'Motong','user4'=>'Brang Kolong','user5'=>'Labu Ala','user6'=>'Suka Damai','user7'=>'Karang Dima','user8'=>'Usar Mapin','user9'=>'Juranalas','user10'=>'Labuhan Kuris'),
+            "Kabupaten Sumbawa Barat"=>array('user1'=>'Seteluk Atas','user2'=>'Seteluk Tengah','user3'=>'Tapir','user4'=>'Loka','user5'=>'Rempe','user6'=>'Seran','user7'=>'Air Suning','user8'=>'Lamusung','user9'=>'Meraran','user10'=>'Kelanir'),
+            "Kabupaten Bima"=>array('user1'=>'Timu','user2'=>'Sondo','user3'=>'Kananga','user4'=>'Rato','user5'=>'Tambe','user6'=>'Rasabou','user7'=>'Tente','user8'=>'Donggobolo','user9'=>'Keli','user10'=>'Dadibou'),
+            "Kota Bima"=>array('user1'=>'','user2'=>'','user3'=>'','user4'=>'','user5'=>'','user6'=>'','user7'=>'','user8'=>'','user9'=>'','user10'=>''),
+            "Kabupaten Dompu"=>array('user1'=>'','user2'=>'','user3'=>'','user4'=>'','user5'=>'','user6'=>'','user7'=>'','user8'=>'','user9'=>'','user10'=>'')),
         "sdidtk"=>array(
-            "Kota Mataram"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
-            "Kabupaten Lombok Barat"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
-            "Kabupaten Lombok Tengah"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
-            "Kabupaten Lombok Timur"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
+            "Kota Mataram"=>array('user1'=>'','user2'=>'','user3'=>'','user4'=>'','user5'=>'','user6'=>'','user7'=>'','user8'=>'','user9'=>'','user10'=>''),
+            "Kabupaten Lombok Barat"=>array('user1'=>'','user2'=>'','user3'=>'','user4'=>'','user5'=>'','user6'=>'','user7'=>'','user8'=>'','user9'=>'','user10'=>''),
+            "Kabupaten Lombok Tengah"=>array('user1'=>'','user2'=>'','user3'=>'','user4'=>'','user5'=>'','user6'=>'','user7'=>'','user8'=>'','user9'=>'','user10'=>''),
+            "Kabupaten Lombok Timur"=>array('user1'=>'','user2'=>'','user3'=>'','user4'=>'','user5'=>'','user6'=>'','user7'=>'','user8'=>'','user9'=>'','user10'=>''),
             "Kabupaten Lombok Utara"=>array('user1'=>'Santong','user2'=>'Sesait','user3'=>'Pendua','user4'=>'Bentek','user5'=>'Gondang','user6'=>'Genggelang','user7'=>'Rempek','user8'=>'Sambik Bangkol','user9'=>'Pemenang Barat','user10'=>'Pemenang Timur'),
-            "Kabupaten Sumbawa"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
-            "Kabupaten Sumbawa Barat"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
-            "Kabupaten Bima"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
-            "Kota Bima"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''),
-            "Kabupaten Dompu"=>array('user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>'','user'=>''))
+            "Kabupaten Sumbawa"=>array('user1'=>'','user2'=>'','user3'=>'','user4'=>'','user5'=>'','user6'=>'','user7'=>'','user8'=>'','user9'=>'','user10'=>''),
+            "Kabupaten Sumbawa Barat"=>array('user1'=>'','user2'=>'','user3'=>'','user4'=>'','user5'=>'','user6'=>'','user7'=>'','user8'=>'','user9'=>'','user10'=>''),
+            "Kabupaten Bima"=>array('user1'=>'','user2'=>'','user3'=>'','user4'=>'','user5'=>'','user6'=>'','user7'=>'','user8'=>'','user9'=>'','user10'=>''),
+            "Kota Bima"=>array('user1'=>'','user2'=>'','user3'=>'','user4'=>'','user5'=>'','user6'=>'','user7'=>'','user8'=>'','user9'=>'','user10'=>''),
+            "Kabupaten Dompu"=>array('user1'=>'','user2'=>'','user3'=>'','user4'=>'','user5'=>'','user6'=>'','user7'=>'','user8'=>'','user9'=>'','user10'=>''))
         ];
     
     private $loc_id = [
-            "Kota Mataram"=>array(),
-            "Kabupaten Lombok Barat"=>array(),
-            "Kabupaten Lombok Tengah"=>array(),
-            "Kabupaten Lombok Timur"=>array(),
-            "Kabupaten Lombok Utara"=>array('Santong'=>'Santong','Sesait'=>'Sesait','Pendua'=>'Pendua','Bentek'=>'Bentek','Gondang'=>'Gondang','Genggelang'=>'Genggelang','Rempek'=>'Rempek','Sambik Bangkol'=>'Sambik Bangkol','Pemenang Barat'=>'Pemenang Barat','Pemenang Timur'=>'Pemenang Timur'),
-            "Kabupaten Sumbawa"=>array(),
-            "Kabupaten Sumbawa Barat"=>array(),
-            "Kabupaten Bima"=>array(),
-            "Kota Bima"=>array(),
-            "Kabupaten Dompu"=>array()
+            "Kota Mataram"=>array('Karang Pule.'=>'Karang Pule','Jempong Baru'=>'Jempong Baru','Tanjung Karang.'=>'Tanjung Karang','Ampenan Selatan'=>'Ampenan Selatan','Banjar'=>'Banjar','Kekalek Jaya'=>'Kekalek Jaya','Tanjung Karang Permai'=>'Tanjung Karang Permai','Pejeruk.'=>'Pejeruk','Kebun Sari'=>'Kebun Sari','Pejarakan Karya'=>'Pejarakan Karya'),
+            "Kabupaten Lombok Barat"=>array('Bengkel'=>'Bengkel','Merembu'=>'Merembu','Bagik Polak Barat'=>'Bagik Polak Barat','Bagik Polak Timur'=>'Bagik Polak Timur','Telagawaru'=>'Telagawaru','Labuapi.'=>'Labuapi','Rumak'=>'Rumak','Banyumulek.'=>'Banyumulek','Lelede'=>'Lelede','Dasan Baru'=>'Dasan Baru'),
+            "Kabupaten Lombok Tengah"=>array('Presak'=>'Presak','Teduh'=>'Teduh','Kopang Rembige'=>'Kopang Rembige','Montong Gamang'=>'Montong Gamang','Serage'=>'Serage','Gerantung'=>'Gerantung','Batu Tulis'=>'Batu Tulis','Pengenjek'=>'Pengenjek','Tanah Beak'=>'Tanah Beak','Sengkerang'=>'Sengkerang'),
+            "Kabupaten Lombok Timur"=>array('Lendang Belo'=>'Lendang Belo','Lendang Nangka Utara'=>'Lendang Nangka Utara','Pringgabaya'=>'Pringgabaya','Sembalun..'=>'Sembalun','Sembalun Bumbung'=>'Sembalun Bumbung','Wanasaba.'=>'Wanasaba','Mamben Daya'=>'Mamben Daya','Masbagik Utara Baru'=>'Masbagik Utara Baru','Jero Gunung'=>'Jero Gunung','Sukarara'=>'Sukarara'),
+            "Kabupaten Lombok Utara"=>array('Santong.'=>'Santong','Sesait'=>'Sesait','Pendua'=>'Pendua','Bentek'=>'Bentek','Gondang'=>'Gondang','Genggelang'=>'Genggelang','Rempek'=>'Rempek','Sambik Bangkol'=>'Sambik Bangkol','Pemenang Barat'=>'Pemenang Barat','Pemenang Timur'=>'Pemenang Timur'),
+            "Kabupaten Sumbawa"=>array('Pekat'=>'Pekat','Jorok'=>'Jorok','Motong'=>'Motong','Brang Kolong'=>'Brang Kolong','Labu Ala'=>'Labu Ala','Suka Damai.'=>'Suka Damai','Karang Dima'=>'Karang Dima','Usar Mapin'=>'Usar Mapin','Juranalas'=>'Juranalas','Labuhan Kuris'=>'Labuhan Kuris'),
+            "Kabupaten Sumbawa Barat"=>array('Seteluk Atas'=>'Seteluk Atas','Seteluk Tengah'=>'Seteluk Tengah','Tapir'=>'Tapir','Loka'=>'Loka','Rempe'=>'Rempe','Seran'=>'Seran','Air Suning'=>'Air Suning','Lamusung'=>'Lamusung','Meraran'=>'Meraran','Kelanir'=>'Kelanir'),
+            "Kabupaten Bima"=>array('Timu'=>'Timu','Sondo'=>'Sondo','Kananga'=>'Kananga','Rato'=>'Rato','Tambe'=>'Tambe','Rasabou'=>'Rasabou','Tente'=>'Tente','Donggobolo'=>'Donggobolo','Keli'=>'Keli','Dadibou'=>'Dadibou'),
+            "Kota Bima"=>array('user1'=>'','user2'=>'','user3'=>'','user4'=>'','user5'=>'','user6'=>'','user7'=>'','user8'=>'','user9'=>'','user10'=>''),
+            "Kabupaten Dompu"=>array('user1'=>'','user2'=>'','user3'=>'','user4'=>'','user5'=>'','user6'=>'','user7'=>'','user8'=>'','user9'=>'','user10'=>'')
         ];
     
     private $int_loc_id = [

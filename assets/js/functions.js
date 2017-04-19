@@ -481,7 +481,7 @@ $.fn.showChart = function(data){
                 }],
             tooltip: {
                 shared: true,
-                pointFormat: data1['y_label']+": {point.y:.2f} %"
+                pointFormat: data1['y_label']+": {point.y:.2f} "+data1['symbol']
             },
             legend: {
                 enabled : false
