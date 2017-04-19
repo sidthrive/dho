@@ -40,8 +40,9 @@ class Laporan extends CI_Controller{
             $dataXLS['xlsForm']=$this->BidanEcCakupanModel->cakupanBulanIni($dataXLS['bulan'],$dataXLS['tahun']);
         }
         
+        $data['location'] = $this->loc->getAllLoc('bidan');
         $this->load->view("header");
-        $this->load->view("laporan/laporansidebar");
+        $this->load->view("laporan/laporansidebar",$data);
         $this->load->view("laporan/pws",$dataXLS,false);
         $this->load->view("footer");
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
@@ -49,7 +50,8 @@ class Laporan extends CI_Controller{
     
     public function downloadBidanPWS(){
         $this->load->view("header");
-        $this->load->view("laporan/laporansidebar");
+        $data['location'] = $this->loc->getAllLoc('bidan');
+        $this->load->view("laporan/laporansidebar",$data);
         if($this->session->userdata('level')=="fhw"){
             $this->load->view("laporan/fhw/downloadpwsbidan");
         }else{
