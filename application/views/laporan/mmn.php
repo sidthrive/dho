@@ -25,11 +25,12 @@
     <br/>
     <br/>
     <div id="container" style="text-align: center;">
-        <div title="MMN">
+        <?php foreach($xlsForm as $form){ ?>
+        <div title="<?=$form['page']?>">
             <div id="">
                 <!-- START Script Block for Chart -->
-                <h3>Jumlah Ibu yang menerima MMN - <?=str_replace("_",' ',$mode)?></h3>
-                <div id="mmn" align="center">
+                <h3><?=$form['title']?> - <?=str_replace("_",' ',$mode)?></h3>
+                <div id="<?=$form['page']?>" align="center">
                 </div>
 
                 <!-- END Script Block for Chart -->                
@@ -37,7 +38,7 @@
         </div>
         <br/>
         <br/>
-
+        <?php } ?>
     </div>
 </div>
 <script src="<?=base_url()?>assets/js/highcharts.js"></script>
