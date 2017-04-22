@@ -18,8 +18,8 @@ class LocationModel extends CI_Model{
             "Kabupaten Sumbawa"=>array('user1'=>'Pekat','user2'=>'Jorok','user3'=>'Motong','user4'=>'Brang Kolong','user5'=>'Labu Ala','user6'=>'Suka Damai','user7'=>'Karang Dima','user8'=>'Usar Mapin','user9'=>'Juranalas','user10'=>'Labuhan Kuris'),
             "Kabupaten Sumbawa Barat"=>array('user1'=>'Seteluk Atas','user2'=>'Seteluk Tengah','user3'=>'Tapir','user4'=>'Loka','user5'=>'Rempe','user6'=>'Seran','user7'=>'Air Suning','user8'=>'Lamusung','user9'=>'Meraran','user10'=>'Kelanir'),
             "Kabupaten Bima"=>array('user1'=>'Timu','user2'=>'Sondo','user3'=>'Kananga','user4'=>'Rato','user5'=>'Tambe','user6'=>'Rasabou','user7'=>'Tente','user8'=>'Donggobolo','user9'=>'Keli','user10'=>'Dadibou'),
-            "Kota Bima"=>array('user1'=>'','user2'=>'','user3'=>'','user4'=>'','user5'=>'','user6'=>'','user7'=>'','user8'=>'','user9'=>'','user10'=>''),
-            "Kabupaten Dompu"=>array('user1'=>'','user2'=>'','user3'=>'','user4'=>'','user5'=>'','user6'=>'','user7'=>'','user8'=>'','user9'=>'','user10'=>'')),
+            "Kota Bima"=>array('user1'=>'Penatoi','user2'=>'Lewirato','user3'=>'Panggi','user4'=>'Sambinae','user5'=>'Manggemaci','user6'=>'Monggonao','user7'=>'Santi','user8'=>'Matakando','user9'=>'Mande','user10'=>'Sadia'),
+            "Kabupaten Dompu"=>array('user1'=>'Bara','user2'=>'Mumbu','user3'=>'Wawonduru','user4'=>'Simpasai','user5'=>'Baka Jaya','user6'=>'Katua','user7'=>'Mangge Nae','user8'=>'Mbawi','user9'=>'Kareke','user10'=>'Dorebara')),
         "sdidtk"=>array(
             "Kota Mataram"=>array('user1'=>'','user2'=>'','user3'=>'','user4'=>'','user5'=>'','user6'=>'','user7'=>'','user8'=>'','user9'=>'','user10'=>''),
             "Kabupaten Lombok Barat"=>array('user1'=>'','user2'=>'','user3'=>'','user4'=>'','user5'=>'','user6'=>'','user7'=>'','user8'=>'','user9'=>'','user10'=>''),
@@ -42,8 +42,8 @@ class LocationModel extends CI_Model{
             "Kabupaten Sumbawa"=>array('Pekat'=>'Pekat','Jorok'=>'Jorok','Motong'=>'Motong','Brang Kolong'=>'Brang Kolong','Labu Ala'=>'Labu Ala','Suka Damai.'=>'Suka Damai','Karang Dima'=>'Karang Dima','Usar Mapin'=>'Usar Mapin','Juranalas'=>'Juranalas','Labuhan Kuris'=>'Labuhan Kuris'),
             "Kabupaten Sumbawa Barat"=>array('Seteluk Atas'=>'Seteluk Atas','Seteluk Tengah'=>'Seteluk Tengah','Tapir'=>'Tapir','Loka'=>'Loka','Rempe'=>'Rempe','Seran'=>'Seran','Air Suning'=>'Air Suning','Lamusung'=>'Lamusung','Meraran'=>'Meraran','Kelanir'=>'Kelanir'),
             "Kabupaten Bima"=>array('Timu'=>'Timu','Sondo'=>'Sondo','Kananga'=>'Kananga','Rato'=>'Rato','Tambe'=>'Tambe','Rasabou'=>'Rasabou','Tente'=>'Tente','Donggobolo'=>'Donggobolo','Keli'=>'Keli','Dadibou'=>'Dadibou'),
-            "Kota Bima"=>array('user1'=>'','user2'=>'','user3'=>'','user4'=>'','user5'=>'','user6'=>'','user7'=>'','user8'=>'','user9'=>'','user10'=>''),
-            "Kabupaten Dompu"=>array('user1'=>'','user2'=>'','user3'=>'','user4'=>'','user5'=>'','user6'=>'','user7'=>'','user8'=>'','user9'=>'','user10'=>'')
+            "Kota Bima"=>array('Penatoi'=>'Penatoi','Lewirato'=>'Lewirato','Panggi'=>'Panggi','Sambinae'=>'Sambinae','Manggemaci'=>'Manggemaci','Monggonao'=>'Monggonao','Santi'=>'Santi','Matakando'=>'Matakando','Mande'=>'Mande','Sadia'=>'Sadia'),
+            "Kabupaten Dompu"=>array('Bara'=>'Bara','Mumbu'=>'Mumbu','Wawonduru'=>'Wawonduru','Simpasai'=>'Simpasai','Baka Jaya'=>'Baka Jaya','Katua'=>'Katua','Mangge Nae'=>'Mangge Nae','Mbawi'=>'Mbawi','Kareke'=>'Kareke','Dorebara'=>'Dorebara')
         ];
     
     private $int_loc_id = [
