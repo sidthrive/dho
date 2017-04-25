@@ -1,11 +1,11 @@
 <div id="content">
     <div id="text" style="text-align: center;">
-        <h3>Cakupan Indikator MMN</h3>
+        <h3>Cakupan Indikator PARANA</h3>
     </div>
     <br/>
     <br>
     <div>
-        <form class="form" action="<?php echo site_url()."laporan/gen/".$this->uri->segment(3)?>" method="get">
+        <form class="form" action="<?php echo site_url()."laporan/parana/".$this->uri->segment(3)?>" method="get">
             <label class="col-sm-2 control-label">Periode: </label>
             <select name="mode" class="form-control-static">
                 <option value="bulan_ini" <?=$mode=="bulan_ini"?"selected":""?>>Bulan Ini</option>
@@ -61,5 +61,9 @@
 <script src="<?=base_url()?>assets/js/functions.js"></script>
 <script>
     var json = <?=json_encode($xlsForm)?>;
-    $.fn.showChart(json);
+    <?php if($mode=="semua_bulan"){ ?>
+    $.fn.showChartStack4(json);
+    <?php }else{ ?>
+    $.fn.showChart(json);    
+    <?php } ?>
 </script>

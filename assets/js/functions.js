@@ -651,6 +651,83 @@ $.fn.showChartStack = function(data){
     });
 };
 
+$.fn.showChartStack4 = function(data){
+    $.each(data,function(index1,data1){
+        var id = data1['page'];
+        var x = [];
+        var y1 = [];
+        var y2 = [];
+        var y3 = [];
+        var y4 = [];
+        $.each(data1['form'],function(index2,data2){
+            x.push(index2);
+            y1.push(data2['s1']);
+            y2.push(data2['s2']);
+            y3.push(data2['s3']);
+            y4.push(data2['s4']);
+        });
+        Highcharts.setOptions({
+            lang: {
+                decimalPoint: ',',
+                thousandsSep: '.'
+            }
+        });
+
+        $('#'+id).highcharts({			
+            chart: {
+                zoomType: 'xy',
+                height: 400
+            },
+            title: {
+                text: ''
+            },
+            xAxis: [{
+                    categories: x
+                }],
+            legend: {
+                enabled : false
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    stacking: 'normal',
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            tooltip: {
+                formatter: function () {
+                    return '<b>' + this.x + '</b><br/>' +
+                        this.series.name + ': ' + this.y + '<br/>' +
+                        'Total: ' + this.point.stackTotal;
+                }
+            },  
+            series: [{
+                    name: data1['series_name'][0],
+                    type: 'column',
+                    data: y1,
+                    color: 'blue'
+                },{
+                    name: data1['series_name'][1],
+                    type: 'column',
+                    data: y2,
+                    color: 'red'
+                },{
+                    name: data1['series_name'][2],
+                    type: 'column',
+                    data: y3,
+                    color: 'green'
+                },{
+                    name: data1['series_name'][3],
+                    type: 'column',
+                    data: y4,
+                    color: 'yellow'
+                }]
+        });
+    });
+};
+
 $.fn.showChartStackDouble = function(data){
     $.each(data,function(index1,data1){
         var id = data1['page'];
