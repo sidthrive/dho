@@ -685,7 +685,7 @@ $.fn.showChartStack4 = function(data){
                     categories: x
                 }],
             legend: {
-                enabled : false
+                enabled : true
             },
             plotOptions: {
                 series: {
