@@ -1,11 +1,11 @@
 <div id="content">
     <div id="text" style="text-align: center;">
-        <h3>Cakupan Indikator PARANA</h3>
+        <h3>Cakupan Indikator KARANA</h3>
     </div>
     <br/>
     <br>
     <div>
-        <form class="form" action="<?php echo site_url()."laporan/parana/".$this->uri->segment(3)?>" method="get">
+        <form class="form" action="<?php echo site_url()."laporan/karana/".$this->uri->segment(3)?>" method="get">
             <label class="col-sm-2 control-label">Periode: </label>
             <select name="mode" class="form-control-static">
                 <option value="bulan_ini" <?=$mode=="bulan_ini"?"selected":""?>>Bulan Ini</option>

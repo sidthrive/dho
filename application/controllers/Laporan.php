@@ -119,24 +119,24 @@ class Laporan extends CI_Controller{
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
-    public function parana(){
+    public function karana(){
         $bulan_map = [1=>'januari',2=>'februari',3=>'maret',4=>'april',5=>'mei',6=>'juni',7=>'juli',8=>'agustus',9=>'september',10=>'oktober',11=>'november',12=>'desember'];
         $bulan_map_flip = array_flip($bulan_map);
         $tm = date("n");
         if($this->input->get('mode')==null){
             $data['mode'] = "bulan_ini";
-            redirect("laporan/parana/".$this->uri->segment(3)."?mode=".$data['mode']."&bulan=".$bulan_map[$tm]);
+            redirect("laporan/karana/".$this->uri->segment(3)."?mode=".$data['mode']."&bulan=".$bulan_map[$tm]);
         }else{
             if($this->input->get('mode')=="semua_bulan"&&$this->input->get('desa')==null){
                 $data['kab'] = str_replace("%20"," ",$this->uri->segment(3));
                 $data['desas'] = $this->loc->getLocId($data['kab']);
                 $data['mode'] = $this->input->get('mode');
                 $data['desa'] = reset($data['desas']);
-                redirect("laporan/parana/".$this->uri->segment(3)."?mode=".$data['mode']."&desa=".reset($data['desas']));
+                redirect("laporan/karana/".$this->uri->segment(3)."?mode=".$data['mode']."&desa=".reset($data['desas']));
             }else{
                 if($this->input->get('mode')!="semua_bulan"&&$this->input->get('bulan')==null){
                     $data['mode'] = $this->input->get('mode');
-                    redirect("laporan/parana/".$this->uri->segment(3)."?mode=".$data['mode']."&bulan=".$bulan_map[$tm]);
+                    redirect("laporan/karana/".$this->uri->segment(3)."?mode=".$data['mode']."&bulan=".$bulan_map[$tm]);
                 }else{
                     $data['mode'] = $this->input->get('mode');
                     $data['bulan'] = $this->input->get('bulan');

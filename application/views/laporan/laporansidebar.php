@@ -67,21 +67,21 @@
             </div>
             <?php } ?>
             <?php if($this->session->userdata('tipe')=="bidan"||$this->session->userdata('tipe')=="all"){ ?>
-            <div class="panel panel-default" id="paranas">
-                <a data-toggle="collapse" data-parent="#accordion" href="#parana_menu">
+            <div class="panel panel-default" id="karanas">
+                <a data-toggle="collapse" data-parent="#accordion" href="#karana_menu">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        PARANA
+                        KARANA
                     </h4>
                 </div>
                 </a>
-                <div id="parana_menu" class="panel-collapse collapse<?=($this->uri->segment(2)=='parana')?' in':''?>">
+                <div id="karana_menu" class="panel-collapse collapse<?=($this->uri->segment(2)=='karana')?' in':''?>">
                     <?php
                     foreach($location as $kec=>$desas){
                     ?>
                     <div class="panel panel-default panel-collapse">
-                        <a data-parent="#parana_menu" href="<?php echo site_url() ."laporan/parana/".$kec?>">
-                        <div <?=($this->uri->segment(2)=='parana'&&str_replace('%20',' ',$this->uri->segment(3))==$kec)?' style="background-color:#909090"':''?> class="panel-heading">
+                        <a data-parent="#karana_menu" href="<?php echo site_url() ."laporan/karana/".$kec?>">
+                        <div <?=($this->uri->segment(2)=='karana'&&str_replace('%20',' ',$this->uri->segment(3))==$kec)?' style="background-color:#909090"':''?> class="panel-heading">
                             <h4 class="panel-title">
                                  <?=$kec?>
                             </h4>

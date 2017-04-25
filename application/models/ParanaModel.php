@@ -29,7 +29,7 @@ class ParanaModel extends CI_Model{
         $v1 = $form;
         
         $series1['page']='gen1';
-        $series1['title']='Jumlah Ibu yang mengikuti sesi parana';
+        $series1['title']='Jumlah Ibu yang mengikuti sesi karana';
         $series1['symbol']='';
         $series1['form']=$v1;
         $series1['y_label']='Jumlah';
@@ -58,7 +58,7 @@ class ParanaModel extends CI_Model{
         $v1 = $form;
         
         $series1['page']='gen1';
-        $series1['title']='Jumlah Ibu yang mengikuti sesi parana';
+        $series1['title']='Jumlah Ibu yang mengikuti sesi karana';
         $series1['symbol']='';
         $series1['form']=$v1;
         $series1['y_label']='Jumlah';
@@ -76,7 +76,7 @@ class ParanaModel extends CI_Model{
         }
         $xlsForm = [];
         $series1['page']='mmn';
-        $series1['title']='Jumlah Ibu yang mengikuti sesi parana';
+        $series1['title']='Jumlah Ibu yang mengikuti sesi karana';
         $series1['symbol']='';
         $series1['form']=$form;
         $series1['y_label']='Jumlah';
