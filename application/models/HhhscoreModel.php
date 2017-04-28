@@ -18,7 +18,7 @@ class HhhscoreModel extends CI_Model{
             $form[$dn] = rand(15, 30);
         }
         $series1['page']='gen1';
-        $series1['title']='HAND SCORE';
+        $series1['title']='TOTAL HAND SCORE';
         $series1['symbol']='%';
         $series1['form']=$form;
         $series1['y_label']='Persentase';
@@ -140,7 +140,7 @@ class HhhscoreModel extends CI_Model{
             $form[$dn] = rand(15, 30);
         }
         $series1['page']='gen1';
-        $series1['title']='HEART SCORE';
+        $series1['title']='TOTAL HEART SCORE';
         $series1['symbol']='%';
         $series1['form']=$form;
         $series1['y_label']='Persentase';
