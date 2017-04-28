@@ -22,6 +22,19 @@ class EcCakupanModel extends CI_Model{
         return $ret;
     }
     
+    public function getCakupanContainerKec($kec,$p=FALSE){
+        $loc = $this->loc->getLocId($kec);
+        $ret = [];
+        foreach ($loc as $loc1=>$loc2){
+            if($kec=='vaksinator'){
+                if($p){
+                    $ret[$loc2] = array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0);
+                }else $ret[$loc2] = array('l'=>0,'p'=>0);
+            }else $ret[$loc2] = rand(15, 30);
+        }
+        return $ret;
+    }
+    
     public function getSpvCakupanContainer($fhw,$kec,$p=FALSE){
         $loc = $this->loc->getLocId($kec);
         $ret = [];

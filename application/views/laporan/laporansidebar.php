@@ -21,13 +21,28 @@
                 <div id="bidan_menu" class="panel-collapse collapse<?=($this->uri->segment(2)=='cakupanindikatorpws'||$this->uri->segment(2)=='downloadbidanpws')?' in':''?>">
                     <div class="panel panel-default">
                         <div class="panel panel-default">
-                            <a href="<?php echo site_url() ."laporan/cakupanindikatorpws"?>">
-                            <div class="panel-heading" <?=($this->uri->segment(2)=='cakupanindikatorpws')?' style="background-color:#909090"':''?>>
+                            <a data-toggle="collapse" data-parent="#bidan_menu" href="#by_loc">
+                            <div class="panel-heading">
                                 <h4 class="panel-title">
                                     Cakupan Indikator PWS
                                 </h4>
                             </div>
                             </a>
+                            <div id="by_loc" class="panel-collapse collapse<?=$this->uri->segment(2)=='cakupanindikatorpws'?' in':''?>">
+                                <?php
+                                foreach($location as $kec=>$desas){
+                                ?>
+                                <div class="panel panel-default panel-collapse">
+                                    <a data-parent="#bidan_menu" href="<?php echo site_url() ."laporan/cakupanindikatorpws/".$kec?>">
+                                    <div <?=($this->uri->segment(2)=='cakupanindikatorpws'&&str_replace('%20',' ',$this->uri->segment(3))==$kec)?' style="background-color:#909090"':''?> class="panel-heading">
+                                        <h4 class="panel-title">
+                                             <?=$kec?>
+                                        </h4>
+                                    </div>
+                                    </a>
+                                </div>
+                                <?php } ?>
+                            </div>
                         </div>
                         <a href="<?php echo site_url() ."laporan/downloadbidanpws"?>">
                         <div class="panel-heading"<?=($this->uri->segment(2)=='downloadbidanpws')?' style="background-color:#909090"':''?>>

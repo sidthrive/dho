@@ -5,7 +5,7 @@
     <br/>
     <br>
     <div>
-        <form class="form" action="<?php echo site_url()."laporan/cakupanindikatorpws"?>" method="get">
+        <form class="form" action="<?php echo site_url()."laporan/cakupanindikatorpws/".$kec?>" method="get">
             <label class="col-sm-2 control-label">Periode: </label>
             <select name="b" class="form-control-static">
                 <option value="januari" <?=$bulan=="januari"?"selected":""?>>Januari</option>

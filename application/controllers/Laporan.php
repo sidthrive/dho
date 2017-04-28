@@ -26,8 +26,10 @@ class Laporan extends CI_Controller{
             $bulan_map = [1=>'januari',2=>'februari',3=>'maret',4=>'april',5=>'mei',6=>'juni',7=>'juli',8=>'agustus',9=>'september',10=>'oktober',11=>'november',12=>'desember'];
             $b = date("n");
             $t = date("Y");
-            redirect("laporan/cakupanindikatorpws?b=$bulan_map[$b]&t=$t");
+            $dataXLS['kec'] = str_replace("%20"," ",$this->uri->segment(3));
+            redirect("laporan/cakupanindikatorpws/".$dataXLS['kec']."?b=$bulan_map[$b]&t=$t");
         }else{
+            $dataXLS['kec'] = str_replace("%20"," ",$this->uri->segment(3));
             $dataXLS['bulan'] = $this->input->get('b');
             $dataXLS['tahun'] = $this->input->get('t');
         }
@@ -37,7 +39,7 @@ class Laporan extends CI_Controller{
             $dataXLS['xlsForm']=$this->BidanEcFhwCakupanModel->cakupanBulanIni($dataXLS['bulan'],$dataXLS['tahun']);
         }else{
             $this->load->model('BidanEcCakupanModel');
-            $dataXLS['xlsForm']=$this->BidanEcCakupanModel->cakupanBulanIni($dataXLS['bulan'],$dataXLS['tahun']);
+            $dataXLS['xlsForm']=$this->BidanEcCakupanModel->cakupanBulanIni($dataXLS['kec'],$dataXLS['bulan'],$dataXLS['tahun']);
         }
         
         $data['location'] = $this->loc->getAllLoc('bidan');
