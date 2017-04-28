@@ -1,11 +1,11 @@
 <div id="content">
     <div id="text" style="text-align: center;">
-        <h3>HEART SCORE</h3>
+        <h3>HAND SCORE</h3>
     </div>
     <br/>
     <br>
     <div>
-        <form class="form" action="<?php echo site_url()."hhhscore/heartscore/".$kec?>" method="get">
+        <form class="form" action="<?php echo site_url()."hhhscore/handscore/".$kec?>" method="get">
             <label class="col-sm-2 control-label">Periode: </label>
             <select name="b" class="form-control-static">
                 <option value="januari" <?=$bulan=="januari"?"selected":""?>>Januari</option>
