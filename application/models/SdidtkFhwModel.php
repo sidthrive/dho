@@ -11,7 +11,7 @@ class SdidtkFhwModel extends CI_Model{
     public function getCountPerForm($desa=""){
         $analyticsDB = $this->load->database('analytics', TRUE);
         $query  = $analyticsDB->query("SHOW TABLES FROM gen_analytics");
-        $table_default = $this->Table->getTable('bidan');
+        $table_default = $this->Table->getTable('sdidtk');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
@@ -67,7 +67,7 @@ class SdidtkFhwModel extends CI_Model{
         $dusun = implode(" ", explode('_', $dusun));
         $analyticsDB = $this->load->database('analytics', TRUE);
         $query  = $analyticsDB->query("SHOW TABLES FROM gen_analytics");
-        $table_default = $this->Table->getTable('bidan');
+        $table_default = $this->Table->getTable('sdidtk');
         $tabindex = $this->Table->getTableIndex('bidan');
         //retrieve the tables name
         $tables = array();
@@ -134,7 +134,7 @@ class SdidtkFhwModel extends CI_Model{
         $analyticsDB = $this->load->database('analytics', TRUE);
         $query  = $analyticsDB->query("SHOW TABLES FROM gen_analytics");
         
-        $table_default = $this->Table->getTable('bidan');
+        $table_default = $this->Table->getTable('sdidtk');
         //retrieve the tables name
         
         $tables = array();
@@ -214,7 +214,7 @@ class SdidtkFhwModel extends CI_Model{
         $analyticsDB = $this->load->database('analytics', TRUE);
         $query  = $analyticsDB->query("SHOW TABLES FROM gen_analytics");
         
-        $table_default = $this->Table->getTable('bidan');
+        $table_default = $this->Table->getTable('sdidtk');
         //retrieve the tables name
         
         $tables = array();
