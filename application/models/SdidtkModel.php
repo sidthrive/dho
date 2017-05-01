@@ -17,7 +17,7 @@ class SdidtkModel extends CI_Model{
         $analyticsDB = $this->load->database('analytics', TRUE);
         $query  = $analyticsDB->query("SHOW TABLES FROM gen_analytics");
         
-        $table_default = $this->Table->getTable('bidan');
+        $table_default = $this->Table->getTable('sdidtk');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
@@ -42,7 +42,7 @@ class SdidtkModel extends CI_Model{
                 $data = array();
                 for($i=$begin;$begin<=$end;$i->modify('+1 day')){
                     $date    = $i->format("Y-m-d");
-                    $data[$date] = 0;
+                    $data[$date] = rand(15, 30);
                 }
                 $result_data[$desa] = $data;
             }
@@ -91,7 +91,7 @@ class SdidtkModel extends CI_Model{
         date_default_timezone_set("Asia/Makassar"); 
         $analyticsDB = $this->load->database('analytics', TRUE);
         $query  = $analyticsDB->query("SHOW TABLES FROM gen_analytics");
-        $table_default = $this->Table->getTable('bidan');
+        $table_default = $this->Table->getTable('sdidtk');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
@@ -116,7 +116,7 @@ class SdidtkModel extends CI_Model{
                 $data = array();
                 for($i=$begin;$begin<=$end;$i->modify('+1 day')){
                     $date    = $i->format("Y-m-d");
-                    $data[$date] = 0;
+                    $data[$date] = rand(15, 30);
                 }
                 $result_data[$desa] = $data;
             }
@@ -126,7 +126,7 @@ class SdidtkModel extends CI_Model{
                 for($i=1;$i<=30;$i++){
                     $day     = 30-$i;
                     $date    = date("Y-m-d",  strtotime("-".$day." days"));
-                    $data[$date] = 0;
+                    $data[$date] = rand(15, 30);
                 }
                 $result_data[$desa] = $data;
             }
@@ -192,7 +192,7 @@ class SdidtkModel extends CI_Model{
         date_default_timezone_set("Asia/Makassar"); 
         $analyticsDB = $this->load->database('analytics', TRUE);
         $query  = $analyticsDB->query("SHOW TABLES FROM gen_analytics");
-        $table_default = $this->Table->getTable('bidan');
+        $table_default = $this->Table->getTable('sdidtk');
         //retrieve the tables name
         $tables = array();
         foreach ($query->result() as $table){
@@ -221,14 +221,14 @@ class SdidtkModel extends CI_Model{
                 for($i=1;$i<=6;$i++){
                     $days     = 6-$i;
                     $date    = date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"-")."-".$days." days"));
-                    $day_temp[$date] = 0;
+                    $day_temp[$date] = rand(15, 30);
                 }
                 $data['thisweek'] = $day_temp;
                 $day_temp = array();
                 for($i=1;$i<=6;$i++){
                     $days     = 6-$i;
                     $date    = date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"-")."-".$days." days"));
-                    $day_temp[$date] = 0;
+                    $day_temp[$date] = rand(15, 30);
                 }
                 $data['lastweek'] = $day_temp;
                 
@@ -239,13 +239,13 @@ class SdidtkModel extends CI_Model{
                 $month  = array();
                 for($i=1;$i<=12;$i++){
                     $date   = date("Y-m",strtotime("+".(-$this_month+$i)." months"));
-                    $month[$date]   =   0;
+                    $month[$date]   =   rand(15, 30);
                 }
                 $data['thisyear'] = $month;
                 $month  = array();
                 for($i=1;$i<=12;$i++){
                     $date   = date("Y-m",strtotime("+".(-$this_month+$i-12)." months"));
-                    $month[$date]   =   0;
+                    $month[$date]   =   rand(15, 30);
                 }
                 $data['lastyear'] = $month;
             }
@@ -316,7 +316,7 @@ class SdidtkModel extends CI_Model{
         $analyticsDB = $this->load->database('analytics', TRUE);
         $query  = $analyticsDB->query("SHOW TABLES FROM gen_analytics");
         
-        $table_default = $this->Table->getTable('bidan');
+        $table_default = $this->Table->getTable('sdidtk');
         $table_name = $this->Table->getTableName('bidan');
         //retrieve the tables name
         $tables = array();
@@ -335,7 +335,7 @@ class SdidtkModel extends CI_Model{
             foreach($daterange as $date){
                 $data[$date->format("Y-m-d")] = array();
                 foreach ($table_default as $table=>$legend){
-                    $table_data = 0;
+                    $table_data = rand(15, 30);
                     $data[$date->format("Y-m-d")][$legend] = $table_data;
                 }
             }
@@ -409,7 +409,7 @@ class SdidtkModel extends CI_Model{
         $analyticsDB = $this->load->database('analytics', TRUE);
         $query  = $analyticsDB->query("SHOW TABLES FROM analytics");
         
-        $table_default = $this->Table->getTable('bidan');
+        $table_default = $this->Table->getTable('sdidtk');
         $table_name = $this->Table->getTableName('bidan');
         //retrieve the tables name
         $tables = array();
@@ -427,7 +427,7 @@ class SdidtkModel extends CI_Model{
             foreach($daterange as $date){
                 $data[$date->format("Y-m-d")] = array();
                 foreach ($table_default as $table=>$legend){
-                    $table_data = 0;
+                    $table_data = rand(15, 30);
                     $data[$date->format("Y-m-d")][$legend] = $table_data;
                 }
             }
@@ -497,7 +497,7 @@ class SdidtkModel extends CI_Model{
         $analyticsDB = $this->load->database('analytics', TRUE);
         $query  = $analyticsDB->query("SHOW TABLES FROM gen_analytics");
             
-        $table_default = $this->Table->getTable('bidan');
+        $table_default = $this->Table->getTable('sdidtk');
         //retrieve the tables name
         $tables = array();
         
@@ -515,7 +515,7 @@ class SdidtkModel extends CI_Model{
         foreach ($users as $user=>$desa){
             $data = array();
             foreach ($table_default as $table=>$legend){
-                $table_name = 0;
+                $table_name = rand(15, 30);
                 $data[$legend] = $table_name;
             }
             $result_data[$desa] = $data;
@@ -543,7 +543,7 @@ class SdidtkModel extends CI_Model{
         $analyticsDB = $this->load->database('analytics', TRUE);
         $query  = $analyticsDB->query("SHOW TABLES FROM gen_analytics");
         
-        $table_default = $this->Table->getTable('bidan');
+        $table_default = $this->Table->getTable('sdidtk');
         //retrieve the tables name
         $tables = array();
         
@@ -561,7 +561,7 @@ class SdidtkModel extends CI_Model{
         foreach ($users as $user=>$desa){
             $data = array();
             foreach ($table_default as $table=>$legend){
-                $table_name = 0;
+                $table_name = rand(15, 30);
                 $data[$legend] = $table_name;
             }
             $result_data[$desa] = $data;
@@ -586,7 +586,7 @@ class SdidtkModel extends CI_Model{
     public function getCountPerFormForDrill($desa="",$date=""){
         $analyticsDB = $this->load->database('analytics', TRUE);
         $query  = $analyticsDB->query("SHOW TABLES FROM gen_analytics");
-        $table_default = $this->Table->getTable('bidan');
+        $table_default = $this->Table->getTable('sdidtk');
         $tabindex = $this->Table->getTableIndex('bidan');
         //retrieve the tables name
         $tables = array();
@@ -608,7 +608,7 @@ class SdidtkModel extends CI_Model{
                 $data[$date]["id"] = $date;
                 $data[$date]["data"] = array();
                 foreach ($table_default as $td=>$td_name){
-                    array_push($data[$date]["data"], array($td_name,0));
+                    array_push($data[$date]["data"], array($td_name,rand(15, 30)));
                 }
             }
             $result_data = $data;
@@ -635,7 +635,7 @@ class SdidtkModel extends CI_Model{
     public function getCountPerFormByVisitDateForDrill($desa="",$date=""){
         $analyticsDB = $this->load->database('analytics', TRUE);
         $query  = $analyticsDB->query("SHOW TABLES FROM analytics");
-        $table_default = $this->Table->getTable('bidan');
+        $table_default = $this->Table->getTable('sdidtk');
         $tabindex = $this->Table->getTableIndex('bidan');
         //retrieve the tables name
         $tables = array();
@@ -657,7 +657,7 @@ class SdidtkModel extends CI_Model{
                 $data[$date]["id"] = $date;
                 $data[$date]["data"] = array();
                 foreach ($table_default as $td=>$td_name){
-                    array_push($data[$date]["data"], array($td_name,0));
+                    array_push($data[$date]["data"], array($td_name,rand(15, 30)));
                 }
             }
             $result_data = $data;

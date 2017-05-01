@@ -1,6 +1,6 @@
 <div id="content">
     <div id="text" style="text-align: center;">
-        <h3>Cakupan Indikator MMN</h3>
+        <h3>Indikator Cakupan GEN</h3>
     </div>
     <br/>
     <br>

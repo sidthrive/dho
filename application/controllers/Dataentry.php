@@ -318,6 +318,11 @@ class DataEntry extends CI_Controller{
         
         echo json_encode($data);
     }
+    public function getfhwSdidtkByForm($desa,$date){
+        
+        $data = $this->SdidtkFhwModel->getCountPerFormForDrill($desa,$date);
+        echo json_encode($data);
+    }
     
     public function getSdidtkByFormByVisitDate($desa,$date){
         if($this->session->userdata('level')=="fhw"){

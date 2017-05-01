@@ -36,12 +36,12 @@ class SdidtkFhwModel extends CI_Model{
         foreach ($namadusun as $dusun=>$nama){
             $data = array();
             foreach ($table_default as $table=>$legend){
-                $data[$legend] = 0;
+                $data[$legend] = rand(15, 30);
             }
             $result_data[$nama] = $data;
         }
         
-        foreach ($table_default as $table=>$legend){
+        foreach ($tables as $table=>$legend){
             $query = $analyticsDB->query("SELECT locationId, baseEntityId, dateCreated from ".$table." where (locationId LIKE '%$username%')");
             foreach ($query->result() as $c_data){
                 $query2 = $analyticsDB->query("SELECT dusun FROM client_ibu where baseEntityId='$c_data->baseEntityId' LIMIT 1");
@@ -101,7 +101,7 @@ class SdidtkFhwModel extends CI_Model{
             $data[$date]["id"] = $date;
             $data[$date]["data"] = array();
             foreach ($table_default as $td=>$td_name){
-                array_push($data[$date]["data"], array($td_name,0));
+                array_push($data[$date]["data"], array($td_name, rand(15, 30)));
             }
         }
         $result_data = $data;
@@ -163,7 +163,7 @@ class SdidtkFhwModel extends CI_Model{
                 $data = array();
                 for($i=$begin;$begin<=$end;$i->modify('+1 day')){
                     $date    = $i->format("Y-m-d");
-                    $data[$date] = 0;
+                    $data[$date] = rand(15, 30);
                 }
                 $result_data[$nama] = $data;
             }
@@ -173,7 +173,7 @@ class SdidtkFhwModel extends CI_Model{
                 for($i=1;$i<=30;$i++){
                     $day     = 30-$i;
                     $date    = date("Y-m-d",  strtotime("-".$day." days"));
-                    $data[$date] = 0;
+                    $data[$date] = rand(15, 30);
                 }
                 $result_data[$nama] = $data;
             }
@@ -247,14 +247,14 @@ class SdidtkFhwModel extends CI_Model{
                 for($i=1;$i<=6;$i++){
                     $days     = 6-$i;
                     $date    = date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"")."-".$days." days"));
-                    $day_temp[$date] = 0;
+                    $day_temp[$date] = rand(15, 30);
                 }
                 $data['thisweek'] = $day_temp;
                 $day_temp = array();
                 for($i=1;$i<=6;$i++){
                     $days     = 6-$i;
                     $date    = date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"")."-".$days." days"));
-                    $day_temp[$date] = 0;
+                    $day_temp[$date] = rand(15, 30);
                 }
                 $data['lastweek'] = $day_temp;
                 
@@ -265,13 +265,13 @@ class SdidtkFhwModel extends CI_Model{
                 $month  = array();
                 for($i=1;$i<=12;$i++){
                     $date   = date("Y-m",strtotime("+".(-$this_month+$i)." months"));
-                    $month[$date]   =   0;
+                    $month[$date]   =   rand(15, 30);
                 }
                 $data['thisyear'] = $month;
                 $month  = array();
                 for($i=1;$i<=12;$i++){
                     $date   = date("Y-m",strtotime("+".(-$this_month+$i-12)." months"));
-                    $month[$date]   =   0;
+                    $month[$date]   =   rand(15, 30);
                 }
                 $data['lastyear'] = $month;
             }

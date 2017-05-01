@@ -27,15 +27,32 @@ class AnalyticsEcTableModel extends CI_Model{
             'event_bidan_kohort_pelayanan_kb'=>'Pelayanan KB',
             'event_bidan_penutupan_kb'=>'Penutupan KB',
             'event_bidan_penutupan_ibu'=>'Penutupan Ibu',
-            'event_bidan_tambah_bayi'=>'Tambah Bayi'],
-        'gizi'=>[
-            'event_gizi_registrasi_gizi'=>'Registrasi Gizi',
-            'event_gizi_kunjungan_gizi'=>'Kunjungan Gizi',
-            'event_gizi_penutupan_anak'=>'Penutupan Anak'],
-        'vaksinator'=>[
-            'event_vaksin_registrasi_vaksinator'=>'Registrasi Vaksinator',
-            'event_vaksin_imunisasi_bayi'=>'Form Imunisasi',
-            'event_vaksin_penutupan_anak'=>'Penutuan Anak']];
+            'event_bidan_tambah_bayi'=>'Tambah Bayi',
+            '15'=>'Invitasi Parana',
+            '16'=>'Parana Sesi 1',
+            '17'=>'Parana Sesi 2',
+            '18'=>'Parana Sesi 3',
+            '19'=>'Parana Sesi 4 '],
+        'sdidtk'=>[
+            '1'=>'Antropometri',
+            '2'=>'KPSP 1 Tahun',
+            '3'=>'KPSP 2 Tahun',
+            '4'=>'KPSP 3 Tahun',
+            '5'=>'KPSP 4 Tahun',
+            '6'=>'KPSP 5 Tahun',
+            '7'=>'KPSP 6 Tahun',
+            '8'=>'Tes Daya Lihat',
+            '9'=>'Tes Daya Dengar',
+            '10'=>'KMME',
+            '11'=>'GPPH',
+            '12'=>'CHAT',
+            '13'=>'Home 0-2 Tahun',
+            '14'=>'Home 3-6 Tahun',
+            '15'=>'Invitasi Parana',
+            '16'=>'Parana Sesi 1',
+            '17'=>'Parana Sesi 2',
+            '18'=>'Parana Sesi 3',
+            '19'=>'Parana Sesi 4 ']];
     
     public function getTable($fhw){
         return $this->table[$fhw];
