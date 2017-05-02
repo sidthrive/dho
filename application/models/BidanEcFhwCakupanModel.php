@@ -26,7 +26,7 @@ class BidanEcFhwCakupanModel extends CI_Model{
 //        $target_mt      =  $this->target[$bidan];
         
         $form = $user;
-        $datavisit = $this->db->query("SELECT *,client_ibu.dusun FROM event_bidan_kunjungan_anc LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_kunjungan_anc.baseEntityId WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND ancKe=1 AND locationId='$bidan' group by event_bidan_kunjungan_anc.baseEntityId")->result();
+        $datavisit = [];//$this->db->query("SELECT *,client_ibu.dusun FROM event_bidan_kunjungan_anc LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_kunjungan_anc.baseEntityId WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND ancKe=1 AND locationId='$bidan' group by event_bidan_kunjungan_anc.baseEntityId")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->dusun, $dusun)){
                 $form[$dusun[$dvisit->dusun]] += 1;
@@ -43,7 +43,7 @@ class BidanEcFhwCakupanModel extends CI_Model{
         array_push($xlsForm, $series1);
        
         $form = $user;
-        $datavisit = $this->db->query("SELECT *,client_ibu.dusun FROM event_bidan_kunjungan_anc LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_kunjungan_anc.baseEntityId WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND ancKe=4 AND locationId='$bidan' group by event_bidan_kunjungan_anc.baseEntityId")->result();
+        $datavisit = [];//$this->db->query("SELECT *,client_ibu.dusun FROM event_bidan_kunjungan_anc LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_kunjungan_anc.baseEntityId WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND ancKe=4 AND locationId='$bidan' group by event_bidan_kunjungan_anc.baseEntityId")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->dusun, $dusun)){
                 $form[$dusun[$dvisit->dusun]] += 1;
@@ -60,7 +60,7 @@ class BidanEcFhwCakupanModel extends CI_Model{
         array_push($xlsForm, $series2);
        
         $form = $user;
-        $datavisit = $this->db->query("SELECT *,client_ibu.dusun FROM event_bidan_kunjungan_anc LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_kunjungan_anc.baseEntityId WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND locationId='$bidan'")->result();
+        $datavisit = [];//$this->db->query("SELECT *,client_ibu.dusun FROM event_bidan_kunjungan_anc LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_kunjungan_anc.baseEntityId WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND locationId='$bidan'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->dusun, $dusun)){
                 if($dvisit->komplikasidalamKehamilan!="None"){
@@ -83,7 +83,7 @@ class BidanEcFhwCakupanModel extends CI_Model{
        
         $likes = $user;
         $nakes = $user;
-        $datapersalinan= $this->db->query("SELECT *,client_ibu.dusun FROM event_bidan_dokumentasi_persalinan LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_dokumentasi_persalinan.baseEntityId WHERE tanggalPlasentaLahir > '$startdate' AND tanggalPlasentaLahir < '$enddate'  AND locationId='$bidan'")->result();
+        $datapersalinan= [];//$this->db->query("SELECT *,client_ibu.dusun FROM event_bidan_dokumentasi_persalinan LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_dokumentasi_persalinan.baseEntityId WHERE tanggalPlasentaLahir > '$startdate' AND tanggalPlasentaLahir < '$enddate'  AND locationId='$bidan'")->result();
         foreach ($datapersalinan as $dsalin){
             if(array_key_exists($dsalin->dusun, $dusun)){
                 if($dsalin->tempatBersalin=="podok_bersalin_desa"||$dsalin->tempatBersalin=="pusat_kesehatan_masyarakat_pembantu"||$dsalin->tempatBersalin=="pusat_kesehatan_masyarakat"||$dsalin->tempatBersalin=="rumah_bersalin"||$dsalin->tempatBersalin=="rumah_sakit_ibu_dan_anak"||$dsalin->tempatBersalin=="rumah_sakit"||$dsalin->tempatBersalin=="rumah_sakit_orang_dengan_hiv_aids"){
@@ -113,7 +113,7 @@ class BidanEcFhwCakupanModel extends CI_Model{
         array_push($xlsForm, $series5);
        
         $form = $user;
-        $datavisit = $this->db->query("SELECT *,client_ibu.dusun FROM event_bidan_kunjungan_pnc LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_kunjungan_pnc.baseEntityId WHERE (pncDate > '$startdate' AND pncDate < '$enddate') AND hariKeKF='kf4' AND locationId='$bidan' group by event_bidan_kunjungan_pnc.baseEntityId")->result();
+        $datavisit = [];//$this->db->query("SELECT *,client_ibu.dusun FROM event_bidan_kunjungan_pnc LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_kunjungan_pnc.baseEntityId WHERE (pncDate > '$startdate' AND pncDate < '$enddate') AND hariKeKF='kf4' AND locationId='$bidan' group by event_bidan_kunjungan_pnc.baseEntityId")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->dusun, $dusun)){
                 $form[$dusun[$dvisit->dusun]] += 1;
@@ -131,7 +131,7 @@ class BidanEcFhwCakupanModel extends CI_Model{
        
         $form = $user;
         $form2 = $user;
-        $datavisit = $this->db->query("SELECT *,client_ibu.dusun FROM event_bidan_kunjungan_neonatal LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_kunjungan_neonatal.baseEntityId WHERE eventDate > '$startdate' AND eventDate < '$enddate'")->result();
+        $datavisit = [];//$this->db->query("SELECT *,client_ibu.dusun FROM event_bidan_kunjungan_neonatal LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_kunjungan_neonatal.baseEntityId WHERE eventDate > '$startdate' AND eventDate < '$enddate'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->dusun, $dusun)){
                 if($dvisit->kunjunganNeonatal=="Pertama"){
@@ -159,7 +159,7 @@ class BidanEcFhwCakupanModel extends CI_Model{
         array_push($xlsForm, $series8);
        
         $form = $user;
-        $datavisit = $this->db->query("SELECT *,client_ibu.dusun FROM event_bidan_penutupan_anc LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_penutupan_anc.baseEntityId WHERE eventDate > '$startdate' AND eventDate < '$enddate' AND locationId='$bidan'")->result();
+        $datavisit = [];//$this->db->query("SELECT *,client_ibu.dusun FROM event_bidan_penutupan_anc LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_penutupan_anc.baseEntityId WHERE eventDate > '$startdate' AND eventDate < '$enddate' AND locationId='$bidan'")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->dusun, $dusun)){
                 if($dvisit->closeReason=="maternal_death"){
@@ -177,7 +177,7 @@ class BidanEcFhwCakupanModel extends CI_Model{
         $form = $user;
         $form2 = $user;
         $form3 = $user;
-        $data = $this->db->query("SELECT *,client_ibu.dusun FROM event_bidan_penutupan_anak LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_penutupan_anak.baseEntityId WHERE eventDate > '$startdate' AND eventDate < '$enddate' AND locationId='$bidan'")->result();
+        $data = [];//$this->db->query("SELECT *,client_ibu.dusun FROM event_bidan_penutupan_anak LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_penutupan_anak.baseEntityId WHERE eventDate > '$startdate' AND eventDate < '$enddate' AND locationId='$bidan'")->result();
         foreach ($data as $d){
             if(array_key_exists($d->dusun, $dusun)){
                 $query = $this->db->query("SELECT tanggalPlasentaLahir FROM event_bidan_dokumentasi_persalinan WHERE baseEntityId='$d->baseEntityId'");

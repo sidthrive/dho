@@ -14,8 +14,12 @@ class Laporan extends CI_Controller{
     
     public function index(){
         $this->load->view('header');
-        $data['location'] = $this->loc->getAllLoc('bidan');
-        $this->load->view('laporan/laporansidebar',$data);
+        if($this->session->userdata('level')=="fhw"){
+            $this->load->view('laporan/fhw/laporansidebar');
+        }else{
+            $data['location'] = $this->loc->getAllLoc('bidan');
+            $this->load->view('laporan/laporansidebar',$data);
+        }
         $this->load->view('laporan/laporanmainpage');
         $this->load->view('footer');
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
@@ -34,17 +38,18 @@ class Laporan extends CI_Controller{
             $dataXLS['tahun'] = $this->input->get('t');
         }
         
+        $this->load->view("header");
+        $data['location'] = $this->loc->getAllLoc('bidan');
         if($this->session->userdata('level')=="fhw"){
             $this->load->model('BidanEcFhwCakupanModel');
             $dataXLS['xlsForm']=$this->BidanEcFhwCakupanModel->cakupanBulanIni($dataXLS['bulan'],$dataXLS['tahun']);
+            $this->load->view("laporan/fhw/laporansidebar",$data);
         }else{
             $this->load->model('BidanEcCakupanModel');
             $dataXLS['xlsForm']=$this->BidanEcCakupanModel->cakupanBulanIni($dataXLS['kec'],$dataXLS['bulan'],$dataXLS['tahun']);
+            $this->load->view("laporan/laporansidebar",$data);
         }
         
-        $data['location'] = $this->loc->getAllLoc('bidan');
-        $this->load->view("header");
-        $this->load->view("laporan/laporansidebar",$data);
         $this->load->view("laporan/pws",$dataXLS,false);
         $this->load->view("footer");
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
@@ -73,35 +78,72 @@ class Laporan extends CI_Controller{
         $bulan_map = [1=>'januari',2=>'februari',3=>'maret',4=>'april',5=>'mei',6=>'juni',7=>'juli',8=>'agustus',9=>'september',10=>'oktober',11=>'november',12=>'desember'];
         $bulan_map_flip = array_flip($bulan_map);
         $tm = date("n");
-        if($this->input->get('mode')==null){
-            $data['mode'] = "bulan_ini";
-            redirect("laporan/gen/".$this->uri->segment(3)."?mode=".$data['mode']."&bulan=".$bulan_map[$tm]);
-        }else{
-            if($this->input->get('mode')=="semua_bulan"&&$this->input->get('desa')==null){
-                $data['kab'] = str_replace("%20"," ",$this->uri->segment(3));
-                $data['desas'] = $this->loc->getLocId($data['kab']);
-                $data['mode'] = $this->input->get('mode');
-                $data['desa'] = reset($data['desas']);
-                redirect("laporan/gen/".$this->uri->segment(3)."?mode=".$data['mode']."&desa=".reset($data['desas']));
-            }else{
-                if($this->input->get('mode')!="semua_bulan"&&$this->input->get('bulan')==null){
-                    $data['mode'] = $this->input->get('mode');
-                    redirect("laporan/gen/".$this->uri->segment(3)."?mode=".$data['mode']."&bulan=".$bulan_map[$tm]);
-                }else{
-                    $data['mode'] = $this->input->get('mode');
-                    $data['bulan'] = $this->input->get('bulan');
-                    $data['desa'] = $this->input->get('desa');
-                }
-            }
-        }
-        
-        $data['kab'] = str_replace("%20"," ",$this->uri->segment(3));
-        $data['desas'] = $this->loc->getLocId($data['kab']);
+        $this->load->view("header");
         
         if($this->session->userdata('level')=="fhw"){
-            $this->load->model('BidanEcFhwCakupanModel');
-            $data['xlsForm']=$this->MmnModel->cakupanBulanIni();
+            if($this->input->get('mode')==null){
+                $data['mode'] = "bulan_ini";
+                redirect("laporan/gen?mode=".$data['mode']."&bulan=".$bulan_map[$tm]);
+            }else{
+                if($this->input->get('mode')=="semua_bulan"&&$this->input->get('dusun')==null){
+                    $data['kab'] = $this->session->userdata('location');
+                    $data['dusuns'] = $this->loc->getDusun($data['kab']);
+                    $data['mode'] = $this->input->get('mode');
+                    $data['dusun'] = reset($data['dusuns']);
+                    redirect("laporan/gen?mode=".$data['mode']."&dusun=".reset($data['dusuns']));
+                }else{
+                    if($this->input->get('mode')!="semua_bulan"&&$this->input->get('bulan')==null){
+                        $data['mode'] = $this->input->get('mode');
+                        redirect("laporan/gen?mode=".$data['mode']."&bulan=".$bulan_map[$tm]);
+                    }else{
+                        $data['mode'] = $this->input->get('mode');
+                        $data['bulan'] = $this->input->get('bulan');
+                        $data['dusun'] = $this->input->get('dusun');
+                    }
+                }
+            }
+            $data['kab'] = $this->session->userdata('location');
+            $data['dusuns'] = $this->loc->getDusun($data['kab']);
+
+            $this->load->model('MmnFhwModel');
+            if($data['mode']=='bulan_ini'){
+                $data['xlsForm']=$this->MmnFhwModel->cakupanBulanIni($data['kab']);
+            }elseif($data['mode']=='akumulatif'){
+                $data['xlsForm']=$this->MmnFhwModel->cakupanAkumulatif($data['kab']);
+            }elseif($data['mode']=='semua_bulan'){
+                $data['xlsForm']=$this->MmnFhwModel->semuabulan($data['kab']);
+            }
+
+            $data['location'] = $this->loc->getAllLoc('bidan');
+
+            $this->load->view("laporan/fhw/laporansidebar",$data);
+            $this->load->view("laporan/fhw/mmn",$data);
         }else{
+            if($this->input->get('mode')==null){
+                $data['mode'] = "bulan_ini";
+                redirect("laporan/gen/".$this->uri->segment(3)."?mode=".$data['mode']."&bulan=".$bulan_map[$tm]);
+            }else{
+                if($this->input->get('mode')=="semua_bulan"&&$this->input->get('desa')==null){
+                    $data['kab'] = str_replace("%20"," ",$this->uri->segment(3));
+                    $data['desas'] = $this->loc->getLocId($data['kab']);
+                    $data['mode'] = $this->input->get('mode');
+                    $data['desa'] = reset($data['desas']);
+                    redirect("laporan/gen/".$this->uri->segment(3)."?mode=".$data['mode']."&desa=".reset($data['desas']));
+                }else{
+                    if($this->input->get('mode')!="semua_bulan"&&$this->input->get('bulan')==null){
+                        $data['mode'] = $this->input->get('mode');
+                        redirect("laporan/gen/".$this->uri->segment(3)."?mode=".$data['mode']."&bulan=".$bulan_map[$tm]);
+                    }else{
+                        $data['mode'] = $this->input->get('mode');
+                        $data['bulan'] = $this->input->get('bulan');
+                        $data['desa'] = $this->input->get('desa');
+                    }
+                }
+            }
+
+            $data['kab'] = str_replace("%20"," ",$this->uri->segment(3));
+            $data['desas'] = $this->loc->getLocId($data['kab']);
+
             $this->load->model('MmnModel');
             if($data['mode']=='bulan_ini'){
                 $data['xlsForm']=$this->MmnModel->cakupanBulanIni($data['kab']);
@@ -110,13 +152,13 @@ class Laporan extends CI_Controller{
             }elseif($data['mode']=='semua_bulan'){
                 $data['xlsForm']=$this->MmnModel->semuabulan($data['kab']);
             }
+
+            $data['location'] = $this->loc->getAllLoc('bidan');
+
+            $this->load->view("laporan/laporansidebar",$data);
+            $this->load->view("laporan/mmn",$data);
         }
         
-        $data['location'] = $this->loc->getAllLoc('bidan');
-        
-        $this->load->view("header");
-        $this->load->view("laporan/laporansidebar",$data);
-        $this->load->view("laporan/mmn",$data);
         $this->load->view("footer");
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
@@ -125,35 +167,73 @@ class Laporan extends CI_Controller{
         $bulan_map = [1=>'januari',2=>'februari',3=>'maret',4=>'april',5=>'mei',6=>'juni',7=>'juli',8=>'agustus',9=>'september',10=>'oktober',11=>'november',12=>'desember'];
         $bulan_map_flip = array_flip($bulan_map);
         $tm = date("n");
-        if($this->input->get('mode')==null){
-            $data['mode'] = "bulan_ini";
-            redirect("laporan/karana/".$this->uri->segment(3)."?mode=".$data['mode']."&bulan=".$bulan_map[$tm]);
-        }else{
-            if($this->input->get('mode')=="semua_bulan"&&$this->input->get('desa')==null){
-                $data['kab'] = str_replace("%20"," ",$this->uri->segment(3));
-                $data['desas'] = $this->loc->getLocId($data['kab']);
-                $data['mode'] = $this->input->get('mode');
-                $data['desa'] = reset($data['desas']);
-                redirect("laporan/karana/".$this->uri->segment(3)."?mode=".$data['mode']."&desa=".reset($data['desas']));
-            }else{
-                if($this->input->get('mode')!="semua_bulan"&&$this->input->get('bulan')==null){
-                    $data['mode'] = $this->input->get('mode');
-                    redirect("laporan/karana/".$this->uri->segment(3)."?mode=".$data['mode']."&bulan=".$bulan_map[$tm]);
-                }else{
-                    $data['mode'] = $this->input->get('mode');
-                    $data['bulan'] = $this->input->get('bulan');
-                    $data['desa'] = $this->input->get('desa');
-                }
-            }
-        }
-        
-        $data['kab'] = str_replace("%20"," ",$this->uri->segment(3));
-        $data['desas'] = $this->loc->getLocId($data['kab']);
         
         if($this->session->userdata('level')=="fhw"){
-            $this->load->model('ParanaModel');
-            $data['xlsForm']=$this->ParanaModel->cakupanBulanIni();
+            if($this->input->get('mode')==null){
+                $data['mode'] = "bulan_ini";
+                redirect("laporan/karana?mode=".$data['mode']."&bulan=".$bulan_map[$tm]);
+            }else{
+                if($this->input->get('mode')=="semua_bulan"&&$this->input->get('dusun')==null){
+                    $data['kab'] = $this->session->userdata('location');
+                    $data['dusuns'] = $this->loc->getDusun($data['kab']);
+                    $data['mode'] = $this->input->get('mode');
+                    $data['dusun'] = reset($data['dusuns']);
+                    redirect("laporan/karana?mode=".$data['mode']."&dusun=".reset($data['dusuns']));
+                }else{
+                    if($this->input->get('mode')!="semua_bulan"&&$this->input->get('bulan')==null){
+                        $data['mode'] = $this->input->get('mode');
+                        redirect("laporan/karana?mode=".$data['mode']."&bulan=".$bulan_map[$tm]);
+                    }else{
+                        $data['mode'] = $this->input->get('mode');
+                        $data['bulan'] = $this->input->get('bulan');
+                        $data['dusun'] = $this->input->get('dusun');
+                    }
+                }
+            }
+
+            $data['kab'] = $this->session->userdata('location');
+            $data['dusuns'] = $this->loc->getDusun($data['kab']);
+
+            $this->load->model('ParanaFhwModel');
+            if($data['mode']=='bulan_ini'){
+                $data['xlsForm']=$this->ParanaFhwModel->cakupanBulanIni($data['kab']);
+            }elseif($data['mode']=='akumulatif'){
+                $data['xlsForm']=$this->ParanaFhwModel->cakupanAkumulatif($data['kab']);
+            }elseif($data['mode']=='semua_bulan'){
+                $data['xlsForm']=$this->ParanaFhwModel->semuabulan($data['kab']);
+            }
+
+            $data['location'] = $this->loc->getAllLoc('bidan');
+
+            $this->load->view("header");
+            $this->load->view("laporan/fhw/laporansidebar");
+            $this->load->view("laporan/fhw/parana",$data);
         }else{
+            if($this->input->get('mode')==null){
+                $data['mode'] = "bulan_ini";
+                redirect("laporan/karana/".$this->uri->segment(3)."?mode=".$data['mode']."&bulan=".$bulan_map[$tm]);
+            }else{
+                if($this->input->get('mode')=="semua_bulan"&&$this->input->get('desa')==null){
+                    $data['kab'] = str_replace("%20"," ",$this->uri->segment(3));
+                    $data['desas'] = $this->loc->getLocId($data['kab']);
+                    $data['mode'] = $this->input->get('mode');
+                    $data['desa'] = reset($data['desas']);
+                    redirect("laporan/karana/".$this->uri->segment(3)."?mode=".$data['mode']."&desa=".reset($data['desas']));
+                }else{
+                    if($this->input->get('mode')!="semua_bulan"&&$this->input->get('bulan')==null){
+                        $data['mode'] = $this->input->get('mode');
+                        redirect("laporan/karana/".$this->uri->segment(3)."?mode=".$data['mode']."&bulan=".$bulan_map[$tm]);
+                    }else{
+                        $data['mode'] = $this->input->get('mode');
+                        $data['bulan'] = $this->input->get('bulan');
+                        $data['desa'] = $this->input->get('desa');
+                    }
+                }
+            }
+
+            $data['kab'] = str_replace("%20"," ",$this->uri->segment(3));
+            $data['desas'] = $this->loc->getLocId($data['kab']);
+
             $this->load->model('ParanaModel');
             if($data['mode']=='bulan_ini'){
                 $data['xlsForm']=$this->ParanaModel->cakupanBulanIni($data['kab']);
@@ -162,13 +242,14 @@ class Laporan extends CI_Controller{
             }elseif($data['mode']=='semua_bulan'){
                 $data['xlsForm']=$this->ParanaModel->semuabulan($data['kab']);
             }
+
+            $data['location'] = $this->loc->getAllLoc('bidan');
+
+            $this->load->view("header");
+            $this->load->view("laporan/laporansidebar",$data);
+            $this->load->view("laporan/parana",$data);
         }
         
-        $data['location'] = $this->loc->getAllLoc('bidan');
-        
-        $this->load->view("header");
-        $this->load->view("laporan/laporansidebar",$data);
-        $this->load->view("laporan/parana",$data);
         $this->load->view("footer");
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }

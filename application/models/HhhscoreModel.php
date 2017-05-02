@@ -13,7 +13,11 @@ class HhhscoreModel extends CI_Model{
     public function handScoreBulanIni($kab){
         $xlsForm = [];
         $form = [];
-        $desas = $this->loc->getLocId($kab);
+        if($this->session->userdata('level')=="fhw"){
+            $desas = $this->loc->getDusun($kab);
+        }else{
+            $desas = $this->loc->getLocId($kab);
+        }
         foreach ($desas as $dt=>$dn){
             $form[$dn] = rand(15, 30);
         }
@@ -135,7 +139,11 @@ class HhhscoreModel extends CI_Model{
     public function heartScoreBulanIni($kab){
         $xlsForm = [];
         $form = [];
-        $desas = $this->loc->getLocId($kab);
+        if($this->session->userdata('level')=="fhw"){
+            $desas = $this->loc->getDusun($kab);
+        }else{
+            $desas = $this->loc->getLocId($kab);
+        }
         foreach ($desas as $dt=>$dn){
             $form[$dn] = rand(15, 30);
         }

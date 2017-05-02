@@ -16,7 +16,12 @@ class HHHScore extends CI_Controller{
     public function index(){
         
         $this->load->view('header');
-        $this->load->view('hhhscore/hhhsidebar');
+        if($this->session->userdata('level')=="fhw"){
+            $this->load->view('hhhscore/fhw/hhhsidebar');
+        }else{
+            $data['location'] = $this->loc->getAllLoc('bidan');
+            $this->load->view('hhhscore/hhhsidebar',$data);
+        }
         $this->load->view('hhhscore/standarisasimainpage');
         $this->load->view('footer');
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
@@ -69,7 +74,7 @@ class HHHScore extends CI_Controller{
                 $data['id_user'] = $this->db->query("SELECT id FROM user WHERE username='".$this->session->userdata('username')."'")->row()->id;
                 $data['jadwal'] = $this->db->query("SELECT * FROM tes WHERE id_user='".$data['id_user']."' AND id_jenis=3 AND aktif='yes'")->row();
                 $this->load->view('header');
-                $this->load->view('hhhscore/hhhsidebar');
+                $this->load->view('hhhscore/fhw/hhhsidebar');
                 $this->load->view('hhhscore/headscore',$data);
                 $this->load->view('footer');
             }
@@ -106,48 +111,92 @@ class HHHScore extends CI_Controller{
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     public function handscore(){
-        $dataXLS['kec'] = str_replace("%20"," ",$this->uri->segment(3));
-        if($this->input->get('b')==null){
-            $bulan_map = [1=>'januari',2=>'februari',3=>'maret',4=>'april',5=>'mei',6=>'juni',7=>'juli',8=>'agustus',9=>'september',10=>'oktober',11=>'november',12=>'desember'];
-            $b = date("n");
-            $t = date("Y");
-            redirect("hhhscore/handscore/".$dataXLS['kec']."?b=$bulan_map[$b]&t=$t");
+        if($this->session->userdata('level')=="fhw"){
+            $dataXLS['kec'] = $this->session->userdata('location');
+            if($this->input->get('b')==null){
+                $bulan_map = [1=>'januari',2=>'februari',3=>'maret',4=>'april',5=>'mei',6=>'juni',7=>'juli',8=>'agustus',9=>'september',10=>'oktober',11=>'november',12=>'desember'];
+                $b = date("n");
+                $t = date("Y");
+                redirect("hhhscore/handscore/".$dataXLS['kec']."?b=$bulan_map[$b]&t=$t");
+            }else{
+                $dataXLS['bulan'] = $this->input->get('b');
+                $dataXLS['tahun'] = $this->input->get('t');
+            }
+            $this->load->model('HhhscoreModel');
+
+            $dataXLS['xlsForm']=$this->HhhscoreModel->handScoreBulanIni($dataXLS['kec']);
+
+            $this->load->view('header');
+            $this->load->view('hhhscore/fhw/hhhsidebar');
+            $this->load->view('hhhscore/handscore',$dataXLS);
+            $this->load->view('footer');
         }else{
-            $dataXLS['bulan'] = $this->input->get('b');
-            $dataXLS['tahun'] = $this->input->get('t');
+            $dataXLS['kec'] = str_replace("%20"," ",$this->uri->segment(3));
+            if($this->input->get('b')==null){
+                $bulan_map = [1=>'januari',2=>'februari',3=>'maret',4=>'april',5=>'mei',6=>'juni',7=>'juli',8=>'agustus',9=>'september',10=>'oktober',11=>'november',12=>'desember'];
+                $b = date("n");
+                $t = date("Y");
+                redirect("hhhscore/handscore/".$dataXLS['kec']."?b=$bulan_map[$b]&t=$t");
+            }else{
+                $dataXLS['bulan'] = $this->input->get('b');
+                $dataXLS['tahun'] = $this->input->get('t');
+            }
+            $this->load->model('HhhscoreModel');
+
+            $dataXLS['xlsForm']=$this->HhhscoreModel->handScoreBulanIni($dataXLS['kec']);
+
+            $data['location'] = $this->loc->getAllLoc('bidan');
+            $this->load->view('header');
+            $this->load->view('hhhscore/hhhsidebar',$data);
+            $this->load->view('hhhscore/handscore',$dataXLS);
+            $this->load->view('footer');
         }
-        $this->load->model('HhhscoreModel');
         
-        $dataXLS['xlsForm']=$this->HhhscoreModel->handScoreBulanIni($dataXLS['kec']);
-        
-        $data['location'] = $this->loc->getAllLoc('bidan');
-        $this->load->view('header');
-        $this->load->view('hhhscore/hhhsidebar',$data);
-        $this->load->view('hhhscore/handscore',$dataXLS);
-        $this->load->view('footer');
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
     public function heartscore(){
-        $dataXLS['kec'] = str_replace("%20"," ",$this->uri->segment(3));
-        if($this->input->get('b')==null){
-            $bulan_map = [1=>'januari',2=>'februari',3=>'maret',4=>'april',5=>'mei',6=>'juni',7=>'juli',8=>'agustus',9=>'september',10=>'oktober',11=>'november',12=>'desember'];
-            $b = date("n");
-            $t = date("Y");
-            redirect("hhhscore/heartscore/".$dataXLS['kec']."?b=$bulan_map[$b]&t=$t");
+        if($this->session->userdata('level')=="fhw"){
+            $dataXLS['kec'] = $this->session->userdata('location');
+            if($this->input->get('b')==null){
+                $bulan_map = [1=>'januari',2=>'februari',3=>'maret',4=>'april',5=>'mei',6=>'juni',7=>'juli',8=>'agustus',9=>'september',10=>'oktober',11=>'november',12=>'desember'];
+                $b = date("n");
+                $t = date("Y");
+                redirect("hhhscore/heartscore/".$dataXLS['kec']."?b=$bulan_map[$b]&t=$t");
+            }else{
+                $dataXLS['bulan'] = $this->input->get('b');
+                $dataXLS['tahun'] = $this->input->get('t');
+            }
+            $this->load->model('HhhscoreModel');
+
+            $dataXLS['xlsForm']=$this->HhhscoreModel->heartScoreBulanIni($dataXLS['kec']);
+
+            $this->load->view('header');
+            $this->load->view('hhhscore/fhw/hhhsidebar');
+            $this->load->view('hhhscore/heartscore',$dataXLS);
+            $this->load->view('footer');
         }else{
-            $dataXLS['bulan'] = $this->input->get('b');
-            $dataXLS['tahun'] = $this->input->get('t');
+            $dataXLS['kec'] = str_replace("%20"," ",$this->uri->segment(3));
+            if($this->input->get('b')==null){
+                $bulan_map = [1=>'januari',2=>'februari',3=>'maret',4=>'april',5=>'mei',6=>'juni',7=>'juli',8=>'agustus',9=>'september',10=>'oktober',11=>'november',12=>'desember'];
+                $b = date("n");
+                $t = date("Y");
+                redirect("hhhscore/heartscore/".$dataXLS['kec']."?b=$bulan_map[$b]&t=$t");
+            }else{
+                $dataXLS['bulan'] = $this->input->get('b');
+                $dataXLS['tahun'] = $this->input->get('t');
+            }
+            $this->load->model('HhhscoreModel');
+
+            $dataXLS['xlsForm']=$this->HhhscoreModel->heartScoreBulanIni($dataXLS['kec']);
+
+            $data['location'] = $this->loc->getAllLoc('bidan');
+            $this->load->view('header');
+            $this->load->view('hhhscore/hhhsidebar',$data);
+            $this->load->view('hhhscore/heartscore',$dataXLS);
+            $this->load->view('footer');
         }
-        $this->load->model('HhhscoreModel');
         
-        $dataXLS['xlsForm']=$this->HhhscoreModel->heartScoreBulanIni($dataXLS['kec']);
-        
-        $data['location'] = $this->loc->getAllLoc('bidan');
-        $this->load->view('header');
-        $this->load->view('hhhscore/hhhsidebar',$data);
-        $this->load->view('hhhscore/heartscore',$dataXLS);
-        $this->load->view('footer');
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
