@@ -10,16 +10,16 @@ class LocationModel extends CI_Model{
     
     private $loc = [
         "bidan"=>array(
-            "Kota Mataram"=>array('user1'=>'Karang Pule','user2'=>'Jempong Baru','user3'=>'Tanjung Karang','user4'=>'Ampenan Selatan','user5'=>'Banjar','user6'=>'Kekalek Jaya','user7'=>'Tanjung Karang Permai','user8'=>'Pejeruk','user9'=>'Kebun Sari','user10'=>'Pejarakan Karya'),
-            "Kabupaten Lombok Barat"=>array('user1'=>'Bengkel','user2'=>'Merembu','user3'=>'Bagik Polak Barat','user4'=>'Bagik Polak Timur','user5'=>'Telagawaru','user6'=>'Labuapi','user7'=>'Rumak','user8'=>'Banyumulek','user9'=>'Lelede','user10'=>'Dasan Baru'),
-            "Kabupaten Lombok Tengah"=>array('user1'=>'Presak','user2'=>'Teduh','user3'=>'Kopang Rembige','user4'=>'Montong Gamang','user5'=>'Serage','user6'=>'Gerantung','user7'=>'Batu Tulis','user8'=>'Pengenjek','user9'=>'Tanah Beak','user10'=>'Sengkerang'),
-            "Kabupaten Lombok Timur"=>array('user1'=>'Lendang Belo','user2'=>'Lendang Nangka Utara','user3'=>'Pringgabaya','user4'=>'Sembalun','user5'=>'Sembalun Bumbung','user6'=>'Wanasaba','user7'=>'Mamben Daya','user8'=>'Masbagik Utara Baru','user9'=>'Jero Gunung','user10'=>'Sukarara'),
-            "Kabupaten Lombok Utara"=>array('user1'=>'Santong','user2'=>'Sesait','user3'=>'Pendua','user4'=>'Bentek','user5'=>'Gondang','user6'=>'Genggelang','user7'=>'Rempek','user8'=>'Sambik Bangkol','user9'=>'Pemenang Barat','user10'=>'Pemenang Timur'),
-            "Kabupaten Sumbawa"=>array('user1'=>'Pekat','user2'=>'Jorok','user3'=>'Motong','user4'=>'Brang Kolong','user5'=>'Labu Ala','user6'=>'Suka Damai','user7'=>'Karang Dima','user8'=>'Usar Mapin','user9'=>'Juranalas','user10'=>'Labuhan Kuris'),
-            "Kabupaten Sumbawa Barat"=>array('user1'=>'Seteluk Atas','user2'=>'Seteluk Tengah','user3'=>'Tapir','user4'=>'Loka','user5'=>'Rempe','user6'=>'Seran','user7'=>'Air Suning','user8'=>'Lamusung','user9'=>'Meraran','user10'=>'Kelanir'),
-            "Kabupaten Bima"=>array('user1'=>'Timu','user2'=>'Sondo','user3'=>'Kananga','user4'=>'Rato','user5'=>'Tambe','user6'=>'Rasabou','user7'=>'Tente','user8'=>'Donggobolo','user9'=>'Keli','user10'=>'Dadibou'),
-            "Kota Bima"=>array('user1'=>'Penatoi','user2'=>'Lewirato','user3'=>'Panggi','user4'=>'Sambinae','user5'=>'Manggemaci','user6'=>'Monggonao','user7'=>'Santi','user8'=>'Matakando','user9'=>'Mande','user10'=>'Sadia'),
-            "Kabupaten Dompu"=>array('user1'=>'Bara','user2'=>'Mumbu','user3'=>'Wawonduru','user4'=>'Simpasai','user5'=>'Baka Jaya','user6'=>'Katua','user7'=>'Mangge Nae','user8'=>'Mbawi','user9'=>'Kareke','user10'=>'Dorebara')),
+            "Kota Mataram"=>array('gen11'=>'Karang Pule','gen12'=>'Jempong Baru','gen13'=>'Tanjung Karang','gen14'=>'Ampenan Selatan','gen15'=>'Banjar','gen16'=>'Kekalek Jaya','gen17'=>'Tanjung Karang Permai','gen18'=>'Pejeruk','gen19'=>'Kebun Sari','gen20'=>'Pejarakan Karya'),
+            "Kabupaten Lombok Barat"=>array('gen1'=>'Bengkel','gen2'=>'Merembu','gen3'=>'Bagik Polak Barat','gen4'=>'Bagik Polak Timur','gen5'=>'Telagawaru','gen6'=>'Labuapi','gen7'=>'Rumak','gen8'=>'Banyumulek','gen9'=>'Lelede','gen10'=>'Dasan Baru'),
+            "Kabupaten Lombok Tengah"=>array('user23'=>'Presak','user22'=>'Teduh','user25'=>'Kopang Rembige','user29'=>'Montong Gamang','user26'=>'Serage','user30'=>'Gerantung','user2ex'=>'Batu Tulis','gen91'=>'Pengenjek','gen92'=>'Tanah Beak','gen93'=>'Sengkerang'),
+            "Kabupaten Lombok Timur"=>array('gen31'=>'Lendang Belo','gen32'=>'Lendang Nangka Utara','gen33'=>'Pringgabaya','gen34'=>'Sembalun','gen35'=>'Sembalun Bumbung','gen36'=>'Wanasaba','gen37'=>'Mamben Daya','gen38'=>'Masbagik Utara Baru','gen39'=>'Jero Gunung','gen40'=>'Sukarara'),
+            "Kabupaten Lombok Utara"=>array('gen21'=>'Santong','gen22'=>'Sesait','gen23'=>'Pendua','gen24'=>'Bentek','gen25'=>'Gondang','gen26'=>'Genggelang','gen27'=>'Rempek','gen28'=>'Sambik Bangkol','gen29'=>'Pemenang Barat','gen30'=>'Pemenang Timur'),
+            "Kabupaten Sumbawa"=>array('gen51'=>'Pekat','gen52'=>'Jorok','gen5'=>'Motong','gen54'=>'Brang Kolong','gen55'=>'Labu Ala','gen56'=>'Suka Damai','gen57'=>'Karang Dima','gen58'=>'Usar Mapin','gen59'=>'Juranalas','gen60'=>'Labuhan Kuris'),
+            "Kabupaten Sumbawa Barat"=>array('gen61'=>'Seteluk Atas','gen62'=>'Seteluk Tengah','gen63'=>'Tapir','gen64'=>'Loka','gen65'=>'Rempe','gen66'=>'Seran','gen67'=>'Air Suning','gen68'=>'Lamusung','gen69'=>'Meraran','gen70'=>'Kelanir'),
+            "Kabupaten Bima"=>array('gen41'=>'Timu','gen42'=>'Sondo','gen43'=>'Kananga','gen44'=>'Rato','gen45'=>'Tambe','gen46'=>'Rasabou','gen47'=>'Tente','gen48'=>'Donggobolo','gen49'=>'Keli','gen50'=>'Dadibou'),
+            "Kota Bima"=>array('gen71'=>'Penatoi','gen72'=>'Lewirato','gen73'=>'Panggi','gen74'=>'Sambinae','gen75'=>'Manggemaci','gen76'=>'Monggonao','gen77'=>'Santi','gen78'=>'Matakando','gen79'=>'Mande','gen80'=>'Sadia'),
+            "Kabupaten Dompu"=>array('gen81'=>'Bara','gen82'=>'Mumbu','gen83'=>'Wawonduru','gen84'=>'Simpasai','gen85'=>'Baka Jaya','gen86'=>'Katua','gen87'=>'Mangge Nae','gen88'=>'Mbawi','gen89'=>'Kareke','gen90'=>'Dorebara')),
         "sdidtk"=>array(
             "Kabupaten Lombok Tengah"=>array('user1'=>'Presak','user2'=>'Teduh','user3'=>'Kopang Rembige','user4'=>'Montong Gamang','user5'=>'Serage','user6'=>'Gerantung','user7'=>'Batu Tulis'))
         ];
@@ -288,6 +288,19 @@ class LocationModel extends CI_Model{
         return $this->loc_id[$kec];
     }
     
+    public function getLocUser($fhw,$kec){
+        return $this->loc[$fhw][$kec];
+    }
+    
+    public function getLocUserQuery($locId){
+        $location = '';
+        foreach ($locId as $loc=>$id){
+            $location .= "userId = '$loc'";
+            if($id!=  end($locId)) $location .= " OR ";
+        }
+        return $location;
+    }
+    
     public function getIntLocId($fhw){
         return $this->int_loc_id[$fhw];
     }
@@ -307,8 +320,19 @@ class LocationModel extends CI_Model{
         }
     }
     
+    public function getLocUserAndDesabyDesa($fhw,$desa){
+        foreach ($this->loc[$fhw] as $kec=>$desas){
+            if($ret = array_search($desa, $desas)) return [$ret=>$desa];
+        }
+    }
+    
     public function getLocIdbyDesa($desa){
         foreach ($this->loc_id as $kec=>$desas){
+            if($ret = array_search($desa, $desas)) return $ret;
+        }
+    }
+    public function getLocUserbyDesa($fhw,$desa){
+        foreach ($this->loc[$fhw] as $kec=>$desas){
             if($ret = array_search($desa, $desas)) return $ret;
         }
     }
