@@ -197,7 +197,7 @@ $.fn.showChartDataEntryMinggu = function(data){
     });
     
     $.each(chart_data,function(user,weeks){
-        var x = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+        var x = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'];
         var y_now = [];
         var y_last = [];
         $.each(weeks,function(week,form){
