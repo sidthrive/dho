@@ -42,7 +42,7 @@ class SdidtkModel extends CI_Model{
                 $data = array();
                 for($i=$begin;$begin<=$end;$i->modify('+1 day')){
                     $date    = $i->format("Y-m-d");
-                    $data[$date] = rand(15, 30);
+                    $data[$date] = 0;
                 }
                 $result_data[$desa] = $data;
             }
@@ -116,7 +116,7 @@ class SdidtkModel extends CI_Model{
                 $data = array();
                 for($i=$begin;$begin<=$end;$i->modify('+1 day')){
                     $date    = $i->format("Y-m-d");
-                    $data[$date] = rand(15, 30);
+                    $data[$date] = 0;
                 }
                 $result_data[$desa] = $data;
             }
@@ -126,7 +126,7 @@ class SdidtkModel extends CI_Model{
                 for($i=1;$i<=30;$i++){
                     $day     = 30-$i;
                     $date    = date("Y-m-d",  strtotime("-".$day." days"));
-                    $data[$date] = rand(15, 30);
+                    $data[$date] = 0;
                 }
                 $result_data[$desa] = $data;
             }
@@ -221,14 +221,14 @@ class SdidtkModel extends CI_Model{
                 for($i=1;$i<=6;$i++){
                     $days     = 6-$i;
                     $date    = date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"-")."-".$days." days"));
-                    $day_temp[$date] = rand(15, 30);
+                    $day_temp[$date] = 0;
                 }
                 $data['thisweek'] = $day_temp;
                 $day_temp = array();
                 for($i=1;$i<=6;$i++){
                     $days     = 6-$i;
                     $date    = date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"-")."-".$days." days"));
-                    $day_temp[$date] = rand(15, 30);
+                    $day_temp[$date] = 0;
                 }
                 $data['lastweek'] = $day_temp;
                 
@@ -239,13 +239,13 @@ class SdidtkModel extends CI_Model{
                 $month  = array();
                 for($i=1;$i<=12;$i++){
                     $date   = date("Y-m",strtotime("+".(-$this_month+$i)." months"));
-                    $month[$date]   =   rand(15, 30);
+                    $month[$date]   =   0;
                 }
                 $data['thisyear'] = $month;
                 $month  = array();
                 for($i=1;$i<=12;$i++){
                     $date   = date("Y-m",strtotime("+".(-$this_month+$i-12)." months"));
-                    $month[$date]   =   rand(15, 30);
+                    $month[$date]   =   0;
                 }
                 $data['lastyear'] = $month;
             }
@@ -335,7 +335,7 @@ class SdidtkModel extends CI_Model{
             foreach($daterange as $date){
                 $data[$date->format("Y-m-d")] = array();
                 foreach ($table_default as $table=>$legend){
-                    $table_data = rand(15, 30);
+                    $table_data = 0;
                     $data[$date->format("Y-m-d")][$legend] = $table_data;
                 }
             }
@@ -427,7 +427,7 @@ class SdidtkModel extends CI_Model{
             foreach($daterange as $date){
                 $data[$date->format("Y-m-d")] = array();
                 foreach ($table_default as $table=>$legend){
-                    $table_data = rand(15, 30);
+                    $table_data = 0;
                     $data[$date->format("Y-m-d")][$legend] = $table_data;
                 }
             }
@@ -515,7 +515,7 @@ class SdidtkModel extends CI_Model{
         foreach ($users as $user=>$desa){
             $data = array();
             foreach ($table_default as $table=>$legend){
-                $table_name = rand(15, 30);
+                $table_name = 0;
                 $data[$legend] = $table_name;
             }
             $result_data[$desa] = $data;
@@ -561,7 +561,7 @@ class SdidtkModel extends CI_Model{
         foreach ($users as $user=>$desa){
             $data = array();
             foreach ($table_default as $table=>$legend){
-                $table_name = rand(15, 30);
+                $table_name = 0;
                 $data[$legend] = $table_name;
             }
             $result_data[$desa] = $data;
@@ -608,7 +608,7 @@ class SdidtkModel extends CI_Model{
                 $data[$date]["id"] = $date;
                 $data[$date]["data"] = array();
                 foreach ($table_default as $td=>$td_name){
-                    array_push($data[$date]["data"], array($td_name,rand(15, 30)));
+                    array_push($data[$date]["data"], array($td_name,0));
                 }
             }
             $result_data = $data;
@@ -657,7 +657,7 @@ class SdidtkModel extends CI_Model{
                 $data[$date]["id"] = $date;
                 $data[$date]["data"] = array();
                 foreach ($table_default as $td=>$td_name){
-                    array_push($data[$date]["data"], array($td_name,rand(15, 30)));
+                    array_push($data[$date]["data"], array($td_name,0));
                 }
             }
             $result_data = $data;

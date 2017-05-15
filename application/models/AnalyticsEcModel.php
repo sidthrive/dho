@@ -31,7 +31,7 @@ class AnalyticsEcModel extends CI_Model{
             }
         }
         
-        $locId = $this->loc->getLocId($kecamatan);$location = $this->loc->getLocIdQuery($locId);
+        $locId = $this->loc->getLocUser('bidan',$kecamatan);$location = $this->loc->getLocUserQuery($locId);
         
         //make result array from the tables name
         $result_data = array();
@@ -42,7 +42,7 @@ class AnalyticsEcModel extends CI_Model{
                 $data = array();
                 for($i=$begin;$begin<=$end;$i->modify('+1 day')){
                     $date    = $i->format("Y-m-d");
-                    $data[$date] = rand(15, 30);
+                    $data[$date] = 0;
                 }
                 $result_data[$desa] = $data;
             }
@@ -52,7 +52,7 @@ class AnalyticsEcModel extends CI_Model{
                 for($i=1;$i<=30;$i++){
                     $day     = 30-$i;
                     $date    = date("Y-m-d",  strtotime("-".$day." days"));
-                    $data[$date] = rand(15, 30);
+                    $data[$date] = 0;
                 }
                 $result_data[$desa] = $data;
             }
@@ -61,20 +61,20 @@ class AnalyticsEcModel extends CI_Model{
         foreach ($tables as $table=>$legend){
             //query tha data
             if($range!=""){
-                $query = $analyticsDB->query("SELECT locationId, dateCreated,count(*) as counts from ".$table." where ($location) AND dateCreated >= '".$range[0]."' AND dateCreated <= '".$range[1]."' group by locationId, dateCreated");
+                $query = $analyticsDB->query("SELECT userId, submissionDate,count(*) as counts from ".$table." where ($location) AND submissionDate >= '".$range[0]."' AND submissionDate <= '".$range[1]."' group by userId, submissionDate");
             }else{
-                $query = $analyticsDB->query("SELECT locationId, dateCreated,count(*) as counts from ".$table." where ($location) AND dateCreated >= '".date("Y-m-d",strtotime("-30 days"))."' AND dateCreated <= '".date("Y-m-d")."' group by locationId, dateCreated");
+                $query = $analyticsDB->query("SELECT userId, submissionDate,count(*) as counts from ".$table." where ($location) AND submissionDate >= '".date("Y-m-d",strtotime("-30 days"))."' AND submissionDate <= '".date("Y-m-d")."' group by userId, submissionDate");
             }
             
             foreach ($query->result() as $datas){
-                if(array_key_exists($datas->locationId, $locId)){
-                    $data_count                  = $result_data[$locId[$datas->locationId]];
-                    $tgl = explode('T', $datas->dateCreated);
+                if(array_key_exists($datas->userId, $locId)){
+                    $data_count                  = $result_data[$locId[$datas->userId]];
+                    $tgl = explode('T', $datas->submissionDate);
                     $tgl = trim($tgl[0]);
                     if(array_key_exists($tgl, $data_count)){
                         $data_count[$tgl] +=$datas->counts;
                     }
-                    $result_data[$locId[$datas->locationId]] = $data_count;
+                    $result_data[$locId[$datas->userId]] = $data_count;
                 }
                 
             }
@@ -105,7 +105,7 @@ class AnalyticsEcModel extends CI_Model{
             }
         }
         
-        $locId = $this->loc->getLocId($kecamatan);$location = $this->loc->getLocIdQuery($locId);
+        $locId = $this->loc->getLocUser('bidan',$kecamatan);$location = $this->loc->getLocUserQuery($locId);
         
         //make result array from the tables name
         $result_data = array();
@@ -116,7 +116,7 @@ class AnalyticsEcModel extends CI_Model{
                 $data = array();
                 for($i=$begin;$begin<=$end;$i->modify('+1 day')){
                     $date    = $i->format("Y-m-d");
-                    $data[$date] = rand(15, 30);
+                    $data[$date] = 0;
                 }
                 $result_data[$desa] = $data;
             }
@@ -126,7 +126,7 @@ class AnalyticsEcModel extends CI_Model{
                 for($i=1;$i<=30;$i++){
                     $day     = 30-$i;
                     $date    = date("Y-m-d",  strtotime("-".$day." days"));
-                    $data[$date] = rand(15, 30);
+                    $data[$date] = 0;
                 }
                 $result_data[$desa] = $data;
             }
@@ -151,7 +151,7 @@ class AnalyticsEcModel extends CI_Model{
                 }elseif($table=="kohort_kb_pelayanan"&&$table=="kohort_kb_update"){
                     $query = $analyticsDB->query("SELECT userid, tanggalkunjungan as visitdate,count(*) as counts from ".$table." where (tanggalkunjungan >= '".$range[0]."' and tanggalkunjungan <= '".$range[1]."') group by userid, tanggalkunjungan");
                 }else{
-                    $query = $analyticsDB->query("SELECT  dateCreated as visitdate,count(*) as counts from ".$table." where (dateCreated >= '".$range[0]."' and dateCreated <= '".$range[1]."') group by locationId, dateCreated");
+                    $query = $analyticsDB->query("SELECT  submissionDate as visitdate,count(*) as counts from ".$table." where (submissionDate >= '".$range[0]."' and submissionDate <= '".$range[1]."') group by userId, submissionDate");
                 }
             }else{
                 if($table=="kartu_anc_visit"){
@@ -167,14 +167,14 @@ class AnalyticsEcModel extends CI_Model{
                 }elseif($table=="kohort_kb_pelayanan"&&$table=="kohort_kb_update"){
                     $query = $analyticsDB->query("SELECT userid, tanggalkunjungan as visitdate,count(*) as counts from ".$table." where (tanggalkunjungan >= '".date("Y-m-d",strtotime("-30 days"))."' and tanggalkunjungan <= '".date("Y-m-d")."') group by userid, tanggalkunjungan");
                 }else{
-                    $query = $analyticsDB->query("SELECT  dateCreated as visitdate,count(*) as counts from ".$table." where (dateCreated >= '".date("Y-m-d",strtotime("-30 days"))."' and dateCreated <= '".date("Y-m-d")."') group by locationId, dateCreated");
+                    $query = $analyticsDB->query("SELECT  submissionDate as visitdate,count(*) as counts from ".$table." where (submissionDate >= '".date("Y-m-d",strtotime("-30 days"))."' and submissionDate <= '".date("Y-m-d")."') group by userId, submissionDate");
                 }
             }
             
             foreach ($query->result() as $datas){
                 if(array_key_exists($datas->userid, $locId)){
                     $data_count                  = $result_data[$locId[$datas->userid]];
-                    $tgl = explode('T', $datas->dateCreated);
+                    $tgl = explode('T', $datas->submissionDate);
                     $tgl = trim($tgl[0]);
                     if(array_key_exists($tgl, $data_count)){
                         $data_count[$tgl] +=$datas->counts;
@@ -206,7 +206,7 @@ class AnalyticsEcModel extends CI_Model{
             }
         }
         
-        $locId = $this->loc->getLocId($kecamatan);$location = $this->loc->getLocIdQuery($locId);
+        $locId = $this->loc->getLocUser('bidan',$kecamatan);$location = $this->loc->getLocUserQuery($locId);
         
         //make result array from the tables name
         $result_data = array();
@@ -218,17 +218,17 @@ class AnalyticsEcModel extends CI_Model{
                 $data['thisweek'] = array();
                 $data['lastweek'] = array();                       
                 $day_temp = array();
-                for($i=1;$i<=6;$i++){
-                    $days     = 6-$i;
-                    $date    = date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"-")."-".$days." days"));
-                    $day_temp[$date] = rand(15, 30);
+                for($i=1;$i<=7;$i++){
+                    $days     = 7-$i;
+                    $date    = date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 7)?"next Sunday ":"-")."-".$days." days"));
+                    $day_temp[$date] = 0;
                 }
                 $data['thisweek'] = $day_temp;
                 $day_temp = array();
-                for($i=1;$i<=6;$i++){
-                    $days     = 6-$i;
-                    $date    = date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"-")."-".$days." days"));
-                    $day_temp[$date] = rand(15, 30);
+                for($i=1;$i<=7;$i++){
+                    $days     = 7-$i;
+                    $date    = date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 7)?"last Sunday ":"-")."-".$days." days"));
+                    $day_temp[$date] = 0;
                 }
                 $data['lastweek'] = $day_temp;
                 
@@ -239,13 +239,13 @@ class AnalyticsEcModel extends CI_Model{
                 $month  = array();
                 for($i=1;$i<=12;$i++){
                     $date   = date("Y-m",strtotime("+".(-$this_month+$i)." months"));
-                    $month[$date]   =   rand(15, 30);
+                    $month[$date]   =   0;
                 }
                 $data['thisyear'] = $month;
                 $month  = array();
                 for($i=1;$i<=12;$i++){
                     $date   = date("Y-m",strtotime("+".(-$this_month+$i-12)." months"));
-                    $month[$date]   =   rand(15, 30);
+                    $month[$date]   =   0;
                 }
                 $data['lastyear'] = $month;
             }
@@ -255,18 +255,18 @@ class AnalyticsEcModel extends CI_Model{
         foreach ($tables as $table=>$legend){
             
             if($mode=='Mingguan'){
-                $query = $analyticsDB->query("SELECT locationId, dateCreated,count(*) as counts from ".$table." where ($location) AND dateCreated >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 7)?"last Saturday ":"-7 days")."-5 days"))."' AND dateCreated <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"-1 days")))."' group by locationId, dateCreated");
+                $query = $analyticsDB->query("SELECT userId, submissionDate,count(*) as counts from ".$table." where ($location) AND submissionDate >= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 7)?"last Sunday ":"-7 days")."-5 days"))."' AND submissionDate <= '".date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 7)?"next Sunday ":"-1 days")))."' group by userId, submissionDate");
             }elseif($mode=='Bulanan'){
-                $query = $analyticsDB->query("SELECT locationId, dateCreated,count(*) as counts from ".$table." where ($location) AND dateCreated >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND dateCreated <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by locationId, dateCreated");
+                $query = $analyticsDB->query("SELECT userId, submissionDate,count(*) as counts from ".$table." where ($location) AND submissionDate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' AND submissionDate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."' group by userId, submissionDate");
             }
             
             foreach ($query->result() as $datas){
-                if(array_key_exists($datas->locationId, $locId)){
+                if(array_key_exists($datas->userId, $locId)){
                     if($mode=='Mingguan'){
-                        $week   =   $result_data[$locId[$datas->locationId]];
+                        $week   =   $result_data[$locId[$datas->userId]];
                         $thisweek   = $week['thisweek'];
                         $lastweek   = $week['lastweek'];
-                        $tgl = explode('T', $datas->dateCreated);
+                        $tgl = explode('T', $datas->submissionDate);
                         $tgl = trim($tgl[0]);
                         if(array_key_exists($tgl, $thisweek)){
                             $thisweek[$tgl] +=$datas->counts;
@@ -276,12 +276,12 @@ class AnalyticsEcModel extends CI_Model{
                         }
                         $week['thisweek'] = $thisweek;
                         $week['lastweek'] = $lastweek;
-                        $result_data[$locId[$datas->locationId]] = $week;
+                        $result_data[$locId[$datas->userId]] = $week;
                     }elseif($mode=='Bulanan'){
-                        $month = $result_data[$locId[$datas->locationId]];
+                        $month = $result_data[$locId[$datas->userId]];
                         $thisyear = $month['thisyear'];
                         $lastyear = $month['lastyear'];
-                        $tgl = explode('T', $datas->dateCreated);
+                        $tgl = explode('T', $datas->submissionDate);
                         $tgl = trim($tgl[0]);
                         $m = explode('-', $tgl);
                         array_pop($m);
@@ -294,7 +294,7 @@ class AnalyticsEcModel extends CI_Model{
                         }
                         $month['thisyear'] = $thisyear;
                         $month['lastyear'] = $lastyear;
-                        $result_data[$locId[$datas->locationId]] = $month;
+                        $result_data[$locId[$datas->userId]] = $month;
                     }
                 }
                 
@@ -327,7 +327,7 @@ class AnalyticsEcModel extends CI_Model{
             }
         }
         
-        $locId = $this->loc->getLocId($kecamatan);$location = $this->loc->getLocIdQuery($locId);
+        $locId = $this->loc->getLocUser('bidan',$kecamatan);$location = $this->loc->getLocUserQuery($locId);
         
         $result_data = array();
         foreach ($locId as $user=>$desa){
@@ -335,7 +335,7 @@ class AnalyticsEcModel extends CI_Model{
             foreach($daterange as $date){
                 $data[$date->format("Y-m-d")] = array();
                 foreach ($table_default as $table=>$legend){
-                    $table_data = rand(15, 30);
+                    $table_data = 0;
                     $data[$date->format("Y-m-d")][$legend] = $table_data;
                 }
             }
@@ -345,12 +345,12 @@ class AnalyticsEcModel extends CI_Model{
         foreach ($tables as $table=>$legend){
             //query tha data
             foreach($daterange as $date){
-                $query = $analyticsDB->query("SELECT locationId, dateCreated,count(*) as counts from ".$table." where ($location) AND dateCreated LIKE '".$date->format("Y-m-d")."%' group by locationId, dateCreated");
+                $query = $analyticsDB->query("SELECT userId, submissionDate,count(*) as counts from ".$table." where ($location) AND submissionDate LIKE '".$date->format("Y-m-d")."%' group by userId, submissionDate");
                 foreach ($query->result() as $datas){
-                    if(array_key_exists($datas->locationId, $locId)){
-                        $data_count                  = $result_data[$locId[$datas->locationId]][$date->format("Y-m-d")];
+                    if(array_key_exists($datas->userId, $locId)){
+                        $data_count                  = $result_data[$locId[$datas->userId]][$date->format("Y-m-d")];
                         $data_count[$legend]         += $datas->counts;
-                        $result_data[$locId[$datas->locationId]][$date->format("Y-m-d")] = $data_count;
+                        $result_data[$locId[$datas->userId]][$date->format("Y-m-d")] = $data_count;
                     }
                 }
             }
@@ -419,7 +419,7 @@ class AnalyticsEcModel extends CI_Model{
             }
         }
         
-        $users = $this->loc->getLocId($kecamatan);$location = $this->loc->getLocIdQuery($users);
+        $users = $this->loc->getLocUser('bidan',$kecamatan);$location = $this->loc->getLocUserQuery($users);
         
         $result_data = array();
         foreach ($users as $user=>$desa){
@@ -427,7 +427,7 @@ class AnalyticsEcModel extends CI_Model{
             foreach($daterange as $date){
                 $data[$date->format("Y-m-d")] = array();
                 foreach ($table_default as $table=>$legend){
-                    $table_data = rand(15, 30);
+                    $table_data = 0;
                     $data[$date->format("Y-m-d")][$legend] = $table_data;
                 }
             }
@@ -437,13 +437,13 @@ class AnalyticsEcModel extends CI_Model{
         foreach ($tables as $table=>$legend){
             //query tha data
             foreach($daterange as $date){
-                $query = $analyticsDB->query("SELECT locationId, dateCreated,count(*) as counts from ".$table." where ($location) AND dateCreated LIKE '".$date->format("Y-m-d")."%' group by locationId, dateCreated");
+                $query = $analyticsDB->query("SELECT userId, submissionDate,count(*) as counts from ".$table." where ($location) AND submissionDate LIKE '".$date->format("Y-m-d")."%' group by userId, submissionDate");
                     
                 foreach ($query->result() as $datas){
-                    if(array_key_exists($datas->locationId, $users)){
-                        $data_count                  = $result_data[$users[$datas->locationId]][$date->format("Y-m-d")];
+                    if(array_key_exists($datas->userId, $users)){
+                        $data_count                  = $result_data[$users[$datas->userId]][$date->format("Y-m-d")];
                         $data_count[$legend]         += $datas->counts;
-                        $result_data[$users[$datas->locationId]][$date->format("Y-m-d")] = $data_count;
+                        $result_data[$users[$datas->userId]][$date->format("Y-m-d")] = $data_count;
                     }
                 }
             }
@@ -508,14 +508,14 @@ class AnalyticsEcModel extends CI_Model{
         }
         
         
-        $users = $this->loc->getLocId($kecamatan);$location = $this->loc->getLocIdQuery($users);
+        $users = $this->loc->getLocUser('bidan',$kecamatan);$location = $this->loc->getLocUserQuery($users);
         
         //make result array from the tables name
         $result_data = array();
         foreach ($users as $user=>$desa){
             $data = array();
             foreach ($table_default as $table=>$legend){
-                $table_name = rand(15, 30);
+                $table_name = 0;
                 $data[$legend] = $table_name;
             }
             $result_data[$desa] = $data;
@@ -523,13 +523,13 @@ class AnalyticsEcModel extends CI_Model{
 
         foreach ($tables as $table=>$legend){
             //query tha data
-            $query = $analyticsDB->query("SELECT locationId, dateCreated,count(*) as counts from ".$table." where ($location) AND dateCreated >= '$start' AND dateCreated <= '$end' group by locationId, dateCreated");
+            $query = $analyticsDB->query("SELECT userId, submissionDate,count(*) as counts from ".$table." where ($location) AND submissionDate >= '$start' AND submissionDate <= '$end' group by userId, submissionDate");
             
             foreach ($query->result() as $datas){
-                if(array_key_exists($datas->locationId, $users)){
-                    $data_count                  = $result_data[$users[$datas->locationId]];
+                if(array_key_exists($datas->userId, $users)){
+                    $data_count                  = $result_data[$users[$datas->userId]];
                     $data_count[$legend]         += $datas->counts;
-                    $result_data[$users[$datas->locationId]] = $data_count;
+                    $result_data[$users[$datas->userId]] = $data_count;
                 }
             }
         }
@@ -554,14 +554,14 @@ class AnalyticsEcModel extends CI_Model{
         }
         
         
-        $users = $this->loc->getLocId($kecamatan);$location = $this->loc->getLocIdQuery($users);
+        $users = $this->loc->getLocUser('bidan',$kecamatan);$location = $this->loc->getLocUserQuery($users);
         
         //make result array from the tables name
         $result_data = array();
         foreach ($users as $user=>$desa){
             $data = array();
             foreach ($table_default as $table=>$legend){
-                $table_name = rand(15, 30);
+                $table_name = 0;
                 $data[$legend] = $table_name;
             }
             $result_data[$desa] = $data;
@@ -569,13 +569,13 @@ class AnalyticsEcModel extends CI_Model{
 
         foreach ($tables as $table=>$legend){
             //query tha data
-            $query = $analyticsDB->query("SELECT locationId, dateCreated,count(*) as counts from ".$table." where ($location) AND dateCreated >= '$start' AND dateCreated <= '$end' group by locationId, dateCreated");
+            $query = $analyticsDB->query("SELECT userId, submissionDate,count(*) as counts from ".$table." where ($location) AND submissionDate >= '$start' AND submissionDate <= '$end' group by userId, submissionDate");
             
             foreach ($query->result() as $datas){
-                if(array_key_exists($datas->locationId, $users)){
-                    $data_count                  = $result_data[$users[$datas->locationId]];
+                if(array_key_exists($datas->userId, $users)){
+                    $data_count                  = $result_data[$users[$datas->userId]];
                     $data_count[$legend]         += $datas->counts;
-                    $result_data[$users[$datas->locationId]] = $data_count;
+                    $result_data[$users[$datas->userId]] = $data_count;
                 }
             }
         }
@@ -596,8 +596,7 @@ class AnalyticsEcModel extends CI_Model{
             }
         }
         
-        $users = $this->loc->getLocIdAndDesabyDesa(str_replace('_',' ',$desa));
-        
+        $users = $this->loc->getLocUserAndDesabyDesa('bidan',str_replace('_',' ',$desa));
         //make result array from the tables name
         $result_data = array();
         foreach ($users as $user=>$desa){
@@ -608,7 +607,7 @@ class AnalyticsEcModel extends CI_Model{
                 $data[$date]["id"] = $date;
                 $data[$date]["data"] = array();
                 foreach ($table_default as $td=>$td_name){
-                    array_push($data[$date]["data"], array($td_name,rand(15, 30)));
+                    array_push($data[$date]["data"], array($td_name,0));
                 }
             }
             $result_data = $data;
@@ -617,9 +616,9 @@ class AnalyticsEcModel extends CI_Model{
         foreach ($users as $user=>$desa){
             foreach ($tables as $table=>$legend){
                 //query tha data
-                $query3 = $analyticsDB->query("SELECT locationId, dateCreated,count(*) as counts from ".$table." where dateCreated LIKE '".$date."%' group by locationId, dateCreated");
+                $query3 = $analyticsDB->query("SELECT userId, submissionDate,count(*) as counts from ".$table." where submissionDate LIKE '".$date."%' group by userId, submissionDate");
                 foreach ($query3->result() as $datas){
-                    if(array_key_exists($datas->locationId, $users)){
+                    if(array_key_exists($datas->userId, $users)){
                         $data_count                  = $result_data[$date];
                         if(array_key_exists($table, $table_default)){
                             $data_count["data"][$tabindex[$table]][1]         += $datas->counts;
@@ -645,7 +644,7 @@ class AnalyticsEcModel extends CI_Model{
             }
         }
         
-        $users = $this->loc->getLocIdAndDesabyDesa(str_replace('_',' ',$desa));
+        $users = $this->loc->getLocUserAndDesabyDesa('bidan',str_replace('_',' ',$desa));
         
         //make result array from the tables name
         $result_data = array();
