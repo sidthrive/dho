@@ -107,7 +107,7 @@
                 <a data-toggle="collapse" data-parent="#accordion" href="#sdidtk_menu">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        Sdidtk
+                        ECD
                     </h4>
                 </div>
                 </a>
