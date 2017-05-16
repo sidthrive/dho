@@ -31,7 +31,7 @@
                             </a>
                             <div id="by_form" class="panel-collapse collapse<?=$this->uri->segment(2)=='bidanbyform'?' in':''?>">
                                 <?php
-                                $location = $this->loc->getAllLoc('bidan');
+//                                $location = $this->loc->getAllLoc('bidan');
                                 foreach($location as $kec=>$desas){
                                 ?>
                                 <div class="panel panel-default panel-collapse">

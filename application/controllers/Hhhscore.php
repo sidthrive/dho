@@ -19,7 +19,11 @@ class HHHScore extends CI_Controller{
         if($this->session->userdata('level')=="fhw"){
             $this->load->view('hhhscore/fhw/hhhsidebar');
         }else{
-            $data['location'] = $this->loc->getAllLoc('bidan');
+            if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
+                $data['location'] = $this->loc->getAllLocSpv('bidan',$this->session->userdata('location'));
+            }else{
+                $data['location'] = $this->loc->getAllLoc('bidan');
+            }
             $this->load->view('hhhscore/hhhsidebar',$data);
         }
         $this->load->view('hhhscore/standarisasimainpage');
@@ -27,7 +31,11 @@ class HHHScore extends CI_Controller{
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     public function headscore(){
-        $data['location'] = $this->loc->getAllLoc('bidan');
+        if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
+            $data['location'] = $this->loc->getAllLocSpv('bidan',$this->session->userdata('location'));
+        }else{
+            $data['location'] = $this->loc->getAllLoc('bidan');
+        }
         if($this->session->userdata('level')=="fhw"){
             $data['mode']  = $this->uri->segment(3);
             if($data['mode']=='hasil'){
@@ -145,7 +153,11 @@ class HHHScore extends CI_Controller{
 
             $dataXLS['xlsForm']=$this->HhhscoreModel->handScoreBulanIni($dataXLS['kec']);
 
-            $data['location'] = $this->loc->getAllLoc('bidan');
+            if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
+                $data['location'] = $this->loc->getAllLocSpv('bidan',$this->session->userdata('location'));
+            }else{
+                $data['location'] = $this->loc->getAllLoc('bidan');
+            }
             $this->load->view('header');
             $this->load->view('hhhscore/hhhsidebar',$data);
             $this->load->view('hhhscore/handscore',$dataXLS);
@@ -190,7 +202,11 @@ class HHHScore extends CI_Controller{
 
             $dataXLS['xlsForm']=$this->HhhscoreModel->heartScoreBulanIni($dataXLS['kec']);
 
-            $data['location'] = $this->loc->getAllLoc('bidan');
+            if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
+                $data['location'] = $this->loc->getAllLocSpv('bidan',$this->session->userdata('location'));
+            }else{
+                $data['location'] = $this->loc->getAllLoc('bidan');
+            }
             $this->load->view('header');
             $this->load->view('hhhscore/hhhsidebar',$data);
             $this->load->view('hhhscore/heartscore',$dataXLS);

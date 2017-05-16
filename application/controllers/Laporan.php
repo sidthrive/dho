@@ -17,7 +17,11 @@ class Laporan extends CI_Controller{
         if($this->session->userdata('level')=="fhw"){
             $this->load->view('laporan/fhw/laporansidebar');
         }else{
-            $data['location'] = $this->loc->getAllLoc('bidan');
+            if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
+                $data['location'] = $this->loc->getAllLocSpv('bidan',$this->session->userdata('location'));
+            }else{
+                $data['location'] = $this->loc->getAllLoc('bidan');
+            }
             $this->load->view('laporan/laporansidebar',$data);
         }
         $this->load->view('laporan/laporanmainpage');
@@ -39,7 +43,11 @@ class Laporan extends CI_Controller{
         }
         
         $this->load->view("header");
-        $data['location'] = $this->loc->getAllLoc('bidan');
+        if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
+            $data['location'] = $this->loc->getAllLocSpv('bidan',$this->session->userdata('location'));
+        }else{
+            $data['location'] = $this->loc->getAllLoc('bidan');
+        }
         if($this->session->userdata('level')=="fhw"){
             $this->load->model('BidanEcFhwCakupanModel');
             $dataXLS['xlsForm']=$this->BidanEcFhwCakupanModel->cakupanBulanIni($dataXLS['bulan'],$dataXLS['tahun']);
@@ -153,7 +161,11 @@ class Laporan extends CI_Controller{
                 $data['xlsForm']=$this->MmnModel->semuabulan($data['kab']);
             }
 
-            $data['location'] = $this->loc->getAllLoc('bidan');
+            if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
+                $data['location'] = $this->loc->getAllLocSpv('bidan',$this->session->userdata('location'));
+            }else{
+                $data['location'] = $this->loc->getAllLoc('bidan');
+            }
 
             $this->load->view("laporan/laporansidebar",$data);
             $this->load->view("laporan/mmn",$data);
@@ -243,7 +255,11 @@ class Laporan extends CI_Controller{
                 $data['xlsForm']=$this->ParanaModel->semuabulan($data['kab']);
             }
 
-            $data['location'] = $this->loc->getAllLoc('bidan');
+            if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
+                $data['location'] = $this->loc->getAllLocSpv('bidan',$this->session->userdata('location'));
+            }else{
+                $data['location'] = $this->loc->getAllLoc('bidan');
+            }
 
             $this->load->view("header");
             $this->load->view("laporan/laporansidebar",$data);
