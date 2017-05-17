@@ -12,7 +12,7 @@ class LocationModel extends CI_Model{
         "bidan"=>array(
             "Kota Mataram"=>array('gen11'=>'Karang Pule','gen12'=>'Jempong Baru','gen13'=>'Tanjung Karang','gen14'=>'Ampenan Selatan','gen15'=>'Banjar','gen16'=>'Kekalek Jaya','gen17'=>'Tanjung Karang Permai','gen18'=>'Pejeruk','gen19'=>'Kebun Sari','gen20'=>'Pejarakan Karya'),
             "Kabupaten Lombok Barat"=>array('gen1'=>'Bengkel','gen2'=>'Merembu','gen3'=>'Bagik Polak Barat','gen4'=>'Bagik Polak Timur','gen5'=>'Telagawaru','gen6'=>'Labuapi','gen7'=>'Rumak','gen8'=>'Banyumulek','gen9'=>'Lelede','gen10'=>'Dasan Baru'),
-            "Kabupaten Lombok Tengah"=>array('user23'=>'Presak','user22'=>'Teduh','user25'=>'Kopang Rembige','user29'=>'Montong Gamang','user26'=>'Serage','user30'=>'Gerantung','user2ex'=>'Batu Tulis','gen91'=>'Pengenjek','gen92'=>'Tanah Beak','gen93'=>'Sengkerang'),
+            "Kabupaten Lombok Tengah"=>array('user23'=>'Presak','user22'=>'Teduh','user25'=>'Kopang Rembige','user29'=>'Montong Gamang','user26'=>'Serage','user30'=>'Gerantung','user20'=>'Batu Tulis','gen91'=>'Pengenjek','gen92'=>'Tanah Beak','gen93'=>'Sengkerang'),
             "Kabupaten Lombok Timur"=>array('gen31'=>'Lendang Belo','gen32'=>'Lendang Nangka Utara','gen33'=>'Pringgabaya','gen34'=>'Sembalun','gen35'=>'Sembalun Bumbung','gen36'=>'Wanasaba','gen37'=>'Mamben Daya','gen38'=>'Masbagik Utara Baru','gen39'=>'Jero Gunung','gen40'=>'Sukarara'),
             "Kabupaten Lombok Utara"=>array('gen21'=>'Santong','gen22'=>'Sesait','gen23'=>'Pendua','gen24'=>'Bentek','gen25'=>'Gondang','gen26'=>'Genggelang','gen27'=>'Rempek','gen28'=>'Sambik Bangkol','gen29'=>'Pemenang Barat','gen30'=>'Pemenang Timur'),
             "Kabupaten Sumbawa"=>array('gen51'=>'Pekat','gen52'=>'Jorok','gen5'=>'Motong','gen54'=>'Brang Kolong','gen55'=>'Labu Ala','gen56'=>'Suka Damai','gen57'=>'Karang Dima','gen58'=>'Usar Mapin','gen59'=>'Juranalas','gen60'=>'Labuhan Kuris'),
@@ -25,17 +25,17 @@ class LocationModel extends CI_Model{
         ];
     
     private $loc_id = [
-            "Kota Mataram"=>array('Karang Pule.'=>'Karang Pule','Jempong Baru'=>'Jempong Baru','Tanjung Karang.'=>'Tanjung Karang','Ampenan Selatan'=>'Ampenan Selatan','Banjar'=>'Banjar','Kekalek Jaya'=>'Kekalek Jaya','Tanjung Karang Permai'=>'Tanjung Karang Permai','Pejeruk.'=>'Pejeruk','Kebun Sari'=>'Kebun Sari','Pejarakan Karya'=>'Pejarakan Karya'),
-            "Kabupaten Lombok Barat"=>array('Bengkel'=>'Bengkel','Merembu'=>'Merembu','Bagik Polak Barat'=>'Bagik Polak Barat','Bagik Polak Timur'=>'Bagik Polak Timur','Telagawaru'=>'Telagawaru','Labuapi.'=>'Labuapi','Rumak'=>'Rumak','Banyumulek.'=>'Banyumulek','Lelede'=>'Lelede','Dasan Baru'=>'Dasan Baru'),
-            "Kabupaten Lombok Tengah"=>array('Presak'=>'Presak','Teduh'=>'Teduh','Kopang Rembige'=>'Kopang Rembige','Montong Gamang'=>'Montong Gamang','Serage'=>'Serage','Gerantung'=>'Gerantung','Batu Tulis'=>'Batu Tulis','Pengenjek'=>'Pengenjek','Tanah Beak'=>'Tanah Beak','Sengkerang'=>'Sengkerang'),
-            "Kabupaten Lombok Tengah 2"=>array('Presak'=>'Presak','Teduh'=>'Teduh','Kopang Rembige'=>'Kopang Rembige','Montong Gamang'=>'Montong Gamang','Serage'=>'Serage','Gerantung'=>'Gerantung','Batu Tulis'=>'Batu Tulis'),
-            "Kabupaten Lombok Timur"=>array('Lendang Belo'=>'Lendang Belo','Lendang Nangka Utara'=>'Lendang Nangka Utara','Pringgabaya'=>'Pringgabaya','Sembalun..'=>'Sembalun','Sembalun Bumbung'=>'Sembalun Bumbung','Wanasaba.'=>'Wanasaba','Mamben Daya'=>'Mamben Daya','Masbagik Utara Baru'=>'Masbagik Utara Baru','Jero Gunung'=>'Jero Gunung','Sukarara'=>'Sukarara'),
-            "Kabupaten Lombok Utara"=>array('Santong.'=>'Santong','Sesait'=>'Sesait','Pendua'=>'Pendua','Bentek'=>'Bentek','Gondang'=>'Gondang','Genggelang'=>'Genggelang','Rempek'=>'Rempek','Sambik Bangkol'=>'Sambik Bangkol','Pemenang Barat'=>'Pemenang Barat','Pemenang Timur'=>'Pemenang Timur'),
-            "Kabupaten Sumbawa"=>array('Pekat'=>'Pekat','Jorok'=>'Jorok','Motong'=>'Motong','Brang Kolong'=>'Brang Kolong','Labu Ala'=>'Labu Ala','Suka Damai.'=>'Suka Damai','Karang Dima'=>'Karang Dima','Usar Mapin'=>'Usar Mapin','Juranalas'=>'Juranalas','Labuhan Kuris'=>'Labuhan Kuris'),
-            "Kabupaten Sumbawa Barat"=>array('Seteluk Atas'=>'Seteluk Atas','Seteluk Tengah'=>'Seteluk Tengah','Tapir'=>'Tapir','Loka'=>'Loka','Rempe'=>'Rempe','Seran'=>'Seran','Air Suning'=>'Air Suning','Lamusung'=>'Lamusung','Meraran'=>'Meraran','Kelanir'=>'Kelanir'),
-            "Kabupaten Bima"=>array('Timu'=>'Timu','Sondo'=>'Sondo','Kananga'=>'Kananga','Rato'=>'Rato','Tambe'=>'Tambe','Rasabou'=>'Rasabou','Tente'=>'Tente','Donggobolo'=>'Donggobolo','Keli'=>'Keli','Dadibou'=>'Dadibou'),
-            "Kota Bima"=>array('Penatoi'=>'Penatoi','Lewirato'=>'Lewirato','Panggi'=>'Panggi','Sambinae'=>'Sambinae','Manggemaci'=>'Manggemaci','Monggonao'=>'Monggonao','Santi'=>'Santi','Matakando'=>'Matakando','Mande'=>'Mande','Sadia'=>'Sadia'),
-            "Kabupaten Dompu"=>array('Bara'=>'Bara','Mumbu'=>'Mumbu','Wawonduru'=>'Wawonduru','Simpasai'=>'Simpasai','Baka Jaya'=>'Baka Jaya','Katua'=>'Katua','Mangge Nae'=>'Mangge Nae','Mbawi'=>'Mbawi','Kareke'=>'Kareke','Dorebara'=>'Dorebara')
+            "Kota Mataram"=>array('gen11'=>'Karang Pule','gen12'=>'Jempong Baru','gen13'=>'Tanjung Karang','gen14'=>'Ampenan Selatan','gen15'=>'Banjar','gen16'=>'Kekalek Jaya','gen17'=>'Tanjung Karang Permai','gen18'=>'Pejeruk','gen19'=>'Kebun Sari','gen20'=>'Pejarakan Karya'),
+            "Kabupaten Lombok Barat"=>array('gen1'=>'Bengkel','gen2'=>'Merembu','gen3'=>'Bagik Polak Barat','gen4'=>'Bagik Polak Timur','gen5'=>'Telagawaru','gen6'=>'Labuapi','gen7'=>'Rumak','gen8'=>'Banyumulek','gen9'=>'Lelede','gen10'=>'Dasan Baru'),
+            "Kabupaten Lombok Tengah"=>array('user23'=>'Presak','user22'=>'Teduh','user25'=>'Kopang Rembige','user29'=>'Montong Gamang','user26'=>'Serage','user30'=>'Gerantung','user20'=>'Batu Tulis','gen91'=>'Pengenjek','gen92'=>'Tanah Beak','gen93'=>'Sengkerang'),
+            "Kabupaten Lombok Tengah 2"=>array('user23'=>'Presak','user22'=>'Teduh','user25'=>'Kopang Rembige','user29'=>'Montong Gamang','user26'=>'Serage','user30'=>'Gerantung','user20'=>'Batu Tulis'),
+            "Kabupaten Lombok Timur"=>array('gen31'=>'Lendang Belo','gen32'=>'Lendang Nangka Utara','gen33'=>'Pringgabaya','gen34'=>'Sembalun','gen35'=>'Sembalun Bumbung','gen36'=>'Wanasaba','gen37'=>'Mamben Daya','gen38'=>'Masbagik Utara Baru','gen39'=>'Jero Gunung','gen40'=>'Sukarara'),
+            "Kabupaten Lombok Utara"=>array('gen21'=>'Santong','gen22'=>'Sesait','gen23'=>'Pendua','gen24'=>'Bentek','gen25'=>'Gondang','gen26'=>'Genggelang','gen27'=>'Rempek','gen28'=>'Sambik Bangkol','gen29'=>'Pemenang Barat','gen30'=>'Pemenang Timur'),
+            "Kabupaten Sumbawa"=>array('gen51'=>'Pekat','gen52'=>'Jorok','gen5'=>'Motong','gen54'=>'Brang Kolong','gen55'=>'Labu Ala','gen56'=>'Suka Damai','gen57'=>'Karang Dima','gen58'=>'Usar Mapin','gen59'=>'Juranalas','gen60'=>'Labuhan Kuris'),
+            "Kabupaten Sumbawa Barat"=>array('gen61'=>'Seteluk Atas','gen62'=>'Seteluk Tengah','gen63'=>'Tapir','gen64'=>'Loka','gen65'=>'Rempe','gen66'=>'Seran','gen67'=>'Air Suning','gen68'=>'Lamusung','gen69'=>'Meraran','gen70'=>'Kelanir'),
+            "Kabupaten Bima"=>array('gen41'=>'Timu','gen42'=>'Sondo','gen43'=>'Kananga','gen44'=>'Rato','gen45'=>'Tambe','gen46'=>'Rasabou','gen47'=>'Tente','gen48'=>'Donggobolo','gen49'=>'Keli','gen50'=>'Dadibou'),
+            "Kota Bima"=>array('gen71'=>'Penatoi','gen72'=>'Lewirato','gen73'=>'Panggi','gen74'=>'Sambinae','gen75'=>'Manggemaci','gen76'=>'Monggonao','gen77'=>'Santi','gen78'=>'Matakando','gen79'=>'Mande','gen80'=>'Sadia'),
+            "Kabupaten Dompu"=>array('gen81'=>'Bara','gen82'=>'Mumbu','gen83'=>'Wawonduru','gen84'=>'Simpasai','gen85'=>'Baka Jaya','gen86'=>'Katua','gen87'=>'Mangge Nae','gen88'=>'Mbawi','gen89'=>'Kareke','gen90'=>'Dorebara')
         ];
     
     private $int_loc_id = [
@@ -64,7 +64,7 @@ class LocationModel extends CI_Model{
         'Kekalek Jaya'=>array(1=>'Kekalek Kijang','Kekalek Timur','Kekalek Barat','Gerisak','Kekalek Indah'),
         'Tanjung Karang'=>array(1=>'Batu Dawe','Batu Ringgit Utara','Batu Ringgit Selatan','Bendega','Bangsal','Sembalun'),
         'Tanjung Karang Permai'=>array(1=>'Barito','Batanghari','Sejahtera','Asahan','Bagek Kembar'),
-        'Pejeruk'=>array(1=>'Pejeruk Desa','Pejeruk Abian','Pejeruk Perluasan','Pejeruk Sejahtera','Kebon Jeruk','Kebon Jeruk Baru','Pejeruk Bangket','Kebon Bawak Barat'),
+        'Pejeruk'=>array(1=>'Pejeruk Desa','Pejeruk Abian','Pejeruk Perluasan','Pejeruk Sejahtera','Kebon Jeruk','Kebon Jeruk Baru','Pejeruk Bangket','Kebon Bawah Tengah'),
         'Kebun Sari'=>array(1=>'Kebun Bawak Timur','Kebun Bawak Tengah','Dasan Sari','Kebun Bawak Nurul Yaqin','Karang Baru.'),
         'Pejarakan Karya'=>array(1=>'Pejarakan','Penan','Moncok Karya','Moncok Telaga Emas'),
         'Santong'=>array(1=>'Temposodo','Sempakok','Cempaka','Santong Timur','Santong Barat','Subak Sepulu','Suka Damai','Waker.','Santong Asli','Gubuk Baru','Santong Tengah','Mekar Sari.'),
@@ -180,7 +180,7 @@ class LocationModel extends CI_Model{
         'Kekalek Jaya'=>array('Kekalek Kijang'=>'Kekalek Kijang','Kekalek Timur'=>'Kekalek Timur','Kekalek Barat'=>'Kekalek Barat','Gerisak'=>'Gerisak','Kekalek Indah'=>'Kekalek Indah'),
         'Tanjung Karang'=>array('Batu Dawe'=>'Batu Dawe','Batu Ringgit Utara'=>'Batu Ringgit Utara','Batu Ringgit Selatan'=>'Batu Ringgit Selatan','Bendega'=>'Bendega','Bangsal'=>'Bangsal','Sembalun'=>'Sembalun'),
         'Tanjung Karang Permai'=>array('Barito'=>'Barito','Batanghari'=>'Batanghari','Sejahtera'=>'Sejahtera','Asahan'=>'Asahan','Bagek Kembar'=>'Bagek Kembar'),
-        'Pejeruk'=>array('Pejeruk Desa'=>'Pejeruk Desa','Pejeruk Abian'=>'Pejeruk Abian','Pejeruk Perluasan'=>'Pejeruk Perluasan','Pejeruk Sejahtera'=>'Pejeruk Sejahtera','Kebon Jeruk'=>'Kebon Jeruk','Kebon Jeruk Baru'=>'Kebon Jeruk Baru','Pejeruk Bangket'=>'Pejeruk Bangket','Kebon Bawak Barat'=>'Kebon Bawak Barat'),
+        'Pejeruk'=>array('Pejeruk Desa'=>'Pejeruk Desa','Pejeruk Abian'=>'Pejeruk Abian','Pejeruk Perluasan'=>'Pejeruk Perluasan','Pejeruk Sejahtera'=>'Pejeruk Sejahtera','Kebon Jeruk'=>'Kebon Jeruk','Kebon Jeruk Baru'=>'Kebon Jeruk Baru','Pejeruk Bangket'=>'Pejeruk Bangket','Kebon Bawah Tengah'=>'Kebon Bawah Tengah'),
         'Kebun Sari'=>array('Kebun Bawak Timur'=>'Kebun Bawak Timur','Kebun Bawak Tengah'=>'Kebun Bawak Tengah','Dasan Sari'=>'Dasan Sari','Kebun Bawak Nurul Yaqin'=>'Kebun Bawak Nurul Yaqin','Karang Baru.'=>'Karang Baru'),
         'Pejarakan Karya'=>array('Pejarakan'=>'Pejarakan','Penan'=>'Penan','Moncok Karya'=>'Moncok Karya','Moncok Telaga Emas'=>'Moncok Telaga Emas'),
         'Santong'=>array('Temposodo'=>'Temposodo','Sempakok'=>'Sempakok','Cempaka'=>'Cempaka','Santong Timur'=>'Santong Timur','Santong Barat'=>'Santong Barat','Subak Sepulu'=>'Subak Sepulu','Suka Damai'=>'Suka Damai','Waker.'=>'Waker','Santong Asli'=>'Santong Asli','Gubuk Baru'=>'Gubuk Baru','Santong Tengah'=>'Santong Tengah','Mekar Sari.'=>'Mekar Sari'),
