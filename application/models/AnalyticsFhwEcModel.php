@@ -83,7 +83,7 @@ class AnalyticsFhwEcModel extends CI_Model{
             }elseif($table=="kartu_pnc_visit"){
                 $query = $analyticsDB->query("SELECT userid, motherId, submissiondate from ".$table." where (userid='$username')");
                 foreach ($query->result() as $c_data){
-                    $query2 = $analyticsDB->query("SELECT dusun FROM kartu_anc_registration_oa where motherId='$c_data->motherId'");
+                    $query2 = $analyticsDB->query("SELECT dusun FROM kartu_anc_registration where motherId='$c_data->motherId'");
                     foreach ($query2->result() as $c2_data){
                         if(array_key_exists($c2_data->dusun, $namadusun)){
                             $data_count                  = $result_data[$namadusun[$c2_data->dusun]];
@@ -95,7 +95,7 @@ class AnalyticsFhwEcModel extends CI_Model{
             }elseif($table=="kohort_bayi_kunjungan"){
                 $query = $analyticsDB->query("SELECT userid, childId, submissiondate from ".$table." where (userid='$username')");
                 foreach ($query->result() as $c_data){
-                    $query2 = $analyticsDB->query("SELECT dusun FROM kohort_bayi_registration_oa where childId='$c_data->childId'");
+                    $query2 = $analyticsDB->query("SELECT dusun FROM kohort_bayi_registration LEFT JOIN kartu_ibu_registration ON kohort_bayi_registration.kiId=kartu_ibu_registration.kiId where childId='$c_data->childId'");
                     foreach ($query2->result() as $c2_data){
                         if(array_key_exists($c2_data->dusun, $namadusun)){
                             $data_count                  = $result_data[$namadusun[$c2_data->dusun]];
@@ -220,7 +220,7 @@ class AnalyticsFhwEcModel extends CI_Model{
             }elseif($table=="kartu_pnc_visit"){
                 $query = $analyticsDB->query("SELECT userid, motherId, submissiondate from ".$table." where (userid='$username') and submissiondate='".$date."'");
                 foreach ($query->result() as $c_data){
-                    $query2 = $analyticsDB->query("SELECT dusun FROM kartu_anc_registration_oa where motherId='$c_data->motherId'");
+                    $query2 = $analyticsDB->query("SELECT dusun FROM kartu_anc_registration where motherId='$c_data->motherId'");
                     foreach ($query2->result() as $c2_data){
                         if(array_key_exists($c2_data->dusun, $namadusun)){
                             $data_count                  = $result_data[$date];
@@ -234,7 +234,7 @@ class AnalyticsFhwEcModel extends CI_Model{
             }elseif($table=="kohort_bayi_kunjungan"){
                 $query = $analyticsDB->query("SELECT userid, childId, submissiondate from ".$table." where (userid='$username') and submissiondate='".$date."'");
                 foreach ($query->result() as $c_data){
-                    $query2 = $analyticsDB->query("SELECT dusun FROM kohort_bayi_registration_oa where childId='$c_data->childId'");
+                    $query2 = $analyticsDB->query("SELECT dusun FROM kohort_bayi_registration LEFT JOIN kartu_ibu_registration ON kohort_bayi_registration.kiId=kartu_ibu_registration.kiId where childId='$c_data->childId'");
                     foreach ($query2->result() as $c2_data){
                         if(array_key_exists($c2_data->dusun, $namadusun)){
                             $data_count                  = $result_data[$date];
@@ -386,7 +386,7 @@ class AnalyticsFhwEcModel extends CI_Model{
             }elseif($table=="kartu_pnc_visit"){
                 $query = $analyticsDB->query("SELECT userid, motherId, submissiondate from ".$table." where (userid='$username')");
                 foreach ($query->result() as $c_data){
-                    $query2 = $analyticsDB->query("SELECT dusun FROM kartu_anc_registration_oa where motherId='$c_data->motherId'");
+                    $query2 = $analyticsDB->query("SELECT dusun FROM kartu_anc_registration where motherId='$c_data->motherId'");
                     foreach ($query2->result() as $c2_data){
                         if(array_key_exists($c2_data->dusun, $namadusun)){
                             $data_count                  = $result_data[$namadusun[$c2_data->dusun]];
@@ -400,7 +400,7 @@ class AnalyticsFhwEcModel extends CI_Model{
             }elseif($table=="kohort_bayi_kunjungan"){
                 $query = $analyticsDB->query("SELECT userid, childId, submissiondate from ".$table." where (userid='$username')");
                 foreach ($query->result() as $c_data){
-                    $query2 = $analyticsDB->query("SELECT dusun FROM kohort_bayi_registration_oa where childId='$c_data->childId'");
+                    $query2 = $analyticsDB->query("SELECT dusun FROM kohort_bayi_registration LEFT JOIN kartu_ibu_registration ON kohort_bayi_registration.kiId=kartu_ibu_registration.kiId where childId='$c_data->childId'");
                     foreach ($query2->result() as $c2_data){
                         if(array_key_exists($c2_data->dusun, $namadusun)){
                             $data_count                  = $result_data[$namadusun[$c2_data->dusun]];
@@ -665,7 +665,7 @@ class AnalyticsFhwEcModel extends CI_Model{
                     $query = $analyticsDB->query("SELECT userid, motherId, submissiondate from ".$table." where (userid='$username') and (submissiondate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' and submissiondate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."')");
                 }
                 foreach ($query->result() as $c_data){
-                    $query2 = $analyticsDB->query("SELECT dusun FROM kartu_anc_registration_oa where motherId='$c_data->motherId'");
+                    $query2 = $analyticsDB->query("SELECT dusun FROM kartu_anc_registration where motherId='$c_data->motherId'");
                     foreach ($query2->result() as $c2_data){
                         if($mode=='Mingguan'){
                             if(array_key_exists($c2_data->dusun, $namadusun)){
@@ -710,7 +710,7 @@ class AnalyticsFhwEcModel extends CI_Model{
                     $query = $analyticsDB->query("SELECT userid, childId, submissiondate from ".$table." where (userid='$username') and (submissiondate >= '".date("Y-m",strtotime("+".(-$this_month-11)." months"))."' and submissiondate <= '".date("Y-m",strtotime("+".(12-$this_month)." months"))."')");
                 }
                 foreach ($query->result() as $c_data){
-                    $query2 = $analyticsDB->query("SELECT dusun FROM kohort_bayi_registration_oa where childId='$c_data->childId'");
+                    $query2 = $analyticsDB->query("SELECT dusun FROM kohort_bayi_registration LEFT JOIN kartu_ibu_registration ON kohort_bayi_registration.kiId=kartu_ibu_registration.kiId where childId='$c_data->childId'");
                     foreach ($query2->result() as $c2_data){
                         if($mode=='Mingguan'){
                             if(array_key_exists($c2_data->dusun, $namadusun)){

@@ -25,7 +25,7 @@ class AnalyticsEcTableModel extends CI_Model{
             'kartu_anc_edit'=>'Edit ANC',
             'kartu_anc_visit_edit'=>'Edit Kunjungan ANC',
             'kartu_anc_visit_integrasi'=>'Kunjungan ANC Integrasi',
-            'kartu_anc_visit_labtest'=>'Kunjungan ANC Labtest',
+            'kartu_anc_visit_labTest'=>'Kunjungan ANC Labtest',
             'kartu_ibu_close'=>'Penutupan Ibu',
             'kartu_ibu_edit'=>'Edit Ibu',
             'kartu_pnc_close'=>'Penutupan PNC',
