@@ -104,7 +104,7 @@ class BidanEcCakupanModel extends CI_Model{
                         continue;
                     }
                 }
-                if($dvisit->pelayananfe0=="Ya"&&array_key_exists($dvisit->id, $laboratoriumPeriksaHbAnemia)){
+                if($dvisit->pelayananFe0=="Ya"&&array_key_exists($dvisit->id, $laboratoriumPeriksaHbAnemia)){
                     $tertangani[$dvisit->id] = 'yes';
                     $form[$user_village[$dvisit->userId]] += 1;
                     continue;
@@ -149,7 +149,7 @@ class BidanEcCakupanModel extends CI_Model{
                 }
             }
         }
-        $datapersalinan= $this->db->query("SELECT * FROM kartu_pnc_regitration_oa WHERE tanggalLahirAnak > '$startyear' AND tanggalLahirAnak < '$enddate'")->result();
+        $datapersalinan= $this->db->query("SELECT * FROM kartu_pnc_regitration_oa WHERE tanggalLahir > '$startyear' AND tanggalLahir < '$enddate'")->result();
         foreach ($datapersalinan as $dsalin){
             if(array_key_exists($dsalin->userId, $user_village)){
                 if($dsalin->tempatBersalin=="podok_bersalin_desa"||$dsalin->tempatBersalin=="pusat_kesehatan_masyarakat_pembantu"||$dsalin->tempatBersalin=="pusat_kesehatan_masyarakat"||$dsalin->tempatBersalin=="rumah_bersalin"||$dsalin->tempatBersalin=="rumah_sakit_ibu_dan_anak"||$dsalin->tempatBersalin=="rumah_sakit"||$dsalin->tempatBersalin=="rumah_sakit_orang_dengan_hiv_aids"){
@@ -181,7 +181,7 @@ class BidanEcCakupanModel extends CI_Model{
         array_push($xlsForm, $series5);
        
         $form = $user;
-        $datavisit = $this->db->query("SELECT * FROM kartu_pnc_visit WHERE (referenceDate > '$startyear' AND referenceDate < '$enddate') AND (hariKeKF='kf3' OR hariKeKF='kf4') group by motherId")->result();
+        $datavisit = $this->db->query("SELECT * FROM kartu_pnc_visit WHERE (PNCDate > '$startyear' AND PNCDate < '$enddate') AND (hariKeKF='kf3' OR hariKeKF='kf4') group by motherId")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userId, $user_village)){
                 $form[$user_village[$dvisit->userId]] += 1;
