@@ -6,7 +6,7 @@ class DataentryModel extends CI_Model{
 
     function __construct() {
         parent::__construct();
-        $this->load->library('Couchdb');
+        $this->load->library('couchdb');
         date_default_timezone_set("Asia/Makassar"); 
     }
     
@@ -29,7 +29,7 @@ class DataentryModel extends CI_Model{
         }
         
         foreach ($users as $user=>$desa){
-            $data = $this->Couchdb->startkey([$user,$startdate])->endkey([$user,$enddate])->getView('FormSubmission','formSubmission_by_anm_and_client_version');
+            $data = $this->couchdb->startkey([$user,$startdate])->endkey([$user,$enddate])->getView('FormSubmission','formSubmission_by_anm_and_client_version');
             foreach ($data->rows as $d){
                 $d->key[1] = date("Y-m-d",  substr($d->key[1], 0, 10));
                 if(array_key_exists($d->value, $table_default)){
@@ -62,7 +62,7 @@ class DataentryModel extends CI_Model{
         }
         
         foreach ($users as $user=>$desa){
-            $data = $this->Couchdb->startkey([$user,$startdate])->endkey([$user,$enddate])->getView('FormSubmission','formSubmission_by_anm_and_client_version');
+            $data = $this->couchdb->startkey([$user,$startdate])->endkey([$user,$enddate])->getView('FormSubmission','formSubmission_by_anm_and_client_version');
             foreach ($data->rows as $d){
                 $d->key[1] = date("Y-m-d",  substr($d->key[1], 0, 10));
                 if(array_key_exists($d->value, $table_default)){
@@ -97,7 +97,7 @@ class DataentryModel extends CI_Model{
         }
         
         foreach ($users as $user=>$desa){
-            $data = $this->Couchdb->startkey([$user,$startdate])->endkey([$user,$enddate])->getView('FormSubmission','formSubmission_by_anm_and_client_version');
+            $data = $this->couchdb->startkey([$user,$startdate])->endkey([$user,$enddate])->getView('FormSubmission','formSubmission_by_anm_and_client_version');
             foreach ($data->rows as $d){
                 $d->key[1] = date("Y-m-d",  substr($d->key[1], 0, 10));
                 if(array_key_exists($d->value, $table_default)){

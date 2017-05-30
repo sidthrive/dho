@@ -26,7 +26,7 @@ Copyright (C) 2009  Mickael Bailly
 *
 *
 */
-class CouchClient extends Couch {
+class couchClient extends Couch {
 
 	/**
 	* @var string database name

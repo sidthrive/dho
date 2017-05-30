@@ -16,7 +16,7 @@ Copyright (C) 2009  Mickael Bailly
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-class CouchDocument {
+class couchDocument {
 
 	/**
 	* @var stdClass object internal data

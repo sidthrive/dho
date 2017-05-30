@@ -24,7 +24,7 @@
 *
 *
 */
-class CouchReplicator {
+class couchReplicator {
 	/**
 	* @var reference to our CouchDB client
 	*/
