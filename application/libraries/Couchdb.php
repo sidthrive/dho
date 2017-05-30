@@ -1,9 +1,9 @@
 <?PHP
 
-require_once APPPATH."/libraries/couch.php";
-require_once APPPATH."/libraries/couchClient.php";
-require_once APPPATH."/libraries/couchDocument.php";
-require_once APPPATH."/libraries/couchReplicator.php";
+require_once APPPATH."/libraries/Couch.php";
+require_once APPPATH."/libraries/CouchClient.php";
+require_once APPPATH."/libraries/CouchDocument.php";
+require_once APPPATH."/libraries/CouchReplicator.php";
 
 class Couchdb extends CouchClient {
 
