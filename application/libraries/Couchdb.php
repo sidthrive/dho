@@ -5,7 +5,7 @@ require_once APPPATH."/libraries/couchClient.php";
 require_once APPPATH."/libraries/couchDocument.php";
 require_once APPPATH."/libraries/couchReplicator.php";
 
-class couchdb extends couchClient {
+class Couchdb extends CouchClient {
 
 	function __construct() {
 		$ci =& get_instance();

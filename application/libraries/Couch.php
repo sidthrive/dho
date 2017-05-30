@@ -22,7 +22,7 @@ Copyright (C) 2009  Mickael Bailly
 * basics to implement JSON / REST / HTTP CouchDB protocol
 *
 */
-class couch {
+class Couch {
 	/**
 	* @var string database source name
 	*/

@@ -26,7 +26,7 @@
 *
 *
 */
-class couchAdmin {
+class CouchAdmin {
 	/**
 	* @var reference to our CouchDB client
 	*/
