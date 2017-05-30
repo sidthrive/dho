@@ -6,7 +6,7 @@ class DataentryModel extends CI_Model{
 
     function __construct() {
         parent::__construct();
-        $this->load->library('couchdb');
+        $this->load->library('Couchdb');
         date_default_timezone_set("Asia/Makassar"); 
     }
     
