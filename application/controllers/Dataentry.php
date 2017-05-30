@@ -13,6 +13,7 @@ class DataEntry extends CI_Controller{
         $this->load->model('AnalyticsEcModel','AnalyticsModel');
         $this->load->model('SdidtkModel','SdidtkModel');
         $this->load->model('SdidtkFhwModel','SdidtkFhwModel');
+        $this->load->model('DataentryModel');
     }
     
     public function index(){
@@ -57,7 +58,6 @@ class DataEntry extends CI_Controller{
                 $data['end'] = $this->input->get('end');
                 $old_data = $this->input->get('old');
             }$data['datemode'] = $by;
-                $data['data'] = $this->AnalyticsModel->getCountPerForm($data['kecamatan'],$data['start'],$data['end']);
             $this->load->view("header");
             if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
                 $data['location'] = $this->loc->getAllLocSpv('bidan',$this->session->userdata('location'));
@@ -66,6 +66,7 @@ class DataEntry extends CI_Controller{
             }
             $this->load->view("dataentry/dataentrysidebar",$data);
             if($data['desa']==""){
+                $data['data'] = $this->DataentryModel->getCountPerForm($data['kecamatan'],$data['start'],$data['end']);
                 $this->load->view("dataentry/bidanentryform",$data);
                 
             }else{
@@ -138,7 +139,6 @@ class DataEntry extends CI_Controller{
                 $data['end'] = $this->input->get('end');
             }
             $data['datemode'] = $by;
-                $data['data'] = $this->AnalyticsModel->getCountPerDayDrill($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
             $this->load->view("header");
             if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
                 $data['location'] = $this->loc->getAllLocSpv('bidan',$this->session->userdata('location'));
@@ -147,6 +147,7 @@ class DataEntry extends CI_Controller{
             }
             $this->load->view("dataentry/dataentrysidebar",$data);
             if($data['desa']==""){
+                $data['data'] = $this->DataentryModel->getCountPerDayDrill($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
                 $this->load->view("dataentry/bidanentrytanggal",$data);
                 
             }else{
@@ -170,7 +171,7 @@ class DataEntry extends CI_Controller{
         if($this->session->userdata('level')=="fhw"){
             $data = $this->AnalyticsFhwModel->getCountPerFormForDrill($desa,$date);
         }else{
-            $data = $this->AnalyticsModel->getCountPerFormByVisitDateForDrill($desa,$date);
+            $data = $this->DataentryModel->getCountPerFormByVisitDateForDrill($desa,$date);
         }
         
         echo json_encode($data);
@@ -180,7 +181,7 @@ class DataEntry extends CI_Controller{
         if($this->session->userdata('level')=="fhw"){
             $data = $this->AnalyticsFhwModel->getCountPerFormForDrill($desa,$date);
         }else{
-            $data = $this->AnalyticsModel->getCountPerFormForDrill($desa,$date);
+            $data = $this->DataentryModel->getCountPerFormForDrill($desa,$date);
         }
         
         echo json_encode($data);
@@ -222,7 +223,6 @@ class DataEntry extends CI_Controller{
                 $data['end'] = $this->input->get('end');
             }
             $data['datemode'] = $by;
-                $data['data'] = $this->SdidtkModel->getCountPerForm($data['kecamatan'],$data['start'],$data['end']);
             $this->load->view("header");
             if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
                 $data['location'] = $this->loc->getAllLocSpv('bidan',$this->session->userdata('location'));
@@ -231,6 +231,7 @@ class DataEntry extends CI_Controller{
             }
             $this->load->view("dataentry/dataentrysidebar",$data);
             if($data['desa']==""){
+                $data['data'] = $this->SdidtkModel->getCountPerForm($data['kecamatan'],$data['start'],$data['end']);
                 $this->load->view("dataentry/sdidtkentryform",$data);
                 
             }else{
@@ -281,7 +282,6 @@ class DataEntry extends CI_Controller{
                 $data['end'] = $this->input->get('end');
             }
             $data['datemode'] = $by;
-                $data['data'] = $this->SdidtkModel->getCountPerDayDrill($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
             $this->load->view("header");
             if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
                 $data['location'] = $this->loc->getAllLocSpv('bidan',$this->session->userdata('location'));
@@ -290,6 +290,7 @@ class DataEntry extends CI_Controller{
             }
             $this->load->view("dataentry/dataentrysidebar",$data);
             if($data['desa']==""){
+                $data['data'] = $this->SdidtkModel->getCountPerDayDrill($data['kecamatan'],$data['mode'],array($data['start'],$data['end']));
                 $this->load->view("dataentry/sdidtkentrytanggal",$data);
                 
             }else{

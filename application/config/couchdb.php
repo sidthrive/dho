@@ -1,5 +1,5 @@
 <?PHP
 
-$config["couch_dsn"] = "http://localhost:5984/";
-$config["couch_database"] = "opensrp";
+$config["couch_dsn"] = "http://localhost:5983/";
+$config["couch_database"] = "genopensrp-form";
 
