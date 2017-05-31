@@ -10,10 +10,10 @@ class DataEntry extends CI_Controller{
         }
         $this->load->model('AnalyticsFhwEcModel','AnalyticsFhwModel');
         $this->load->model('LocationModel','loc');
-        $this->load->model('AnalyticsEcModel','AnalyticsModel');
         $this->load->model('SdidtkModel','SdidtkModel');
         $this->load->model('SdidtkFhwModel','SdidtkFhwModel');
         $this->load->model('DataentryModel');
+        $this->load->model('DataentryFhwModel');
     }
     
     public function index(){
@@ -40,7 +40,7 @@ class DataEntry extends CI_Controller{
         if($this->session->userdata('level')=="fhw"){
             
             $data['desa']		= $this->session->userdata('location');
-            $data['data']                   = $this->AnalyticsFhwModel->getCountPerForm();
+            $data['data']                   = $this->DataentryFhwModel->getCountPerForm("",$data['start'],$data['end']);
             $this->load->view("header");
             $this->load->view("dataentry/fhw/dataentrysidebar");
             $this->load->view("dataentry/fhw/bidanentryform",$data);
@@ -70,7 +70,7 @@ class DataEntry extends CI_Controller{
                 $this->load->view("dataentry/bidanentryform",$data);
                 
             }else{
-                $data['data']           = $this->AnalyticsFhwModel->getCountPerForm($data['desa']);
+                $data['data']           = $this->DataentryFhwModel->getCountPerForm($data['desa'],$data['start'],$data['end']);
                 $this->load->view("dataentry/fhw/bidanentryform",$data);
             }
             $this->load->view("footer");
@@ -80,6 +80,7 @@ class DataEntry extends CI_Controller{
     }
     
     public function downloadbidanByForm(){
+        $this->load->model('AnalyticsEcModel','AnalyticsModel');
         if($this->session->userdata('level')=="fhw"){
             
             $data['desa']		= $this->session->userdata('location');
@@ -114,7 +115,7 @@ class DataEntry extends CI_Controller{
                 $data['start'] = $this->input->get('start');
                 $data['end'] = $this->input->get('end');
             }
-            $data['data']                   = $this->AnalyticsFhwModel->getCountPerDay($data['desa'],$data['mode'],array($data['start'],$data['end']));
+            $data['data']                   = $this->DataentryFhwModel->getCountPerDayDrill($data['desa'],$data['mode'],array($data['start'],$data['end']));
             $this->load->view("header");
             $this->load->view("dataentry/fhw/dataentrysidebar");
             $this->load->view("dataentry/fhw/bidanentrytanggal",$data);
@@ -159,7 +160,7 @@ class DataEntry extends CI_Controller{
                     $data['start'] = $this->input->get('start');
                     $data['end'] = $this->input->get('end');
                 }
-                $data['data']           = $this->AnalyticsFhwModel->getCountPerDay($data['desa'],$data['mode'],array($data['start'],$data['end']));
+                $data['data']           = $this->DataentryFhwModel->getCountPerDayDrill($data['desa'],$data['mode'],array($data['start'],$data['end']));
                 $this->load->view("dataentry/fhw/bidanentrytanggal",$data);
             }
             $this->load->view("footer");
@@ -169,7 +170,7 @@ class DataEntry extends CI_Controller{
     
     public function getbidanByFormByVisitDate($desa,$date){
         if($this->session->userdata('level')=="fhw"){
-            $data = $this->AnalyticsFhwModel->getCountPerFormForDrill($desa,$date);
+            $data = $this->DataentryFhwModel->getCountPerFormForDrill($desa,$date);
         }else{
             $data = $this->DataentryModel->getCountPerFormByVisitDateForDrill($desa,$date);
         }
@@ -179,7 +180,7 @@ class DataEntry extends CI_Controller{
     
     public function getbidanByForm($desa,$date){
         if($this->session->userdata('level')=="fhw"){
-            $data = $this->AnalyticsFhwModel->getCountPerFormForDrill($desa,$date);
+            $data = $this->DataentryFhwModel->getCountPerFormForDrill($desa,$date);
         }else{
             $data = $this->DataentryModel->getCountPerFormForDrill($desa,$date);
         }
@@ -188,7 +189,7 @@ class DataEntry extends CI_Controller{
     }
     public function getfhwbidanByForm($desa,$date){
         
-        $data = $this->AnalyticsFhwModel->getCountPerFormForDrill($desa,$date);
+        $data = $this->DataentryFhwModel->getCountPerFormForDrill($desa,$date);
         echo json_encode($data);
     }
     

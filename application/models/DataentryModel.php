@@ -32,8 +32,8 @@ class DataentryModel extends CI_Model{
             $data = $this->couchdb->startkey([$user,$startdate])->endkey([$user,$enddate])->getView('FormSubmission','formSubmission_by_anm_and_client_version');
             foreach ($data->rows as $d){
                 $d->key[1] = date("Y-m-d",  substr($d->key[1], 0, 10));
-                if(array_key_exists($d->value, $table_default)){
-                    $result_data[$users[$user]][$table_default[$d->value]]++;
+                if(array_key_exists($d->value->formName, $table_default)){
+                    $result_data[$users[$user]][$table_default[$d->value->formName]]++;
                 }
             }
         }
@@ -65,7 +65,7 @@ class DataentryModel extends CI_Model{
             $data = $this->couchdb->startkey([$user,$startdate])->endkey([$user,$enddate])->getView('FormSubmission','formSubmission_by_anm_and_client_version');
             foreach ($data->rows as $d){
                 $d->key[1] = date("Y-m-d",  substr($d->key[1], 0, 10));
-                if(array_key_exists($d->value, $table_default)){
+                if(array_key_exists($d->value->formName, $table_default)){
                     $result_data[$users[$user]][$d->key[1]]++;
                 }
             }
@@ -100,8 +100,8 @@ class DataentryModel extends CI_Model{
             $data = $this->couchdb->startkey([$user,$startdate])->endkey([$user,$enddate])->getView('FormSubmission','formSubmission_by_anm_and_client_version');
             foreach ($data->rows as $d){
                 $d->key[1] = date("Y-m-d",  substr($d->key[1], 0, 10));
-                if(array_key_exists($d->value, $table_default)){
-                    $result_data[$date]["data"][$tabindex[$d->value]][1]++;
+                if(array_key_exists($d->value->formName, $table_default)){
+                    $result_data[$date]["data"][$tabindex[$d->value->formName]][1]++;
                 }
             }
         }
