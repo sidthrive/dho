@@ -233,7 +233,7 @@ class LocationModel extends CI_Model{
         'Lamusung'=>array('Lamusung.'=>'Lamusung','Lengkok'=>'Lengkok','Bugis'=>'Bugis'),
         'Meraran'=>array('Meraran.'=>'Meraran','Aina'=>'Aina','Batu Cermai'=>'Batu Cermai'),
         'Kelanir'=>array('Kelanir.'=>'Kelanir','Rigalu'=>'Rigalu','Sedong'=>'Sedong'),
-        'Penatoi'=>array('Kalate'=>'Kalate','Btn Penatoi'=>'Btn Penatoi','Lewilanco'=>'Lewilanco'),
+        'Penatoi'=>array('Kalate'=>'Kalate','Btn Penatoi'=>'Penatoi','Lewilanco'=>'Lewilanco'),
         'Lewirato'=>array('Lewirato.'=>'Lewirato'),
         'Panggi'=>array('Panggi.'=>'Panggi','BTN Panggi'=>'BTN Panggi'),
         'Sambinae'=>array('Sambinae.'=>'Sambinae'),
