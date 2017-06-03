@@ -13,21 +13,21 @@ class Pws extends CI_Controller{
         
     }
     private function isHaveDoneAnc4($bumil){
-        if($this->db->query("SELECT * FROM event_bidan_kunjungan_anc WHERE baseEntityId='$bumil->baseEntityId' AND ancDate < '$bumil->ancDate' AND ancKe=4")->num_rows()>0){
+        if($this->db->query("SELECT * FROM kartu_anc_visit WHERE motherId='$bumil->motherId' AND ancDate < '$bumil->ancDate' AND ancKe=4")->num_rows()>0){
             return true;
         }else return false;
     }
     
     private function isHaveDoneAnc1($bumil){
-        if($this->db->query("SELECT * FROM event_bidan_kunjungan_anc WHERE baseEntityId='$bumil->baseEntityId' AND ancDate < '$bumil->ancDate' AND ancKe=1 AND kunjunganKe=1")->num_rows()>0){
+        if($this->db->query("SELECT * FROM kartu_anc_visit WHERE motherId='$bumil->motherId' AND ancDate < '$bumil->ancDate' AND ancKe=1 AND kunjunganKe=1")->num_rows()>0){
             return true;
         }else return false;
     }
     
     private function isHRP($bumil,$resiko,$bumildata){
         $no = 0;
-        if(array_key_exists($bumil->baseEntityId, $resiko)){
-            foreach ($resiko[$bumil->baseEntityId] as $visit){
+        if(array_key_exists($bumil->motherId, $resiko)){
+            foreach ($resiko[$bumil->motherId] as $visit){
                 $thisanc = date("Y-m-d", strtotime($visit->ancDate));
                 $bumilanc = date("Y-m-d", strtotime($bumil->ancDate));
                 if($thisanc<$bumilanc){
@@ -44,14 +44,19 @@ class Pws extends CI_Controller{
         }
         
         if($no>0){
-            if(array_key_exists($bumil->baseEntityId, $bumildata)){
-                foreach ($bumildata[$bumil->baseEntityId] as $bum){
+            if(array_key_exists($bumil->motherId, $bumildata)){
+                foreach ($bumildata[$bumil->motherId] as $bum){
                     if($bum->highRiskPregnancyProteinEnergyMalnutrition=="yes"
+                        ||$bum->malariaRisk=="yes"
                         ||$bum->highRiskLabourTBRisk=="yes"
                         ||$bum->HighRiskPregnancyTooManyChildren=="yes"
                         ||$bum->HighRiskPregnancyAbortus=="yes"
                         ||$bum->HighRiskLabourSectionCesareaRecord=="yes"
+                        ||$bum->highRiskSTIBBVs=="yes"
                         ||$bum->highRiskEctopicPregnancy=="yes"
+                        ||$bum->otherRiskMolaHidatidosa=="yes"
+                        ||$bum->otherRiskCongenitalAbnormality=="yes"
+                        ||$bum->otherRiskEarlyWaterbreak=="yes"
                         ||$bum->highRiskCardiovascularDiseaseRecord=="yes"
                         ||$bum->highRiskDidneyDisorder=="yes"
                         ||$bum->highRiskHeartDisorder=="yes"
@@ -234,81 +239,92 @@ class Pws extends CI_Controller{
         $result_index['anemia_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$month], 283);
         $result_index['kek_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$month], 314);
         
-        $query = $this->db->query("SELECT locationId,baseEntityId,ancDate FROM event_bidan_kunjungan_anc WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND (ancKe=1 AND kunjunganKe=1) group by baseEntityId")->result();
+        $query = $this->db->query("SELECT userID,motherId,ancDate FROM kartu_anc_visit WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND (ancKe=1 AND kunjunganKe=1) group by motherId")->result();
         foreach ($query as $k1){
-            if(array_key_exists($k1->locationId, $user_index)){
+            if(array_key_exists($k1->userID, $user_index)){
                 if(!$this->isHaveDoneAnc1($k1)){
-                    $key=array_search($user_index[$k1->locationId],$result['data']['DATA A']['desa']);
+                    $key=array_search($user_index[$k1->userID],$result['data']['DATA A']['desa']);
                     $result['data']['DATA']['cakupan_k1_bulan_ini'][$key] += 1;
                 }
             }
         }
 
-        $query = $this->db->query("SELECT locationId,baseEntityId,ancDate FROM event_bidan_kunjungan_anc WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND ancKe=4 group by baseEntityId")->result();
+        $query = $this->db->query("SELECT userID,motherId,ancDate FROM kartu_anc_visit WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND ancKe=4 group by motherId")->result();
         foreach ($query as $k4){
-            if(array_key_exists($k4->locationId, $user_index)){
+            if(array_key_exists($k4->userID, $user_index)){
                 if(!$this->isHaveDoneAnc4($k4)){
-                    $key=array_search($user_index[$k4->locationId],$result['data']['DATA A']['desa']);
+                    $key=array_search($user_index[$k4->userID],$result['data']['DATA A']['desa']);
                     $result['data']['DATA']['cakupan_k4_bulan_ini'][$key] += 1;
                 }
             }
         }
         
-        $query2 = $this->db->query("SELECT locationId,baseEntityId,ancDate,highRiskPregnancyProteinEnergyMalnutrition,highRiskPregnancyPIH,highRisklabourFetusNumber,highRiskLabourFetusSize,highRiskLabourFetusMalpresentation FROM event_bidan_kunjungan_anc ORDER BY ancDate")->result();
+        $query = $this->db->query("SELECT userID,motherId,ancDate,highRiskPregnancyProteinEnergyMalnutrition,highRiskPregnancyPIH,highRisklabourFetusNumber,highRiskLabourFetusSize,highRiskLabourFetusMalpresentation FROM kartu_anc_visit WHERE (ancDate > '$startyear' AND ancDate < '$startdate')")->result();
+        $query2 = $this->db->query("SELECT userID,motherId,ancDate,highRiskPregnancyProteinEnergyMalnutrition,highRiskPregnancyPIH,highRisklabourFetusNumber,highRiskLabourFetusSize,highRiskLabourFetusMalpresentation FROM kartu_anc_visit ORDER BY ancDate")->result();
         $resikos = [];
         foreach ($query2 as $q){
-            if(!array_key_exists($q->baseEntityId, $resikos)){
-                $resikos[$q->baseEntityId] = [];
-                array_push($resikos[$q->baseEntityId], $q);
+            if(!array_key_exists($q->motherId, $resikos)){
+                $resikos[$q->motherId] = [];
+                array_push($resikos[$q->motherId], $q);
             }else{
-                array_push($resikos[$q->baseEntityId], $q);
+                array_push($resikos[$q->motherId], $q);
             }
         }
         
-        $query2 = $this->db->query("SELECT baseEntityId,"
+        $query2 = $this->db->query("SELECT motherId,"
                 . "highRiskPregnancyProteinEnergyMalnutrition,"
+                . "malariaRisk,"
                 . "highRiskLabourTBRisk,"
                 . "HighRiskPregnancyTooManyChildren,"
                 . "HighRiskPregnancyAbortus,"
                 . "HighRiskLabourSectionCesareaRecord,"
+                . "highRiskSTIBBVs,"
                 . "highRiskEctopicPregnancy,"
+                . "otherRiskMolaHidatidosa,"
+                . "otherRiskCongenitalAbnormality,"
+                . "otherRiskEarlyWaterbreak,"
                 . "highRiskCardiovascularDiseaseRecord,"
                 . "highRiskDidneyDisorder,"
                 . "highRiskHeartDisorder,"
                 . "highRiskAsthma,"
                 . "highRiskTuberculosis,"
                 . "highRiskMalaria,"
-                . "highRiskHIVAIDS FROM event_bidan_tambah_anc")->result();
+                . "highRiskHIVAIDS FROM kartu_anc_registration")->result();
         $bumildata = [];
         foreach ($query2 as $q){
-            if(!array_key_exists($q->baseEntityId, $bumildata)){
-                $bumildata[$q->baseEntityId] = [];
-                array_push($bumildata[$q->baseEntityId], $q);
+            if(!array_key_exists($q->motherId, $bumildata)){
+                $bumildata[$q->motherId] = [];
+                array_push($bumildata[$q->motherId], $q);
             }
         }
         $bumil = [];
-        $query = $this->db->query("SELECT locationId,baseEntityId,ancDate,highRiskPregnancyProteinEnergyMalnutrition,highRiskPregnancyPIH,highRisklabourFetusNumber,highRiskLabourFetusSize,highRiskLabourFetusMalpresentation FROM event_bidan_kunjungan_anc WHERE (ancDate > '$startdate' AND ancDate < '$enddate')")->result();
+        $query = $this->db->query("SELECT userID,motherId,ancDate,highRiskPregnancyProteinEnergyMalnutrition,highRiskPregnancyPIH,highRisklabourFetusNumber,highRiskLabourFetusSize,highRiskLabourFetusMalpresentation FROM kartu_anc_visit WHERE (ancDate > '$startdate' AND ancDate < '$enddate')")->result();
         foreach ($query as $resiko){
-            if(array_key_exists($resiko->locationId, $user_index)){
-                if(!array_key_exists($resiko->baseEntityId, $bumil)){
+            if(array_key_exists($resiko->userID, $user_index)){
+                if(!array_key_exists($resiko->motherId, $bumil)){
                     if(!$this->isHRP($resiko,$resikos,$bumildata)){
                         if($resiko->highRiskPregnancyProteinEnergyMalnutrition=="yes"
                         ||$resiko->highRiskPregnancyPIH=="yes"
                         ||$resiko->highRisklabourFetusNumber=="yes"
                         ||$resiko->highRiskLabourFetusSize=="yes"
                         ||$resiko->highRiskLabourFetusMalpresentation=="yes"){
-                            $key=array_search($user_index[$resiko->locationId],$result['data']['DATA A']['desa']);
+                            $key=array_search($user_index[$resiko->userID],$result['data']['DATA A']['desa']);
                             $result['data']['DATA']['cakupan_resiko_bulan_ini'][$key] += 1;
-                            $bumil[$resiko->baseEntityId] = 'yes';
+                            $bumil[$resiko->motherId] = 'yes';
                         }else{
-                            if(array_key_exists($resiko->baseEntityId, $bumildata)){
-                                foreach ($bumildata[$resiko->baseEntityId] as $bum){
+                            if(array_key_exists($resiko->motherId, $bumildata)){
+                                foreach ($bumildata[$resiko->motherId] as $bum){
                                     if($bum->highRiskPregnancyProteinEnergyMalnutrition=="yes"
+                                        ||$bum->malariaRisk=="yes"
                                         ||$bum->highRiskLabourTBRisk=="yes"
                                         ||$bum->HighRiskPregnancyTooManyChildren=="yes"
                                         ||$bum->HighRiskPregnancyAbortus=="yes"
                                         ||$bum->HighRiskLabourSectionCesareaRecord=="yes"
+                                        ||$bum->highRiskSTIBBVs=="yes"
                                         ||$bum->highRiskEctopicPregnancy=="yes"
+                                        ||$bum->otherRiskMolaHidatidosa=="yes"
+                                        ||$bum->otherRiskCongenitalAbnormality=="yes"
+                                        ||$bum->otherRiskEarlyWaterbreak=="yes"
                                         ||$bum->highRiskCardiovascularDiseaseRecord=="yes"
                                         ||$bum->highRiskDidneyDisorder=="yes"
                                         ||$bum->highRiskHeartDisorder=="yes"
@@ -316,9 +332,9 @@ class Pws extends CI_Controller{
                                         ||$bum->highRiskTuberculosis=="yes"
                                         ||$bum->highRiskMalaria=="yes"
                                         ||$bum->highRiskHIVAIDS=="yes"){
-                                        $key=array_search($user_index[$resiko->locationId],$result['data']['DATA A']['desa']);
+                                        $key=array_search($user_index[$resiko->userID],$result['data']['DATA A']['desa']);
                                         $result['data']['DATA']['cakupan_resiko_bulan_ini'][$key] += 1;
-                                        $bumil[$resiko->baseEntityId] = 'yes';
+                                        $bumil[$resiko->motherId] = 'yes';
                                     }
                                 }
                             }
@@ -329,23 +345,23 @@ class Pws extends CI_Controller{
         }
         
         
-        $query2 = $this->db->query("SELECT baseEntityId,ancDate,komplikasidalamKehamilan FROM event_bidan_kunjungan_anc ORDER BY ancDate")->result();
+        $query2 = $this->db->query("SELECT motherId,ancDate,komplikasidalamKehamilan FROM kartu_anc_visit ORDER BY ancDate")->result();
         $komplikasi = [];
         foreach ($query2 as $q){
-            if(!array_key_exists($q->baseEntityId, $komplikasi)){
-                $komplikasi[$q->baseEntityId] = [];
-                array_push($komplikasi[$q->baseEntityId], $q);
+            if(!array_key_exists($q->motherId, $komplikasi)){
+                $komplikasi[$q->motherId] = [];
+                array_push($komplikasi[$q->motherId], $q);
             }else{
-                array_push($komplikasi[$q->baseEntityId], $q);
+                array_push($komplikasi[$q->motherId], $q);
             }
         }
         
-        $query = $this->db->query("SELECT locationId,baseEntityId,ancDate,komplikasidalamKehamilan FROM event_bidan_kunjungan_anc WHERE (ancDate > '$startdate' AND ancDate < '$enddate')")->result();
+        $query = $this->db->query("SELECT userID,motherId,ancDate,komplikasidalamKehamilan FROM kartu_anc_visit WHERE (ancDate > '$startdate' AND ancDate < '$enddate')")->result();
         foreach ($query as $k1){
-            if(array_key_exists($k1->locationId, $user_index)){
+            if(array_key_exists($k1->userID, $user_index)){
                 if(!$this->isHaveKomplikasiBefore($k1,$komplikasi)){
                     if($k1->komplikasidalamKehamilan!=''&&$k1->komplikasidalamKehamilan!='None'&&$k1->komplikasidalamKehamilan!='tidak_ada_komplikasi'){
-                        $key=array_search($user_index[$k1->locationId],$result['data']['DATA A']['desa']);
+                        $key=array_search($user_index[$k1->userID],$result['data']['DATA A']['desa']);
                         $result['data']['DATA']['komplikasi_bulan_ini'][$key] += 1;
                     }
                 }
@@ -353,20 +369,20 @@ class Pws extends CI_Controller{
         }
         
         
-        $datapersalinan= $this->db->query("SELECT event_bidan_dokumentasi_persalinan.* , client_anak.birthDate, client_anak.gender FROM event_bidan_dokumentasi_persalinan,client_anak WHERE event_bidan_dokumentasi_persalinan.baseEntityId = client_anak.ibuCaseId AND birthDate > '$startdate' AND birthDate < '$enddate'")->result();
+        $datapersalinan= $this->db->query("SELECT * FROM kartu_pnc_dokumentasi_persalinan WHERE tanggalLahirAnak > '$startdate' AND tanggalLahirAnak < '$enddate'")->result();
         foreach ($datapersalinan as $dsalin){
-            if(array_key_exists($dsalin->locationId, $user_index)){
-                $key=array_search($user_index[$dsalin->locationId],$result['data']['DATA A']['desa']);
+            if(array_key_exists($dsalin->userID, $user_index)){
+                $key=array_search($user_index[$dsalin->userID],$result['data']['DATA A']['desa']);
                 if($dsalin->penolong=="bidan"||$dsalin->penolong=="dr.spesialis"||$dsalin->penolong=="dr.umum"||$dsalin->penolong=="lain-lain"){
-                    if($dsalin->gender=='male'){
+                    if($dsalin->jenisKelamin=='laki'){
                         $result['data']['DATA']['linakes_bulan_ini'][$key] += 1;
-                    }elseif($dsalin->gender=='female'){
+                    }elseif($dsalin->jenisKelamin=='perempuan'){
                         $result['data']['DATA']['linakes_bulan_ini'][$key] += 1;
                     }
                 }else{
-                    if($dsalin->gender=='male'){
+                    if($dsalin->jenisKelamin=='laki'){
                         $result['data']['DATA']['nolinakes_bulan_ini'][$key] += 1;
-                    }elseif($dsalin->gender=='female'){
+                    }elseif($dsalin->jenisKelamin=='perempuan'){
                         $result['data']['DATA']['nolinakes_bulan_ini'][$key] += 1;
                     }
                 }
@@ -375,39 +391,39 @@ class Pws extends CI_Controller{
         
         
         
-        $datapersalinan= $this->db->query("SELECT event_bidan_dokumentasi_persalinan.* , client_anak.birthDate, client_anak.gender FROM event_bidan_dokumentasi_persalinan,client_anak WHERE event_bidan_dokumentasi_persalinan.baseEntityId = client_anak.ibuCaseId AND birthDate > '$startdate' AND birthDate < '$enddate'")->result();
+        $datapersalinan= $this->db->query("SELECT * FROM kartu_pnc_dokumentasi_persalinan WHERE tanggalLahirAnak > '$startdate' AND tanggalLahirAnak < '$enddate'")->result();
         foreach ($datapersalinan as $dsalin){
-            if(array_key_exists($dsalin->locationId, $user_index)){
-                $key=array_search($user_index[$dsalin->locationId],$result['data']['DATA A']['desa']);
+            if(array_key_exists($dsalin->userID, $user_index)){
+                $key=array_search($user_index[$dsalin->userID],$result['data']['DATA A']['desa']);
                 if($dsalin->tempatBersalin=="podok_bersalin_desa"||$dsalin->tempatBersalin=="pusat_kesehatan_masyarakat_pembantu"||$dsalin->tempatBersalin=="pusat_kesehatan_masyarakat"||$dsalin->tempatBersalin=="rumah_bersalin"||$dsalin->tempatBersalin=="rumah_sakit_ibu_dan_anak"||$dsalin->tempatBersalin=="rumah_sakit"||$dsalin->tempatBersalin=="rumah_sakit_orang_dengan_hiv_aids"){
                     $result['data']['DATA']['fasilitas_bulan_ini'][$key] += 1;
                 }
             }
         }
         
-        $datavisit = $this->db->query("SELECT * FROM event_bidan_kunjungan_pnc WHERE (PNCDate > '$startdate' AND PNCDate < '$enddate') AND hariKeKF='kf4' group by baseEntityId")->result();
+        $datavisit = $this->db->query("SELECT * FROM kartu_pnc_visit WHERE (referenceDate > '$startdate' AND referenceDate < '$enddate') AND hariKeKF='kf4' group by motherId")->result();
         foreach ($datavisit as $dvisit){
-            if(array_key_exists($dvisit->locationId, $user_index)){
-                $key=array_search($user_index[$dvisit->locationId],$result['data']['DATA A']['desa']);
+            if(array_key_exists($dvisit->userID, $user_index)){
+                $key=array_search($user_index[$dvisit->userID],$result['data']['DATA A']['desa']);
                 $result['data']['DATA']['k_nifas_bulan_ini'][$key] += 1;
             }
         }
         
-        $query2 = $this->db->query("SELECT baseEntityId,laboratoriumPeriksaHbAnemia,highRiskPregnancyAnemia FROM event_bidan_kunjungan_anc_lab_test")->result();
+        $query2 = $this->db->query("SELECT motherId,laboratoriumPeriksaHbAnemia,highRiskPregnancyAnemia FROM kartu_anc_visit_labTest")->result();
         $datalabs = [];
         foreach ($query2 as $q){
-            if(!array_key_exists($q->baseEntityId, $datalabs)){
-                $datalabs[$q->baseEntityId] = [];
-                array_push($datalabs[$q->baseEntityId], $q);
+            if(!array_key_exists($q->motherId, $datalabs)){
+                $datalabs[$q->motherId] = [];
+                array_push($datalabs[$q->motherId], $q);
             }else{
-                array_push($datalabs[$q->baseEntityId], $q);
+                array_push($datalabs[$q->motherId], $q);
             }
         }
         
-        $dataibu = $this->db->query("SELECT * FROM event_bidan_tambah_anc WHERE (referenceDate > '$startdate' AND referenceDate < '$enddate')")->result();
+        $dataibu = $this->db->query("SELECT * FROM kartu_anc_registration WHERE (referenceDate > '$startdate' AND referenceDate < '$enddate')")->result();
         foreach ($dataibu as $ibu){
-            if(array_key_exists($ibu->locationId, $user_index)){
-                $key=array_search($user_index[$ibu->locationId],$result['data']['DATA A']['desa']);
+            if(array_key_exists($ibu->userID, $user_index)){
+                $key=array_search($user_index[$ibu->userID],$result['data']['DATA A']['desa']);
                 if($this->isAnemia($ibu,$datalabs)){
                     $result['data']['DATA']['anemia_bulan_ini'][$key] += 1;
                 }
@@ -417,68 +433,68 @@ class Pws extends CI_Controller{
             }
         }
         
-        $datavisit = $this->db->query("SELECT * FROM event_bidan_kunjungan_anc WHERE (ancDate > '$startyear' AND ancDate < '$enddate')")->result();
-        $query = $this->db->query("SELECT baseEntityId FROM event_bidan_kunjungan_anc_lab_test WHERE laboratoriumPeriksaHbAnemia='positif'")->result();
+        $datavisit = $this->db->query("SELECT * FROM kartu_anc_visit WHERE (ancDate > '$startdate' AND ancDate < '$enddate')")->result();
+        $query = $this->db->query("SELECT motherId FROM kartu_anc_visit_labTest WHERE laboratoriumPeriksaHbAnemia='positif'")->result();
         $laboratoriumPeriksaHbAnemia = [];
         foreach ($query as $q){
-            if(!array_key_exists($q->baseEntityId, $laboratoriumPeriksaHbAnemia)){
-                $laboratoriumPeriksaHbAnemia[$q->baseEntityId] = TRUE;
+            if(!array_key_exists($q->motherId, $laboratoriumPeriksaHbAnemia)){
+                $laboratoriumPeriksaHbAnemia[$q->motherId] = TRUE;
             }
         }
-//        $query = $this->db->query("SELECT event_bidan_tambah_anc.baseEntityId as baseEntityId FROM event_bidan_tambah_anc,event_bidan_kunjungan_anc_integrasi WHERE event_bidan_tambah_anc.baseEntityId=event_bidan_kunjungan_anc_integrasi.baseEntityId AND event_bidan_tambah_anc.highRiskTuberculosis='yes' AND event_bidan_kunjungan_anc_integrasi.integrasiProgramtbObat='yes'")->result();
+        $query = $this->db->query("SELECT kartu_anc_registration.motherId as motherId FROM kartu_anc_registration,kartu_anc_visit_integrasi WHERE kartu_anc_registration.motherId=kartu_anc_visit_integrasi.motherId AND kartu_anc_registration.highRiskTuberculosis='yes' AND kartu_anc_visit_integrasi.integrasiProgramtbObat='yes'")->result();
         $highRiskTuberculosis = [];
         foreach ($query as $q){
-            if(!array_key_exists($q->baseEntityId, $highRiskTuberculosis)){
-                $highRiskTuberculosis[$q->baseEntityId] = TRUE;
+            if(!array_key_exists($q->motherId, $highRiskTuberculosis)){
+                $highRiskTuberculosis[$q->motherId] = TRUE;
             }
         }
-//        $query = $this->db->query("SELECT event_bidan_tambah_anc.baseEntityId as baseEntityId FROM event_bidan_tambah_anc,event_bidan_kunjungan_anc_integrasi WHERE event_bidan_tambah_anc.baseEntityId=event_bidan_kunjungan_anc_integrasi.baseEntityId AND event_bidan_tambah_anc.highRiskMalaria='yes' AND event_bidan_kunjungan_anc_integrasi.integrasiProgramMalariaObat='yes'")->result();
+        $query = $this->db->query("SELECT kartu_anc_registration.motherId as motherId FROM kartu_anc_registration,kartu_anc_visit_integrasi WHERE kartu_anc_registration.motherId=kartu_anc_visit_integrasi.motherId AND kartu_anc_registration.highRiskMalaria='yes' AND kartu_anc_visit_integrasi.integrasiProgramMalariaObat='yes'")->result();
         $highRiskMalaria = [];
         foreach ($query as $q){
-            if(!array_key_exists($q->baseEntityId, $highRiskMalaria)){
-                $highRiskMalaria[$q->baseEntityId] = TRUE;
+            if(!array_key_exists($q->motherId, $highRiskMalaria)){
+                $highRiskMalaria[$q->motherId] = TRUE;
             }
         }
-        $query = $this->db->query("SELECT event_bidan_tambah_anc.baseEntityId as baseEntityId FROM event_bidan_tambah_anc,event_bidan_kunjungan_anc_integrasi WHERE event_bidan_tambah_anc.baseEntityId=event_bidan_kunjungan_anc_integrasi.baseEntityId AND event_bidan_tambah_anc.highRiskHIVAIDS='yes' AND event_bidan_kunjungan_anc_integrasi.integrasiProgrampmtctSerologi='yes'")->result();
+        $query = $this->db->query("SELECT kartu_anc_registration.motherId as motherId FROM kartu_anc_registration,kartu_anc_visit_integrasi WHERE kartu_anc_registration.motherId=kartu_anc_visit_integrasi.motherId AND kartu_anc_registration.highRiskHIVAIDS='yes' AND kartu_anc_visit_integrasi.integrasiProgrampmtctSerologi='yes'")->result();
         $highRiskHIVAIDS = [];
         foreach ($query as $q){
-            if(!array_key_exists($q->baseEntityId, $highRiskHIVAIDS)){
-                $highRiskHIVAIDS[$q->baseEntityId] = TRUE;
+            if(!array_key_exists($q->motherId, $highRiskHIVAIDS)){
+                $highRiskHIVAIDS[$q->motherId] = TRUE;
             }
         }
         $tertangani = array();
         foreach ($datavisit as $dvisit){
-            if(array_key_exists($dvisit->baseEntityId, $tertangani)){
+            if(array_key_exists($dvisit->motherId, $tertangani)){
                 continue;
             }
-            if(array_key_exists($dvisit->locationId, $user_index)){
-                $key=array_search($user_index[$dvisit->locationId],$result['data']['DATA A']['desa']);
+            if(array_key_exists($dvisit->userID, $user_index)){
+                $key=array_search($user_index[$dvisit->userID],$result['data']['DATA A']['desa']);
                 if($dvisit->komplikasidalamKehamilan!="None"&&$dvisit->komplikasidalamKehamilan!=''&&$dvisit->komplikasidalamKehamilan!='tidak_ada_komplikasi'){
                     if(isset($dvisit->rujukan)){
                         if($dvisit->rujukan=="Ya"){
-                            $tertangani[$dvisit->baseEntityId] = 'yes';
+                            $tertangani[$dvisit->motherId] = 'yes';
                             $result['data']['DATA']['komplikasi_tertangani_bulan_ini'][$key] += 1;
                             continue;
                         }
                     }
                 }
-                if($dvisit->pelayananfe0=="Ya"&&array_key_exists($dvisit->baseEntityId, $laboratoriumPeriksaHbAnemia)){
-                    $tertangani[$dvisit->baseEntityId] = 'yes';
+                if($dvisit->pelayananfe0=="Ya"&&array_key_exists($dvisit->motherId, $laboratoriumPeriksaHbAnemia)){
+                    $tertangani[$dvisit->motherId] = 'yes';
                     $result['data']['DATA']['komplikasi_tertangani_bulan_ini'][$key] += 1;
                     continue;
                 }
-                if(array_key_exists($dvisit->baseEntityId, $highRiskTuberculosis)){
-                    $tertangani[$dvisit->baseEntityId] = 'yes';
+                if(array_key_exists($dvisit->motherId, $highRiskTuberculosis)){
+                    $tertangani[$dvisit->motherId] = 'yes';
                     $result['data']['DATA']['komplikasi_tertangani_bulan_ini'][$key] += 1;
                     continue;
                 }
-                if(array_key_exists($dvisit->baseEntityId, $highRiskMalaria)){
-                    $tertangani[$dvisit->baseEntityId] = 'yes';
+                if(array_key_exists($dvisit->motherId, $highRiskMalaria)){
+                    $tertangani[$dvisit->motherId] = 'yes';
                     $result['data']['DATA']['komplikasi_tertangani_bulan_ini'][$key] += 1;
                     continue;
                 }
-                if(array_key_exists($dvisit->baseEntityId, $highRiskHIVAIDS)){
-                    $tertangani[$dvisit->baseEntityId] = 'yes';
+                if(array_key_exists($dvisit->motherId, $highRiskHIVAIDS)){
+                    $tertangani[$dvisit->motherId] = 'yes';
                     $result['data']['DATA']['komplikasi_tertangani_bulan_ini'][$key] += 1;
                     continue;
                 }
@@ -495,7 +511,7 @@ class Pws extends CI_Controller{
             $desa = 'desa_'.strtolower(str_replace(' ', '_', $u));
             foreach ($result['data']['DATA'] as $x=>$d){
                 $id = $desa.$year.$month.$x;
-                //var_dump($id);
+//                var_dump($id."=".$d[$i]);
                 if(array_key_exists($id, $ids)){
                     $pwsdb->query("UPDATE kia SET value='$d[$i]' WHERE id='$id'");
                 }else{
@@ -507,8 +523,8 @@ class Pws extends CI_Controller{
     }
     
     private function isHaveKomplikasiBefore($bumil,$komplikasi){
-        if(array_key_exists($bumil->baseEntityId, $komplikasi)){
-            foreach ($komplikasi[$bumil->baseEntityId] as $visit){
+        if(array_key_exists($bumil->motherId, $komplikasi)){
+            foreach ($komplikasi[$bumil->motherId] as $visit){
                 $thisanc = date("Y-m-d", strtotime($visit->ancDate));
                 $bumilanc = date("Y-m-d", strtotime($bumil->ancDate));
                 if($thisanc<$bumilanc){
@@ -522,8 +538,8 @@ class Pws extends CI_Controller{
     }
     
     private function isAnemia($bumil,$datalabs){
-        if(array_key_exists($bumil->baseEntityId, $datalabs)){
-            foreach ($datalabs[$bumil->baseEntityId] as $data){
+        if(array_key_exists($bumil->motherId, $datalabs)){
+            foreach ($datalabs[$bumil->motherId] as $data){
                 if($data->laboratoriumPeriksaHbAnemia=='positif'||$data->highRiskPregnancyAnemia=='yes'){
                     return true;
                 }
@@ -569,7 +585,7 @@ class Pws extends CI_Controller{
         $result_index['anemia_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$month], 283);
         $result_index['kek_bulan_ini']=$this->setArrayIndex($user, $bulan_col[$month], 314);
         
-        $query = $this->db->query("SELECT locationId,event_bidan_kunjungan_anc.baseEntityId,ancDate,client_ibu.dusun FROM event_bidan_kunjungan_anc LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_kunjungan_anc.baseEntityId WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND (ancKe=1 AND kunjunganKe=1) group by baseEntityId")->result();
+        $query = $this->db->query("SELECT kartu_anc_visit.userID,kartu_anc_visit.motherId,kartu_anc_visit.ancDate,kartu_ibu_registration.dusun FROM kartu_anc_visit LEFT JOIN kartu_ibu_registration ON kartu_anc_visit.kiId=kartu_ibu_registration.kiId WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND (ancKe=1 AND kunjunganKe=1) group by motherId")->result();
         foreach ($query as $k1){
             if(array_key_exists($k1->dusun, $user_index)){
                 if(!$this->isHaveDoneAnc1($k1)){
@@ -579,7 +595,7 @@ class Pws extends CI_Controller{
             }
         }
 
-        $query = $this->db->query("SELECT locationId,event_bidan_kunjungan_anc.baseEntityId,ancDate,client_ibu.dusun FROM event_bidan_kunjungan_anc LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_kunjungan_anc.baseEntityId WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND ancKe=4 group by baseEntityId")->result();
+        $query = $this->db->query("SELECT kartu_anc_visit.userID,kartu_anc_visit.motherId,kartu_anc_visit.ancDate,kartu_ibu_registration.dusun FROM kartu_anc_visit LEFT JOIN kartu_ibu_registration ON kartu_anc_visit.kiId=kartu_ibu_registration.kiId WHERE (ancDate > '$startdate' AND ancDate < '$enddate') AND ancKe=4 group by motherId")->result();
         foreach ($query as $k4){
             if(array_key_exists($k4->dusun, $user_index)){
                 if(!$this->isHaveDoneAnc4($k4)){
@@ -589,43 +605,48 @@ class Pws extends CI_Controller{
             }
         }
         
-        $query2 = $this->db->query("SELECT locationId,client_ibu.dusun,event_bidan_kunjungan_anc.baseEntityId,ancDate,highRiskPregnancyProteinEnergyMalnutrition,highRiskPregnancyPIH,highRisklabourFetusNumber,highRiskLabourFetusSize,highRiskLabourFetusMalpresentation FROM event_bidan_kunjungan_anc LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_kunjungan_anc.baseEntityId GROUP BY event_bidan_kunjungan_anc.docId ORDER BY ancDate")->result();
+        $query2 = $this->db->query("SELECT userID,motherId,ancDate,highRiskPregnancyProteinEnergyMalnutrition,highRiskPregnancyPIH,highRisklabourFetusNumber,highRiskLabourFetusSize,highRiskLabourFetusMalpresentation FROM kartu_anc_visit ORDER BY ancDate")->result();
         $resikos = [];
         foreach ($query2 as $q){
-            if(!array_key_exists($q->baseEntityId, $resikos)){
-                $resikos[$q->baseEntityId] = [];
-                array_push($resikos[$q->baseEntityId], $q);
+            if(!array_key_exists($q->motherId, $resikos)){
+                $resikos[$q->motherId] = [];
+                array_push($resikos[$q->motherId], $q);
             }else{
-                array_push($resikos[$q->baseEntityId], $q);
+                array_push($resikos[$q->motherId], $q);
             }
         }
         
-        $query2 = $this->db->query("SELECT baseEntityId,"
+        $query2 = $this->db->query("SELECT motherId,"
                 . "highRiskPregnancyProteinEnergyMalnutrition,"
+                . "malariaRisk,"
                 . "highRiskLabourTBRisk,"
                 . "HighRiskPregnancyTooManyChildren,"
                 . "HighRiskPregnancyAbortus,"
                 . "HighRiskLabourSectionCesareaRecord,"
+                . "highRiskSTIBBVs,"
                 . "highRiskEctopicPregnancy,"
+                . "otherRiskMolaHidatidosa,"
+                . "otherRiskCongenitalAbnormality,"
+                . "otherRiskEarlyWaterbreak,"
                 . "highRiskCardiovascularDiseaseRecord,"
                 . "highRiskDidneyDisorder,"
                 . "highRiskHeartDisorder,"
                 . "highRiskAsthma,"
                 . "highRiskTuberculosis,"
                 . "highRiskMalaria,"
-                . "highRiskHIVAIDS FROM event_bidan_tambah_anc")->result();
+                . "highRiskHIVAIDS FROM kartu_anc_registration")->result();
         $bumildata = [];
         foreach ($query2 as $q){
-            if(!array_key_exists($q->baseEntityId, $bumildata)){
-                $bumildata[$q->baseEntityId] = [];
-                array_push($bumildata[$q->baseEntityId], $q);
+            if(!array_key_exists($q->motherId, $bumildata)){
+                $bumildata[$q->motherId] = [];
+                array_push($bumildata[$q->motherId], $q);
             }
         }
         $bumil = [];
-        $query = $this->db->query("SELECT locationId,client_ibu.dusun,event_bidan_kunjungan_anc.baseEntityId,ancDate,highRiskPregnancyProteinEnergyMalnutrition,highRiskPregnancyPIH,highRisklabourFetusNumber,highRiskLabourFetusSize,highRiskLabourFetusMalpresentation FROM event_bidan_kunjungan_anc LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_kunjungan_anc.baseEntityId WHERE (ancDate > '$startdate' AND ancDate < '$enddate') GROUP BY event_bidan_kunjungan_anc.docId")->result();
+        $query = $this->db->query("SELECT kartu_anc_visit.userID,kartu_anc_visit.motherId,kartu_anc_visit.ancDate,kartu_ibu_registration.dusun,highRiskPregnancyProteinEnergyMalnutrition,highRiskPregnancyPIH,highRisklabourFetusNumber,highRiskLabourFetusSize,highRiskLabourFetusMalpresentation FROM kartu_anc_visit LEFT JOIN kartu_ibu_registration ON kartu_anc_visit.kiId=kartu_ibu_registration.kiId WHERE (ancDate > '$startdate' AND ancDate < '$enddate')")->result();
         foreach ($query as $resiko){
             if(array_key_exists($resiko->dusun, $user_index)){
-                if(!array_key_exists($resiko->baseEntityId, $bumil)){
+                if(!array_key_exists($resiko->userID, $bumil)){
                     if(!$this->isHRP($resiko,$resikos,$bumildata)){
                         if($resiko->highRiskPregnancyProteinEnergyMalnutrition=="yes"
                         ||$resiko->highRiskPregnancyPIH=="yes"
@@ -634,10 +655,10 @@ class Pws extends CI_Controller{
                         ||$resiko->highRiskLabourFetusMalpresentation=="yes"){
                             $key=array_search($user_index[$resiko->dusun],$result['data']['DATA A']['dusun']);
                             $result['data']['DATA']['cakupan_resiko_bulan_ini'][$key] += 1;
-                            $bumil[$resiko->baseEntityId] = 'yes';
+                            $bumil[$resiko->userID] = 'yes';
                         }else{
-                            if(array_key_exists($resiko->baseEntityId, $bumildata)){
-                                foreach ($bumildata[$resiko->baseEntityId] as $bum){
+                            if(array_key_exists($resiko->userID, $bumildata)){
+                                foreach ($bumildata[$resiko->userID] as $bum){
                                     if($bum->highRiskPregnancyProteinEnergyMalnutrition=="yes"
                                         ||$bum->highRiskLabourTBRisk=="yes"
                                         ||$bum->HighRiskPregnancyTooManyChildren=="yes"
@@ -653,7 +674,7 @@ class Pws extends CI_Controller{
                                         ||$bum->highRiskHIVAIDS=="yes"){
                                         $key=array_search($user_index[$resiko->dusun],$result['data']['DATA A']['dusun']);
                                         $result['data']['DATA']['cakupan_resiko_bulan_ini'][$key] += 1;
-                                        $bumil[$resiko->baseEntityId] = 'yes';
+                                        $bumil[$resiko->userID] = 'yes';
                                     }
                                 }
                             }
@@ -664,18 +685,18 @@ class Pws extends CI_Controller{
         }
         
         
-        $query2 = $this->db->query("SELECT event_bidan_kunjungan_anc.baseEntityId,client_ibu.dusun,ancDate,komplikasidalamKehamilan FROM event_bidan_kunjungan_anc LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_kunjungan_anc.baseEntityId GROUP BY event_bidan_kunjungan_anc.docId ORDER BY ancDate")->result();
+        $query2 = $this->db->query("SELECT motherId,ancDate,komplikasidalamKehamilan FROM kartu_anc_visit ORDER BY ancDate")->result();
         $komplikasi = [];
         foreach ($query2 as $q){
-            if(!array_key_exists($q->baseEntityId, $komplikasi)){
-                $komplikasi[$q->baseEntityId] = [];
-                array_push($komplikasi[$q->baseEntityId], $q);
+            if(!array_key_exists($q->motherId, $komplikasi)){
+                $komplikasi[$q->motherId] = [];
+                array_push($komplikasi[$q->motherId], $q);
             }else{
-                array_push($komplikasi[$q->baseEntityId], $q);
+                array_push($komplikasi[$q->motherId], $q);
             }
         }
         
-        $query = $this->db->query("SELECT locationId,client_ibu.dusun,event_bidan_kunjungan_anc.baseEntityId,ancDate,komplikasidalamKehamilan FROM event_bidan_kunjungan_anc LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_kunjungan_anc.baseEntityId WHERE (ancDate > '$startdate' AND ancDate < '$enddate') GROUP BY event_bidan_kunjungan_anc.docId")->result();
+        $query = $this->db->query("SELECT kartu_anc_visit.userID,kartu_anc_visit.motherId,kartu_anc_visit.ancDate,kartu_ibu_registration.dusun,komplikasidalamKehamilan FROM kartu_anc_visit LEFT JOIN kartu_ibu_registration ON kartu_anc_visit.kiId=kartu_ibu_registration.kiId WHERE (ancDate > '$startdate' AND ancDate < '$enddate')")->result();
         foreach ($query as $k1){
             if(array_key_exists($k1->dusun, $user_index)){
                 if(!$this->isHaveKomplikasiBefore($k1,$komplikasi)){
@@ -688,20 +709,20 @@ class Pws extends CI_Controller{
         }
         
         
-        $datapersalinan= $this->db->query("SELECT event_bidan_dokumentasi_persalinan.* , client_anak.birthDate, client_anak.gender,client_ibu.dusun FROM client_anak,event_bidan_dokumentasi_persalinan LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_dokumentasi_persalinan.baseEntityId WHERE event_bidan_dokumentasi_persalinan.baseEntityId = client_anak.ibuCaseId AND client_anak.birthDate > '$startdate' AND client_anak.birthDate < '$enddate' GROUP BY event_bidan_dokumentasi_persalinan.docId")->result();
+        $datapersalinan= $this->db->query("SELECT kartu_pnc_dokumentasi_persalinan.*,kartu_ibu_registration.dusun FROM `kartu_pnc_dokumentasi_persalinan` LEFT JOIN kartu_anc_registration LEFT JOIN kartu_ibu_registration ON kartu_anc_registration.kiId=kartu_ibu_registration.kiId ON kartu_pnc_dokumentasi_persalinan.motherId=kartu_anc_registration.motherId WHERE tanggalLahirAnak > '$startdate' AND tanggalLahirAnak < '$enddate'")->result();
         foreach ($datapersalinan as $dsalin){
             if(array_key_exists($dsalin->dusun, $user_index)){
                 $key=array_search($user_index[$dsalin->dusun],$result['data']['DATA A']['dusun']);
                 if($dsalin->penolong=="bidan"||$dsalin->penolong=="dr.spesialis"||$dsalin->penolong=="dr.umum"||$dsalin->penolong=="lain-lain"){
-                    if($dsalin->gender=='male'){
+                    if($dsalin->jenisKelamin=='laki'){
                         $result['data']['DATA']['linakes_bulan_ini'][$key] += 1;
-                    }elseif($dsalin->gender=='female'){
+                    }elseif($dsalin->jenisKelamin=='perempuan'){
                         $result['data']['DATA']['linakes_bulan_ini'][$key] += 1;
                     }
                 }else{
-                    if($dsalin->gender=='male'){
+                    if($dsalin->jenisKelamin=='laki'){
                         $result['data']['DATA']['nolinakes_bulan_ini'][$key] += 1;
-                    }elseif($dsalin->gender=='female'){
+                    }elseif($dsalin->jenisKelamin=='perempuan'){
                         $result['data']['DATA']['nolinakes_bulan_ini'][$key] += 1;
                     }
                 }
@@ -710,7 +731,7 @@ class Pws extends CI_Controller{
         
         
         
-        $datapersalinan= $this->db->query("SELECT event_bidan_dokumentasi_persalinan.* , client_anak.birthDate, client_anak.gender,client_ibu.dusun FROM client_anak,event_bidan_dokumentasi_persalinan LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_dokumentasi_persalinan.baseEntityId WHERE event_bidan_dokumentasi_persalinan.baseEntityId = client_anak.ibuCaseId AND client_anak.birthDate > '$startdate' AND client_anak.birthDate < '$enddate' GROUP BY event_bidan_dokumentasi_persalinan.docId")->result();
+        $datapersalinan= $this->db->query("SELECT kartu_pnc_dokumentasi_persalinan.*,kartu_ibu_registration.dusun FROM `kartu_pnc_dokumentasi_persalinan` LEFT JOIN kartu_anc_registration LEFT JOIN kartu_ibu_registration ON kartu_anc_registration.kiId=kartu_ibu_registration.kiId ON kartu_pnc_dokumentasi_persalinan.motherId=kartu_anc_registration.motherId WHERE tanggalLahirAnak > '$startdate' AND tanggalLahirAnak < '$enddate'")->result();
         foreach ($datapersalinan as $dsalin){
             if(array_key_exists($dsalin->dusun, $user_index)){
                 $key=array_search($user_index[$dsalin->dusun],$result['data']['DATA A']['dusun']);
@@ -720,7 +741,7 @@ class Pws extends CI_Controller{
             }
         }
         
-        $datavisit = $this->db->query("SELECT event_bidan_kunjungan_pnc.*,client_ibu.dusun  FROM event_bidan_kunjungan_pnc LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_kunjungan_pnc.baseEntityId WHERE (PNCDate > '$startdate' AND PNCDate < '$enddate') AND hariKeKF='kf4' group by event_bidan_kunjungan_pnc.baseEntityId")->result();
+        $datavisit = $this->db->query("SELECT kartu_pnc_visit.*,kartu_ibu_registration.dusun FROM kartu_pnc_visit LEFT JOIN kartu_ibu_registration ON kartu_pnc_visit.kiId=kartu_ibu_registration.kiId WHERE (referenceDate > '$startdate' AND referenceDate < '$enddate') AND hariKeKF='kf4' group by motherId")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->dusun, $user_index)){
                 $key=array_search($user_index[$dvisit->dusun],$result['data']['DATA A']['dusun']);
@@ -728,18 +749,18 @@ class Pws extends CI_Controller{
             }
         }
         
-        $query2 = $this->db->query("SELECT baseEntityId,laboratoriumPeriksaHbAnemia,highRiskPregnancyAnemia FROM event_bidan_kunjungan_anc_lab_test")->result();
+        $query2 = $this->db->query("SELECT motherId,laboratoriumPeriksaHbAnemia,highRiskPregnancyAnemia FROM kartu_anc_visit_labTest")->result();
         $datalabs = [];
         foreach ($query2 as $q){
-            if(!array_key_exists($q->baseEntityId, $datalabs)){
-                $datalabs[$q->baseEntityId] = [];
-                array_push($datalabs[$q->baseEntityId], $q);
+            if(!array_key_exists($q->motherId, $datalabs)){
+                $datalabs[$q->motherId] = [];
+                array_push($datalabs[$q->motherId], $q);
             }else{
-                array_push($datalabs[$q->baseEntityId], $q);
+                array_push($datalabs[$q->motherId], $q);
             }
         }
         
-        $dataibu = $this->db->query("SELECT event_bidan_tambah_anc.*,client_ibu.dusun FROM event_bidan_tambah_anc LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_tambah_anc.baseEntityId WHERE (referenceDate > '$startdate' AND referenceDate < '$enddate') GROUP BY event_bidan_tambah_anc.docId")->result();
+        $dataibu = $this->db->query("SELECT kartu_anc_registration.*,kartu_ibu_registration.dusun FROM kartu_anc_registration LEFT JOIN kartu_ibu_registration ON kartu_anc_registration.kiId=kartu_ibu_registration.kiId WHERE (referenceDate > '$startdate' AND referenceDate < '$enddate')")->result();
         foreach ($dataibu as $ibu){
             if(array_key_exists($ibu->dusun, $user_index)){
                 $key=array_search($user_index[$ibu->dusun],$result['data']['DATA A']['dusun']);
@@ -752,38 +773,38 @@ class Pws extends CI_Controller{
             }
         }
         
-        $datavisit = $this->db->query("SELECT event_bidan_kunjungan_anc.*,client_ibu.dusun FROM event_bidan_kunjungan_anc LEFT JOIN client_ibu ON client_ibu.baseEntityId=event_bidan_kunjungan_anc.baseEntityId WHERE (ancDate > '$startyear' AND ancDate < '$enddate') GROUP BY event_bidan_kunjungan_anc.docId")->result();
-        $query = $this->db->query("SELECT baseEntityId FROM event_bidan_kunjungan_anc_lab_test WHERE laboratoriumPeriksaHbAnemia='positif'")->result();
+        $datavisit = $this->db->query("SELECT kartu_anc_visit.*,kartu_ibu_registration.dusun FROM kartu_anc_visit LEFT JOIN kartu_ibu_registration ON kartu_anc_visit.kiId=kartu_ibu_registration.kiId WHERE (ancDate > '$startdate' AND ancDate < '$enddate')")->result();
+        $query = $this->db->query("SELECT motherId FROM kartu_anc_visit_labTest WHERE laboratoriumPeriksaHbAnemia='positif'")->result();
         $laboratoriumPeriksaHbAnemia = [];
         foreach ($query as $q){
-            if(!array_key_exists($q->baseEntityId, $laboratoriumPeriksaHbAnemia)){
-                $laboratoriumPeriksaHbAnemia[$q->baseEntityId] = TRUE;
+            if(!array_key_exists($q->motherId, $laboratoriumPeriksaHbAnemia)){
+                $laboratoriumPeriksaHbAnemia[$q->motherId] = TRUE;
             }
         }
-//        $query = $this->db->query("SELECT event_bidan_tambah_anc.baseEntityId as baseEntityId FROM event_bidan_tambah_anc,event_bidan_kunjungan_anc_integrasi WHERE event_bidan_tambah_anc.baseEntityId=event_bidan_kunjungan_anc_integrasi.baseEntityId AND event_bidan_tambah_anc.highRiskTuberculosis='yes' AND event_bidan_kunjungan_anc_integrasi.integrasiProgramtbObat='yes'")->result();
+        $query = $this->db->query("SELECT kartu_anc_registration.motherId as motherId FROM kartu_anc_registration,kartu_anc_visit_integrasi WHERE kartu_anc_registration.motherId=kartu_anc_visit_integrasi.motherId AND kartu_anc_registration.highRiskTuberculosis='yes' AND kartu_anc_visit_integrasi.integrasiProgramtbObat='yes'")->result();
         $highRiskTuberculosis = [];
         foreach ($query as $q){
-            if(!array_key_exists($q->baseEntityId, $highRiskTuberculosis)){
-                $highRiskTuberculosis[$q->baseEntityId] = TRUE;
+            if(!array_key_exists($q->motherId, $highRiskTuberculosis)){
+                $highRiskTuberculosis[$q->motherId] = TRUE;
             }
         }
-//        $query = $this->db->query("SELECT event_bidan_tambah_anc.baseEntityId as baseEntityId FROM event_bidan_tambah_anc,event_bidan_kunjungan_anc_integrasi WHERE event_bidan_tambah_anc.baseEntityId=event_bidan_kunjungan_anc_integrasi.baseEntityId AND event_bidan_tambah_anc.highRiskMalaria='yes' AND event_bidan_kunjungan_anc_integrasi.integrasiProgramMalariaObat='yes'")->result();
+        $query = $this->db->query("SELECT kartu_anc_registration.motherId as motherId FROM kartu_anc_registration,kartu_anc_visit_integrasi WHERE kartu_anc_registration.motherId=kartu_anc_visit_integrasi.motherId AND kartu_anc_registration.highRiskMalaria='yes' AND kartu_anc_visit_integrasi.integrasiProgramMalariaObat='yes'")->result();
         $highRiskMalaria = [];
         foreach ($query as $q){
-            if(!array_key_exists($q->baseEntityId, $highRiskMalaria)){
-                $highRiskMalaria[$q->baseEntityId] = TRUE;
+            if(!array_key_exists($q->motherId, $highRiskMalaria)){
+                $highRiskMalaria[$q->motherId] = TRUE;
             }
         }
-        $query = $this->db->query("SELECT event_bidan_tambah_anc.baseEntityId as baseEntityId FROM event_bidan_tambah_anc,event_bidan_kunjungan_anc_integrasi WHERE event_bidan_tambah_anc.baseEntityId=event_bidan_kunjungan_anc_integrasi.baseEntityId AND event_bidan_tambah_anc.highRiskHIVAIDS='yes' AND event_bidan_kunjungan_anc_integrasi.integrasiProgrampmtctSerologi='yes'")->result();
+        $query = $this->db->query("SELECT kartu_anc_registration.motherId as motherId FROM kartu_anc_registration,kartu_anc_visit_integrasi WHERE kartu_anc_registration.motherId=kartu_anc_visit_integrasi.motherId AND kartu_anc_registration.highRiskHIVAIDS='yes' AND kartu_anc_visit_integrasi.integrasiProgrampmtctSerologi='yes'")->result();
         $highRiskHIVAIDS = [];
         foreach ($query as $q){
-            if(!array_key_exists($q->baseEntityId, $highRiskHIVAIDS)){
-                $highRiskHIVAIDS[$q->baseEntityId] = TRUE;
+            if(!array_key_exists($q->motherId, $highRiskHIVAIDS)){
+                $highRiskHIVAIDS[$q->motherId] = TRUE;
             }
         }
         $tertangani = array();
         foreach ($datavisit as $dvisit){
-            if(array_key_exists($dvisit->baseEntityId, $tertangani)){
+            if(array_key_exists($dvisit->motherId, $tertangani)){
                 continue;
             }
             if(array_key_exists($dvisit->dusun, $user_index)){
@@ -791,29 +812,29 @@ class Pws extends CI_Controller{
                 if($dvisit->komplikasidalamKehamilan!="None"&&$dvisit->komplikasidalamKehamilan!=''&&$dvisit->komplikasidalamKehamilan!='tidak_ada_komplikasi'){
                     if(isset($dvisit->rujukan)){
                         if($dvisit->rujukan=="Ya"){
-                            $tertangani[$dvisit->baseEntityId] = 'yes';
+                            $tertangani[$dvisit->motherId] = 'yes';
                             $result['data']['DATA']['komplikasi_tertangani_bulan_ini'][$key] += 1;
                             continue;
                         }
                     }
                 }
-                if($dvisit->pelayananfe0=="Ya"&&array_key_exists($dvisit->baseEntityId, $laboratoriumPeriksaHbAnemia)){
-                    $tertangani[$dvisit->baseEntityId] = 'yes';
+                if($dvisit->pelayananfe0=="Ya"&&array_key_exists($dvisit->motherId, $laboratoriumPeriksaHbAnemia)){
+                    $tertangani[$dvisit->motherId] = 'yes';
                     $result['data']['DATA']['komplikasi_tertangani_bulan_ini'][$key] += 1;
                     continue;
                 }
-                if(array_key_exists($dvisit->baseEntityId, $highRiskTuberculosis)){
-                    $tertangani[$dvisit->baseEntityId] = 'yes';
+                if(array_key_exists($dvisit->motherId, $highRiskTuberculosis)){
+                    $tertangani[$dvisit->motherId] = 'yes';
                     $result['data']['DATA']['komplikasi_tertangani_bulan_ini'][$key] += 1;
                     continue;
                 }
-                if(array_key_exists($dvisit->baseEntityId, $highRiskMalaria)){
-                    $tertangani[$dvisit->baseEntityId] = 'yes';
+                if(array_key_exists($dvisit->motherId, $highRiskMalaria)){
+                    $tertangani[$dvisit->motherId] = 'yes';
                     $result['data']['DATA']['komplikasi_tertangani_bulan_ini'][$key] += 1;
                     continue;
                 }
-                if(array_key_exists($dvisit->baseEntityId, $highRiskHIVAIDS)){
-                    $tertangani[$dvisit->baseEntityId] = 'yes';
+                if(array_key_exists($dvisit->motherId, $highRiskHIVAIDS)){
+                    $tertangani[$dvisit->motherId] = 'yes';
                     $result['data']['DATA']['komplikasi_tertangani_bulan_ini'][$key] += 1;
                     continue;
                 }
