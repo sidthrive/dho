@@ -401,7 +401,7 @@ class Pws extends CI_Controller{
             }
         }
         
-        $datavisit = $this->db->query("SELECT * FROM kartu_pnc_visit WHERE (referenceDate > '$startdate' AND referenceDate < '$enddate') AND hariKeKF='kf4' group by motherId")->result();
+        $datavisit = $this->db->query("SELECT * FROM kartu_pnc_visit WHERE (PNCDate > '$startdate' AND PNCDate < '$enddate') AND hariKeKF='kf4' group by motherId")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userID, $user_index)){
                 $key=array_search($user_index[$dvisit->userID],$result['data']['DATA A']['desa']);
