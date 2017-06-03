@@ -49,7 +49,7 @@ class LocationModel extends CI_Model{
         'Bagik Polak Barat'=>array(1=>'Jogot Barat','Jogot Tengah','Jogot Timur','Jogot Selatan','Lendang','Jerneng'),
         'Bagik Polak Timur'=>array(1=>'Karang Bucu Lauk','Karang Bucu Daye','Rerot','Karang Kebon Barat','Karang Kebon Timur','Enjak.'),
         'Telagawaru'=>array(1=>'Paok Kambut I','Paok Kambut II','Gubuk Aida','Telagawaru.','Telagawaru III','Btn Bhp'),
-        'Labuapi'=>array(1=>'Labuapi Utara I','Labuapi  Utara II','Labuapi Selatan','Labuapi Timur','Labuapi Repok'),
+        'Labuapi'=>array(1=>'Labuapi Utara I','Labuapi Utara II','Labuapi Selatan','Labuapi Timur','Labuapi Repok'),
         'Rumak'=>array(1=>'Rubar Selatan','Rubar Utara','Rutim Selatan','Rutim Utara'),
         'Banyumulek'=>array(1=>'Mekar Sari','Karang Pande','Pengodongan','Kerangkeng Timur','Kerangkeng Barat','Banyumulek Timur','Gubuk Barat','Banyumulek Barat','Muhajirin','Dasan Tawar'),
         'Lelede'=>array(1=>'Dasan Bawak','Lelede I','Lelede II','Lelede III','Lelede IV','Lelede V'),
