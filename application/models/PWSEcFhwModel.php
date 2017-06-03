@@ -86,6 +86,7 @@ class PWSEcFhwModel extends CI_Model{
         
         $dusun = array_values($this->loc->getDusun($desa));
         $user_index = $this->loc->getDusunTypo($desa);
+        foreach ($dusun as $x=>$dsn){$dusun[$x] = $user_index[$dsn];}
         $result['data']['DATA A']['judul'] = ["REKAPITULASI PWS IBU - KIA DESA ".strtoupper($desa)];
         $result['data']['DATA A']['header'] = ["DUSUN"];
         $result['data']['DATA A']['dusun'] = $dusun;
@@ -205,6 +206,7 @@ class PWSEcFhwModel extends CI_Model{
         
         $dusun = array_values($this->loc->getDusun($desa));
         $user_index = $this->loc->getDusunTypo($desa);
+        foreach ($dusun as $x=>$dsn){$dusun[$x] = $user_index[$dsn];}
         $result['data']['DATA A']['judul'] = ["REKAPITULASI PWS IBU - KIA DESA ".strtoupper($desa)];
         $result['data']['DATA A']['header'] = ["DUSUN"];
         $result['data']['DATA A']['dusun'] = $dusun;
@@ -342,6 +344,7 @@ class PWSEcFhwModel extends CI_Model{
         
         $dusun = array_values($this->loc->getDusun($desa));
         $user_index = $this->loc->getDusunTypo($desa);
+        foreach ($dusun as $x=>$dsn){$dusun[$x] = $user_index[$dsn];}
         $result['data']['DATA A']['judul'] = ["PEMANTAUAN WILAYAH SETEMPAT (PWS) DESA ".strtoupper($desa)." TAHUN ".$year];
         $result['data']['DATA A']['header'] = ["DUSUN"];
         $result['data']['DATA A']['dusun'] = $dusun;
@@ -469,6 +472,7 @@ class PWSEcFhwModel extends CI_Model{
         
         $dusun = array_values($this->loc->getDusun($desa));
         $user_index = $this->loc->getDusunTypo($desa);
+        foreach ($dusun as $x=>$dsn){$dusun[$x] = $user_index[$dsn];}
         $result['data']['DATA A']['judul'] = ["DESA ".strtoupper($desa)];
         $result['data']['DATA A']['header'] = ["DUSUN"];
         $result['data']['DATA A']['dusun'] = $dusun;
@@ -597,6 +601,7 @@ class PWSEcFhwModel extends CI_Model{
         
         $dusun = array_values($this->loc->getDusun($desa));
         $user_index = $this->loc->getDusunTypo($desa);
+        foreach ($dusun as $x=>$dsn){$dusun[$x] = $user_index[$dsn];}
         $result['data']['DATA A']['judul'] = ["DESA ".strtoupper($desa)];
         $result['data']['DATA A']['header'] = ["DUSUN"];
         $result['data']['DATA A']['dusun'] = $dusun;
@@ -727,6 +732,7 @@ class PWSEcFhwModel extends CI_Model{
         
         $dusun = array_values($this->loc->getDusun($desa));
         $user_index = $this->loc->getDusunTypo($desa);
+        foreach ($dusun as $x=>$dsn){$dusun[$x] = $user_index[$dsn];}
         $result['form'] = array($form);
         $result['desa'] = array("DESA    :  ".strtoupper($desa));
         $result['bulan']    = array("BULAN              :   ".strtoupper($month)." ".$year);
@@ -866,7 +872,7 @@ class PWSEcFhwModel extends CI_Model{
         
         $dusun = array_values($this->loc->getDusun($desa));
         $user_index = $this->loc->getDusunTypo($desa);
-        
+        foreach ($dusun as $x=>$dsn){$dusun[$x] = $user_index[$dsn];}
         $result['data']['Sheet1']['judul'] = ["DESA ".strtoupper($desa)];
         $result['data']['Perdarahan']['header'] = ["DUSUN"];
         $result['data']['Perdarahan']['dusun'] = $dusun;

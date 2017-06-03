@@ -542,7 +542,7 @@ class Pws extends CI_Controller{
         $result = array();
         $namefile = "";
         $user = array_values($this->loc->getDusun($desa));
-        $user_index = $this->loc->getDusunTypo($desa);
+        $user_index = $this->loc->getDusunTypo($desa);foreach ($user as $x=>$dsn){$user[$x] = $user_index[$dsn];}
         $result['data']['DATA A']['dusun'] = $user;
         $result['data']['DATA']['cakupan_k1_bulan_ini'] = array_fill(0,count($user),0);
         $result['data']['DATA']['cakupan_k4_bulan_ini'] = array_fill(0,count($user),0);
@@ -935,7 +935,7 @@ class Pws extends CI_Controller{
         $result = array();
         $namefile = "";
         $user = array_values($this->loc->getDusun($desa));
-        $user_index = $this->loc->getDusunTypo($desa);
+        $user_index = $this->loc->getDusunTypo($desa);foreach ($user as $x=>$dsn){$user[$x] = $user_index[$dsn];}
         $result['data']['DATA A']['dusun'] = $user;
         
         $result['data']['DATA']['kunjungan_neonatal_I_L'] = array_fill(0,count($user),0);
@@ -1115,7 +1115,7 @@ class Pws extends CI_Controller{
         $result = array();
         $namefile = "";
         $user = array_values($this->loc->getDusun($desa));
-        $user_index = $this->loc->getDusunTypo($desa);
+        $user_index = $this->loc->getDusunTypo($desa);foreach ($user as $x=>$dsn){$user[$x] = $user_index[$dsn];}
         $result['data']['DATA A']['dusun'] = $user;
         
         $result['data']['DATA']['pelayanan_kb_4t'] = array_fill(0,count($user),0);
@@ -1302,7 +1302,7 @@ class Pws extends CI_Controller{
         $result = array();
         $namefile = "";
         $user = array_values($this->loc->getDusun($desa));
-        $user_index = $this->loc->getDusunTypo($desa);
+        $user_index = $this->loc->getDusunTypo($desa);foreach ($user as $x=>$dsn){$user[$x] = $user_index[$dsn];}
         $result['data']['DATA A']['dusun'] = $user;
         
         $result['data']['DATA']['pneumonia_kasus_L'] = array_fill(0,count($user),0);
@@ -1517,7 +1517,7 @@ class Pws extends CI_Controller{
         $result = array();
         $namefile = "";
         $user = array_values($this->loc->getDusun($desa));
-        $user_index = $this->loc->getDusunTypo($desa);
+        $user_index = $this->loc->getDusunTypo($desa);foreach ($user as $x=>$dsn){$user[$x] = $user_index[$dsn];}
         $result['data']['DATA A']['dusun'] = $user;
         
         $result['data']['DATA']['pneumonia_kasus_L'] = array_fill(0,count($user),0);
@@ -1755,7 +1755,7 @@ class Pws extends CI_Controller{
         $result = array();
         $namefile = "";
         $user = array_values($this->loc->getDusun($desa));
-        $user_index = $this->loc->getDusunTypo($desa);
+        $user_index = $this->loc->getDusunTypo($desa);foreach ($user as $x=>$dsn){$user[$x] = $user_index[$dsn];}
         $result['data']['DATA A']['dusun'] = $user;
         
         $result['data']['DATA']['bblr_kasus_L'] = array_fill(0,count($user),0);
@@ -1971,7 +1971,7 @@ class Pws extends CI_Controller{
         $result = array();
         $namefile = "";
         $user = array_values($this->loc->getDusun($desa));
-        $user_index = $this->loc->getDusunTypo($desa);
+        $user_index = $this->loc->getDusunTypo($desa);foreach ($user as $x=>$dsn){$user[$x] = $user_index[$dsn];}
         
         $result['data']['Pendarahan']['hamil_muda_K'] = array_fill(0,count($user),0);
         $result['data']['Pendarahan']['hamil_muda_M'] = array_fill(0,count($user),0);
