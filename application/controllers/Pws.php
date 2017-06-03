@@ -478,7 +478,7 @@ class Pws extends CI_Controller{
                         }
                     }
                 }
-                if($dvisit->pelayananfe0=="Ya"&&array_key_exists($dvisit->motherId, $laboratoriumPeriksaHbAnemia)){
+                if($dvisit->pelayananFe0=="Ya"&&array_key_exists($dvisit->motherId, $laboratoriumPeriksaHbAnemia)){
                     $tertangani[$dvisit->motherId] = 'yes';
                     $result['data']['DATA']['komplikasi_tertangani_bulan_ini'][$key] += 1;
                     continue;
@@ -818,7 +818,7 @@ class Pws extends CI_Controller{
                         }
                     }
                 }
-                if($dvisit->pelayananfe0=="Ya"&&array_key_exists($dvisit->motherId, $laboratoriumPeriksaHbAnemia)){
+                if($dvisit->pelayananFe0=="Ya"&&array_key_exists($dvisit->motherId, $laboratoriumPeriksaHbAnemia)){
                     $tertangani[$dvisit->motherId] = 'yes';
                     $result['data']['DATA']['komplikasi_tertangani_bulan_ini'][$key] += 1;
                     continue;
