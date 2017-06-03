@@ -741,7 +741,7 @@ class Pws extends CI_Controller{
             }
         }
         
-        $datavisit = $this->db->query("SELECT kartu_pnc_visit.*,kartu_ibu_registration.dusun FROM kartu_pnc_visit LEFT JOIN kartu_ibu_registration ON kartu_pnc_visit.kiId=kartu_ibu_registration.kiId WHERE (referenceDate > '$startdate' AND referenceDate < '$enddate') AND hariKeKF='kf4' group by motherId")->result();
+        $datavisit = $this->db->query("SELECT kartu_pnc_visit.*,kartu_ibu_registration.dusun FROM kartu_pnc_visit LEFT JOIN kartu_ibu_registration ON kartu_pnc_visit.kiId=kartu_ibu_registration.kiId WHERE (PNCDate > '$startdate' AND PNCDate < '$enddate') AND hariKeKF='kf4' group by motherId")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->dusun, $user_index)){
                 $key=array_search($user_index[$dvisit->dusun],$result['data']['DATA A']['dusun']);
