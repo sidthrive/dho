@@ -92,12 +92,10 @@ class DataEntry extends CI_Controller{
         }else{
             $data['start'] = $this->input->post('start');
             $data['end'] = $this->input->post('end');
-            $old_data = $this->input->post('old');
             $by = $this->input->post('by');
             $data['kecamatan']		= str_replace('%20',' ',$this->uri->segment(3));
             $data['desa']		= str_replace('%20', ' ', $this->uri->segment(4));
-            if($by=="subdate") $data['data'] = $this->AnalyticsModel->downloadCountPerForm($data['kecamatan'],$data['start'],$data['end'],$old_data);
-            else $data['data'] = $this->AnalyticsModel->downloadCountPerFormByVisitDate($data['kecamatan'],$data['start'],$data['end'],$old_data);
+            $data['data'] = $this->DataentryModel->downloadCountPerForm($data['kecamatan'],$data['start'],$data['end']);
         }
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
