@@ -111,7 +111,7 @@ class DataentryModel extends CI_Model{
     
     public function downloadCountPerForm($kecamatan="",$start,$end){
         $start1 = new DateTime($start);
-        $end1 = new DateTime($end);
+        $end1 = $end2 = new DateTime($end);
         $end1 = $end1->modify('+1 day'); 
         $interval = new DateInterval('P1D');
         $daterange = new DatePeriod($start1, $interval ,$end1);
@@ -185,7 +185,7 @@ class DataentryModel extends CI_Model{
         }
         ob_end_clean();
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="Dataentryform-'.$kecamatan.'-'.$start->format("Ymd").'-'.$end1->format("Ymd").'.xlsx"'); 
+        header('Content-Disposition: attachment;filename="Dataentryform-'.$kecamatan.'-'.$start1->format("Ymd").'-'.$end2->format("Ymd").'.xlsx"'); 
         header('Cache-Control: max-age=0');
 
         $saveContainer = PHPExcel_IOFactory::createWriter($fileObject,'Excel2007');
