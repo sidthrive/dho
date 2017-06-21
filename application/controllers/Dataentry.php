@@ -40,6 +40,15 @@ class DataEntry extends CI_Controller{
         if($this->session->userdata('level')=="fhw"){
             
             $data['desa']		= $this->session->userdata('location');
+            if($this->input->get('start')==null&&$data['desa']==""){
+                if($this->input->get('by')==null)$by = "subdate";else $by = $this->input->get('by');
+                $now = date("Y-m-d");
+                redirect("dataentry/bidanbyform?start=2016-01-01&end=$now&by=$by");
+            }else{
+                $by = $this->input->get('by');
+                $data['start'] = $this->input->get('start');
+                $data['end'] = $this->input->get('end');
+            }
             $data['data']                   = $this->DataentryFhwModel->getCountPerForm("",$data['start'],$data['end']);
             $this->load->view("header");
             $this->load->view("dataentry/fhw/dataentrysidebar");
