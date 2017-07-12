@@ -40,7 +40,7 @@
                 </div>
             </div>
             <?php } ?>
-            <?php if($this->session->userdata('tipe')=="bidan"||$this->session->userdata('tipe')=="all"){ ?>
+            <?php if(($this->session->userdata('tipe')=="bidan"&&(strpos($this->session->userdata('username'),"user")!==false))||$this->session->userdata('tipe')=="all"){ ?>
             <div class="panel panel-default" id="sdidtks">
                 <a data-toggle="collapse" data-parent="#accordion" href="#sdidtk_menu">
                 <div class="panel-heading">
