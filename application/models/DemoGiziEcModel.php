@@ -267,7 +267,7 @@ class DemoGiziEcModel extends CI_Model{
                 $data[$date]["id"] = $date;
                 $data[$date]["data"] = array();
                 foreach ($table_default as $td=>$td_name){
-                    array_push($data[$date]["data"], array($td_name,rand(10,30)));
+                    array_push($data[$date]["data"], array($td_name,rand(0,5)));
                 }
             }
             $result_data = $data;
