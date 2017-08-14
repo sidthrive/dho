@@ -8,14 +8,26 @@ class DataEntry extends CI_Controller{
             $this->session->set_flashdata('url', $this->uri->uri_string);
             redirect('login');
         }
-        $this->load->model('LocationModel','loc');
-        $this->load->model('AnalyticsFhwEcModel','AnalyticsFhwModel');
-        $this->load->model('AnalyticsEcModel','AnalyticsModel');
-        $this->load->model('GiziEcModel','GiziModel');
-        $this->load->model('GiziFhwEcModel','GiziFhwModel');
-        $this->load->model('VaksinatorFhwEcModel','VaksinatorFhwModel');
-        $this->load->model('VaksinatorEcModel','VaksinatorModel');
-        $this->load->model('OnTimeSubmissionModel','OnTimeSubmissionModel');
+        if($this->session->userdata('level')=="demo"){
+            $this->load->model('LocationModel','loc');
+            $this->load->model('DemoAnalyticsFhwEcModel','AnalyticsFhwModel');
+            $this->load->model('DemoAnalyticsEcModel','AnalyticsModel');
+            $this->load->model('DemoGiziEcModel','GiziModel');
+            $this->load->model('DemoGiziFhwEcModel','GiziFhwModel');
+            $this->load->model('DemoVaksinatorFhwEcModel','VaksinatorFhwModel');
+            $this->load->model('DemoVaksinatorEcModel','VaksinatorModel');
+            $this->load->model('DemoOnTimeSubmissionModel','OnTimeSubmissionModel');
+        }else{
+            $this->load->model('LocationModel','loc');
+            $this->load->model('AnalyticsFhwEcModel','AnalyticsFhwModel');
+            $this->load->model('AnalyticsEcModel','AnalyticsModel');
+            $this->load->model('GiziEcModel','GiziModel');
+            $this->load->model('GiziFhwEcModel','GiziFhwModel');
+            $this->load->model('VaksinatorFhwEcModel','VaksinatorFhwModel');
+            $this->load->model('VaksinatorEcModel','VaksinatorModel');
+            $this->load->model('OnTimeSubmissionModel','OnTimeSubmissionModel');
+        }
+        
     }
     
     public function index(){
