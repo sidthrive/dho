@@ -86,7 +86,17 @@ class Laporan extends CI_Controller{
     public function downloadGiziPWS(){
         $this->load->view("header");
         $this->load->view("laporan/laporansidebar");
-        $this->load->view("laporan/downloadpwsgizi");
+        if($this->session->userdata('level')=="fhw"){
+            $this->load->view("laporan/fhw/downloadpwsgizi");
+        }else{
+            if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
+                $data['location'] = $this->loc->getAllLocSpv('gizi',$this->session->userdata('location'));
+            }else{
+                $data['location'] = $this->loc->getAllLoc('gizi');
+            }
+            $this->load->view("laporan/downloadpwsgizi",$data);
+        }
+        
         $this->load->view("footer");
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
@@ -131,7 +141,17 @@ class Laporan extends CI_Controller{
     public function downloadvaksinatorPWS(){
         $this->load->view("header");
         $this->load->view("laporan/laporansidebar");
-        $this->load->view("laporan/downloadpwsjurim");
+        if($this->session->userdata('level')=="fhw"){
+            $this->load->view("laporan/fhw/downloadpwsjurim");
+        }else{
+            if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
+                $data['location'] = $this->loc->getAllLocSpv('vaksinator',$this->session->userdata('location'));
+            }else{
+                $data['location'] = $this->loc->getAllLoc('vaksinator');
+            }
+            $this->load->view("laporan/downloadpwsjurim",$data);
+        }
+        
         $this->load->view("footer");
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
