@@ -6,31 +6,31 @@ class GiziPwsModel extends CI_Model{
 
     function __construct() {
         parent::__construct();
-        $this->db = $this->load->database('gizi', TRUE);
+        $this->db = $this->load->database('analytics', TRUE);
         $this->load->model('PHPExcelModel');
+        $this->load->model('LocationModel');
         date_default_timezone_set("Asia/Makassar"); 
     }
     
     public function getDataKunjungan($clause=1){
-        return $this->db->query("SELECT * FROM kunjungan_gizi WHERE ".$clause)->result();
+        return $this->db->query("SELECT * FROM event_gizi_kunjungan_gizi WHERE ".$clause)->result();
     }
     
     public function getDataRegistrasi($clause=1){
-        return $this->db->query("SELECT * FROM registrasi_gizi WHERE ".$clause)->result();
+        return $this->db->query("SELECT client_anak.birthDate,client_anak.gender,event_child_registration.beratLahir,event_child_registration.locationId FROM client_anak LEFT JOIN event_child_registration ON event_child_registration.baseEntityId =client_anak.baseEntityId  WHERE ".$clause)->result();
     }
     
     public function pwsBulanIni($bulan,$tahun,$kecamatan){
         $bulan_map = ['januari'=>1,'februari'=>2,'maret'=>3,'april'=>4,'mei'=>5,'juni'=>6,'juli'=>7,'agustus'=>8,'september'=>9,'oktober'=>10,'november'=>11,'desember'=>12];
-        if($kecamatan=='sengkol'){
-            $result   =  ['Ketara'=>array(),'Sengkol'=>array(),'Kawo'=>array(),'Tanak Awu'=>array(),'Pengembur'=>array(),'Segala Anyar'=>array()];
-            $result_row = ['Ketara'=>19,'Sengkol'=>20,'Kawo'=>21,'Tanak Awu'=>22,'Pengembur'=>23,'Segala Anyar'=>24];
-            $result_index   =  ['Ketara'=>array(),'Sengkol'=>array(),'Kawo'=>array(),'Tanak Awu'=>array(),'Pengembur'=>array(),'Segala Anyar'=>array()];
-            $user_village = ['gizi8'=>'Ketara','gizi9'=>'Sengkol','gizi10'=>'Sengkol','gizi11'=>'Kawo','gizi12'=>'Tanak Awu','gizi13'=>'Pengembur','gizi14'=>'Segala Anyar'];
-        }elseif($kecamatan=='janapria'){
-            $result   =  ['Lekor'=>array(),'Saba'=>array(),'Pendem'=>array(),'Setuta'=>array(),'Jango'=>array(),'Janapria'=>array()];
-            $result_row   =  ['Lekor'=>19,'Saba'=>20,'Pendem'=>21,'Setuta'=>22,'Jango'=>23,'Janapria'=>24];
-            $result_index   =  ['Lekor'=>array(),'Saba'=>array(),'Pendem'=>array(),'Setuta'=>array(),'Jango'=>array(),'Janapria'=>array()];
-            $user_village = ['gizi1'=>'Lekor','gizi2'=>'Saba','gizi3'=>'Pendem','gizi4'=>'Setuta','gizi5'=>'Jango','gizi6'=>'Janapria'];
+        $locs = $this->LocationModel->getLocId($kecamatan);
+        $result = $result_row = $result_index = $user_village = [];
+        $num = 19;
+        foreach ($locs as $dex=>$name){
+            $result[$name] = [];
+            $result_row[$name] = $num;
+            $num++;
+            $result_index[$name] = [];
+            $user_village[$dex] = $name;
         }
         
         foreach ($user_village as $x=>$uv){
@@ -163,208 +163,215 @@ class GiziPwsModel extends CI_Model{
         $dataS = $this->getDataKunjungan("(umur <= 59) AND (tanggalPenimbangan > '$startdate' AND tanggalPenimbangan < '$enddate')");
         
         foreach ($dataS as $dds){
-            if(array_key_exists($dds->userID, $user_village)){
+            if(array_key_exists($dds->locationId, $user_village)){
                 if($dds->umur<=5){
-                    $child = $this->db->query("SELECT jenisKelamin as jk FROM registrasi_gizi WHERE childId = '".$dds->childId."'");
+                    $child = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId  = '".$dds->baseEntityId ."'");
                     if($child->num_rows()<1){
                         continue;
                     }
                     $jk = $child->row()->jk;
                     if($jk=='male'||$jk=='Laki-laki'){
-                        $result[$user_village[$dds->userID]]['S'][0]['L'] += 1;
+                        $result[$user_village[$dds->locationId]]['S'][0]['L'] += 1;
                         if(strtolower($dds->nutrition_status)=="Weight Increase"){
-                            $result[$user_village[$dds->userID]]['N'][0]['L'] += 1;
+                            $result[$user_village[$dds->locationId]]['N'][0]['L'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="Not gaining weight"){
-                            $result[$user_village[$dds->userID]]['T'][0]['L'] += 1;
+                            $result[$user_village[$dds->locationId]]['T'][0]['L'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="not attending previous visit"){
-                            $result[$user_village[$dds->userID]]['O'][0]['L'] += 1;
+                            $result[$user_village[$dds->locationId]]['O'][0]['L'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="b"){
-                            $result[$user_village[$dds->userID]]['B'][0]['L'] += 1;
+                            $result[$user_village[$dds->locationId]]['B'][0]['L'] += 1;
                         }
                         if(strtolower($dds->dua_t)=="ya"||strtolower($dds->dua_t)=="yes"){
-                            $result[$user_village[$dds->userID]]['2T'][0]['L'] += 1;
+                            $result[$user_village[$dds->locationId]]['2T'][0]['L'] += 1;
                         }
                         if(strtolower($dds->bgm)=="ya"||strtolower($dds->bgm)=="yes"){
-                            $result[$user_village[$dds->userID]]['V'][0]['L'] += 1;
+                            $result[$user_village[$dds->locationId]]['V'][0]['L'] += 1;
                         }
                     }elseif($jk=='female'||$jk=='Perempuan'){
-                        $result[$user_village[$dds->userID]]['S'][0]['P'] += 1;
+                        $result[$user_village[$dds->locationId]]['S'][0]['P'] += 1;
                         if(strtolower($dds->nutrition_status)=="Weight Increase"){
-                            $result[$user_village[$dds->userID]]['N'][0]['P'] += 1;
+                            $result[$user_village[$dds->locationId]]['N'][0]['P'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="Not gaining weight"){
-                            $result[$user_village[$dds->userID]]['T'][0]['P'] += 1;
+                            $result[$user_village[$dds->locationId]]['T'][0]['P'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="not attending previous visit"){
-                            $result[$user_village[$dds->userID]]['O'][0]['P'] += 1;
+                            $result[$user_village[$dds->locationId]]['O'][0]['P'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="b"){
-                            $result[$user_village[$dds->userID]]['B'][0]['P'] += 1;
+                            $result[$user_village[$dds->locationId]]['B'][0]['P'] += 1;
                         }
                         if(strtolower($dds->dua_t)=="ya"||strtolower($dds->dua_t)=="yes"){
-                            $result[$user_village[$dds->userID]]['2T'][0]['P'] += 1;
+                            $result[$user_village[$dds->locationId]]['2T'][0]['P'] += 1;
                         }
                         if(strtolower($dds->bgm)=="ya"||strtolower($dds->bgm)=="yes"){
-                            $result[$user_village[$dds->userID]]['V'][0]['P'] += 1;
+                            $result[$user_village[$dds->locationId]]['V'][0]['P'] += 1;
                         }
                     }
                 }elseif($dds->umur>5&&$dds->umur<=11){
-                    $child = $this->db->query("SELECT jenisKelamin as jk FROM registrasi_gizi WHERE childId = '".$dds->childId."'");
+                    $child = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId  = '".$dds->baseEntityId ."'");
                     if($child->num_rows()<1){
                         continue;
                     }
                     $jk = $child->row()->jk;
                     if($jk=='male'||$jk=='Laki-laki'){
-                        $result[$user_village[$dds->userID]]['S'][1]['L'] += 1;
+                        $result[$user_village[$dds->locationId]]['S'][1]['L'] += 1;
                         if(strtolower($dds->nutrition_status)=="Weight Increase"){
-                            $result[$user_village[$dds->userID]]['N'][1]['L'] += 1;
+                            $result[$user_village[$dds->locationId]]['N'][1]['L'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="t"){
-                            $result[$user_village[$dds->userID]]['T'][1]['L'] += 1;
+                            $result[$user_village[$dds->locationId]]['T'][1]['L'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="not attending previous visit"){
-                            $result[$user_village[$dds->userID]]['O'][1]['L'] += 1;
+                            $result[$user_village[$dds->locationId]]['O'][1]['L'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="b"){
-                            $result[$user_village[$dds->userID]]['B'][1]['L'] += 1;
+                            $result[$user_village[$dds->locationId]]['B'][1]['L'] += 1;
                         }
                         if(strtolower($dds->dua_t)=="ya"||strtolower($dds->dua_t)=="yes"){
-                            $result[$user_village[$dds->userID]]['2T'][1]['L'] += 1;
+                            $result[$user_village[$dds->locationId]]['2T'][1]['L'] += 1;
                         }
                         if(strtolower($dds->bgm)=="ya"||strtolower($dds->bgm)=="yes"){
-                            $result[$user_village[$dds->userID]]['V'][1]['L'] += 1;
+                            $result[$user_village[$dds->locationId]]['V'][1]['L'] += 1;
                         }
                         if(strtolower($dds->mp_asi)=="ya"||strtolower($dds->mp_asi)=="yes"){
-                            $result[$user_village[$dds->userID]]['MP1'][0]['L'] += 1;
+                            $result[$user_village[$dds->locationId]]['MP1'][0]['L'] += 1;
                         }
                     }elseif($jk=='female'||$jk=='Perempuan'){
-                        $result[$user_village[$dds->userID]]['S'][1]['P'] += 1;
+                        $result[$user_village[$dds->locationId]]['S'][1]['P'] += 1;
                         if(strtolower($dds->nutrition_status)=="Weight Increase"){
-                            $result[$user_village[$dds->userID]]['N'][1]['P'] += 1;
+                            $result[$user_village[$dds->locationId]]['N'][1]['P'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="Not gaining weight"){
-                            $result[$user_village[$dds->userID]]['T'][1]['P'] += 1;
+                            $result[$user_village[$dds->locationId]]['T'][1]['P'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="not attending previous visit"){
-                            $result[$user_village[$dds->userID]]['O'][1]['P'] += 1;
+                            $result[$user_village[$dds->locationId]]['O'][1]['P'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="b"){
-                            $result[$user_village[$dds->userID]]['B'][1]['P'] += 1;
+                            $result[$user_village[$dds->locationId]]['B'][1]['P'] += 1;
                         }
                         if(strtolower($dds->dua_t)=="ya"||strtolower($dds->dua_t)=="yes"){
-                            $result[$user_village[$dds->userID]]['2T'][1]['P'] += 1;
+                            $result[$user_village[$dds->locationId]]['2T'][1]['P'] += 1;
                         }
                         if(strtolower($dds->bgm)=="ya"||strtolower($dds->bgm)=="yes"){
-                            $result[$user_village[$dds->userID]]['V'][1]['P'] += 1;
+                            $result[$user_village[$dds->locationId]]['V'][1]['P'] += 1;
                         }
                         if(strtolower($dds->mp_asi)=="ya"||strtolower($dds->mp_asi)=="yes"){
-                            $result[$user_village[$dds->userID]]['MP1'][0]['P'] += 1;
+                            $result[$user_village[$dds->locationId]]['MP1'][0]['P'] += 1;
                         }
                     }
                 }elseif($dds->umur>11&&$dds->umur<=23){
-                    $child = $this->db->query("SELECT jenisKelamin as jk FROM registrasi_gizi WHERE childId = '".$dds->childId."'");
+                    $child = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId  = '".$dds->baseEntityId ."'");
                     if($child->num_rows()<1){
                         continue;
                     }
                     $jk = $child->row()->jk;
                     if($jk=='male'||$jk=='Laki-laki'){
-                        $result[$user_village[$dds->userID]]['S'][2]['L'] += 1;
+                        $result[$user_village[$dds->locationId]]['S'][2]['L'] += 1;
                         if(strtolower($dds->nutrition_status)=="Weight Increase"){
-                            $result[$user_village[$dds->userID]]['N'][2]['L'] += 1;
+                            $result[$user_village[$dds->locationId]]['N'][2]['L'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="Not gaining weight"){
-                            $result[$user_village[$dds->userID]]['T'][2]['L'] += 1;
+                            $result[$user_village[$dds->locationId]]['T'][2]['L'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="not attending previous visit"){
-                            $result[$user_village[$dds->userID]]['O'][2]['L'] += 1;
+                            $result[$user_village[$dds->locationId]]['O'][2]['L'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="b"){
-                            $result[$user_village[$dds->userID]]['B'][2]['L'] += 1;
+                            $result[$user_village[$dds->locationId]]['B'][2]['L'] += 1;
                         }
                         if(strtolower($dds->dua_t)=="ya"||strtolower($dds->dua_t)=="yes"){
-                            $result[$user_village[$dds->userID]]['2T'][2]['L'] += 1;
+                            $result[$user_village[$dds->locationId]]['2T'][2]['L'] += 1;
                         }
                         if(strtolower($dds->bgm)=="ya"||strtolower($dds->bgm)=="yes"){
-                            $result[$user_village[$dds->userID]]['V'][2]['L'] += 1;
+                            $result[$user_village[$dds->locationId]]['V'][2]['L'] += 1;
                         }
                         if(strtolower($dds->mp_asi)=="ya"||strtolower($dds->mp_asi)=="yes"){
-                            $result[$user_village[$dds->userID]]['MP2'][0]['L'] += 1;
+                            $result[$user_village[$dds->locationId]]['MP2'][0]['L'] += 1;
                         }
                     }elseif($jk=='female'||$jk=='Perempuan'){
-                        $result[$user_village[$dds->userID]]['S'][2]['P'] += 1;
+                        $result[$user_village[$dds->locationId]]['S'][2]['P'] += 1;
                         if(strtolower($dds->nutrition_status)=="Weight Increase"){
-                            $result[$user_village[$dds->userID]]['N'][2]['P'] += 1;
+                            $result[$user_village[$dds->locationId]]['N'][2]['P'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="Not gaining weight"){
-                            $result[$user_village[$dds->userID]]['T'][2]['P'] += 1;
+                            $result[$user_village[$dds->locationId]]['T'][2]['P'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="not attending previous visit"){
-                            $result[$user_village[$dds->userID]]['O'][2]['P'] += 1;
+                            $result[$user_village[$dds->locationId]]['O'][2]['P'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="b"){
-                            $result[$user_village[$dds->userID]]['B'][2]['P'] += 1;
+                            $result[$user_village[$dds->locationId]]['B'][2]['P'] += 1;
                         }
                         if(strtolower($dds->dua_t)=="ya"||strtolower($dds->dua_t)=="yes"){
-                            $result[$user_village[$dds->userID]]['2T'][2]['P'] += 1;
+                            $result[$user_village[$dds->locationId]]['2T'][2]['P'] += 1;
                         }
                         if(strtolower($dds->bgm)=="ya"||strtolower($dds->bgm)=="yes"){
-                            $result[$user_village[$dds->userID]]['V'][2]['P'] += 1;
+                            $result[$user_village[$dds->locationId]]['V'][2]['P'] += 1;
                         }
                         if(strtolower($dds->mp_asi)=="ya"||strtolower($dds->mp_asi)=="yes"){
-                            $result[$user_village[$dds->userID]]['MP2'][0]['P'] += 1;
+                            $result[$user_village[$dds->locationId]]['MP2'][0]['P'] += 1;
                         }
                     }
                 }elseif($dds->umur>23&&$dds->umur<=59){
-                    $child = $this->db->query("SELECT jenisKelamin as jk FROM registrasi_gizi WHERE childId = '".$dds->childId."'");
+                    $child = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId  = '".$dds->baseEntityId ."'");
                     if($child->num_rows()<1){
                         continue;
                     }
                     $jk = $child->row()->jk;
                     if($jk=='male'||$jk=='Laki-laki'){
-                        $result[$user_village[$dds->userID]]['S'][3]['L'] += 1; 
+                        $result[$user_village[$dds->locationId]]['S'][3]['L'] += 1; 
                         if(strtolower($dds->nutrition_status)=="Weight Increase"){
-                            $result[$user_village[$dds->userID]]['N'][3]['L'] += 1;
+                            $result[$user_village[$dds->locationId]]['N'][3]['L'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="Not gaining weight"){
-                            $result[$user_village[$dds->userID]]['T'][3]['L'] += 1;
+                            $result[$user_village[$dds->locationId]]['T'][3]['L'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="not attending previous visit"){
-                            $result[$user_village[$dds->userID]]['O'][3]['L'] += 1;
+                            $result[$user_village[$dds->locationId]]['O'][3]['L'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="b"){
-                            $result[$user_village[$dds->userID]]['B'][3]['L'] += 1;
+                            $result[$user_village[$dds->locationId]]['B'][3]['L'] += 1;
                         }
                         if(strtolower($dds->dua_t)=="ya"||strtolower($dds->dua_t)=="yes"){
-                            $result[$user_village[$dds->userID]]['2T'][3]['L'] += 1;
+                            $result[$user_village[$dds->locationId]]['2T'][3]['L'] += 1;
                         }
                         if(strtolower($dds->bgm)=="ya"||strtolower($dds->bgm)=="yes"){
-                            $result[$user_village[$dds->userID]]['V'][3]['L'] += 1;
+                            $result[$user_village[$dds->locationId]]['V'][3]['L'] += 1;
                         }
                     }elseif($jk=='female'||$jk=='Perempuan'){
-                        $result[$user_village[$dds->userID]]['S'][3]['P'] += 1; 
+                        $result[$user_village[$dds->locationId]]['S'][3]['P'] += 1; 
                         if(strtolower($dds->nutrition_status)=="Weight Increase"){
-                            $result[$user_village[$dds->userID]]['N'][3]['P'] += 1;
+                            $result[$user_village[$dds->locationId]]['N'][3]['P'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="Not gaining weight"){
-                            $result[$user_village[$dds->userID]]['T'][3]['P'] += 1;
+                            $result[$user_village[$dds->locationId]]['T'][3]['P'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="not attending previous visit"){
-                            $result[$user_village[$dds->userID]]['O'][3]['P'] += 1;
+                            $result[$user_village[$dds->locationId]]['O'][3]['P'] += 1;
                         }elseif(strtolower($dds->nutrition_status)=="b"){
-                            $result[$user_village[$dds->userID]]['B'][3]['P'] += 1;
+                            $result[$user_village[$dds->locationId]]['B'][3]['P'] += 1;
                         }
                         if(strtolower($dds->dua_t)=="ya"||strtolower($dds->dua_t)=="yes"){
-                            $result[$user_village[$dds->userID]]['2T'][3]['P'] += 1;
+                            $result[$user_village[$dds->locationId]]['2T'][3]['P'] += 1;
                         }
                         if(strtolower($dds->bgm)=="ya"||strtolower($dds->bgm)=="yes"){
-                            $result[$user_village[$dds->userID]]['V'][3]['P'] += 1;
+                            $result[$user_village[$dds->locationId]]['V'][3]['P'] += 1;
                         }
                     }
                 }
             }
         }
         
-        $dataBBLR = $this->getDataRegistrasi("tanggalLahir > '$startdate' AND tanggalLahir < '$enddate'");
+        $dataBBLR = $this->getDataRegistrasi("birthDate > '$startdate' AND birthDate < '$enddate'");
         
         foreach ($dataBBLR as $dds){
-            if(array_key_exists($dds->userID, $user_village)){
+            if(array_key_exists($dds->locationId, $user_village)){
                 if($dds->beratLahir<2500&&$dds->beratLahir!='-'){
-                    $jk = $dds->jenisKelamin;
+                    $jk = $dds->gender;
                     if($jk=='male'||$jk=='Laki-laki'){
-                        $result[$user_village[$dds->userID]]['BBLR'][0]['L'] += 1;
+                        $result[$user_village[$dds->locationId]]['BBLR'][0]['L'] += 1;
                     }elseif($jk=='female'||$jk=='Perempuan'){
-                        $result[$user_village[$dds->userID]]['BBLR'][0]['P'] += 1;
+                        $result[$user_village[$dds->locationId]]['BBLR'][0]['P'] += 1;
                     }
                 }
             }
         }
         
-        $file = APPPATH."download/gizi/pws/template_$kecamatan.xlsx";
+        $file = APPPATH."download/gizi/pws/template.xlsx";
         $this->load->library('PHPExcell');
         $fileObject = PHPExcel_IOFactory::load($file);
         $fileObject->setActiveSheetIndex(0);
         
+        $no = 1;
+        $row = 19;
+        $fileObject->getActiveSheet()->setCellValue('C3', ": ".$kecamatan);
+        $fileObject->getActiveSheet()->setCellValue('C4', ": ".$kecamatan);
         foreach ($result as $key1=>$ite1){
+            $fileObject->getActiveSheet()->setCellValue('A'.$row, $no);
+            $fileObject->getActiveSheet()->setCellValue('B'.$row, $key1);
+            $no++;$row++;
             foreach ($ite1 as $key2=>$ite2){
                 foreach ($ite2 as $key3=>$ite3){
                     foreach ($ite3 as $key4=>$value){
