@@ -6,9 +6,10 @@ class VaksinatorPwsModel extends CI_Model{
 
     function __construct() {
         parent::__construct();
-        $this->db = $this->load->database('vaksinator', TRUE);
+        $this->db = $this->load->database('analytics', TRUE);
         $this->load->library('PHPExcell');
         $this->load->model('PHPExcelModel');
+        $this->load->model('LocationModel');
         date_default_timezone_set("Asia/Makassar"); 
     }
     
@@ -22,43 +23,41 @@ class VaksinatorPwsModel extends CI_Model{
     
     private function getDataTemplate($kecamatan){
         $template = [];
-        if($kecamatan=='sengkol'){
-            $template['hb0'] = $template['bcg'] = $template['polio1'] = $template['dpthb1'] = $template['polio2'] = $template['dpthb2'] = $template['polio3'] = $template['dpthb3'] = $template['polio4'] = $template['campak'] = $template['lengkap'] = $template['booster_dpthb'] = $template['booster_campak'] = 
-                ['Ketara'=>array('l'=>0,'p'=>0),'Sengkol'=>array('l'=>0,'p'=>0),'Kawo'=>array('l'=>0,'p'=>0),'Tanak Awu'=>array('l'=>0,'p'=>0),'Pengembur'=>array('l'=>0,'p'=>0),'Segala Anyar'=>array('l'=>0,'p'=>0)];
-        }elseif($kecamatan=='janapria'){
-            $template['hb0'] = $template['bcg'] = $template['polio1'] = $template['dpthb1'] = $template['polio2'] = $template['dpthb2'] = $template['polio3'] = $template['dpthb3'] = $template['polio4'] = $template['campak'] = $template['lengkap'] = $template['booster_dpthb'] = $template['booster_campak'] = 
-                ['Lekor'=>array('l'=>0,'p'=>0),'Saba'=>array('l'=>0,'p'=>0),'Pendem'=>array('l'=>0,'p'=>0),'Setuta'=>array('l'=>0,'p'=>0),'Jango'=>array('l'=>0,'p'=>0),'Janapria'=>array('l'=>0,'p'=>0)];
+        $locs = $this->LocationModel->getLocId($kecamatan);
+        $data = array('l'=>0,'p'=>0);
+        $temp = [];
+        foreach ($locs as $dex=>$name){
+            $temp[$name] = $data;
         }
+        $template['hb0'] = $template['bcg'] = $template['polio1'] = $template['dpthb1'] = $template['polio2'] = $template['dpthb2'] = $template['polio3'] = $template['dpthb3'] = $template['polio4'] = $template['campak'] = $template['lengkap'] = $template['booster_dpthb'] = $template['booster_campak'] = $temp;
         return $template;
     }
     
     private function getPemakaianVaksinTemplate($kecamatan){
         $template = [];
-        if($kecamatan=='sengkol'){
-            $template =
-                ['Ketara'=>array('unjk'=>0,'bcg'=>0,'pol'=>0,'hib'=>0,'cpk'=>0,'tt'=>0),'Sengkol'=>array('unjk'=>0,'bcg'=>0,'pol'=>0,'hib'=>0,'cpk'=>0,'tt'=>0),'Kawo'=>array('unjk'=>0,'bcg'=>0,'pol'=>0,'hib'=>0,'cpk'=>0,'tt'=>0),'Tanak Awu'=>array('unjk'=>0,'bcg'=>0,'pol'=>0,'hib'=>0,'cpk'=>0,'tt'=>0),'Pengembur'=>array('unjk'=>0,'bcg'=>0,'pol'=>0,'hib'=>0,'cpk'=>0,'tt'=>0),'Segala Anyar'=>array('unjk'=>0,'bcg'=>0,'pol'=>0,'hib'=>0,'cpk'=>0,'tt'=>0)];
-        }elseif($kecamatan=='janapria'){
-            $template = 
-                ['Lekor'=>array('unjk'=>0,'bcg'=>0,'pol'=>0,'hib'=>0,'cpk'=>0,'tt'=>0),'Saba'=>array('unjk'=>0,'bcg'=>0,'pol'=>0,'hib'=>0,'cpk'=>0,'tt'=>0),'Pendem'=>array('unjk'=>0,'bcg'=>0,'pol'=>0,'hib'=>0,'cpk'=>0,'tt'=>0),'Setuta'=>array('unjk'=>0,'bcg'=>0,'pol'=>0,'hib'=>0,'cpk'=>0,'tt'=>0),'Jango'=>array('unjk'=>0,'bcg'=>0,'pol'=>0,'hib'=>0,'cpk'=>0,'tt'=>0),'Janapria'=>array('unjk'=>0,'bcg'=>0,'pol'=>0,'hib'=>0,'cpk'=>0,'tt'=>0)];
+        $locs = $this->LocationModel->getLocId($kecamatan);
+        $data = array('unjk'=>0,'bcg'=>0,'pol'=>0,'hib'=>0,'cpk'=>0,'tt'=>0);
+        foreach ($locs as $dex=>$name){
+            $template[$name] = $data;
         }
         return $template;
     }
     
     private function getVaksinTTTemplate($kecamatan){
         $template = [];
-        if($kecamatan=='sengkol'){
-            $template['bumil'] = $template['wus_th'] =
-                ['Ketara'=>array('tt1'=>0,'tt2'=>0,'tt3'=>0,'tt4'=>0,'tt5'=>0),'Sengkol'=>array('tt1'=>0,'tt2'=>0,'tt3'=>0,'tt4'=>0,'tt5'=>0),'Kawo'=>array('tt1'=>0,'tt2'=>0,'tt3'=>0,'tt4'=>0,'tt5'=>0),'Tanak Awu'=>array('tt1'=>0,'tt2'=>0,'tt3'=>0,'tt4'=>0,'tt5'=>0),'Pengembur'=>array('tt1'=>0,'tt2'=>0,'tt3'=>0,'tt4'=>0,'tt5'=>0),'Segala Anyar'=>array('tt1'=>0,'tt2'=>0,'tt3'=>0,'tt4'=>0,'tt5'=>0)];
-        }elseif($kecamatan=='janapria'){
-            $template['bumil'] = $template['wus_th'] =
-                ['Lekor'=>array('tt1'=>0,'tt2'=>0,'tt3'=>0,'tt4'=>0,'tt5'=>0),'Saba'=>array('tt1'=>0,'tt2'=>0,'tt3'=>0,'tt4'=>0,'tt5'=>0),'Pendem'=>array('tt1'=>0,'tt2'=>0,'tt3'=>0,'tt4'=>0,'tt5'=>0),'Setuta'=>array('tt1'=>0,'tt2'=>0,'tt3'=>0,'tt4'=>0,'tt5'=>0),'Jango'=>array('tt1'=>0,'tt2'=>0,'tt3'=>0,'tt4'=>0,'tt5'=>0),'Janapria'=>array('tt1'=>0,'tt2'=>0,'tt3'=>0,'tt4'=>0,'tt5'=>0)];
+        $locs = $this->LocationModel->getLocId($kecamatan);
+        $data = array('tt1'=>0,'tt2'=>0,'tt3'=>0,'tt4'=>0,'tt5'=>0);
+        $temp = [];
+        foreach ($locs as $dex=>$name){
+            $temp[$name] = $data;
         }
+        $template['bumil'] = $template['wus_th'] = $temp;
         return $template;
     }
 
 
     public function getDataDasar($tahun,$kecamatan){
-        $file = APPPATH."download/vaksinator/pws/data_dasar/data_dasar_".strtolower($kecamatan)."_tes.xlsx";
+        $file = APPPATH."download/vaksinator/pws/data_dasar/template_data_dasar.xlsx";
         $objReader = new PHPExcel_Reader_Excel2007();
         $fileObject = $objReader->load($file)->getActiveSheet();
         $data = [
@@ -84,14 +83,7 @@ class VaksinatorPwsModel extends CI_Model{
                 'campakbatita'=>$fileObject->getCell('Q25')->getCalculatedValue(),
             ),
             'data_demografi'=>  [
-                'desa'=> [
-                    $fileObject->getCell('B11')->getCalculatedValue(),
-                    $fileObject->getCell('B12')->getCalculatedValue(),
-                    $fileObject->getCell('B13')->getCalculatedValue(),
-                    $fileObject->getCell('B14')->getCalculatedValue(),
-                    $fileObject->getCell('B15')->getCalculatedValue(),
-                    $fileObject->getCell('B16')->getCalculatedValue()
-                ],
+                'desa'=> $this->LocationModel->getLocId($kecamatan),
                 'bbl'=>  [
                     'L'=>[
                         $fileObject->getCell('C11')->getCalculatedValue(),
@@ -168,23 +160,19 @@ class VaksinatorPwsModel extends CI_Model{
     }
     
     private function cekImunisasiLengkap($childID){
-        $im_table = ['bcg_visit','polio1_visit','hb1_visit','polio2_visit','dpt_hb2_visit','polio3_visit','hb3_visit','polio4_visit','campak_visit'];
-        $lengkap = true;
-        foreach ($im_table as $table){
-            if(!($this->db->query("SELECT childId from $table WHERE childId = '$childID'")->num_rows()>0)){
-                $lengkap = false;
-                break;
-            }
+        $lengkap = false;
+        if($this->db->query("SELECT baseEntityId from event_vaksin_imunisasi_bayi WHERE (baseEntityId = '$childID') AND (hb0!='NULL' AND bcg!='NULL' AND polio1!='NULL' AND polio2!='NULL' AND polio3!='NULL' AND polio4!='NULL' AND dptHb1!='NULL' AND dptHb2!='NULL' AND dptHb3!='NULL' AND campak!='NULL')")->num_rows()>0){
+            $lengkap = true;
         }
         return $lengkap;
     }
     
     public function downloadLaporanBulanan($bulan,$tahun,$kecamatan){
         $bulan_map = ['januari'=>1,'februari'=>2,'maret'=>3,'april'=>4,'mei'=>5,'juni'=>6,'juli'=>7,'agustus'=>8,'september'=>9,'oktober'=>10,'november'=>11,'desember'=>12];
-        if($kecamatan=='sengkol'){
-            $user_village = ['gizi8'=>'Ketara','gizi9'=>'Sengkol','gizi10'=>'Sengkol','gizi11'=>'Kawo','gizi12'=>'Tanak Awu','gizi13'=>'Pengembur','gizi14'=>'Segala Anyar'];
-        }elseif($kecamatan=='janapria'){
-            $user_village = ['gizi1'=>'Lekor','gizi2'=>'Saba','gizi3'=>'Pendem','gizi4'=>'Setuta','gizi5'=>'Jango','gizi6'=>'Janapria'];
+        $locs = $this->LocationModel->getLocId($kecamatan);
+        $user_village = [];
+        foreach ($locs as $dex=>$name){
+            $user_village[$dex] = $name;
         }
         
         $data_dasar = $this->getDataDasar($tahun,$kecamatan);
@@ -203,313 +191,313 @@ class VaksinatorPwsModel extends CI_Model{
         $enddate = date("Y-m", strtotime($startdate." +1 months"));
         
         //get HB0 data
-        $databulanini = $this->db->query("SELECT * FROM hb0_visit WHERE hb0 > '$startdate' AND hb0 < '$enddate'")->result();
-        $datakumulatif = $this->db->query("SELECT * FROM hb0_visit WHERE hb0 > '$startyear' AND hb0 < '$enddate'")->result();
+        $databulanini = $this->db->query("SELECT baseEntityId,locationId FROM event_vaksin_imunisasi_bayi WHERE hb0 > '$startdate' AND hb0 < '$enddate' GROUP BY baseEntityId")->result();
+        $datakumulatif = $this->db->query("SELECT baseEntityId,locationId FROM event_vaksin_imunisasi_bayi WHERE hb0 > '$startyear' AND hb0 < '$enddate' GROUP BY baseEntityId")->result();
         
         foreach ($databulanini as $d){
-            if(array_key_exists($d->userID, $user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$d->childId."'")->row()->jk;
+            if(array_key_exists($d->locationId, $user_village)){
+                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$d->baseEntityId."'")->row()->jk;
                 if($jk=="laki-laki"||$jk=="male"){
-                    $data_bulan_ini['hb0'][$user_village[$d->userID]]['l'] +=1;   
+                    $data_bulan_ini['hb0'][$user_village[$d->locationId]]['l'] +=1;   
                 }elseif($jk=="perempuan"||$jk=="female"){
-                    $data_bulan_ini['hb0'][$user_village[$d->userID]]['p'] +=1;
+                    $data_bulan_ini['hb0'][$user_village[$d->locationId]]['p'] +=1;
                 }
             }
         }
         
         foreach ($datakumulatif as $d){
-            if(array_key_exists($d->userID, $user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$d->childId."'")->row()->jk;
+            if(array_key_exists($d->locationId, $user_village)){
+                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$d->baseEntityId."'")->row()->jk;
                 if($jk=="laki-laki"||$jk=="male"){
-                    $data_kumulatif['hb0'][$user_village[$d->userID]]['l'] +=1;  
+                    $data_kumulatif['hb0'][$user_village[$d->locationId]]['l'] +=1;  
                 }elseif($jk=="perempuan"||$jk=="female"){
-                    $data_kumulatif['hb0'][$user_village[$d->userID]]['p'] +=1;
+                    $data_kumulatif['hb0'][$user_village[$d->locationId]]['p'] +=1;
                 }
             }
         }
         
          //get BCG data
-        $databulanini = $this->db->query("SELECT * FROM bcg_visit WHERE bcg > '$startdate' AND bcg < '$enddate'")->result();
-        $datakumulatif = $this->db->query("SELECT * FROM bcg_visit WHERE bcg > '$startyear' AND bcg < '$enddate'")->result();
+        $databulanini = $this->db->query("SELECT baseEntityId,locationId FROM event_vaksin_imunisasi_bayi WHERE bcg > '$startdate' AND bcg < '$enddate'")->result();
+        $datakumulatif = $this->db->query("SELECT baseEntityId,locationId FROM event_vaksin_imunisasi_bayi WHERE bcg > '$startyear' AND bcg < '$enddate'")->result();
         
         foreach ($databulanini as $d){
-            if(array_key_exists($d->userID, $user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$d->childId."'")->row()->jk;
+            if(array_key_exists($d->locationId, $user_village)){
+                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$d->baseEntityId."'")->row()->jk;
                 if($jk=="laki-laki"||$jk=="male"){
-                    $data_bulan_ini['bcg'][$user_village[$d->userID]]['l'] +=1;   
+                    $data_bulan_ini['bcg'][$user_village[$d->locationId]]['l'] +=1;   
                 }elseif($jk=="perempuan"||$jk=="female"){
-                    $data_bulan_ini['bcg'][$user_village[$d->userID]]['p'] +=1;
+                    $data_bulan_ini['bcg'][$user_village[$d->locationId]]['p'] +=1;
                 }
             }
         }
         
         foreach ($datakumulatif as $d){
-            if(array_key_exists($d->userID, $user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$d->childId."'")->row()->jk;
+            if(array_key_exists($d->locationId, $user_village)){
+                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$d->baseEntityId."'")->row()->jk;
                 if($jk=="laki-laki"||$jk=="male"){
-                    $data_kumulatif['bcg'][$user_village[$d->userID]]['l'] +=1;   
+                    $data_kumulatif['bcg'][$user_village[$d->locationId]]['l'] +=1;   
                 }elseif($jk=="perempuan"||$jk=="female"){
-                    $data_kumulatif['bcg'][$user_village[$d->userID]]['p'] +=1;
+                    $data_kumulatif['bcg'][$user_village[$d->locationId]]['p'] +=1;
                 }
             }
         }
         
          //get POLIO1 data
-        $databulanini = $this->db->query("SELECT * FROM polio1_visit WHERE polio1 > '$startdate' AND polio1 < '$enddate'")->result();
-        $datakumulatif = $this->db->query("SELECT * FROM polio1_visit WHERE polio1 > '$startyear' AND polio1 < '$enddate'")->result();
+        $databulanini = $this->db->query("SELECT baseEntityId,locationId FROM event_vaksin_imunisasi_bayi WHERE polio1 > '$startdate' AND polio1 < '$enddate'")->result();
+        $datakumulatif = $this->db->query("SELECT baseEntityId,locationId FROM event_vaksin_imunisasi_bayi WHERE polio1 > '$startyear' AND polio1 < '$enddate'")->result();
         
         foreach ($databulanini as $d){
-            if(array_key_exists($d->userID, $user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$d->childId."'")->row()->jk;
+            if(array_key_exists($d->locationId, $user_village)){
+                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$d->baseEntityId."'")->row()->jk;
                 if($jk=="laki-laki"||$jk=="male"){
-                    $data_bulan_ini['polio1'][$user_village[$d->userID]]['l'] +=1;  
+                    $data_bulan_ini['polio1'][$user_village[$d->locationId]]['l'] +=1;  
                 }elseif($jk=="perempuan"||$jk=="female"){
-                    $data_bulan_ini['polio1'][$user_village[$d->userID]]['p'] +=1;
+                    $data_bulan_ini['polio1'][$user_village[$d->locationId]]['p'] +=1;
                 }
             }
         }
         
         foreach ($datakumulatif as $d){
-            if(array_key_exists($d->userID, $user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$d->childId."'")->row()->jk;
+            if(array_key_exists($d->locationId, $user_village)){
+                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$d->baseEntityId."'")->row()->jk;
                 if($jk=="laki-laki"||$jk=="male"){
-                    $data_kumulatif['polio1'][$user_village[$d->userID]]['l'] +=1;   
+                    $data_kumulatif['polio1'][$user_village[$d->locationId]]['l'] +=1;   
                 }elseif($jk=="perempuan"||$jk=="female"){
-                    $data_kumulatif['polio1'][$user_village[$d->userID]]['p'] +=1;
+                    $data_kumulatif['polio1'][$user_village[$d->locationId]]['p'] +=1;
                 }
             }
         }
         
          //get DPTHB1 data
-        $databulanini = $this->db->query("SELECT * FROM hb1_visit WHERE dpt_hb1 > '$startdate' AND dpt_hb1 < '$enddate'")->result();
-        $datakumulatif = $this->db->query("SELECT * FROM hb1_visit WHERE dpt_hb1 > '$startyear' AND dpt_hb1 < '$enddate'")->result();
+        $databulanini = $this->db->query("SELECT baseEntityId,locationId FROM event_vaksin_imunisasi_bayi WHERE dptHb1 > '$startdate' AND dptHb1 < '$enddate'")->result();
+        $datakumulatif = $this->db->query("SELECT baseEntityId,locationId FROM event_vaksin_imunisasi_bayi WHERE dptHb1 > '$startyear' AND dptHb1 < '$enddate'")->result();
         
         foreach ($databulanini as $d){
-            if(array_key_exists($d->userID, $user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$d->childId."'")->row()->jk;
+            if(array_key_exists($d->locationId, $user_village)){
+                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$d->baseEntityId."'")->row()->jk;
                 if($jk=="laki-laki"||$jk=="male"){
-                    $data_bulan_ini['dpthb1'][$user_village[$d->userID]]['l'] +=1; 
+                    $data_bulan_ini['dpthb1'][$user_village[$d->locationId]]['l'] +=1; 
                 }elseif($jk=="perempuan"||$jk=="female"){
-                    $data_bulan_ini['dpthb1'][$user_village[$d->userID]]['p'] +=1;
+                    $data_bulan_ini['dpthb1'][$user_village[$d->locationId]]['p'] +=1;
                 }
             }
         }
         
         foreach ($datakumulatif as $d){
-            if(array_key_exists($d->userID, $user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$d->childId."'")->row()->jk;
+            if(array_key_exists($d->locationId, $user_village)){
+                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$d->baseEntityId."'")->row()->jk;
                 if($jk=="laki-laki"||$jk=="male"){
-                    $data_kumulatif['dpthb1'][$user_village[$d->userID]]['l'] +=1;   
+                    $data_kumulatif['dpthb1'][$user_village[$d->locationId]]['l'] +=1;   
                 }elseif($jk=="perempuan"||$jk=="female"){
-                    $data_kumulatif['dpthb1'][$user_village[$d->userID]]['p'] +=1;
+                    $data_kumulatif['dpthb1'][$user_village[$d->locationId]]['p'] +=1;
                 }
             }
         }
         
          //get POLIO2 data
-        $databulanini = $this->db->query("SELECT * FROM polio2_visit WHERE polio2 > '$startdate' AND polio2 < '$enddate'")->result();
-        $datakumulatif = $this->db->query("SELECT * FROM polio2_visit WHERE polio2 > '$startyear' AND polio2 < '$enddate'")->result();
+        $databulanini = $this->db->query("SELECT baseEntityId,locationId FROM event_vaksin_imunisasi_bayi WHERE polio2 > '$startdate' AND polio2 < '$enddate'")->result();
+        $datakumulatif = $this->db->query("SELECT baseEntityId,locationId FROM event_vaksin_imunisasi_bayi WHERE polio2 > '$startyear' AND polio2 < '$enddate'")->result();
         
         foreach ($databulanini as $d){
-            if(array_key_exists($d->userID, $user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$d->childId."'")->row()->jk;
+            if(array_key_exists($d->locationId, $user_village)){
+                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$d->baseEntityId."'")->row()->jk;
                 if($jk=="laki-laki"||$jk=="male"){
-                    $data_bulan_ini['polio2'][$user_village[$d->userID]]['l'] +=1;   
+                    $data_bulan_ini['polio2'][$user_village[$d->locationId]]['l'] +=1;   
                 }elseif($jk=="perempuan"||$jk=="female"){
-                    $data_bulan_ini['polio2'][$user_village[$d->userID]]['p'] +=1;
+                    $data_bulan_ini['polio2'][$user_village[$d->locationId]]['p'] +=1;
                 }
             }
         }
         
         foreach ($datakumulatif as $d){
-            if(array_key_exists($d->userID, $user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$d->childId."'")->row()->jk;
+            if(array_key_exists($d->locationId, $user_village)){
+                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$d->baseEntityId."'")->row()->jk;
                 if($jk=="laki-laki"||$jk=="male"){
-                    $data_kumulatif['polio2'][$user_village[$d->userID]]['l'] +=1;   
+                    $data_kumulatif['polio2'][$user_village[$d->locationId]]['l'] +=1;   
                 }elseif($jk=="perempuan"||$jk=="female"){
-                    $data_kumulatif['polio2'][$user_village[$d->userID]]['p'] +=1;
+                    $data_kumulatif['polio2'][$user_village[$d->locationId]]['p'] +=1;
                 }
             }
         }
         
          //get DPTHB2 data
-        $databulanini = $this->db->query("SELECT * FROM dpt_hb2_visit WHERE dpt_hb2 > '$startdate' AND dpt_hb2 < '$enddate'")->result();
-        $datakumulatif = $this->db->query("SELECT * FROM dpt_hb2_visit WHERE dpt_hb2 > '$startyear' AND dpt_hb2 < '$enddate'")->result();
+        $databulanini = $this->db->query("SELECT baseEntityId,locationId FROM event_vaksin_imunisasi_bayi WHERE dptHb2 > '$startdate' AND dptHb2 < '$enddate'")->result();
+        $datakumulatif = $this->db->query("SELECT baseEntityId,locationId FROM event_vaksin_imunisasi_bayi WHERE dptHb2 > '$startyear' AND dptHb2 < '$enddate'")->result();
         
         foreach ($databulanini as $d){
-            if(array_key_exists($d->userID, $user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$d->childId."'")->row()->jk;
+            if(array_key_exists($d->locationId, $user_village)){
+                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$d->baseEntityId."'")->row()->jk;
                 if($jk=="laki-laki"||$jk=="male"){
-                    $data_bulan_ini['dpthb2'][$user_village[$d->userID]]['l'] +=1;   
+                    $data_bulan_ini['dpthb2'][$user_village[$d->locationId]]['l'] +=1;   
                 }elseif($jk=="perempuan"||$jk=="female"){
-                    $data_bulan_ini['dpthb2'][$user_village[$d->userID]]['p'] +=1;
+                    $data_bulan_ini['dpthb2'][$user_village[$d->locationId]]['p'] +=1;
                 }
             }
         }
         
         foreach ($datakumulatif as $d){
-            if(array_key_exists($d->userID, $user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$d->childId."'")->row()->jk;
+            if(array_key_exists($d->locationId, $user_village)){
+                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$d->baseEntityId."'")->row()->jk;
                 if($jk=="laki-laki"||$jk=="male"){
-                    $data_kumulatif['dpthb2'][$user_village[$d->userID]]['l'] +=1;  
+                    $data_kumulatif['dpthb2'][$user_village[$d->locationId]]['l'] +=1;  
                 }elseif($jk=="perempuan"||$jk=="female"){
-                    $data_kumulatif['dpthb2'][$user_village[$d->userID]]['p'] +=1;
+                    $data_kumulatif['dpthb2'][$user_village[$d->locationId]]['p'] +=1;
                 }
             }
         }
         
          //get POLIO3 data
-        $databulanini = $this->db->query("SELECT * FROM polio3_visit WHERE polio3 > '$startdate' AND polio3 < '$enddate'")->result();
-        $datakumulatif = $this->db->query("SELECT * FROM polio3_visit WHERE polio3 > '$startyear' AND polio3 < '$enddate'")->result();
+        $databulanini = $this->db->query("SELECT baseEntityId,locationId FROM event_vaksin_imunisasi_bayi WHERE polio3 > '$startdate' AND polio3 < '$enddate'")->result();
+        $datakumulatif = $this->db->query("SELECT baseEntityId,locationId FROM event_vaksin_imunisasi_bayi WHERE polio3 > '$startyear' AND polio3 < '$enddate'")->result();
         
         foreach ($databulanini as $d){
-            if(array_key_exists($d->userID, $user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$d->childId."'")->row()->jk;
+            if(array_key_exists($d->locationId, $user_village)){
+                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$d->baseEntityId."'")->row()->jk;
                 if($jk=="laki-laki"||$jk=="male"){
-                    $data_bulan_ini['polio3'][$user_village[$d->userID]]['l'] +=1;   
+                    $data_bulan_ini['polio3'][$user_village[$d->locationId]]['l'] +=1;   
                 }elseif($jk=="perempuan"||$jk=="female"){
-                    $data_bulan_ini['polio3'][$user_village[$d->userID]]['p'] +=1;
+                    $data_bulan_ini['polio3'][$user_village[$d->locationId]]['p'] +=1;
                 }
             }
         }
         
         foreach ($datakumulatif as $d){
-            if(array_key_exists($d->userID, $user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$d->childId."'")->row()->jk;
+            if(array_key_exists($d->locationId, $user_village)){
+                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$d->baseEntityId."'")->row()->jk;
                 if($jk=="laki-laki"||$jk=="male"){
-                    $data_kumulatif['polio3'][$user_village[$d->userID]]['l'] +=1;   
+                    $data_kumulatif['polio3'][$user_village[$d->locationId]]['l'] +=1;   
                 }elseif($jk=="perempuan"||$jk=="female"){
-                    $data_kumulatif['polio3'][$user_village[$d->userID]]['p'] +=1;
+                    $data_kumulatif['polio3'][$user_village[$d->locationId]]['p'] +=1;
                 }
             }
         }
         
         //get DPTHB3 data
-        $databulanini = $this->db->query("SELECT * FROM hb3_visit WHERE dpt_hb3 > '$startdate' AND dpt_hb3 < '$enddate'")->result();
-        $datakumulatif = $this->db->query("SELECT * FROM hb3_visit WHERE dpt_hb3 > '$startyear' AND dpt_hb3 < '$enddate'")->result();
+        $databulanini = $this->db->query("SELECT baseEntityId,locationId FROM event_vaksin_imunisasi_bayi WHERE dptHb3 > '$startdate' AND dptHb3 < '$enddate'")->result();
+        $datakumulatif = $this->db->query("SELECT baseEntityId,locationId FROM event_vaksin_imunisasi_bayi WHERE dptHb3 > '$startyear' AND dptHb3 < '$enddate'")->result();
         
         foreach ($databulanini as $d){
-            if(array_key_exists($d->userID, $user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$d->childId."'")->row()->jk;
+            if(array_key_exists($d->locationId, $user_village)){
+                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$d->baseEntityId."'")->row()->jk;
                 if($jk=="laki-laki"||$jk=="male"){
-                    $data_bulan_ini['dpthb3'][$user_village[$d->userID]]['l'] +=1;   
+                    $data_bulan_ini['dpthb3'][$user_village[$d->locationId]]['l'] +=1;   
                 }elseif($jk=="perempuan"||$jk=="female"){
-                    $data_bulan_ini['dpthb3'][$user_village[$d->userID]]['p'] +=1;
+                    $data_bulan_ini['dpthb3'][$user_village[$d->locationId]]['p'] +=1;
                 }
             }
         }
         
         foreach ($datakumulatif as $d){
-            if(array_key_exists($d->userID, $user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$d->childId."'")->row()->jk;
+            if(array_key_exists($d->locationId, $user_village)){
+                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$d->baseEntityId."'")->row()->jk;
                 if($jk=="laki-laki"||$jk=="male"){
-                    $data_kumulatif['dpthb3'][$user_village[$d->userID]]['l'] +=1;   
+                    $data_kumulatif['dpthb3'][$user_village[$d->locationId]]['l'] +=1;   
                 }elseif($jk=="perempuan"||$jk=="female"){
-                    $data_kumulatif['dpthb3'][$user_village[$d->userID]]['p'] +=1;
+                    $data_kumulatif['dpthb3'][$user_village[$d->locationId]]['p'] +=1;
                 }
             }
         }
         
          //get POLIO4 data
-        $databulanini = $this->db->query("SELECT * FROM polio4_visit WHERE polio4 > '$startdate' AND polio4 < '$enddate'")->result();
-        $datakumulatif = $this->db->query("SELECT * FROM polio4_visit WHERE polio4 > '$startyear' AND polio4 < '$enddate'")->result();
+        $databulanini = $this->db->query("SELECT baseEntityId,locationId FROM event_vaksin_imunisasi_bayi WHERE polio4 > '$startdate' AND polio4 < '$enddate'")->result();
+        $datakumulatif = $this->db->query("SELECT baseEntityId,locationId FROM event_vaksin_imunisasi_bayi WHERE polio4 > '$startyear' AND polio4 < '$enddate'")->result();
         
         foreach ($databulanini as $d){
-            if(array_key_exists($d->userID, $user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$d->childId."'")->row()->jk;
+            if(array_key_exists($d->locationId, $user_village)){
+                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$d->baseEntityId."'")->row()->jk;
                 if($jk=="laki-laki"||$jk=="male"){
-                    $data_bulan_ini['polio4'][$user_village[$d->userID]]['l'] +=1;   
+                    $data_bulan_ini['polio4'][$user_village[$d->locationId]]['l'] +=1;   
                 }elseif($jk=="perempuan"||$jk=="female"){
-                    $data_bulan_ini['polio4'][$user_village[$d->userID]]['p'] +=1;
+                    $data_bulan_ini['polio4'][$user_village[$d->locationId]]['p'] +=1;
                 }
             }
         }
         
         foreach ($datakumulatif as $d){
-            if(array_key_exists($d->userID, $user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$d->childId."'")->row()->jk;
+            if(array_key_exists($d->locationId, $user_village)){
+                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$d->baseEntityId."'")->row()->jk;
                 if($jk=="laki-laki"||$jk=="male"){
-                    $data_kumulatif['polio4'][$user_village[$d->userID]]['l'] +=1;   
+                    $data_kumulatif['polio4'][$user_village[$d->locationId]]['l'] +=1;   
                 }elseif($jk=="perempuan"||$jk=="female"){
-                    $data_kumulatif['polio4'][$user_village[$d->userID]]['p'] +=1;
+                    $data_kumulatif['polio4'][$user_village[$d->locationId]]['p'] +=1;
                 }
             }
         }
         
          //get CAMPAK data
-        $databulanini = $this->db->query("SELECT * FROM campak_visit WHERE imunisasi_campak > '$startdate' AND imunisasi_campak < '$enddate'")->result();
-        $datakumulatif = $this->db->query("SELECT * FROM campak_visit WHERE imunisasi_campak > '$startyear' AND imunisasi_campak < '$enddate'")->result();
+        $databulanini = $this->db->query("SELECT baseEntityId,locationId FROM event_vaksin_imunisasi_bayi WHERE campak > '$startdate' AND campak < '$enddate'")->result();
+        $datakumulatif = $this->db->query("SELECT baseEntityId,locationId FROM event_vaksin_imunisasi_bayi WHERE campak > '$startyear' AND campak < '$enddate'")->result();
         
         foreach ($databulanini as $d){
-            if(array_key_exists($d->userID, $user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$d->childId."'")->row()->jk;
+            if(array_key_exists($d->locationId, $user_village)){
+                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$d->baseEntityId."'")->row()->jk;
                 if($jk=="laki-laki"||$jk=="male"){
-                    $data_bulan_ini['campak'][$user_village[$d->userID]]['l'] +=1;   
+                    $data_bulan_ini['campak'][$user_village[$d->locationId]]['l'] +=1;   
                 }elseif($jk=="perempuan"||$jk=="female"){
-                    $data_bulan_ini['campak'][$user_village[$d->userID]]['p'] +=1;
+                    $data_bulan_ini['campak'][$user_village[$d->locationId]]['p'] +=1;
                 }
             }
         }
         
         foreach ($datakumulatif as $d){
-            if(array_key_exists($d->userID, $user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$d->childId."'")->row()->jk;
+            if(array_key_exists($d->locationId, $user_village)){
+                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$d->baseEntityId."'")->row()->jk;
                 if($jk=="laki-laki"||$jk=="male"){
-                    $data_kumulatif['campak'][$user_village[$d->userID]]['l'] +=1;  
+                    $data_kumulatif['campak'][$user_village[$d->locationId]]['l'] +=1;  
                 }elseif($jk=="perempuan"||$jk=="female"){
-                    $data_kumulatif['campak'][$user_village[$d->userID]]['p'] +=1;
+                    $data_kumulatif['campak'][$user_village[$d->locationId]]['p'] +=1;
                 }
             }
         }
         
 //        //get BOOSTER DPTHB data
-//        $databulanini = $this->db->query("SELECT * FROM campak_lanjutan_visit WHERE campak_lanjutan > '$startdate' AND campak_lanjutan < '$enddate'")->result();
-//        $datakumulatif = $this->db->query("SELECT * FROM campak_lanjutan_visit WHERE campak_lanjutan > '$startyear' AND campak_lanjutan < '$enddate'")->result();
+//        $databulanini = $this->db->query("SELECT baseEntityId,locationId FROM event_vaksin_imunisasi_bayi WHERE dpt_hb_lanjutan > '$startdate' AND dpt_hb_lanjutan < '$enddate'")->result();
+//        $datakumulatif = $this->db->query("SELECT baseEntityId,locationId FROM event_vaksin_imunisasi_bayi WHERE dpt_hb_lanjutan > '$startyear' AND dpt_hb_lanjutan < '$enddate'")->result();
 //        
 //        foreach ($databulanini as $d){
-//            if(array_key_exists($d->userID, $user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$d->childId."'")->row()->jk;
+//            if(array_key_exists($d->locationId, $user_village)){
+//                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$d->baseEntityId."'")->row()->jk;
 //                if($jk=="laki-laki"||$jk=="male"){
-//                    $data_bulan_ini['booster_dpthb'][$user_village[$d->userID]]['l'] +=1; 
+//                    $data_bulan_ini['booster_dpthb'][$user_village[$d->locationId]]['l'] +=1; 
 //                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $data_bulan_ini['booster_dpthb'][$user_village[$d->userID]]['p'] +=1;
+//                    $data_bulan_ini['booster_dpthb'][$user_village[$d->locationId]]['p'] +=1;
 //                }
 //            }
 //        }
 //        
 //        foreach ($datakumulatif as $d){
-//            if(array_key_exists($d->userID, $user_village)){
-//                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$d->childId."'")->row()->jk;
+//            if(array_key_exists($d->locationId, $user_village)){
+//                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$d->baseEntityId."'")->row()->jk;
 //                if($jk=="laki-laki"||$jk=="male"){
-//                    $data_kumulatif['booster_dpthb'][$user_village[$d->userID]]['l'] +=1; 
+//                    $data_kumulatif['booster_dpthb'][$user_village[$d->locationId]]['l'] +=1; 
 //                }elseif($jk=="perempuan"||$jk=="female"){
-//                    $data_kumulatif['booster_dpthb'][$user_village[$d->userID]]['p'] +=1;
+//                    $data_kumulatif['booster_dpthb'][$user_village[$d->locationId]]['p'] +=1;
 //                }
 //            }
 //        }
         
          //get BOOSTER CAMPAK data
-        $databulanini = $this->db->query("SELECT * FROM campak_lanjutan_visit WHERE campak_lanjutan > '$startdate' AND campak_lanjutan < '$enddate'")->result();
-        $datakumulatif = $this->db->query("SELECT * FROM campak_lanjutan_visit WHERE campak_lanjutan > '$startyear' AND campak_lanjutan < '$enddate'")->result();
+        $databulanini = $this->db->query("SELECT baseEntityId,locationId FROM event_vaksin_imunisasi_bayi WHERE campak_lanjutan > '$startdate' AND campak_lanjutan < '$enddate'")->result();
+        $datakumulatif = $this->db->query("SELECT baseEntityId,locationId FROM event_vaksin_imunisasi_bayi WHERE campak_lanjutan > '$startyear' AND campak_lanjutan < '$enddate'")->result();
         
         foreach ($databulanini as $d){
-            if(array_key_exists($d->userID, $user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$d->childId."'")->row()->jk;
+            if(array_key_exists($d->locationId, $user_village)){
+                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$d->baseEntityId."'")->row()->jk;
                 if($jk=="laki-laki"||$jk=="male"){
-                    $data_bulan_ini['booster_campak'][$user_village[$d->userID]]['l'] +=1; 
+                    $data_bulan_ini['booster_campak'][$user_village[$d->locationId]]['l'] +=1; 
                 }elseif($jk=="perempuan"||$jk=="female"){
-                    $data_bulan_ini['booster_campak'][$user_village[$d->userID]]['p'] +=1;
+                    $data_bulan_ini['booster_campak'][$user_village[$d->locationId]]['p'] +=1;
                 }
             }
         }
         
         foreach ($datakumulatif as $d){
-            if(array_key_exists($d->userID, $user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$d->childId."'")->row()->jk;
+            if(array_key_exists($d->locationId, $user_village)){
+                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$d->baseEntityId."'")->row()->jk;
                 if($jk=="laki-laki"||$jk=="male"){
-                    $data_kumulatif['booster_campak'][$user_village[$d->userID]]['l'] +=1; 
+                    $data_kumulatif['booster_campak'][$user_village[$d->locationId]]['l'] +=1; 
                 }elseif($jk=="perempuan"||$jk=="female"){
-                    $data_kumulatif['booster_campak'][$user_village[$d->userID]]['p'] +=1;
+                    $data_kumulatif['booster_campak'][$user_village[$d->locationId]]['p'] +=1;
                 }
             }
         }
@@ -517,30 +505,30 @@ class VaksinatorPwsModel extends CI_Model{
          //calculate Imunisasi lengkap data
         $lastyearfromthismonth = date("Y-m", strtotime($startdate." -1 year"));
         $lastyearfromthisjanuari = date("Y-m", strtotime($startyear." -1 year"));
-        $databulanini = $this->db->query("SELECT * FROM registrasi_jurim WHERE tanggal_lahir > '$lastyearfromthismonth' AND tanggal_lahir < '$enddate'")->result();
-        $datakumulatif = $this->db->query("SELECT * FROM registrasi_jurim WHERE tanggal_lahir > '$lastyearfromthisjanuari' AND tanggal_lahir < '$enddate'")->result();
+        $databulanini = $this->db->query("SELECT client_anak.baseEntityId,client_anak.gender,event_child_registration.locationId FROM client_anak LEFT JOIN event_child_registration ON event_child_registration.baseEntityId=client_anak.baseEntityId WHERE birthDate > '$lastyearfromthismonth' AND birthDate < '$enddate' GROUP BY baseEntityId")->result();
+        $datakumulatif = $this->db->query("SELECT client_anak.baseEntityId,client_anak.gender,event_child_registration.locationId FROM client_anak LEFT JOIN event_child_registration ON event_child_registration.baseEntityId=client_anak.baseEntityId WHERE birthDate > '$lastyearfromthisjanuari' AND birthDate < '$enddate' GROUP BY baseEntityId")->result();
         
         foreach ($databulanini as $d){
-            if(array_key_exists($d->userID, $user_village)){
-                $jk = $d->jenis_kelamin;
-                if($this->cekImunisasiLengkap($d->childId)){
+            if(array_key_exists($d->locationId, $user_village)){
+                $jk = $d->gender;
+                if($this->cekImunisasiLengkap($d->baseEntityId)){
                     if($jk=="laki-laki"||$jk=="male"){
-                        $data_bulan_ini['lengkap'][$user_village[$d->userID]]['l'] +=1;   
+                        $data_bulan_ini['lengkap'][$user_village[$d->locationId]]['l'] +=1;   
                     }elseif($jk=="perempuan"||$jk=="female"){
-                        $data_bulan_ini['lengkap'][$user_village[$d->userID]]['p'] +=1;
+                        $data_bulan_ini['lengkap'][$user_village[$d->locationId]]['p'] +=1;
                     }
                }
             }
         }
         
         foreach ($datakumulatif as $d){
-            if(array_key_exists($d->userID, $user_village)){
-                $jk = $d->jenis_kelamin;
-                if($this->cekImunisasiLengkap($d->childId)){
+            if(array_key_exists($d->locationId, $user_village)){
+                $jk = $d->gender;
+                if($this->cekImunisasiLengkap($d->baseEntityId)){
                     if($jk=="laki-laki"||$jk=="male"){
-                        $data_kumulatif['lengkap'][$user_village[$d->userID]]['l'] +=1;   
+                        $data_kumulatif['lengkap'][$user_village[$d->locationId]]['l'] +=1;   
                     }elseif($jk=="perempuan"||$jk=="female"){
-                        $data_kumulatif['lengkap'][$user_village[$d->userID]]['p'] +=1;
+                        $data_kumulatif['lengkap'][$user_village[$d->locationId]]['p'] +=1;
                     }
                }
             }
@@ -552,76 +540,78 @@ class VaksinatorPwsModel extends CI_Model{
         $file_laporan->getActiveSheet()->setCellValue('C4', $data_dasar['kabupaten']);
         $file_laporan->getActiveSheet()->setCellValue('G4', strtoupper($bulan));
         $file_laporan->getActiveSheet()->setCellValue('H4', $data_dasar['tahun']);
-        for($i=0;$i<6;$i++){
-            $file_laporan->getActiveSheet()->setCellValue('B'.(10+$i), $data_dasar['data_demografi']['desa'][$i]);
+        $i=0;
+        foreach ($data_dasar['data_demografi']['desa'] as $index=>$desa){
+            $file_laporan->getActiveSheet()->setCellValue('B'.(10+$i), $data_dasar['data_demografi']['desa'][$index]);
             $file_laporan->getActiveSheet()->setCellValue('C'.(10+$i), $data_dasar['data_demografi']['bbl']['L'][$i]); 
             $file_laporan->getActiveSheet()->setCellValue('D'.(10+$i), $data_dasar['data_demografi']['bbl']['P'][$i]); 
             $file_laporan->getActiveSheet()->setCellValue('F'.(10+$i), $data_dasar['data_demografi']['si']['L'][$i]); 
             $file_laporan->getActiveSheet()->setCellValue('G'.(10+$i), $data_dasar['data_demografi']['si']['P'][$i]); 
-            $file_laporan->getActiveSheet()->setCellValue('I'.(10+$i), $data_bulan_ini['hb0'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']);
-            $file_laporan->getActiveSheet()->setCellValue('K'.(10+$i), $data_bulan_ini['hb0'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']);
-            $file_laporan->getActiveSheet()->setCellValue('O'.(10+$i), $data_kumulatif['hb0'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']);
-            $file_laporan->getActiveSheet()->setCellValue('Q'.(10+$i), $data_kumulatif['hb0'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']);
+            $file_laporan->getActiveSheet()->setCellValue('I'.(10+$i), $data_bulan_ini['hb0'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']);
+            $file_laporan->getActiveSheet()->setCellValue('K'.(10+$i), $data_bulan_ini['hb0'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']);
+            $file_laporan->getActiveSheet()->setCellValue('O'.(10+$i), $data_kumulatif['hb0'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']);
+            $file_laporan->getActiveSheet()->setCellValue('Q'.(10+$i), $data_kumulatif['hb0'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']);
             
-            $file_laporan->getActiveSheet()->setCellValue('U'.(10+$i), $data_bulan_ini['bcg'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']);
-            $file_laporan->getActiveSheet()->setCellValue('W'.(10+$i), $data_bulan_ini['bcg'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']);
-            $file_laporan->getActiveSheet()->setCellValue('AA'.(10+$i), $data_kumulatif['bcg'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']);
-            $file_laporan->getActiveSheet()->setCellValue('AC'.(10+$i), $data_kumulatif['bcg'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']);
+            $file_laporan->getActiveSheet()->setCellValue('U'.(10+$i), $data_bulan_ini['bcg'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']);
+            $file_laporan->getActiveSheet()->setCellValue('W'.(10+$i), $data_bulan_ini['bcg'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']);
+            $file_laporan->getActiveSheet()->setCellValue('AA'.(10+$i), $data_kumulatif['bcg'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']);
+            $file_laporan->getActiveSheet()->setCellValue('AC'.(10+$i), $data_kumulatif['bcg'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']);
             
-            $file_laporan->getActiveSheet()->setCellValue('AG'.(10+$i), $data_bulan_ini['polio1'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']);
-            $file_laporan->getActiveSheet()->setCellValue('AI'.(10+$i), $data_bulan_ini['polio1'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']);
-            $file_laporan->getActiveSheet()->setCellValue('AM'.(10+$i), $data_kumulatif['polio1'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']);
-            $file_laporan->getActiveSheet()->setCellValue('AO'.(10+$i), $data_kumulatif['polio1'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']);
+            $file_laporan->getActiveSheet()->setCellValue('AG'.(10+$i), $data_bulan_ini['polio1'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']);
+            $file_laporan->getActiveSheet()->setCellValue('AI'.(10+$i), $data_bulan_ini['polio1'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']);
+            $file_laporan->getActiveSheet()->setCellValue('AM'.(10+$i), $data_kumulatif['polio1'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']);
+            $file_laporan->getActiveSheet()->setCellValue('AO'.(10+$i), $data_kumulatif['polio1'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']);
             
-            $file_laporan->getActiveSheet()->setCellValue('AS'.(10+$i), $data_bulan_ini['dpthb1'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']);
-            $file_laporan->getActiveSheet()->setCellValue('AU'.(10+$i), $data_bulan_ini['dpthb1'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']);
-            $file_laporan->getActiveSheet()->setCellValue('AY'.(10+$i), $data_kumulatif['dpthb1'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']);
-            $file_laporan->getActiveSheet()->setCellValue('BA'.(10+$i), $data_kumulatif['dpthb1'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']);
+            $file_laporan->getActiveSheet()->setCellValue('AS'.(10+$i), $data_bulan_ini['dpthb1'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']);
+            $file_laporan->getActiveSheet()->setCellValue('AU'.(10+$i), $data_bulan_ini['dpthb1'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']);
+            $file_laporan->getActiveSheet()->setCellValue('AY'.(10+$i), $data_kumulatif['dpthb1'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']);
+            $file_laporan->getActiveSheet()->setCellValue('BA'.(10+$i), $data_kumulatif['dpthb1'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']);
             
-            $file_laporan->getActiveSheet()->setCellValue('BE'.(10+$i), $data_bulan_ini['polio2'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']);
-            $file_laporan->getActiveSheet()->setCellValue('BG'.(10+$i), $data_bulan_ini['polio2'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']);
-            $file_laporan->getActiveSheet()->setCellValue('BK'.(10+$i), $data_kumulatif['polio2'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']);
-            $file_laporan->getActiveSheet()->setCellValue('BM'.(10+$i), $data_kumulatif['polio2'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']);
+            $file_laporan->getActiveSheet()->setCellValue('BE'.(10+$i), $data_bulan_ini['polio2'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']);
+            $file_laporan->getActiveSheet()->setCellValue('BG'.(10+$i), $data_bulan_ini['polio2'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']);
+            $file_laporan->getActiveSheet()->setCellValue('BK'.(10+$i), $data_kumulatif['polio2'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']);
+            $file_laporan->getActiveSheet()->setCellValue('BM'.(10+$i), $data_kumulatif['polio2'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']);
             
-            $file_laporan->getActiveSheet()->setCellValue('BQ'.(10+$i), $data_bulan_ini['dpthb2'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']);
-            $file_laporan->getActiveSheet()->setCellValue('BS'.(10+$i), $data_bulan_ini['dpthb2'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']);
-            $file_laporan->getActiveSheet()->setCellValue('BW'.(10+$i), $data_kumulatif['dpthb2'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']);
-            $file_laporan->getActiveSheet()->setCellValue('BY'.(10+$i), $data_kumulatif['dpthb2'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']);
+            $file_laporan->getActiveSheet()->setCellValue('BQ'.(10+$i), $data_bulan_ini['dpthb2'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']);
+            $file_laporan->getActiveSheet()->setCellValue('BS'.(10+$i), $data_bulan_ini['dpthb2'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']);
+            $file_laporan->getActiveSheet()->setCellValue('BW'.(10+$i), $data_kumulatif['dpthb2'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']);
+            $file_laporan->getActiveSheet()->setCellValue('BY'.(10+$i), $data_kumulatif['dpthb2'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']);
             
-            $file_laporan->getActiveSheet()->setCellValue('CC'.(10+$i), $data_bulan_ini['polio3'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']);
-            $file_laporan->getActiveSheet()->setCellValue('CE'.(10+$i), $data_bulan_ini['polio3'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']);
-            $file_laporan->getActiveSheet()->setCellValue('CI'.(10+$i), $data_kumulatif['polio3'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']);
-            $file_laporan->getActiveSheet()->setCellValue('CK'.(10+$i), $data_kumulatif['polio3'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']);
+            $file_laporan->getActiveSheet()->setCellValue('CC'.(10+$i), $data_bulan_ini['polio3'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']);
+            $file_laporan->getActiveSheet()->setCellValue('CE'.(10+$i), $data_bulan_ini['polio3'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']);
+            $file_laporan->getActiveSheet()->setCellValue('CI'.(10+$i), $data_kumulatif['polio3'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']);
+            $file_laporan->getActiveSheet()->setCellValue('CK'.(10+$i), $data_kumulatif['polio3'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']);
             
-            $file_laporan->getActiveSheet()->setCellValue('CO'.(10+$i), $data_bulan_ini['dpthb3'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']);
-            $file_laporan->getActiveSheet()->setCellValue('CQ'.(10+$i), $data_bulan_ini['dpthb3'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']);
-            $file_laporan->getActiveSheet()->setCellValue('CU'.(10+$i), $data_kumulatif['dpthb3'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']);
-            $file_laporan->getActiveSheet()->setCellValue('CW'.(10+$i), $data_kumulatif['dpthb3'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']);
+            $file_laporan->getActiveSheet()->setCellValue('CO'.(10+$i), $data_bulan_ini['dpthb3'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']);
+            $file_laporan->getActiveSheet()->setCellValue('CQ'.(10+$i), $data_bulan_ini['dpthb3'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']);
+            $file_laporan->getActiveSheet()->setCellValue('CU'.(10+$i), $data_kumulatif['dpthb3'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']);
+            $file_laporan->getActiveSheet()->setCellValue('CW'.(10+$i), $data_kumulatif['dpthb3'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']);
             
-            $file_laporan->getActiveSheet()->setCellValue('DA'.(10+$i), $data_bulan_ini['polio4'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']);
-            $file_laporan->getActiveSheet()->setCellValue('DC'.(10+$i), $data_bulan_ini['polio4'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']);
-            $file_laporan->getActiveSheet()->setCellValue('DG'.(10+$i), $data_kumulatif['polio4'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']);
-            $file_laporan->getActiveSheet()->setCellValue('DI'.(10+$i), $data_kumulatif['polio4'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']);
+            $file_laporan->getActiveSheet()->setCellValue('DA'.(10+$i), $data_bulan_ini['polio4'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']);
+            $file_laporan->getActiveSheet()->setCellValue('DC'.(10+$i), $data_bulan_ini['polio4'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']);
+            $file_laporan->getActiveSheet()->setCellValue('DG'.(10+$i), $data_kumulatif['polio4'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']);
+            $file_laporan->getActiveSheet()->setCellValue('DI'.(10+$i), $data_kumulatif['polio4'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']);
             
-            $file_laporan->getActiveSheet()->setCellValue('DM'.(10+$i), $data_bulan_ini['campak'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']);
-            $file_laporan->getActiveSheet()->setCellValue('DO'.(10+$i), $data_bulan_ini['campak'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']);
-            $file_laporan->getActiveSheet()->setCellValue('DS'.(10+$i), $data_kumulatif['campak'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']);
-            $file_laporan->getActiveSheet()->setCellValue('DU'.(10+$i), $data_kumulatif['campak'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']);
+            $file_laporan->getActiveSheet()->setCellValue('DM'.(10+$i), $data_bulan_ini['campak'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']);
+            $file_laporan->getActiveSheet()->setCellValue('DO'.(10+$i), $data_bulan_ini['campak'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']);
+            $file_laporan->getActiveSheet()->setCellValue('DS'.(10+$i), $data_kumulatif['campak'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']);
+            $file_laporan->getActiveSheet()->setCellValue('DU'.(10+$i), $data_kumulatif['campak'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']);
             
-            $file_laporan->getActiveSheet()->setCellValue('DY'.(10+$i), $data_bulan_ini['lengkap'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']);
-            $file_laporan->getActiveSheet()->setCellValue('EA'.(10+$i), $data_bulan_ini['lengkap'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']);
-            $file_laporan->getActiveSheet()->setCellValue('EE'.(10+$i), $data_kumulatif['lengkap'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']);
-            $file_laporan->getActiveSheet()->setCellValue('EG'.(10+$i), $data_kumulatif['lengkap'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']);
+            $file_laporan->getActiveSheet()->setCellValue('DY'.(10+$i), $data_bulan_ini['lengkap'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']);
+            $file_laporan->getActiveSheet()->setCellValue('EA'.(10+$i), $data_bulan_ini['lengkap'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']);
+            $file_laporan->getActiveSheet()->setCellValue('EE'.(10+$i), $data_kumulatif['lengkap'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']);
+            $file_laporan->getActiveSheet()->setCellValue('EG'.(10+$i), $data_kumulatif['lengkap'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']);
             
-            $file_laporan->getActiveSheet()->setCellValue('EK'.(10+$i), $data_bulan_ini['booster_dpthb'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']);
-            $file_laporan->getActiveSheet()->setCellValue('EM'.(10+$i), $data_bulan_ini['booster_dpthb'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']);
-            $file_laporan->getActiveSheet()->setCellValue('EQ'.(10+$i), $data_kumulatif['booster_dpthb'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']);
-            $file_laporan->getActiveSheet()->setCellValue('ES'.(10+$i), $data_kumulatif['booster_dpthb'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']);
+            $file_laporan->getActiveSheet()->setCellValue('EK'.(10+$i), $data_bulan_ini['booster_dpthb'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']);
+            $file_laporan->getActiveSheet()->setCellValue('EM'.(10+$i), $data_bulan_ini['booster_dpthb'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']);
+            $file_laporan->getActiveSheet()->setCellValue('EQ'.(10+$i), $data_kumulatif['booster_dpthb'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']);
+            $file_laporan->getActiveSheet()->setCellValue('ES'.(10+$i), $data_kumulatif['booster_dpthb'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']);
             
-            $file_laporan->getActiveSheet()->setCellValue('EW'.(10+$i), $data_bulan_ini['booster_campak'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']);
-            $file_laporan->getActiveSheet()->setCellValue('EY'.(10+$i), $data_bulan_ini['booster_campak'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']);
-            $file_laporan->getActiveSheet()->setCellValue('FC'.(10+$i), $data_kumulatif['booster_campak'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']);
-            $file_laporan->getActiveSheet()->setCellValue('FE'.(10+$i), $data_kumulatif['booster_campak'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']);
+            $file_laporan->getActiveSheet()->setCellValue('EW'.(10+$i), $data_bulan_ini['booster_campak'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']);
+            $file_laporan->getActiveSheet()->setCellValue('EY'.(10+$i), $data_bulan_ini['booster_campak'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']);
+            $file_laporan->getActiveSheet()->setCellValue('FC'.(10+$i), $data_kumulatif['booster_campak'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']);
+            $file_laporan->getActiveSheet()->setCellValue('FE'.(10+$i), $data_kumulatif['booster_campak'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']);
+            $i++;
         }
         $bln_ini = ['I','U','AG','AS','BE','BQ','CC','CO','DA','DM','DY','EK','EW','FI','FU','FY','GC','GG','GS'];
         $sd_bln_ini = ['O','AA','AM','AY','BK','BW','CI','CU','DG','DS','EE','EQ','FC','FO','FW','GA','GE','GM','GY'];
@@ -642,10 +632,10 @@ class VaksinatorPwsModel extends CI_Model{
     
     public function downloadLaporanAnalisa($bulan, $tahun, $kecamatan){
         $bulan_map = ['januari'=>1,'februari'=>2,'maret'=>3,'april'=>4,'mei'=>5,'juni'=>6,'juli'=>7,'agustus'=>8,'september'=>9,'oktober'=>10,'november'=>11,'desember'=>12];
-        if($kecamatan=='sengkol'){
-            $user_village = ['gizi8'=>'Ketara','gizi9'=>'Sengkol','gizi10'=>'Sengkol','gizi11'=>'Kawo','gizi12'=>'Tanak Awu','gizi13'=>'Pengembur','gizi14'=>'Segala Anyar'];
-        }elseif($kecamatan=='janapria'){
-            $user_village = ['field_test2'=>'Lekor','gizi2'=>'Saba','gizi3'=>'Pendem','gizi4'=>'Setuta','gizi5'=>'Jango','gizi6'=>'Janapria'];
+        $locs = $this->LocationModel->getLocId($kecamatan);
+        $user_village = [];
+        foreach ($locs as $dex=>$name){
+            $user_village[$dex] = $name;
         }
         
         $data_dasar = $this->getDataDasar($tahun,$kecamatan);
@@ -661,43 +651,43 @@ class VaksinatorPwsModel extends CI_Model{
         $enddate = date("Y-m", strtotime($startdate." +1 months"));
         
         //get DPTHB3 data
-        $datakumulatif = $this->db->query("SELECT * FROM hb3_visit WHERE dpt_hb3 > '$startyear' AND dpt_hb3 < '$enddate'")->result();
+        $datakumulatif = $this->db->query("SELECT * FROM event_vaksin_imunisasi_bayi WHERE dptHb3 > '$startyear' AND dptHb3 < '$enddate'")->result();
         
         foreach ($datakumulatif as $d){
-            if(array_key_exists($d->userID, $user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$d->childId."'")->row()->jk;
+            if(array_key_exists($d->locationId, $user_village)){
+                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$d->baseEntityId."'")->row()->jk;
                 if($jk=="laki-laki"||$jk=="male"){
-                    $data_kumulatif['dpthb3'][$user_village[$d->userID]]['l'] +=1;   
+                    $data_kumulatif['dpthb3'][$user_village[$d->locationId]]['l'] +=1;   
                 }elseif($jk=="perempuan"||$jk=="female"){
-                    $data_kumulatif['dpthb3'][$user_village[$d->userID]]['p'] +=1;
+                    $data_kumulatif['dpthb3'][$user_village[$d->locationId]]['p'] +=1;
                 }
             }
         }
         
          //get POLIO4 data
-        $datakumulatif = $this->db->query("SELECT * FROM polio4_visit WHERE polio4 > '$startyear' AND polio4 < '$enddate'")->result();
+        $datakumulatif = $this->db->query("SELECT * FROM event_vaksin_imunisasi_bayi WHERE polio4 > '$startyear' AND polio4 < '$enddate'")->result();
                 
         foreach ($datakumulatif as $d){
-            if(array_key_exists($d->userID, $user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$d->childId."'")->row()->jk;
+            if(array_key_exists($d->locationId, $user_village)){
+                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$d->baseEntityId."'")->row()->jk;
                 if($jk=="laki-laki"||$jk=="male"){
-                    $data_kumulatif['polio4'][$user_village[$d->userID]]['l'] +=1;   
+                    $data_kumulatif['polio4'][$user_village[$d->locationId]]['l'] +=1;   
                 }elseif($jk=="perempuan"||$jk=="female"){
-                    $data_kumulatif['polio4'][$user_village[$d->userID]]['p'] +=1;
+                    $data_kumulatif['polio4'][$user_village[$d->locationId]]['p'] +=1;
                 }
             }
         }
         
          //get CAMPAK data
-        $datakumulatif = $this->db->query("SELECT * FROM campak_visit WHERE imunisasi_campak > '$startyear' AND imunisasi_campak < '$enddate'")->result();
+        $datakumulatif = $this->db->query("SELECT * FROM event_vaksin_imunisasi_bayi WHERE campak > '$startyear' AND campak < '$enddate'")->result();
         
         foreach ($datakumulatif as $d){
-            if(array_key_exists($d->userID, $user_village)){
-                $jk = $this->db->query("SELECT jenis_kelamin as jk FROM registrasi_jurim WHERE childID = '".$d->childId."'")->row()->jk;
+            if(array_key_exists($d->locationId, $user_village)){
+                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$d->baseEntityId."'")->row()->jk;
                 if($jk=="laki-laki"||$jk=="male"){
-                    $data_kumulatif['campak'][$user_village[$d->userID]]['l'] +=1;  
+                    $data_kumulatif['campak'][$user_village[$d->locationId]]['l'] +=1;  
                 }elseif($jk=="perempuan"||$jk=="female"){
-                    $data_kumulatif['campak'][$user_village[$d->userID]]['p'] +=1;
+                    $data_kumulatif['campak'][$user_village[$d->locationId]]['p'] +=1;
                 }
             }
         }
@@ -713,19 +703,21 @@ class VaksinatorPwsModel extends CI_Model{
         $file_laporan->getActiveSheet()->setCellValue('T2', ($data_dasar['target_tahunan']['dpthb3']/12)*$bulan_map[$bulan]);
         $file_laporan->getActiveSheet()->setCellValue('T3', ($data_dasar['target_tahunan']['polio4']/12)*$bulan_map[$bulan]);
         $file_laporan->getActiveSheet()->setCellValue('T4', ($data_dasar['target_tahunan']['campak']/12)*$bulan_map[$bulan]);
-        for($i=0;$i<6;$i++){
-            $file_laporan->getActiveSheet()->setCellValue('B'.(11+$i), $data_dasar['data_demografi']['desa'][$i]);
+        $i=0;
+        foreach ($data_dasar['data_demografi']['desa'] as $index=>$desa){
+            $file_laporan->getActiveSheet()->setCellValue('B'.(11+$i), $data_dasar['data_demografi']['desa'][$index]);
             $file_laporan->getActiveSheet()->setCellValue('C'.(11+$i), $data_dasar['data_demografi']['si']['L'][$i]); 
             $file_laporan->getActiveSheet()->setCellValue('D'.(11+$i), $data_dasar['data_demografi']['si']['P'][$i]); 
             
-            $file_laporan->getActiveSheet()->setCellValue('F'.(11+$i), ($data_kumulatif['dpthb3'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']/$data_dasar['data_demografi']['si']['L'][$i])*100);
-            $file_laporan->getActiveSheet()->setCellValue('G'.(11+$i), ($data_kumulatif['dpthb3'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']/$data_dasar['data_demografi']['si']['P'][$i])*100);
+            //$file_laporan->getActiveSheet()->setCellValue('F'.(11+$i), ($data_kumulatif['dpthb3'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']/$data_dasar['data_demografi']['si']['L'][$i])*100);
+            //$file_laporan->getActiveSheet()->setCellValue('G'.(11+$i), ($data_kumulatif['dpthb3'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']/$data_dasar['data_demografi']['si']['P'][$i])*100);
             
-            $file_laporan->getActiveSheet()->setCellValue('P'.(11+$i), ($data_kumulatif['polio4'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']/$data_dasar['data_demografi']['si']['L'][$i])*100);
-            $file_laporan->getActiveSheet()->setCellValue('Q'.(11+$i), ($data_kumulatif['polio4'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']/$data_dasar['data_demografi']['si']['P'][$i])*100);
+            //$file_laporan->getActiveSheet()->setCellValue('P'.(11+$i), ($data_kumulatif['polio4'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']/$data_dasar['data_demografi']['si']['L'][$i])*100);
+            //$file_laporan->getActiveSheet()->setCellValue('Q'.(11+$i), ($data_kumulatif['polio4'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']/$data_dasar['data_demografi']['si']['P'][$i])*100);
             
-            $file_laporan->getActiveSheet()->setCellValue('Z'.(11+$i), ($data_kumulatif['campak'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']/$data_dasar['data_demografi']['si']['L'][$i])*100);
-            $file_laporan->getActiveSheet()->setCellValue('AA'.(11+$i), ($data_kumulatif['campak'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']/$data_dasar['data_demografi']['si']['P'][$i])*100);
+            //$file_laporan->getActiveSheet()->setCellValue('Z'.(11+$i), ($data_kumulatif['campak'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']/$data_dasar['data_demografi']['si']['L'][$i])*100);
+            //$file_laporan->getActiveSheet()->setCellValue('AA'.(11+$i), ($data_kumulatif['campak'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']/$data_dasar['data_demografi']['si']['P'][$i])*100);
+            $i++;
         }
         
         $savedFileName = 'PWS-VAKSINATOR-TABEL_ANALISA-'.strtoupper($kecamatan).'-'.strtoupper($bulan).'-'.strtoupper($tahun).'.xlsx';
@@ -740,10 +732,10 @@ class VaksinatorPwsModel extends CI_Model{
     
     public function downloadLaporanUci($bulan, $tahun, $kecamatan){
         $bulan_map = ['januari'=>1,'februari'=>2,'maret'=>3,'april'=>4,'mei'=>5,'juni'=>6,'juli'=>7,'agustus'=>8,'september'=>9,'oktober'=>10,'november'=>11,'desember'=>12];
-        if($kecamatan=='sengkol'){
-            $user_village = ['gizi8'=>'Ketara','gizi9'=>'Sengkol','gizi10'=>'Sengkol','gizi11'=>'Kawo','gizi12'=>'Tanak Awu','gizi13'=>'Pengembur','gizi14'=>'Segala Anyar'];
-        }elseif($kecamatan=='janapria'){
-            $user_village = ['field_test2'=>'Lekor','gizi2'=>'Saba','gizi3'=>'Pendem','gizi4'=>'Setuta','gizi5'=>'Jango','gizi6'=>'Janapria'];
+        $locs = $this->LocationModel->getLocId($kecamatan);
+        $user_village = [];
+        foreach ($locs as $dex=>$name){
+            $user_village[$dex] = $name;
         }
         
         $data_dasar = $this->getDataDasar($tahun,$kecamatan);
@@ -761,30 +753,30 @@ class VaksinatorPwsModel extends CI_Model{
         //calculate Imunisasi lengkap data
         $lastyearfromthismonth = date("Y-m", strtotime($startdate." -1 year"));
         $lastyearfromthisjanuari = date("Y-m", strtotime($startyear." -1 year"));
-        $databulanini = $this->db->query("SELECT * FROM registrasi_jurim WHERE tanggal_lahir > '$lastyearfromthismonth' AND tanggal_lahir < '$enddate'")->result();
-        $datakumulatif = $this->db->query("SELECT * FROM registrasi_jurim WHERE tanggal_lahir > '$lastyearfromthisjanuari' AND tanggal_lahir < '$enddate'")->result();
+        $databulanini = $this->db->query("SELECT client_anak.baseEntityId,client_anak.gender,event_child_registration.locationId FROM client_anak LEFT JOIN event_child_registration ON event_child_registration.baseEntityId=client_anak.baseEntityId WHERE birthDate > '$lastyearfromthismonth' AND birthDate < '$enddate' GROUP BY baseEntityId")->result();
+        $datakumulatif = $this->db->query("SELECT client_anak.baseEntityId,client_anak.gender,event_child_registration.locationId FROM client_anak LEFT JOIN event_child_registration ON event_child_registration.baseEntityId=client_anak.baseEntityId WHERE birthDate > '$lastyearfromthisjanuari' AND birthDate < '$enddate' GROUP BY baseEntityId")->result();
         
         foreach ($databulanini as $d){
-            if(array_key_exists($d->userID, $user_village)){
-                $jk = $d->jenis_kelamin;
-                if($this->cekImunisasiLengkap($d->childId)){
+            if(array_key_exists($d->locationId, $user_village)){
+                $jk = $d->gender;
+                if($this->cekImunisasiLengkap($d->baseEntityId)){
                     if($jk=="laki-laki"||$jk=="male"){
-                        $data_bulan_ini['lengkap'][$user_village[$d->userID]]['l'] +=1;   
+                        $data_bulan_ini['lengkap'][$user_village[$d->locationId]]['l'] +=1;   
                     }elseif($jk=="perempuan"||$jk=="female"){
-                        $data_bulan_ini['lengkap'][$user_village[$d->userID]]['p'] +=1;
+                        $data_bulan_ini['lengkap'][$user_village[$d->locationId]]['p'] +=1;
                     }
                }
             }
         }
         
         foreach ($datakumulatif as $d){
-            if(array_key_exists($d->userID, $user_village)){
-                $jk = $d->jenis_kelamin;
-                if($this->cekImunisasiLengkap($d->childId)){
+            if(array_key_exists($d->locationId, $user_village)){
+                $jk = $d->gender;
+                if($this->cekImunisasiLengkap($d->baseEntityId)){
                     if($jk=="laki-laki"||$jk=="male"){
-                        $data_kumulatif['lengkap'][$user_village[$d->userID]]['l'] +=1;   
+                        $data_kumulatif['lengkap'][$user_village[$d->locationId]]['l'] +=1;   
                     }elseif($jk=="perempuan"||$jk=="female"){
-                        $data_kumulatif['lengkap'][$user_village[$d->userID]]['p'] +=1;
+                        $data_kumulatif['lengkap'][$user_village[$d->locationId]]['p'] +=1;
                     }
                }
             }
@@ -795,10 +787,12 @@ class VaksinatorPwsModel extends CI_Model{
         $file_laporan->getActiveSheet()->setCellValue('C4', $data_dasar['kabupaten']);
         $file_laporan->getActiveSheet()->setCellValue('C5', $data_dasar['tahun']);
         $file_laporan->getActiveSheet()->setCellValue('D7', "s/d ".strtoupper($bulan).", Per-tanggal:");
-        for($i=0;$i<6;$i++){
-            $file_laporan->getActiveSheet()->setCellValue('B'.(9+$i), $data_dasar['data_demografi']['desa'][$i]);
+        $i=0;
+        foreach ($data_dasar['data_demografi']['desa'] as $index=>$desa){
+            $file_laporan->getActiveSheet()->setCellValue('B'.(9+$i), $data_dasar['data_demografi']['desa'][$index]);
             $file_laporan->getActiveSheet()->setCellValue('C'.(9+$i), $data_dasar['data_demografi']['si']['L'][$i]+$data_dasar['data_demografi']['si']['P'][$i]); 
-            $file_laporan->getActiveSheet()->setCellValue('D'.(9+$i), $data_bulan_ini['lengkap'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['l']+$data_bulan_ini['lengkap'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['p']);
+            $file_laporan->getActiveSheet()->setCellValue('D'.(9+$i), $data_bulan_ini['lengkap'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['l']+$data_bulan_ini['lengkap'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['p']);
+            $i++;
         }
         
         $savedFileName = 'PWS-VAKSINATOR-TABEL_DESA_UCI-'.strtoupper($kecamatan).'-'.strtoupper($bulan).'-'.strtoupper($tahun).'.xlsx';
@@ -814,10 +808,10 @@ class VaksinatorPwsModel extends CI_Model{
     public function downloadLaporanTT($bulan, $tahun, $kecamatan){
         $bidanDB = $this->load->database('analytics', TRUE);
         $bulan_map = ['januari'=>1,'februari'=>2,'maret'=>3,'april'=>4,'mei'=>5,'juni'=>6,'juli'=>7,'agustus'=>8,'september'=>9,'oktober'=>10,'november'=>11,'desember'=>12];
-        if($kecamatan=='sengkol'){
-            $user_village = ['user8'=>'Ketara','user9'=>'Sengkol','user10'=>'Sengkol','user11'=>'Kawo','user12'=>'Tanak Awu','user13'=>'Pengembur','user14'=>'Segala Anyar'];
-        }elseif($kecamatan=='janapria'){
-            $user_village = ['user1'=>'Lekor','user2'=>'Saba','user3'=>'Pendem','user4'=>'Setuta','user5'=>'Jango','user6'=>'Janapria'];
+        $locs = $this->LocationModel->getLocId($kecamatan);
+        $user_village = [];
+        foreach ($locs as $dex=>$name){
+            $user_village[$dex] = $name;
         }
         
         $data_dasar = $this->getDataDasar($tahun,$kecamatan);
@@ -833,37 +827,36 @@ class VaksinatorPwsModel extends CI_Model{
         $enddate = date("Y-m", strtotime($startdate." +1 months"));
         
         //get TT data
-        $databulanini = $bidanDB->query("SELECT * FROM kartu_anc_visit WHERE ancDate > '$startdate' AND ancDate < '$enddate'")->result();
-        $datakumulatif = $bidanDB->query("SELECT * FROM kartu_anc_visit WHERE ancDate > '$startyear' AND ancDate < '$enddate'")->result();
-        
+        $databulanini = $bidanDB->query("SELECT * FROM event_bidan_kunjungan_anc WHERE ancDate > '$startdate' AND ancDate < '$enddate'")->result();
+        $datakumulatif = $bidanDB->query("SELECT * FROM event_bidan_kunjungan_anc WHERE ancDate > '$startyear' AND ancDate < '$enddate'")->result();
         foreach ($databulanini as $d){
-            if(array_key_exists($d->userID, $user_village)){
+            if(array_key_exists($d->locationId, $user_village)){
                 if($d->statusImunisasitt=="tt_ke_0"){
-                    $data_bulan_ini['bumil'][$user_village[$d->userID]]['tt1'] +=1; 
+                    $data_bulan_ini['bumil'][$user_village[$d->locationId]]['tt1'] +=1; 
                 }elseif($d->statusImunisasitt=="tt_ke_1"){
-                    $data_bulan_ini['bumil'][$user_village[$d->userID]]['tt2'] +=1; 
+                    $data_bulan_ini['bumil'][$user_village[$d->locationId]]['tt2'] +=1; 
                 }elseif($d->statusImunisasitt=="tt_ke_2"){
-                    $data_bulan_ini['bumil'][$user_village[$d->userID]]['tt3'] +=1; 
+                    $data_bulan_ini['bumil'][$user_village[$d->locationId]]['tt3'] +=1; 
                 }elseif($d->statusImunisasitt=="tt_ke_3"){
-                    $data_bulan_ini['bumil'][$user_village[$d->userID]]['tt4'] +=1; 
+                    $data_bulan_ini['bumil'][$user_village[$d->locationId]]['tt4'] +=1; 
                 }elseif($d->statusImunisasitt=="tt_ke_4"){
-                    $data_bulan_ini['bumil'][$user_village[$d->userID]]['tt5'] +=1; 
+                    $data_bulan_ini['bumil'][$user_village[$d->locationId]]['tt5'] +=1; 
                 }
             }
         }
         
         foreach ($datakumulatif as $d){
-            if(array_key_exists($d->userID, $user_village)){
+            if(array_key_exists($d->locationId, $user_village)){
                 if($d->statusImunisasitt=="tt_ke_0"){
-                    $data_kumulatif['bumil'][$user_village[$d->userID]]['tt1'] +=1; 
+                    $data_kumulatif['bumil'][$user_village[$d->locationId]]['tt1'] +=1; 
                 }elseif($d->statusImunisasitt=="tt_ke_1"){
-                    $data_kumulatif['bumil'][$user_village[$d->userID]]['tt2'] +=1; 
+                    $data_kumulatif['bumil'][$user_village[$d->locationId]]['tt2'] +=1; 
                 }elseif($d->statusImunisasitt=="tt_ke_2"){
-                    $data_kumulatif['bumil'][$user_village[$d->userID]]['tt3'] +=1; 
+                    $data_kumulatif['bumil'][$user_village[$d->locationId]]['tt3'] +=1; 
                 }elseif($d->statusImunisasitt=="tt_ke_3"){
-                    $data_kumulatif['bumil'][$user_village[$d->userID]]['tt4'] +=1; 
+                    $data_kumulatif['bumil'][$user_village[$d->locationId]]['tt4'] +=1; 
                 }elseif($d->statusImunisasitt=="tt_ke_4"){
-                    $data_kumulatif['bumil'][$user_village[$d->userID]]['tt5'] +=1; 
+                    $data_kumulatif['bumil'][$user_village[$d->locationId]]['tt5'] +=1; 
                 }
             }
         }
@@ -873,21 +866,23 @@ class VaksinatorPwsModel extends CI_Model{
         $file_laporan->getActiveSheet()->setCellValue('C4', $data_dasar['kabupaten']);
         $file_laporan->getActiveSheet()->setCellValue('G4', strtoupper($bulan));
         $file_laporan->getActiveSheet()->setCellValue('J4', $data_dasar['tahun']);
-        for($i=0;$i<6;$i++){
-            $file_laporan->getActiveSheet()->setCellValue('B'.(10+$i), $data_dasar['data_demografi']['desa'][$i]); 
+        $i=0;
+        foreach ($data_dasar['data_demografi']['desa'] as $index=>$desa){
+            $file_laporan->getActiveSheet()->setCellValue('B'.(10+$i), $data_dasar['data_demografi']['desa'][$index]); 
             $file_laporan->getActiveSheet()->setCellValue('C'.(10+$i), $data_dasar['data_demografi']['wus_hamil'][$i]);
             
-            $file_laporan->getActiveSheet()->setCellValue('D'.(10+$i), $data_bulan_ini['bumil'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['tt1']);
-            $file_laporan->getActiveSheet()->setCellValue('H'.(10+$i), $data_bulan_ini['bumil'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['tt2']);
-            $file_laporan->getActiveSheet()->setCellValue('L'.(10+$i), $data_bulan_ini['bumil'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['tt3']);
-            $file_laporan->getActiveSheet()->setCellValue('P'.(10+$i), $data_bulan_ini['bumil'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['tt4']);
-            $file_laporan->getActiveSheet()->setCellValue('T'.(10+$i), $data_bulan_ini['bumil'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['tt5']);
+            $file_laporan->getActiveSheet()->setCellValue('D'.(10+$i), $data_bulan_ini['bumil'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['tt1']);
+            $file_laporan->getActiveSheet()->setCellValue('H'.(10+$i), $data_bulan_ini['bumil'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['tt2']);
+            $file_laporan->getActiveSheet()->setCellValue('L'.(10+$i), $data_bulan_ini['bumil'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['tt3']);
+            $file_laporan->getActiveSheet()->setCellValue('P'.(10+$i), $data_bulan_ini['bumil'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['tt4']);
+            $file_laporan->getActiveSheet()->setCellValue('T'.(10+$i), $data_bulan_ini['bumil'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['tt5']);
             
-            $file_laporan->getActiveSheet()->setCellValue('F'.(10+$i), $data_kumulatif['bumil'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['tt1']);
-            $file_laporan->getActiveSheet()->setCellValue('J'.(10+$i), $data_kumulatif['bumil'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['tt2']);
-            $file_laporan->getActiveSheet()->setCellValue('N'.(10+$i), $data_kumulatif['bumil'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['tt3']);
-            $file_laporan->getActiveSheet()->setCellValue('R'.(10+$i), $data_kumulatif['bumil'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['tt4']);
-            $file_laporan->getActiveSheet()->setCellValue('V'.(10+$i), $data_kumulatif['bumil'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$i]))]['tt5']);
+            $file_laporan->getActiveSheet()->setCellValue('F'.(10+$i), $data_kumulatif['bumil'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['tt1']);
+            $file_laporan->getActiveSheet()->setCellValue('J'.(10+$i), $data_kumulatif['bumil'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['tt2']);
+            $file_laporan->getActiveSheet()->setCellValue('N'.(10+$i), $data_kumulatif['bumil'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['tt3']);
+            $file_laporan->getActiveSheet()->setCellValue('R'.(10+$i), $data_kumulatif['bumil'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['tt4']);
+            $file_laporan->getActiveSheet()->setCellValue('V'.(10+$i), $data_kumulatif['bumil'][ucwords(strtolower($data_dasar['data_demografi']['desa'][$index]))]['tt5']);
+            $i++;
         }
         
         $bln_ini = ['D','H','L','P','T','Y','AC','AG','AK','AO','AS','AW','BA','BE','BI','BM'];
