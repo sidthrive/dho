@@ -15,15 +15,15 @@ class LocationModel extends CI_Model{
             "Kopang"=>array('user21'=>'Aik Bual','user25'=>'Kopang Rembiga','user29'=>'Montong Gamang'),
             "Mantang"=>array('nouser1'=>'Barabali','user24'=>'Mantang','user23'=>'Presak','nouser2'=>'Tampak Siring'),
             "Mujur"=>array('nouser1'=>'Mujur','nouser2'=>'Sukaraja'),
-            "Puyung"=>array('nouser1'=>'Dasan Ketujur','user27'=>'Gemel'),
+            "Puyung"=>array('nouser1'=>'Puyung','user27'=>'Gemel'),
             "Ubung"=>array('user20'=>'Batu Tulis','user28'=>'Labulia','nouser1'=>'Ubung')),
         "vaksinator"=>array(
             "Darek"=>array('nouser1'=>'Pandan Indah','vaksin26'=>'Serage','nouser2'=>'Teduh'),
-            "Pengadang"=>array('vaksin30'=>'Gerantung','nouser1'=>'Jurang Jaler','nouser2'=>'Pengadang'),
+            "Pengadang"=>array('vaksin30'=>'Gerantung','nouser1'=>'Jurang Jaler','vaksin35'=>'Pengadang'),
             "Kopang"=>array('vaksin21'=>'Aik Bual','vaksin25'=>'Kopang Rembiga','vaksin29'=>'Montong Gamang'),
             "Mantang"=>array('nouser1'=>'Barabali','nouser2'=>'Mantang','vaksin23'=>'Presak','nouser3'=>'Tampak Siring'),
             "Mujur"=>array('nouser1'=>'Mujur','nouser2'=>'Sukaraja'),
-            "Puyung"=>array('nouser1'=>'Dasan Ketujur','nouser2'=>'Gemel'),
+            "Puyung"=>array('nouser1'=>'Puyung','nouser2'=>'Gemel'),
             "Ubung"=>array('vaksin20'=>'Batu Tulis','nouser1'=>'Labulia','nouser2'=>'Ubung')),
         "gizi"=>array(
             "Darek"=>array('nouser1'=>'Pandan Indah','gizi26'=>'Serage','nouser2'=>'Teduh'),
@@ -31,17 +31,17 @@ class LocationModel extends CI_Model{
             "Kopang"=>array('gizi21'=>'Aik Bual','gizi25'=>'Kopang Rembiga','gizi29'=>'Montong Gamang'),
             "Mantang"=>array('nouser1'=>'Barabali','nouser2'=>'Mantang','gizi23'=>'Presak','nouser3'=>'Tampak Siring'),
             "Mujur"=>array('nouser1'=>'Mujur','nouser2'=>'Sukaraja'),
-            "Puyung"=>array('nouser1'=>'Dasan Ketujur','nouser2'=>'Gemel'),
+            "Puyung"=>array('nouser1'=>'Puyung','nouser2'=>'Gemel'),
             "Ubung"=>array('gizi20'=>'Batu Tulis','nouser1'=>'Labulia','nouser2'=>'Ubung'))
         ];
     
     private $loc_id = [
             "Darek"=>array('Pandan Indah'=>'Pandan Indah','Serage'=>'Serage','Teduh'=>'Teduh'),
-            "Pengadang"=>array('Gerantung'=>'Gerantung','Jurang Jaler'=>'Jurang Jaler','Pengadang'=>'Pengadang'),
+            "Pengadang"=>array('Gerantung'=>'Gerantung','Jurang Jaler'=>'Jurang Jaler','Pengadang.'=>'Pengadang'),
             "Kopang"=>array('Aik Bual'=>'Aik Bual','Kopang Rembiga'=>'Kopang Rembiga','Montong Gamang'=>'Montong Gamang'),
             "Mantang"=>array('Barabali'=>'Barabali','Mantang.'=>'Mantang','Presak.'=>'Presak','Tampak Siring'=>'Tampak Siring'),
             "Mujur"=>array('Mujur'=>'Mujur','Sukaraja'=>'Sukaraja'),
-            "Puyung"=>array('Dasan Ketujur'=>'Dasan Ketujur','Gemel'=>'Gemel'),
+            "Puyung"=>array('Puyung..'=>'Puyung','Gemel'=>'Gemel'),
             "Ubung"=>array('Batu Tulis'=>'Batu Tulis','Labulia'=>'Labulia','Ubung'=>'Ubung')
         ];
     
@@ -67,7 +67,7 @@ class LocationModel extends CI_Model{
         'Tampak Siring'=>array(1=>'Antak-Antak','Batu Meta','Beneng','Dsn. Baru','Gbk. Blimbing','Jadot','Jeranjang','Ld. Kekah','Lk. Petelahan','Pedadan','Sanggok'),
         'Mujur'=>array(1=>'Berenyok','Budiwathon','Bunut Baok','Gawah Malang','Kebun Alit','Kolak','Kudung Are','Lokon','Montong Inggu','Mungkik','Orok-orok','Pendem.','Pengendong','Perluasan','Santong.','Sebolet','Senayan','Serasap','Tanak Beak','Tembuku'),
         'Sukaraja'=>array(1=>'Bengkang','Karang katon','Kebun pelangeh','Kudung paok','Lengkah','Mircod','Montong bile.','Rajak','Selandung','Songkok'),
-        'Dasan Ketujur'=>array(1=>'Bangket tengak','Dasan ketujur','Gubuk Punik','Krembeng','Lingkung daye','Lingkung Lauk','Merek','Mosok','Otak dese','Pedalaman','Sengkolit','Singosari','Sumpak bat','Sumpak timuk','Taman daye','Waker'),
+        'Puyung'=>array(1=>'Bangket tengak','Dasan ketujur','Gubuk Punik','Krembeng','Lingkung daye','Lingkung Lauk','Merek','Mosok','Otak dese','Pedalaman','Sengkolit','Singosari','Sumpak bat','Sumpak timuk','Taman daye','Waker'),
         'Gemel'=>array(1=>'Bilemantik','Bunceman','Bunprie','Bunsibah','Gemel.','Kebun tengak','Merobok','Mtg. Kecial'),
         'Batu Tulis'=>array(1=>'Bangket Gawah','Batu Tulis.','Bon Rungkang','Bonje','Gontoran','Jereneng'),
         'Labulia'=>array(1=>'Batu Tinggang','Bonduduk','Dasan Sebeleq','Enjak','Labulia.','Olor Agung','Sulin','Tandek','Tober'),
@@ -90,7 +90,7 @@ class LocationModel extends CI_Model{
         'Tampak Siring'=>array('Antak-Antak'=>'Antak-Antak','Batu Meta'=>'Batu Meta','Beneng'=>'Beneng','Dsn. Baru'=>'Dsn Baru','Gbk. Blimbing'=>'Gbk Blimbing','Jadot'=>'Jadot','Jeranjang'=>'Jeranjang','Ld. Kekah'=>'Ld Kekah','Lk. Petelahan'=>'Lk Petelahan','Pedadan'=>'Pedadan','Sanggok'=>'Sanggok'),
         'Mujur'=>array('Berenyok'=>'Berenyok','Budiwathon'=>'Budiwathon','Bunut Baok'=>'Bunut Baok','Gawah Malang'=>'Gawah Malang','Kebun Alit'=>'Kebun Alit','Kolak'=>'Kolak','Kudung Are'=>'Kudung Are','Lokon'=>'Lokon','Montong Inggu'=>'Montong Inggu','Mungkik'=>'Mungkik','Orok-orok'=>'Orok-orok','Pendem.'=>'Pendem','Pendem'=>'Pendem','Pengendong'=>'Pengendong','Perluasan'=>'Perluasan','Santong.'=>'Santong','Santong'=>'Santong','Sebolet'=>'Sebolet','Senayan'=>'Senayan','Serasap'=>'Serasap','Tanak Beak'=>'Tanak Beak','Tembuku'=>'Tembuku'),
         'Sukaraja'=>array('Bengkang'=>'Bengkang','Karang katon'=>'Karang katon','Kebun pelangeh'=>'Kebun pelangeh','Kudung paok'=>'Kudung paok','Lengkah'=>'Lengkah','Mircod'=>'Mircod','Montong bile.'=>'Montong bile','Montong bile'=>'Montong bile','Rajak'=>'Rajak','Selandung'=>'Selandung','Songkok'=>'Songkok'),
-        'Dasan Ketujur'=>array('Bangket tengak'=>'Bangket tengak','Dasan ketujur'=>'Dasan ketujur','Gubuk Punik'=>'Gubuk Punik','Krembeng'=>'Krembeng','Lingkung daye'=>'Lingkung daye','Lingkung Lauk'=>'Lingkung Lauk','Merek'=>'Merek','Mosok'=>'Mosok','Otak dese'=>'Otak dese','Pedalaman'=>'Pedalaman','Sengkolit'=>'Sengkolit','Singosari'=>'Singosari','Sumpak bat'=>'Sumpak bat','Sumpak timuk'=>'Sumpak timuk','Taman daye'=>'Taman daye','Waker'=>'Waker'),
+        'Puyung'=>array('Bangket tengak'=>'Bangket tengak','Dasan ketujur'=>'Dasan ketujur','Gubuk Punik'=>'Gubuk Punik','Krembeng'=>'Krembeng','Lingkung daye'=>'Lingkung daye','Lingkung Lauk'=>'Lingkung Lauk','Merek'=>'Merek','Mosok'=>'Mosok','Otak dese'=>'Otak dese','Pedalaman'=>'Pedalaman','Sengkolit'=>'Sengkolit','Singosari'=>'Singosari','Sumpak bat'=>'Sumpak bat','Sumpak timuk'=>'Sumpak timuk','Taman daye'=>'Taman daye','Waker'=>'Waker'),
         'Gemel'=>array('Bilemantik'=>'Bilemantik','Bunceman'=>'Bunceman','Bunprie'=>'Bunprie','Bunsibah'=>'Bunsibah','Gemel.'=>'Gemel','Gemel'=>'Gemel','Kebun tengak'=>'Kebun tengak','Merobok'=>'Merobok','Mtg. Kecial'=>'Mtg Kecial'),
         'Batu Tulis'=>array('Bangket Gawah'=>'Bangket Gawah','Batutulis'=>'Batu Tulis','Batu tulis.'=>'Batu Tulis','Batu Tulis.'=>'Batu Tulis','Batu Tulis'=>'Batu Tulis','Bunrungkang'=>'Bon Rungkang','Bon Rungkang / Bonje'=>'Bon Rungkang','Bon Rungkang'=>'Bon Rungkang','Bonje'=>'Bonje','Bunje'=>'Bonje','Gontoran'=>'Gontoran','Jereneng'=>'Jereneng'),
         'Labulia'=>array('Batu Tinggang'=>'Batu Tinggang','Bonduduk'=>'Bonduduk','Dasan Sebeleq'=>'Dasan Sebeleq','Enjak'=>'Enjak','Labulia Desa'=>'Labulia Desa','Dasan Tuan'=>'Dasan Tuan','Labulia Lauk'=>'Labulia Lauk','Labulia Daye'=>'Labulia Daye','Olor Agung'=>'Olor Agung','Sulin'=>'Sulin','Wareng Kandel'=>'Wareng Kandel','Tandek Daye'=>'Tandek Daye','Tandek Lauk'=>'Tandek Lauk','Pengempokan'=>'Pengempokan','Tober'=>'Tober'),
