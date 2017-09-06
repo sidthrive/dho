@@ -47,8 +47,8 @@ class LocationModel extends CI_Model{
     
     private $int_loc_id = [
             "bidan"=>array('Serage'=>'Serage','Teduh'=>'Teduh','Gerantung'=>'Gerantung','Kopang Rembiga'=>'Kopang Rembiga','Montong Gamang'=>'Montong Gamang','Mantang.'=>'Mantang','Presak.'=>'Presak','Gemel'=>'Gemel','Batu Tulis'=>'Batu Tulis','Labulia'=>'Labulia'),
-            "gizi"=>array('Serage'=>'Serage','Gerantung'=>'Gerantung','Kopang Rembiga'=>'Kopang Rembiga','Montong Gamang'=>'Montong Gamang','Presak.'=>'Presak','Batu Tulis'=>'Batu Tulis'),
-            "vaksinator"=>array('Serage'=>'Serage','Gerantung'=>'Gerantung','Kopang Rembiga'=>'Kopang Rembiga','Montong Gamang'=>'Montong Gamang','Presak.'=>'Presak','Batu Tulis'=>'Batu Tulis')
+            "gizi"=>array('Serage'=>'Serage','Teduh'=>'Teduh','Gerantung'=>'Gerantung','Kopang Rembiga'=>'Kopang Rembiga','Montong Gamang'=>'Montong Gamang','Mantang.'=>'Mantang','Presak.'=>'Presak','Gemel'=>'Gemel','Batu Tulis'=>'Batu Tulis','Labulia'=>'Labulia'),
+            "vaksinator"=>array('Serage'=>'Serage','Teduh'=>'Teduh','Gerantung'=>'Gerantung','Kopang Rembiga'=>'Kopang Rembiga','Montong Gamang'=>'Montong Gamang','Mantang.'=>'Mantang','Presak.'=>'Presak','Gemel'=>'Gemel','Batu Tulis'=>'Batu Tulis','Labulia'=>'Labulia')
         ];
     
     private $dusun = [
