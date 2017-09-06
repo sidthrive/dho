@@ -50,8 +50,8 @@ class VaksinatorEcCakupanModel extends CI_Model{
         $enddate = date("Y-m", strtotime("+1 months"));
         
         $hb0 = $bcg = $polio1 = $dpthb1 = $polio2 = $dpthb2 = $polio3 = $dpthb3 = $polio4 = $campak = $ipv = $imunisasi = $campak_lanjutan = $tt1 = $tt2 = $tt3 = $tt4 = $tt5 = $uci = $this->user;
-        $datavisit = $this->db->query("SELECT *,client_anak.gender FROM event_vaksin_imunisasi_bayi LEFT JOIN client_anak ON client_anak.baseEntityId=event_vaksin_imunisasi_bayi.baseEntityId "
-                . "WHERE (hb0 > '".$startdate."' AND hb0 < '".$enddate."')"
+        $query_string = "SELECT *,client_anak.gender FROM event_vaksin_imunisasi_bayi LEFT JOIN client_anak ON client_anak.baseEntityId=event_vaksin_imunisasi_bayi.baseEntityId "
+                . "WHERE ((hb0 > '".$startdate."' AND hb0 < '".$enddate."')"
                 . "OR (bcg > '".$startdate."' AND bcg < '".$enddate."')"
                 . "OR (polio1 > '".$startdate."' AND polio1 < '".$enddate."')"
                 . "OR (dptHb1 > '".$startdate."' AND dptHb1 < '".$enddate."')"
@@ -62,8 +62,17 @@ class VaksinatorEcCakupanModel extends CI_Model{
                 . "OR (polio4 > '".$startdate."' AND polio4 < '".$enddate."')"
                 . "OR (campak > '".$startdate."' AND campak < '".$enddate."')"
                 . "OR (campak_lanjutan > '".$startdate."' AND campak_lanjutan < '".$enddate."')"
-                . "OR (ipv > '".$startdate."' AND ipv < '".$enddate."')")->result();
-        
+                . "OR (ipv > '".$startdate."' AND ipv < '".$enddate."'))";
+        $query_string .= " AND (";
+        foreach ($this->user_village as $name=>$n){
+            if($n!=end($this->user_village)){
+                $query_string .= "(locationId = '$name') OR ";
+            }else{
+                $query_string .= "(locationId = '$name')";
+            }
+        }
+        $query_string .= ")";
+        $datavisit = $this->db->query($query_string)->result();
         foreach($datavisit as $dvisit){
             $imu_count = 0;
             if($this->cekTanggalImu($dvisit->hb0, $startdate, $enddate)){
