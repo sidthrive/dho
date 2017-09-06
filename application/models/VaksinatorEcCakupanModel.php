@@ -327,8 +327,8 @@ class VaksinatorEcCakupanModel extends CI_Model{
 //        $datareg = $this->getDataRegistrasi("eventDate > '".$startdate."' AND eventDate < '".$enddate."'");
         
         $hb0 = $bcg = $polio1 = $dpthb1 = $polio2 = $dpthb2 = $polio3 = $dpthb3 = $polio4 = $campak = $ipv = $imunisasi = $campak_lanjutan = $tt1 = $tt2 = $tt3 = $tt4 = $tt5 = $uci = $this->user;
-        $datavisit = $this->db->query("SELECT *,client_anak.gender FROM event_vaksin_imunisasi_bayi LEFT JOIN client_anak ON client_anak.baseEntityId=event_vaksin_imunisasi_bayi.baseEntityId "
-                . "WHERE (hb0 > '".$startyear."' AND hb0 < '".$enddate."')"
+        $query_string = "SELECT *,client_anak.gender FROM event_vaksin_imunisasi_bayi LEFT JOIN client_anak ON client_anak.baseEntityId=event_vaksin_imunisasi_bayi.baseEntityId "
+                . "WHERE ((hb0 > '".$startyear."' AND hb0 < '".$enddate."')"
                 . "OR (bcg > '".$startyear."' AND bcg < '".$enddate."')"
                 . "OR (polio1 > '".$startyear."' AND polio1 < '".$enddate."')"
                 . "OR (dptHb1 > '".$startyear."' AND dptHb1 < '".$enddate."')"
@@ -339,8 +339,17 @@ class VaksinatorEcCakupanModel extends CI_Model{
                 . "OR (polio4 > '".$startyear."' AND polio4 < '".$enddate."')"
                 . "OR (campak > '".$startyear."' AND campak < '".$enddate."')"
                 . "OR (campak_lanjutan > '".$startdate."' AND campak_lanjutan < '".$enddate."')"
-                . "OR (ipv > '".$startdate."' AND ipv < '".$enddate."')")->result();
-        
+                . "OR (ipv > '".$startdate."' AND ipv < '".$enddate."'))";
+        $query_string .= " AND (";
+        foreach ($this->user_village as $name=>$n){
+            if($n!=end($this->user_village)){
+                $query_string .= "(locationId = '$name') OR ";
+            }else{
+                $query_string .= "(locationId = '$name')";
+            }
+        }
+        $query_string .= ")";
+        $datavisit = $this->db->query($query_string)->result();
         foreach($datavisit as $dvisit){
             $imu_count = 0;
             if($this->cekTanggalImu($dvisit->hb0, $startyear, $enddate)){
@@ -593,8 +602,8 @@ class VaksinatorEcCakupanModel extends CI_Model{
         $user   =  ['Saba'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0),'Tanak Awu'=>array('lbl'=>0,'pbl'=>0,'lbi'=>0,'pbi'=>0)];
         $user = $this->ec->getCakupanContainer('vaksinator',TRUE);
         $hb0 = $bcg = $polio1 = $dpthb1 = $polio2 = $dpthb2 = $polio3 = $dpthb3 = $polio4 = $campak = $ipv = $imunisasi = $campak_lanjutan = $tt1 = $tt2 = $tt3 = $tt4 = $tt5 = $uci = $user;
-        $datavisit = $this->db->query("SELECT *,client_anak.gender FROM event_vaksin_imunisasi_bayi LEFT JOIN client_anak ON client_anak.baseEntityId=event_vaksin_imunisasi_bayi.baseEntityId "
-                . "WHERE (hb0 > '".$lastmonth."' AND hb0 < '".$startdate."')"
+        $query_string = "SELECT *,client_anak.gender FROM event_vaksin_imunisasi_bayi LEFT JOIN client_anak ON client_anak.baseEntityId=event_vaksin_imunisasi_bayi.baseEntityId "
+                . "WHERE ((hb0 > '".$lastmonth."' AND hb0 < '".$startdate."')"
                 . "OR (bcg > '".$lastmonth."' AND bcg < '".$startdate."')"
                 . "OR (polio1 > '".$lastmonth."' AND polio1 < '".$startdate."')"
                 . "OR (dptHb1 > '".$lastmonth."' AND dptHb1 < '".$startdate."')"
@@ -605,8 +614,17 @@ class VaksinatorEcCakupanModel extends CI_Model{
                 . "OR (polio4 > '".$lastmonth."' AND polio4 < '".$startdate."')"
                 . "OR (campak > '".$lastmonth."' AND campak < '".$startdate."')"
                 . "OR (campak_lanjutan > '".$lastmonth."' AND campak_lanjutan < '".$startdate."')"
-                . "OR (ipv > '".$lastmonth."' AND ipv < '".$startdate."')")->result();
-        
+                . "OR (ipv > '".$lastmonth."' AND ipv < '".$startdate."'))";
+        $query_string .= " AND (";
+        foreach ($this->user_village as $name=>$n){
+            if($n!=end($this->user_village)){
+                $query_string .= "(locationId = '$name') OR ";
+            }else{
+                $query_string .= "(locationId = '$name')";
+            }
+        }
+        $query_string .= ")";
+        $datavisit = $this->db->query($query_string)->result();
         foreach($datavisit as $dvisit){
             $imu_count = 0;
             if($this->cekTanggalImu($dvisit->hb0, $lastmonth, $startdate)){
@@ -735,8 +753,8 @@ class VaksinatorEcCakupanModel extends CI_Model{
             }
         }
         
-        $datavisit = $this->db->query("SELECT *,client_anak.gender FROM event_vaksin_imunisasi_bayi LEFT JOIN client_anak ON client_anak.baseEntityId=event_vaksin_imunisasi_bayi.baseEntityId "
-                . "WHERE (hb0 > '".$startdate."' AND hb0 < '".$enddate."')"
+        $query_string = "SELECT *,client_anak.gender FROM event_vaksin_imunisasi_bayi LEFT JOIN client_anak ON client_anak.baseEntityId=event_vaksin_imunisasi_bayi.baseEntityId "
+                . "WHERE ((hb0 > '".$startdate."' AND hb0 < '".$enddate."')"
                 . "OR (bcg > '".$startdate."' AND bcg < '".$enddate."')"
                 . "OR (polio1 > '".$startdate."' AND polio1 < '".$enddate."')"
                 . "OR (dptHb1 > '".$startdate."' AND dptHb1 < '".$enddate."')"
@@ -747,8 +765,17 @@ class VaksinatorEcCakupanModel extends CI_Model{
                 . "OR (polio4 > '".$startdate."' AND polio4 < '".$enddate."')"
                 . "OR (campak > '".$startdate."' AND campak < '".$enddate."')"
                 . "OR (campak_lanjutan > '".$startdate."' AND campak_lanjutan < '".$enddate."')"
-                . "OR (ipv > '".$startdate."' AND ipv < '".$enddate."')")->result();
-        
+                . "OR (ipv > '".$startdate."' AND ipv < '".$enddate."'))";
+        $query_string .= " AND (";
+        foreach ($this->user_village as $name=>$n){
+            if($n!=end($this->user_village)){
+                $query_string .= "(locationId = '$name') OR ";
+            }else{
+                $query_string .= "(locationId = '$name')";
+            }
+        }
+        $query_string .= ")";
+        $datavisit = $this->db->query($query_string)->result();
         foreach($datavisit as $dvisit){
             $imu_count = 0;
             if($this->cekTanggalImu($dvisit->hb0, $startdate, $enddate)){
@@ -1040,8 +1067,8 @@ class VaksinatorEcCakupanModel extends CI_Model{
         $user = $this->ec->getCakupanContainer('vaksinator',TRUE);
         $hb0 = $bcg = $polio1 = $dpthb1 = $polio2 = $dpthb2 = $polio3 = $dpthb3 = $polio4 = $campak = $ipv = $imunisasi = $campak_lanjutan = $tt1 = $tt2 = $tt3 = $tt4 = $tt5 = $uci = $user; 
         
-        $datavisit = $this->db->query("SELECT *,client_anak.gender FROM event_vaksin_imunisasi_bayi LEFT JOIN client_anak ON client_anak.baseEntityId=event_vaksin_imunisasi_bayi.baseEntityId "
-                . "WHERE (hb0 > '".$startdate1."' AND hb0 < '".$enddate1."')"
+        $query_string = "SELECT *,client_anak.gender FROM event_vaksin_imunisasi_bayi LEFT JOIN client_anak ON client_anak.baseEntityId=event_vaksin_imunisasi_bayi.baseEntityId "
+                . "WHERE ((hb0 > '".$startdate1."' AND hb0 < '".$enddate1."')"
                 . "OR (bcg > '".$startdate1."' AND bcg < '".$enddate1."')"
                 . "OR (polio1 > '".$startdate1."' AND polio1 < '".$enddate1."')"
                 . "OR (dptHb1 > '".$startdate1."' AND dptHb1 < '".$enddate1."')"
@@ -1052,8 +1079,17 @@ class VaksinatorEcCakupanModel extends CI_Model{
                 . "OR (polio4 > '".$startdate1."' AND polio4 < '".$enddate1."')"
                 . "OR (campak > '".$startdate1."' AND campak < '".$enddate1."')"
                 . "OR (campak_lanjutan > '".$startdate1."' AND campak_lanjutan < '".$enddate1."')"
-                . "OR (ipv > '".$startdate1."' AND ipv < '".$enddate1."')")->result();
-        
+                . "OR (ipv > '".$startdate1."' AND ipv < '".$enddate1."'))";
+        $query_string .= " AND (";
+        foreach ($this->user_village as $name=>$n){
+            if($n!=end($this->user_village)){
+                $query_string .= "(locationId = '$name') OR ";
+            }else{
+                $query_string .= "(locationId = '$name')";
+            }
+        }
+        $query_string .= ")";
+        $datavisit = $this->db->query($query_string)->result();
         foreach($datavisit as $dvisit){
             $imu_count = 0;
             if($this->cekTanggalImu($dvisit->hb0, $startdate1, $enddate1)){
@@ -1182,8 +1218,8 @@ class VaksinatorEcCakupanModel extends CI_Model{
             }
         }
         
-        $datavisit = $this->db->query("SELECT *,client_anak.gender FROM event_vaksin_imunisasi_bayi LEFT JOIN client_anak ON client_anak.baseEntityId=event_vaksin_imunisasi_bayi.baseEntityId "
-                . "WHERE (hb0 > '".$startdate2."' AND hb0 < '".$enddate2."')"
+        $query_string = "SELECT *,client_anak.gender FROM event_vaksin_imunisasi_bayi LEFT JOIN client_anak ON client_anak.baseEntityId=event_vaksin_imunisasi_bayi.baseEntityId "
+                . "WHERE ((hb0 > '".$startdate2."' AND hb0 < '".$enddate2."')"
                 . "OR (bcg > '".$startdate2."' AND bcg < '".$enddate2."')"
                 . "OR (polio1 > '".$startdate2."' AND polio1 < '".$enddate2."')"
                 . "OR (dptHb1 > '".$startdate2."' AND dptHb1 < '".$enddate2."')"
@@ -1194,8 +1230,17 @@ class VaksinatorEcCakupanModel extends CI_Model{
                 . "OR (polio4 > '".$startdate2."' AND polio4 < '".$enddate2."')"
                 . "OR (campak > '".$startdate2."' AND campak < '".$enddate2."')"
                 . "OR (campak_lanjutan > '".$startdate2."' AND campak_lanjutan < '".$enddate2."')"
-                . "OR (ipv > '".$startdate2."' AND ipv < '".$enddate2."')")->result();
-        
+                . "OR (ipv > '".$startdate2."' AND ipv < '".$enddate2."'))";
+        $query_string .= " AND (";
+        foreach ($this->user_village as $name=>$n){
+            if($n!=end($this->user_village)){
+                $query_string .= "(locationId = '$name') OR ";
+            }else{
+                $query_string .= "(locationId = '$name')";
+            }
+        }
+        $query_string .= ")";
+        $datavisit = $this->db->query($query_string)->result();
         foreach($datavisit as $dvisit){
             $imu_count = 0;
             if($this->cekTanggalImu($dvisit->hb0, $startdate2, $enddate2)){
