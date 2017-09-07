@@ -146,7 +146,7 @@ class BidanEcCakupanModel extends CI_Model{
                 if($dsalin->tempatBersalin=="podok_bersalin_desa"||$dsalin->tempatBersalin=="pusat_kesehatan_masyarakat_pembantu"||$dsalin->tempatBersalin=="pusat_kesehatan_masyarakat"||$dsalin->tempatBersalin=="rumah_bersalin"||$dsalin->tempatBersalin=="rumah_sakit_ibu_dan_anak"||$dsalin->tempatBersalin=="rumah_sakit"||$dsalin->tempatBersalin=="rumah_sakit_orang_dengan_hiv_aids"){
                     $likes[$user_village[$dsalin->locationId]] += 1;
                 }
-                if($dsalin->penolong=="bidan"||$dsalin->penolong=="dr.spesialis"||$dsalin->penolong=="dr.umum"||$dsalin->penolong=="lain-lain"){
+                if(strpos($dsalin->penolong, "bidan") !== false||strpos($dsalin->penolong, "dr.spesialis") !== false||strpos($dsalin->penolong, "dr.umum") !== false){
                     $nakes[$user_village[$dsalin->locationId]] += 1;
                 }
             }
