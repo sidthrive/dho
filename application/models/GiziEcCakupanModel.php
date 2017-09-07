@@ -91,7 +91,7 @@ class GiziEcCakupanModel extends CI_Model{
         foreach ($datads as $dds){
             if(array_key_exists($dds->locationId, $user_village)){
                 $balita[$user_village[$dds->locationId]] += 1;
-                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$d->baseEntityId."'");if($jk->num_rows()<1){continue;}$jk = $jk->row()->jk;
+                $jk = $this->db->query("SELECT gender as jk FROM client_anak WHERE baseEntityId = '".$dds->baseEntityId."'");if($jk->num_rows()<1){continue;}$jk = $jk->row()->jk;
                 if(strtolower($dds->nutrition_status)=="n"){
                     $nd[$user_village[$dds->locationId]] += 1;
                 }elseif($dds->nutrition_status==""||$dds->nutrition_status=="-"){
