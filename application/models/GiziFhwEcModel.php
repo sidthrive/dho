@@ -54,10 +54,6 @@ class GiziFhwEcModel extends CI_Model{
                         $data_count                  = $result_data[$namadusun[$n_dusun]];
                         $data_count[$legend]         += 1;
                         $result_data[$namadusun[$n_dusun]] = $data_count;
-                    }else{
-                        $data_count                  = $result_data["Lainnya"];
-                        $data_count[$legend]         += 1;
-                        $result_data["Lainnya"] = $data_count;
                     }
                 }
             }
@@ -70,10 +66,6 @@ class GiziFhwEcModel extends CI_Model{
                             $data_count                  = $result_data[$namadusun[$n_dusun]];
                             $data_count[$legend]         += 1;
                             $result_data[$namadusun[$n_dusun]] = $data_count;
-                        }else{
-                            $data_count                  = $result_data["Lainnya"];
-                            $data_count[$legend]         += 1;
-                            $result_data["Lainnya"] = $data_count;
                         }
                     }
                 }
@@ -232,15 +224,6 @@ class GiziFhwEcModel extends CI_Model{
                         $data_count[$tgl] +=$datas->counts;
                     }
                     $result_data[$namadusun[$datas->dusun]] = $data_count;
-                }else{
-                    var_dump($datas->dusun);
-                    $data_count                  = $result_data["Lainnya"];
-                    $tgl = explode('T', $datas->dateCreated);
-                    $tgl = $tgl[0];
-                    if(array_key_exists($tgl, $data_count)){
-                        $data_count[$tgl] +=$datas->counts;
-                    }
-                    $result_data["Lainnya"] = $data_count;
                 }
             }
         }
@@ -368,21 +351,6 @@ class GiziFhwEcModel extends CI_Model{
                         $week['thisweek'] = $thisweek;
                         $week['lastweek'] = $lastweek;
                         $result_data[$namadusun[$datas->dusun]] = $week;
-                    }else{
-                        $week   =   $result_data["Lainnya"];
-                        $thisweek   = $week['thisweek'];
-                        $lastweek   = $week['lastweek'];
-                        $tgl = explode('T', $datas->dateCreated);
-                        $tgl = $tgl[0];
-                        if(array_key_exists($tgl, $thisweek)){
-                            $thisweek[$tgl] +=$datas->counts;
-                        }
-                        if(array_key_exists($tgl, $lastweek)){
-                            $lastweek[$tgl] +=$datas->counts;
-                        }
-                        $week['thisweek'] = $thisweek;
-                        $week['lastweek'] = $lastweek;
-                        $result_data["Lainnya"] = $week;
                     }
                 }elseif($mode=='Bulanan'){
                     if(array_key_exists($datas->dusun, $namadusun)){
@@ -403,24 +371,6 @@ class GiziFhwEcModel extends CI_Model{
                         $month['thisyear'] = $thisyear;
                         $month['lastyear'] = $lastyear;
                         $result_data[$namadusun[$datas->dusun]] = $month;
-                    }else{
-                        $month = $result_data["Lainnya"];
-                        $thisyear = $month['thisyear'];
-                        $lastyear = $month['lastyear'];
-                        $tgl = explode('T', $datas->dateCreated);
-                        $tgl = $tgl[0];
-                        $m = explode('-', $tgl);
-                        array_pop($m);
-                        $tgl = implode('-',$m);
-                        if(array_key_exists($tgl, $thisyear)){
-                            $thisyear[$tgl] +=$datas->counts;
-                        }
-                        if(array_key_exists($tgl, $lastyear)){
-                            $lastyear[$tgl] +=$datas->counts;
-                        }
-                        $month['thisyear'] = $thisyear;
-                        $month['lastyear'] = $lastyear;
-                        $result_data["Lainnya"] = $month;
                     }
                 }
             }
