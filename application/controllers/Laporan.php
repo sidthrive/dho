@@ -105,8 +105,15 @@ class Laporan extends CI_Controller{
         $kecamatan   = $this->input->post('kecamatan');
         $year   = $this->input->post('year');
         $month  = $this->input->post('month');
-        $this->load->model('GiziPwsModel');
-        $this->GiziPwsModel->pwsBulanIni($month,$year,$kecamatan);
+        if($this->session->userdata('level')=="fhw"){
+            $desa = $this->session->userdata('location');
+            $this->load->model('GiziPwsFhwModel');
+            $this->GiziPwsFhwModel->pwsBulanIni($month,$year,$desa);
+        }else{
+            $this->load->model('GiziPwsModel');
+            $this->GiziPwsModel->pwsBulanIni($month,$year,$kecamatan);
+        }
+        
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
@@ -161,8 +168,15 @@ class Laporan extends CI_Controller{
         $year   = $this->input->post('year');
         $month  = $this->input->post('month');
         $form  = $this->input->post('form');
-        $this->load->model('VaksinatorPwsModel');
-        $this->VaksinatorPwsModel->pwsBulanIni($month,$year,$kecamatan,$form);
+        if($this->session->userdata('level')=="fhw"){
+            $desa = $this->session->userdata('location');
+            $this->load->model('VaksinatorPwsFhwModel');
+            $this->VaksinatorPwsFhwModel->pwsBulanIni($month,$year,$desa,$form);
+        }else{
+            $this->load->model('VaksinatorPwsModel');
+            $this->VaksinatorPwsModel->pwsBulanIni($month,$year,$kecamatan,$form);
+        }
+        
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
     
