@@ -362,7 +362,7 @@ class AnalyticsEcModel extends CI_Model{
             $fileObject->getSheetByName('Worksheet')
         );
         $fileObject->removeSheetByIndex($sheetIndex);
-        $index = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC','AD','AE'];
+        $index = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC','AD','AE','AF'];
         foreach ($result_data as $nama_desa=>$table_data){
             $myWorkSheet = new PHPExcel_Worksheet($fileObject, $nama_desa);
             $fileObject->addSheet($myWorkSheet);
@@ -379,6 +379,12 @@ class AnalyticsEcModel extends CI_Model{
                 foreach ($tdata as $tname=>$value){
                     $fileObject->getActiveSheet()->setCellValue($index[$col++].$row, $value);
                 }
+                $row++;
+            }
+            $row = 2;
+            $fileObject->getActiveSheet()->setCellValue($index[$col+1].'1', 'TOTAL');
+            foreach ($table_data as $date=>$tdata){
+                $fileObject->getActiveSheet()->setCellValue($index[$col+1].$row, '=SUM('.'B'.$row.':'.$index[$col].$row.')');
                 $row++;
             }
             $fileObject->getActiveSheet()->setCellValue('A'.$row, "TOTAL");
