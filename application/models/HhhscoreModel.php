@@ -16,6 +16,7 @@ class HhhscoreModel extends CI_Model{
 
 
     public function handScoreBulanIni($startdate,$enddate){
+        set_time_limit(360);
         ini_set('memory_limit', '256M');
 //        $date1 = date_create('2015-07-13');
 //        $date2 = date_create('2015-11-18');
