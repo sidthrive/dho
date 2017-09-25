@@ -104,6 +104,91 @@ class HHHScore extends CI_Controller{
         }
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
+    
+    public function handscore(){
+        if($this->session->userdata('level')=="fhw"){
+            $dataXLS['kec'] = $this->session->userdata('location');
+            if($this->input->get('start')==null){
+                $s = date("Y-m-d",  strtotime(date("Y-m-d").' -3 months'));
+                $e = date("Y-m-d");
+                redirect("hhhscore/handscore?start=$s&end=$e");
+            }else{
+                $dataXLS['start'] = $this->input->get('start');
+                $dataXLS['end'] = $this->input->get('end');
+            }
+            $this->load->model('HhhscoreModel');
+
+            $dataXLS['xlsForm']=$this->HhhscoreModel->handScoreBulanIni($dataXLS['kec']);
+
+            $this->load->view('header');
+            $this->load->view('hhhscore/fhw/hhhsidebar');
+            $this->load->view('hhhscore/handscore',$dataXLS);
+            $this->load->view('footer');
+        }else{
+            if($this->input->get('start')==null){
+                $s = date("Y-m-d",  strtotime(date("Y-m-d").' -3 months'));
+                $e = date("Y-m-d");
+                redirect("hhhscore/handscore?start=$s&end=$e");
+            }else{
+                $dataXLS['start'] = $this->input->get('start');
+                $dataXLS['end'] = $this->input->get('end');
+            }
+            $this->load->model('HhhscoreModel');
+
+            $dataXLS['xlsForm']=$this->HhhscoreModel->handScoreBulanIni($dataXLS['start'],$dataXLS['end']);
+
+            $data['location'] = $this->loc->getAllLoc('bidan');
+            $this->load->view('header');
+            $this->load->view('hhhscore/hhhsidebar',$data);
+            $this->load->view('hhhscore/handscore',$dataXLS);
+            $this->load->view('footer');
+        }
+        
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
+    }
+    
+    public function heartscore(){
+        if($this->session->userdata('level')=="fhw"){
+            $dataXLS['kec'] = $this->session->userdata('location');
+            if($this->input->get('start')==null){
+                $s = date("Y")."-01-01";
+                $e = date("Y-m-d");
+                redirect("hhhscore/heartscore?start=$s&end=$e");
+            }else{
+                $dataXLS['start'] = $this->input->get('start');
+                $dataXLS['end'] = $this->input->get('end');
+            }
+            $this->load->model('HhhscoreModel');
+
+            $dataXLS['xlsForm']=$this->HhhscoreModel->heartScoreBulanIni($dataXLS['kec']);
+
+            $this->load->view('header');
+            $this->load->view('hhhscore/fhw/hhhsidebar');
+            $this->load->view('hhhscore/heartscore',$dataXLS);
+            $this->load->view('footer');
+        }else{
+            if($this->input->get('start')==null){
+                $s = date("Y")."-01-01";
+                $e = date("Y-m-d");
+                redirect("hhhscore/heartscore?start=$s&end=$e");
+            }else{
+                $dataXLS['start'] = $this->input->get('start');
+                $dataXLS['end'] = $this->input->get('end');
+            }
+            $this->load->model('HhhscoreModel');
+
+            $dataXLS['xlsForm']=$this->HhhscoreModel->heartScoreBulanIni();
+
+            $data['location'] = $this->loc->getAllLoc('bidan');
+            $this->load->view('header');
+            $this->load->view('hhhscore/hhhsidebar',$data);
+            $this->load->view('hhhscore/heartscore',$dataXLS);
+            $this->load->view('footer');
+        }
+        
+        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
+    }
+    
     public function bidanTrimester1(){
         if($this->input->get('b')==null){
             $bulan_map = [1=>'januari',2=>'februari',3=>'maret',4=>'april',5=>'mei',6=>'juni',7=>'juli',8=>'agustus',9=>'september',10=>'oktober',11=>'november',12=>'desember'];
@@ -184,25 +269,25 @@ class HHHScore extends CI_Controller{
         $this->load->view('footer');
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
-    public function heartscore(){
-        if($this->input->get('b')==null){
-            $bulan_map = [1=>'januari',2=>'februari',3=>'maret',4=>'april',5=>'mei',6=>'juni',7=>'juli',8=>'agustus',9=>'september',10=>'oktober',11=>'november',12=>'desember'];
-            $b = date("n");
-            $t = date("Y");
-            redirect("hhhscore/heartscore?b=$bulan_map[$b]&t=$t");
-        }else{
-            $dataXLS['bulan'] = $this->input->get('b');
-            $dataXLS['tahun'] = $this->input->get('t');
-        }
-        $this->load->model('BidanEcCakupanModel');
-        
-        $dataXLS['xlsForm']=$this->BidanEcCakupanModel->heartScoreBulanIni($dataXLS['bulan'],$dataXLS['tahun']);
-        
-        $this->load->view('header');
-        $this->load->view('hhhscore/hhhsidebar');
-        $this->load->view('hhhscore/heartscore',$dataXLS);
-        $this->load->view('footer');
-        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
-    }
+//    public function heartscore(){
+//        if($this->input->get('b')==null){
+//            $bulan_map = [1=>'januari',2=>'februari',3=>'maret',4=>'april',5=>'mei',6=>'juni',7=>'juli',8=>'agustus',9=>'september',10=>'oktober',11=>'november',12=>'desember'];
+//            $b = date("n");
+//            $t = date("Y");
+//            redirect("hhhscore/heartscore?b=$bulan_map[$b]&t=$t");
+//        }else{
+//            $dataXLS['bulan'] = $this->input->get('b');
+//            $dataXLS['tahun'] = $this->input->get('t');
+//        }
+//        $this->load->model('BidanEcCakupanModel');
+//        
+//        $dataXLS['xlsForm']=$this->BidanEcCakupanModel->heartScoreBulanIni($dataXLS['bulan'],$dataXLS['tahun']);
+//        
+//        $this->load->view('header');
+//        $this->load->view('hhhscore/hhhsidebar');
+//        $this->load->view('hhhscore/heartscore',$dataXLS);
+//        $this->load->view('footer');
+//        $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
+//    }
     
 }
