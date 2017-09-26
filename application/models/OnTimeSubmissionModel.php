@@ -91,41 +91,44 @@ class OnTimeSubmissionModel extends CI_Model{
     
     private function isOnTime($table,$data,$fhw){
         $clientdate = explode(" ",$data->clientVersionSubmissionDate);
+        $cdate = date_create($clientdate[0]);
         if($fhw=='bidan'){
             if($table=='event_bidan_kohort_kunjungan_bayi_perbulan'||$table=='event_bidan_kunjungan_balita'||$table=='event_bidan_kunjungan_neonatal'){
-                if($data->tanggalKunjunganBayiPerbulan==$clientdate[0]) return true;
+                $eventdate = explode(" ",$data->tanggalKunjunganBayiPerbulan);
             }elseif($table=='event_bidan_kohort_pelayanan_kb'){
-                if($data->tanggalkunjungan==$clientdate[0]) return true;
+                $eventdate = explode(" ",$data->tanggalkunjungan);
             }elseif($table=='event_bidan_kunjungan_anc'){
-                if($data->ancDate==$clientdate[0]) return true;
+                $eventdate = explode(" ",$data->ancDate);
             }elseif($table=='event_bidan_kunjungan_pnc'){
-                if($data->PNCDate==$clientdate[0]) return true;
-            }elseif($table=='event_bidan_rencana_persalinan'){
-                if($data->tanggalRencanaPersalinan==$clientdate[0]) return true;
+                $eventdate = explode(" ",$data->PNCDate);
             }elseif($table=='event_bidan_tambah_bayi'){
-                if($data->tanggalPendaftaran==$clientdate[0]) return true;
+                $eventdate = explode(" ",$data->tanggalPendaftaran);
             }elseif($table=='event_bidan_tambah_kb'){
-                if($data->tanggalPeriksa==$clientdate[0]) return true;
+                $eventdate = explode(" ",$data->tanggalPeriksa);
             }elseif($table=='event_bidan_kunjungan_anc_integrasi'||$table=='event_bidan_kunjungan_anc_lab_test'||$table=='event_bidan_tambah_anc'){
-                if($data->referenceDate==$clientdate[0]) return true;
+                $eventdate = explode(" ",$data->referenceDate);
             }else{
-                if($data->dateCreated==$clientdate[0]) return true;
+                $eventdate = explode(" ",$data->dateCreated);
             }
         }
         elseif($fhw=='gizi'){
             if($table=='event_gizi_kunjungan_gizi'){
-                if($data->tanggalPenimbangan==$clientdate[0]) return true;
+                $eventdate = explode(" ",$data->tanggalPenimbangan);
             }else{
-                if($data->dateCreated==$clientdate[0]) return true;
+                $eventdate = explode(" ",$data->dateCreated);
             }
         }
         elseif($fhw=='vaksinator'){
             if($table=='event_bidan_kohort_pelayanan_kb'){
-                if($data->tanggalkunjungan==$clientdate[0]) return true;
+                $eventdate = explode(" ",$data->tanggalkunjungan);
             }else{
-                if($data->dateCreated==$clientdate[0]) return true;
+                $eventdate = explode(" ",$data->dateCreated);
             }
         }
+        if($eventdate[0]=="NULL") return false;
+        $evdate = date_create($eventdate[0]);
+        $diff = date_diff($cdate,$evdate);
+        if($diff->days<=1) return true;
         return false;
     }
     
@@ -196,8 +199,8 @@ class OnTimeSubmissionModel extends CI_Model{
             }
         }
         elseif($fhw=='gizi'){
-            if($table=='event_bidan_kohort_pelayanan_kb'){
-                $eventdate = explode(" ",$data->tanggalkunjungan);
+            if($table=='event_gizi_kunjungan_gizi'){
+                $eventdate = explode(" ",$data->tanggalPenimbangan);
             }else{
                 $eventdate = explode(" ",$data->dateCreated);
             }
@@ -212,7 +215,7 @@ class OnTimeSubmissionModel extends CI_Model{
         if($eventdate[0]=="NULL") return false;
         $evdate = date_create($eventdate[0]);
         $diff = date_diff($cdate,$evdate);
-        if($diff->days<7) return true;
+        if($diff->days<=7) return true;
         return false;
     }
     
