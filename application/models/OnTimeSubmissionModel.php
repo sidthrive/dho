@@ -20,11 +20,7 @@ class OnTimeSubmissionModel extends CI_Model{
     public function getDailyOnTime($range="",$fhw){
         $location = $this->loc->getIntLocId($fhw);
         $result_data = array();
-        $result_data['daily'] = array();
-        foreach ($location as $user=>$desa){
-            $result_data['daily'][$desa] = $this->getDailyOnTimeDesa([$user=>$desa], $range,$fhw);
-        }
-        $detail = $this->getOnTimeForm("daily",$range,$fhw);
+        $detail = $this->getOnTimeFormByDate($range,$fhw);
         foreach ($detail as $x=>$d){
             $result_data[$x] = $d;
         }
@@ -34,10 +30,6 @@ class OnTimeSubmissionModel extends CI_Model{
     public function getWeeklyOnTime($range="",$fhw){
         $location = $this->loc->getIntLocId($fhw);
         $result_data = array();
-        $result_data['daily'] = array();
-        foreach ($location as $user=>$desa){
-            $result_data['daily'][$desa] = $this->getWeeklyOnTimeDesa([$user=>$desa], $range,$fhw);
-        }
         $detail = $this->getOnTimeForm("weekly",$range,$fhw);
         foreach ($detail as $x=>$d){
             $result_data[$x] = $d;
@@ -243,7 +235,9 @@ class OnTimeSubmissionModel extends CI_Model{
         
         //make result array from the tables name
         $result_data = array();
+        $result_data['daily'] = array();
         foreach ($locId as $user=>$desa){
+            $result_data['daily'][$desa] = 0;
             $data = array();
             foreach ($table_default as $t=>$tn){
                 $data[$tn] = 0;
@@ -263,15 +257,18 @@ class OnTimeSubmissionModel extends CI_Model{
                     $data_count2                 = $deno[$locId[$datas->locationId]];
                     if($mode=='daily'){
                         if($this->isOnTime($table,$datas,$fhw)){
+                            $result_data['daily'][$locId[$datas->locationId]] +=1;
                             $data_count[$table_default[$table]] +=1;
                         }
                     }else{
                         if($this->isWeeklyOnTime($table,$datas,$fhw)){
+                            $result_data['daily'][$locId[$datas->locationId]] +=1;
                             $data_count[$table_default[$table]] +=1;
                         }
                     }
                     
                     $data_count2[$table_default[$table]] +=1;
+                    $deno['daily'][$locId[$datas->locationId]] +=1;
                     $result_data[$locId[$datas->locationId]] = $data_count;
                     $deno[$locId[$datas->locationId]] = $data_count2;
                 }
@@ -289,6 +286,73 @@ class OnTimeSubmissionModel extends CI_Model{
         return $result_data;
     }
     
+    public function getOnTimeFormByDate($range="",$fhw){
+        date_default_timezone_set("Asia/Makassar"); 
+        $end = new DateTime($range[1]);
+        $end = $end->modify( '+1 day' );
+        $period = new DatePeriod(
+             new DateTime($range[0]),
+             new DateInterval('P1D'),
+             $end
+        );
+        $analyticsDB = $this->load->database('analytics', TRUE);
+        $query  = $analyticsDB->query("SHOW TABLES FROM ec_analytics");
+        
+        $table_default = $this->Table->getTable($fhw);
+        //retrieve the tables name
+        $tables = array();
+        foreach ($query->result() as $table){
+            if($table->Tables_in_ec_analytics[0]=='c'||$table->Tables_in_ec_analytics[0]=='_'){
+                continue;
+            }else {
+                if(array_key_exists($table->Tables_in_ec_analytics, $table_default)){
+                    $tables[$table->Tables_in_ec_analytics]=$table_default[$table->Tables_in_ec_analytics];
+                }
+                
+            }
+        }
+        
+        $locId = $this->loc->getIntLocId($fhw);$location = $this->loc->getLocIdQuery($locId);
+        
+        //make result array from the tables name
+        $result_data = array();
+        $result_data['daily'] = array();
+        foreach ($locId as $user=>$desa){
+            $result_data['daily'][$desa] = 0;
+            foreach (iterator_to_array($period) as $date){
+                $result_data[$desa][$date->format("Y-m-d")] = 0;
+            }
+        }
+        
+        $deno = $result_data;
+        
+        foreach ($tables as $table=>$legend){
+            //query tha data
+            $query = $analyticsDB->query("SELECT * from ".$table." where ($location) AND dateCreated >= '".$range[0]."' AND dateCreated <= '".$range[1]."'");
+            
+            foreach ($query->result() as $datas){
+                if(array_key_exists($datas->locationId, $locId)){
+                    if($this->isOnTime($table,$datas,$fhw)){
+                        $result_data['daily'][$locId[$datas->locationId]] +=1;
+                        $result_data[$locId[$datas->locationId]][$datas->dateCreated] +=1;
+                    }
+                    
+                    $deno['daily'][$locId[$datas->locationId]] +=1;
+                    $deno[$locId[$datas->locationId]][$datas->dateCreated] +=1;
+                }
+                
+            }
+        }
+        
+        foreach ($result_data as $desa=>$res){
+            foreach ($res as $date=>$value){
+                if($deno[$desa][$date]==0)continue;
+                $result_data[$desa][$date] = (float)number_format(100*$result_data[$desa][$date]/$deno[$desa][$date],2);
+            }
+        }
+        
+        return $result_data;
+    }
     
     public function getOnTimeFormDesa($desa,$range,$fhw){
         date_default_timezone_set("Asia/Makassar"); 
