@@ -38,7 +38,7 @@ class BidanEcCakupanModel extends CI_Model{
         }
         
         $form = $user;
-        $datavisit = $this->db->query("SELECT * FROM kartu_anc_visit WHERE (ancDate > '$startyear' AND ancDate < '$enddate') AND ancKe=1 group by id")->result();
+        $datavisit = $this->db->query("SELECT * FROM kartu_anc_visit WHERE (ancDate > '$startyear' AND ancDate < '$enddate') AND (ancKe=1 AND kunjunganKe=1) group by id")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userId, $user_village)){
                 if(!$this->isHaveDoneAnc1($dvisit)){
