@@ -95,9 +95,13 @@ class Pws extends CI_Controller{
         $do_desa = $do_kec."_dusun";
         foreach ($kec as $kecamatan){
             $this->$do_kec($kecamatan, $year, $bulan_map[$month]);
+            ob_get_contents();
+            ob_flush();
             $desas   = $this->loc->getLocId($kecamatan);
             foreach ($desas as $desa){
                 $this->$do_desa($desa, $year, $bulan_map[$month]);
+                ob_get_contents();
+                ob_flush();
             }
         }
         $time_end = microtime(true);
@@ -119,9 +123,13 @@ class Pws extends CI_Controller{
         $do_desa = $do_kec."_dusun";
         foreach ($kec as $kecamatan){
             $this->$do_kec($kecamatan, $year, $bulan_map[$month]);
+            ob_get_contents();
+            ob_flush();
             $desas   = $this->loc->getLocId($kecamatan);
             foreach ($desas as $desa){
                 $this->$do_desa($desa, $year, $bulan_map[$month]);
+                ob_get_contents();
+                ob_flush();
             }
         }
         $time_end = microtime(true);
@@ -147,9 +155,13 @@ class Pws extends CI_Controller{
             var_dump('bulan '.$bln.' start');
             foreach ($kec as $kecamatan){
                 $this->$do_kec($kecamatan, $year, $bln);
+                ob_get_contents();
+                ob_flush();
                 $desas   = $this->loc->getLocId($kecamatan);
                 foreach ($desas as $desa){
                     $this->$do_desa($desa, $year, $bln);
+                    ob_get_contents();
+                    ob_flush();
                 }
                 var_dump($kecamatan.' bulan '.$bln.' done');
             }
@@ -180,9 +192,13 @@ class Pws extends CI_Controller{
                 var_dump('bulan '.$bln.' start');
                 foreach ($kec as $kecamatan){
                     $this->$do_kec($kecamatan, $year, $bln);
+                    ob_get_contents();
+                    ob_flush();
                     $desas   = $this->loc->getLocId($kecamatan);
                     foreach ($desas as $desa){
                         $this->$do_desa($desa, $year, $bln);
+                        ob_get_contents();
+                        ob_flush();
                     }
                     var_dump($kecamatan.' bulan '.$bln.' done');
                 }
