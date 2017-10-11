@@ -43,7 +43,7 @@ class DataEntry extends CI_Controller{
             if($this->input->get('start')==null&&$data['desa']==""){
                 if($this->input->get('by')==null)$by = "subdate";else $by = $this->input->get('by');
                 $now = date("Y-m-d");
-                redirect("dataentry/bidanbyform?start=2016-01-01&end=$now&by=$by");
+                redirect("dataentry/bidanbyform?start=2017-01-01&end=$now&by=$by");
             }else{
                 $by = $this->input->get('by');
                 $data['start'] = $this->input->get('start');
@@ -60,7 +60,7 @@ class DataEntry extends CI_Controller{
             if($this->input->get('start')==null&&$data['desa']==""){
                 if($this->input->get('by')==null)$by = "subdate";else $by = $this->input->get('by');
                 $now = date("Y-m-d");
-                redirect("dataentry/bidanbyform/".$data['kecamatan']."?start=2016-01-01&end=$now&by=$by");
+                redirect("dataentry/bidanbyform/".$data['kecamatan']."?start=2017-01-01&end=$now&by=$by");
             }else{
                 $by = $this->input->get('by');
                 $data['start'] = $this->input->get('start');
@@ -224,7 +224,7 @@ class DataEntry extends CI_Controller{
             if($this->input->get('start')==null&&$data['desa']==""){
                 if($this->input->get('by')==null)$by = "subdate";else $by = $this->input->get('by');
                 $now = date("Y-m-d");
-                redirect("dataentry/sdidtkbyform/".$data['kecamatan']."?start=2016-06-01&end=$now&by=$by");
+                redirect("dataentry/sdidtkbyform/".$data['kecamatan']."?start=2017-06-01&end=$now&by=$by");
             }else{
                 $by = $this->input->get('by');
                 $data['start'] = $this->input->get('start');
