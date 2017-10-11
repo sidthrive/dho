@@ -82,6 +82,7 @@ class Pws extends CI_Controller{
     
     public function calculate($pws){
         set_time_limit(3600);
+        ini_set('memory_limit', '512M');
         $time_start = microtime(true);
         $bulan_map = [1=>'januari','februari','maret','april','mei','juni','juli','agustus','september','oktober','november','desember'];
         $loc = $this->loc->getAllLoc('bidan');
@@ -111,6 +112,7 @@ class Pws extends CI_Controller{
     
     public function calculate_my($pws,$month,$year){
         set_time_limit(3600);
+        ini_set('memory_limit', '512M');
         $time_start = microtime(true);
         $bulan_map = [1=>'januari','februari','maret','april','mei','juni','juli','agustus','september','oktober','november','desember'];
         $loc = $this->loc->getAllLoc('bidan');
@@ -139,6 +141,7 @@ class Pws extends CI_Controller{
     
     public function calculate_all_month($pws){
         set_time_limit(3600);
+        ini_set('memory_limit', '512M');
         $time_start = microtime(true);
         $bulan_map = [1=>'januari','februari','maret','april','mei','juni','juli','agustus','september','oktober','november','desember'];
         $loc = $this->loc->getAllLoc('bidan');
@@ -175,6 +178,7 @@ class Pws extends CI_Controller{
     
     public function calculate_all(){
         set_time_limit(3600);
+        ini_set('memory_limit', '512M');
         $time_start = microtime(true);
         $pwses = ['kia','anak','kb','bayi','balita','neonatal','maternal'];
         $bulan_map = [1=>'januari','februari','maret','april','mei','juni','juli','agustus','september','oktober','november','desember'];
