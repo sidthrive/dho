@@ -10,6 +10,18 @@ class BidanEcCakupanModel extends CI_Model{
         $this->db = $this->load->database('analytics', TRUE);
     }
     
+    private function isHaveDoneAnc4($bumil){
+        if($this->db->query("SELECT * FROM kartu_anc_visit WHERE motherId='$bumil->motherId' AND ancDate < '$bumil->ancDate' AND ancKe=4")->num_rows()>0){
+            return true;
+        }else return false;
+    }
+    
+    private function isHaveDoneAnc1($bumil){
+        if($this->db->query("SELECT * FROM kartu_anc_visit WHERE motherId='$bumil->motherId' AND ancDate < '$bumil->ancDate' AND ancKe=1 AND kunjunganKe=1")->num_rows()>0){
+            return true;
+        }else return false;
+    }
+    
     public function cakupanBulanIni($kec,$bulan,$tahun){
         $bulan_map = ['januari'=>1,'februari'=>2,'maret'=>3,'april'=>4,'mei'=>5,'juni'=>6,'juli'=>7,'agustus'=>8,'september'=>9,'oktober'=>10,'november'=>11,'desember'=>12];
         $startyear = date("Y-m",  strtotime($tahun.'-01'));
@@ -29,7 +41,9 @@ class BidanEcCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM kartu_anc_visit WHERE (ancDate > '$startyear' AND ancDate < '$enddate') AND ancKe=1 group by id")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userId, $user_village)){
-                $form[$user_village[$dvisit->userId]] += 1;
+                if(!$this->isHaveDoneAnc1($dvisit)){
+                    $form[$user_village[$dvisit->userId]] += 1;
+                }
             }
         }
 //        foreach ($form as $desa=>$nilai){
@@ -47,7 +61,9 @@ class BidanEcCakupanModel extends CI_Model{
         $datavisit = $this->db->query("SELECT * FROM kartu_anc_visit WHERE (ancDate > '$startyear' AND ancDate < '$enddate') AND ancKe=4 group by id")->result();
         foreach ($datavisit as $dvisit){
             if(array_key_exists($dvisit->userId, $user_village)){
-                $form[$user_village[$dvisit->userId]] += 1;
+                if(!$this->isHaveDoneAnc4($dvisit)){
+                    $form[$user_village[$dvisit->userId]] += 1;
+                }
             }
         }
 //        foreach ($form as $desa=>$nilai){
