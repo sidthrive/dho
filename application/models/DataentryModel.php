@@ -49,28 +49,117 @@ class DataentryModel extends CI_Model{
         
         $table_default = $this->Table->getTable('bidan');
         $users = $this->loc->getLocUser('bidan',$kecamatan);
-        $result_data = array();
-        foreach ($users as $user=>$desa){
-            $begin = new DateTime($range[0]);
-            $end = new DateTime($range[1]);
-            $data = array();
-            for($i=$begin;$begin<=$end;$i->modify('+1 day')){
-                $date    = $i->format("Y-m-d");
-                $data[$date] = 0;
+        $result_data = $this->getResultDataTemplate($kecamatan,$range,$mode);
+        $now    = date("Y-m-d");
+        if($mode=="Mingguan"){
+            $startdate = (float)(strtotime(date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 7)?"last Saturday ":"-7 days")."-5 days")))."000");
+            $enddate = (float)(strtotime(date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"-1 days"))))."000");
+            foreach ($users as $user=>$desa){
+                $data = $this->couchdb->startkey([$user,$startdate])->endkey([$user,$enddate])->getView('FormSubmission','formSubmission_by_anm_and_client_version');
+                foreach ($data->rows as $d){
+                    $d->key[1] = date("Y-m-d",  substr($d->key[1], 0, 10));
+                    if(array_key_exists($d->value->formName, $table_default)){
+                        if(array_key_exists($d->key[1], $result_data[$users[$user]]['thisweek'])){
+                            $result_data[$users[$user]]['thisweek'][$d->key[1]]++;
+                        }
+                        if(array_key_exists($d->key[1], $result_data[$users[$user]]['lastweek'])){
+                            $result_data[$users[$user]]['lastweek'][$d->key[1]]++;
+                        }
+                    }
+                }
             }
-            $result_data[$desa] = $data;
-        }
-        
-        foreach ($users as $user=>$desa){
-            $data = $this->couchdb->startkey([$user,$startdate])->endkey([$user,$enddate])->getView('FormSubmission','formSubmission_by_anm_and_client_version');
-            foreach ($data->rows as $d){
-                $d->key[1] = date("Y-m-d",  substr($d->key[1], 0, 10));
-                if(array_key_exists($d->value->formName, $table_default)){
-                    $result_data[$users[$user]][$d->key[1]]++;
+        }elseif($mode=="Bulanan"){
+            $this_month = date("n");
+            $startdate = (float)(strtotime(date("Y-m",strtotime("+".(-$this_month-11)." months")))."000");
+            $enddate = (float)(strtotime(date("Y-m",strtotime("+".(12-$this_month)." months")))."000");
+            foreach ($users as $user=>$desa){
+                $data = $this->couchdb->startkey([$user,$startdate])->endkey([$user,$enddate])->getView('FormSubmission','formSubmission_by_anm_and_client_version');
+                foreach ($data->rows as $d){
+                    $d->key[1] = date("Y-m",  substr($d->key[1], 0, 10));
+                    if(array_key_exists($d->value->formName, $table_default)){
+                        if(array_key_exists($d->key[1], $result_data[$users[$user]]['thisyear'])){
+                            $result_data[$users[$user]]['thisyear'][$d->key[1]]++;
+                        }
+                        if(array_key_exists($d->key[1], $result_data[$users[$user]]['lastyear'])){
+                            $result_data[$users[$user]]['lastyear'][$d->key[1]]++;
+                        }
+                    }
+                }
+            }
+        }else{
+            foreach ($users as $user=>$desa){
+                $data = $this->couchdb->startkey([$user,$startdate])->endkey([$user,$enddate])->getView('FormSubmission','formSubmission_by_anm_and_client_version');
+                foreach ($data->rows as $d){
+                    $d->key[1] = date("Y-m-d",  substr($d->key[1], 0, 10));
+                    if(array_key_exists($d->value->formName, $table_default)){
+                        $result_data[$users[$user]][$d->key[1]]++;
+                    }
                 }
             }
         }
         
+        
+        return $result_data;
+    }
+    
+    private function getResultDataTemplate($kecamatan,$range,$mode=""){
+        $users = $this->loc->getLocUser('bidan',$kecamatan);
+        $result_data = array();
+        $now    = date("Y-m-d");
+        if($mode=="Mingguan"){
+            foreach ($users as $user=>$desa){
+                $data = array();
+                $data['thisweek'] = array();
+                $data['lastweek'] = array();                       
+                $day_temp = array();
+                for($i=1;$i<=6;$i++){
+                    $days     = 6-$i;
+                    $date    = date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"next Saturday ":"-")."-".$days." days"));
+                    $day_temp[$date] = 0;
+                }
+                $data['thisweek'] = $day_temp;
+                $day_temp = array();
+                for($i=1;$i<=6;$i++){
+                    $days     = 6-$i;
+                    $date    = date("Y-m-d",  strtotime((!(date('N', strtotime($now)) >= 6)?"last Saturday ":"-")."-".$days." days"));
+                    $day_temp[$date] = 0;
+                }
+                $data['lastweek'] = $day_temp;
+                $result_data[$desa] = $data;
+            }
+            
+        }elseif($mode=="Bulanan"){
+            foreach ($users as $user=>$desa){
+                $data = array();
+                $data['thisyear'] = array();
+                $data['lastyear'] = array();
+                $this_month = date("n");
+                $month  = array();
+                for($i=1;$i<=12;$i++){
+                    $date   = date("Y-m",strtotime("+".(-$this_month+$i)." months"));
+                    $month[$date]   =   0;
+                }
+                $data['thisyear'] = $month;
+                $month  = array();
+                for($i=1;$i<=12;$i++){
+                    $date   = date("Y-m",strtotime("+".(-$this_month+$i-12)." months"));
+                    $month[$date]   =   0;
+                }
+                $data['lastyear'] = $month;
+                $result_data[$desa] = $data;
+            }
+        }else{
+            foreach ($users as $user=>$desa){
+                $begin = new DateTime($range[0]);
+                $end = new DateTime($range[1]);
+                $data = array();
+                for($i=$begin;$begin<=$end;$i->modify('+1 day')){
+                    $date    = $i->format("Y-m-d");
+                    $data[$date] = 0;
+                }
+                $result_data[$desa] = $data;
+            }
+        }
         return $result_data;
     }
     
