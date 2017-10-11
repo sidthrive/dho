@@ -63,7 +63,7 @@ class BidanEcCakupanModel extends CI_Model{
        
         $form = $user;
         $datavisit = $this->db->query("SELECT * FROM kartu_anc_visit WHERE (ancDate > '$startyear' AND ancDate < '$enddate')")->result();
-        $query = $this->db->query("SELECT id FROM kartu_anc_visit_labtest WHERE laboratoriumPeriksaHbAnemia='positif'")->result();
+        $query = $this->db->query("SELECT id FROM kartu_anc_visit_labTest WHERE laboratoriumPeriksaHbAnemia='positif'")->result();
         $laboratoriumPeriksaHbAnemia = [];
         foreach ($query as $q){
             if(!array_key_exists($q->id, $laboratoriumPeriksaHbAnemia)){
