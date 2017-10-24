@@ -24,14 +24,14 @@ class MmnFhwModel extends CI_Model{
         $form = [];
         $desas = $this->loc->getDusun($kab);
         foreach ($desas as $dt=>$dn){
-            $form[$dn] = rand(15, 30);
+            $form[$dn] = 0;
         }
         
         if($kab=='Kabupaten Lombok Tengah'){
             $desas2 = $this->loc->getDusun($kab." 2");
             $form2 = [];
             foreach ($desas2 as $dt=>$dn){
-                $form2[$dn] = rand(15, 30);
+                $form2[$dn] = 0;
             }
         }
         
@@ -588,7 +588,7 @@ class MmnFhwModel extends CI_Model{
         $form = [];
         $desas = $this->loc->getDusun($kab);
         foreach ($desas as $dt=>$dn){
-            $form[$dn] = rand(15, 30);
+            $form[$dn] = 0;
         }
         $series1['page']='gen1';
         $series1['title']='Jumlah Ibu yang menerima MMN';
@@ -599,7 +599,7 @@ class MmnFhwModel extends CI_Model{
         array_push($xlsForm, $series1);
         
         foreach ($desas as $dt=>$dn){
-            $form[$dn] = rand(15, 30);
+            $form[$dn] = 0;
         }
         $series1['page']='gen2';
         $series1['title']='Persentase ibu hamil yang mendapat MMN';
@@ -611,7 +611,7 @@ class MmnFhwModel extends CI_Model{
         
         
         foreach ($desas as $dt=>$dn){
-            $form[$dn] = rand(15, 30);
+            $form[$dn] = 0;
         }
         $series1['page']='gen3';
         $series1['title']='Jumlah total MMN yang diberikan ke ibu hamil';
@@ -622,7 +622,7 @@ class MmnFhwModel extends CI_Model{
         array_push($xlsForm, $series1);
         
         foreach ($desas as $dt=>$dn){
-            $form[$dn] = rand(15, 30);
+            $form[$dn] = 0;
         }
         $series1['page']='gen4';
         $series1['title']='Jumlah anak yang BB/U <-2SD';
@@ -634,7 +634,7 @@ class MmnFhwModel extends CI_Model{
         
         
         foreach ($desas as $dt=>$dn){
-            $form[$dn] = rand(15, 30);
+            $form[$dn] = 0;
         }
         $series1['page']='gen5';
         $series1['title']='Jumlah anak yang dites Home';
@@ -646,7 +646,7 @@ class MmnFhwModel extends CI_Model{
         
         
         foreach ($desas as $dt=>$dn){
-            $form[$dn] = rand(15, 30);
+            $form[$dn] = 0;
         }
         $series1['page']='gen6';
         $series1['title']='Jumlah anak yang BB/U <-SD dan dites Home';
@@ -657,7 +657,7 @@ class MmnFhwModel extends CI_Model{
         array_push($xlsForm, $series1);
         
         foreach ($desas as $dt=>$dn){
-            $form[$dn] = rand(15, 30);
+            $form[$dn] = 0;
         }
         $series1['page']='gen7';
         $series1['title']='Jumlah anak yang memiliki skor Home rendah';
@@ -669,7 +669,7 @@ class MmnFhwModel extends CI_Model{
         
         
         foreach ($desas as $dt=>$dn){
-            $form[$dn] = rand(15, 30);
+            $form[$dn] = 0;
         }
         $series1['page']='gen8';
         $series1['title']='Persentase anak yang memiliki skor Home rendah';
@@ -680,7 +680,7 @@ class MmnFhwModel extends CI_Model{
         array_push($xlsForm, $series1);
         
         foreach ($desas as $dt=>$dn){
-            $form[$dn] = rand(15, 30);
+            $form[$dn] = 0;
         }
         $series1['page']='gen9';
         $series1['title']='Jumlah ibu yang mengikuti sesi Parana';
@@ -692,7 +692,7 @@ class MmnFhwModel extends CI_Model{
         
         
         foreach ($desas as $dt=>$dn){
-            $form[$dn] = rand(15, 30);
+            $form[$dn] = 0;
         }
         $series1['page']='gen10';
         $series1['title']='Jumlah ibu yang mengikuti sesi Parana lengkap';
@@ -703,7 +703,7 @@ class MmnFhwModel extends CI_Model{
         array_push($xlsForm, $series1);
         
         foreach ($desas as $dt=>$dn){
-            $form[$dn] = rand(15, 30);
+            $form[$dn] = 0;
         }
         $series1['page']='gen11';
         $series1['title']='Persentase ibu yang mengikuti sesi Parana lengkap';
@@ -715,7 +715,7 @@ class MmnFhwModel extends CI_Model{
         
         
         foreach ($desas as $dt=>$dn){
-            $form[$dn] = rand(15, 30);
+            $form[$dn] = 0;
         }
         $series1['page']='gen12';
         $series1['title']='Jumlah anak yang memiliki skor Home rendah dan ibunya mengikuti sesi Parana';
@@ -726,7 +726,7 @@ class MmnFhwModel extends CI_Model{
         array_push($xlsForm, $series1);
         
         foreach ($desas as $dt=>$dn){
-            $form[$dn] = rand(15, 30);
+            $form[$dn] = 0;
         }
         $series1['page']='gen13';
         $series1['title']='Jumlah anak yang memiliki skor Home rendah dan ibunya mengikuti sesi Parana lengkap';
@@ -738,7 +738,7 @@ class MmnFhwModel extends CI_Model{
         
         
         foreach ($desas as $dt=>$dn){
-            $form[$dn] = rand(15, 30);
+            $form[$dn] = 0;
         }
         $series1['page']='gen14';
         $series1['title']='Persentase anak yang memiliki skor Home rendah dan ibunya mengikuti sesi Parana lengkap';
@@ -749,7 +749,7 @@ class MmnFhwModel extends CI_Model{
         array_push($xlsForm, $series1);
         
         foreach ($desas as $dt=>$dn){
-            $form[$dn] = rand(15, 30);
+            $form[$dn] = 0;
         }
         $series1['page']='gen15';
         $series1['title']='Jumlah anak yang memiliki skor Home rendah, ibunya ibunya telah mengikuti sesi Parana lengkap dan skor Homenya naik';
@@ -761,7 +761,7 @@ class MmnFhwModel extends CI_Model{
         
         
         foreach ($desas as $dt=>$dn){
-            $form[$dn] = rand(15, 30);
+            $form[$dn] = 0;
         }
         $series1['page']='gen16';
         $series1['title']='Persentase anak yang memiliki skor Home rendah, ibunya ibunya telah mengikuti sesi Parana lengkap dan skor Homenya naik';
@@ -772,7 +772,7 @@ class MmnFhwModel extends CI_Model{
         array_push($xlsForm, $series1);
         
         foreach ($desas as $dt=>$dn){
-            $form[$dn] = rand(15, 30);
+            $form[$dn] = 0;
         }
         $series1['page']='gen17';
         $series1['title']='Jumlah bayi yang mendapat Kunjungan Bayi Lengkap';
@@ -784,7 +784,7 @@ class MmnFhwModel extends CI_Model{
         
         
         foreach ($desas as $dt=>$dn){
-            $form[$dn] = rand(15, 30);
+            $form[$dn] = 0;
         }
         $series1['page']='gen18';
         $series1['title']='Persentase bayi yang mendapat Kunjungan Bayi Bayi Lengkap';
@@ -795,7 +795,7 @@ class MmnFhwModel extends CI_Model{
         array_push($xlsForm, $series1);
         
         foreach ($desas as $dt=>$dn){
-            $form[$dn] = rand(15, 30);
+            $form[$dn] = 0;
         }
         $series1['page']='gen19';
         $series1['title']='Jumlah anak yang mendapat Kunjungan Balita 1';
@@ -807,7 +807,7 @@ class MmnFhwModel extends CI_Model{
         
         
         foreach ($desas as $dt=>$dn){
-            $form[$dn] = rand(15, 30);
+            $form[$dn] = 0;
         }
         $series1['page']='gen20';
         $series1['title']='Persentase anak yang mendapat Kunjungan Balita 1';
@@ -819,7 +819,7 @@ class MmnFhwModel extends CI_Model{
         
         
         foreach ($desas as $dt=>$dn){
-            $form[$dn] = rand(15, 30);
+            $form[$dn] = 0;
         }
         $series1['page']='gen21';
         $series1['title']='Jumlah anak yang mendapat Kunjungan Balita 2';
@@ -831,7 +831,7 @@ class MmnFhwModel extends CI_Model{
         
         
         foreach ($desas as $dt=>$dn){
-            $form[$dn] = rand(15, 30);
+            $form[$dn] = 0;
         }
         $series1['page']='gen22';
         $series1['title']='Persentase anak yang mendapat Kunjungan Balita 2';
@@ -850,7 +850,7 @@ class MmnFhwModel extends CI_Model{
         $form = [];
         
         foreach ($bulan_map as $bln=>$num){
-            $form[ucfirst($bln)] = rand(15, 30);
+            $form[ucfirst($bln)] = 0;
         }
         $series1['page']='gen1';
         $series1['title']='Jumlah Ibu yang menerima MMN';
@@ -861,7 +861,7 @@ class MmnFhwModel extends CI_Model{
         array_push($xlsForm, $series1);
         
         foreach ($bulan_map as $bln=>$num){
-            $form[ucfirst($bln)] = rand(15, 30);
+            $form[ucfirst($bln)] = 0;
         }
         $series1['page']='gen2';
         $series1['title']='Persentase ibu hamil yang mendapat MMN';
@@ -873,7 +873,7 @@ class MmnFhwModel extends CI_Model{
         
         
         foreach ($bulan_map as $bln=>$num){
-            $form[ucfirst($bln)] = rand(15, 30);
+            $form[ucfirst($bln)] = 0;
         }
         $series1['page']='gen3';
         $series1['title']='Jumlah total MMN yang diberikan ke ibu hamil';
@@ -884,7 +884,7 @@ class MmnFhwModel extends CI_Model{
         array_push($xlsForm, $series1);
         
         foreach ($bulan_map as $bln=>$num){
-            $form[ucfirst($bln)] = rand(15, 30);
+            $form[ucfirst($bln)] = 0;
         }
         $series1['page']='gen4';
         $series1['title']='Jumlah anak yang BB/U <-2SD';
@@ -896,7 +896,7 @@ class MmnFhwModel extends CI_Model{
         
         
         foreach ($bulan_map as $bln=>$num){
-            $form[ucfirst($bln)] = rand(15, 30);
+            $form[ucfirst($bln)] = 0;
         }
         $series1['page']='gen5';
         $series1['title']='Jumlah anak yang dites Home';
@@ -908,7 +908,7 @@ class MmnFhwModel extends CI_Model{
         
         
         foreach ($bulan_map as $bln=>$num){
-            $form[ucfirst($bln)] = rand(15, 30);
+            $form[ucfirst($bln)] = 0;
         }
         $series1['page']='gen6';
         $series1['title']='Jumlah anak yang BB/U <-SD dan dites Home';
@@ -919,7 +919,7 @@ class MmnFhwModel extends CI_Model{
         array_push($xlsForm, $series1);
         
         foreach ($bulan_map as $bln=>$num){
-            $form[ucfirst($bln)] = rand(15, 30);
+            $form[ucfirst($bln)] = 0;
         }
         $series1['page']='gen7';
         $series1['title']='Jumlah anak yang memiliki skor Home rendah';
@@ -931,7 +931,7 @@ class MmnFhwModel extends CI_Model{
         
         
         foreach ($bulan_map as $bln=>$num){
-            $form[ucfirst($bln)] = rand(15, 30);
+            $form[ucfirst($bln)] = 0;
         }
         $series1['page']='gen8';
         $series1['title']='Persentase anak yang memiliki skor Home rendah';
@@ -942,7 +942,7 @@ class MmnFhwModel extends CI_Model{
         array_push($xlsForm, $series1);
         
         foreach ($bulan_map as $bln=>$num){
-            $form[ucfirst($bln)] = rand(15, 30);
+            $form[ucfirst($bln)] = 0;
         }
         $series1['page']='gen9';
         $series1['title']='Jumlah ibu yang mengikuti sesi Parana';
@@ -954,7 +954,7 @@ class MmnFhwModel extends CI_Model{
         
         
         foreach ($bulan_map as $bln=>$num){
-            $form[ucfirst($bln)] = rand(15, 30);
+            $form[ucfirst($bln)] = 0;
         }
         $series1['page']='gen10';
         $series1['title']='Jumlah ibu yang mengikuti sesi Parana lengkap';
@@ -965,7 +965,7 @@ class MmnFhwModel extends CI_Model{
         array_push($xlsForm, $series1);
         
         foreach ($bulan_map as $bln=>$num){
-            $form[ucfirst($bln)] = rand(15, 30);
+            $form[ucfirst($bln)] = 0;
         }
         $series1['page']='gen11';
         $series1['title']='Persentase ibu yang mengikuti sesi Parana lengkap';
@@ -977,7 +977,7 @@ class MmnFhwModel extends CI_Model{
         
         
         foreach ($bulan_map as $bln=>$num){
-            $form[ucfirst($bln)] = rand(15, 30);
+            $form[ucfirst($bln)] = 0;
         }
         $series1['page']='gen12';
         $series1['title']='Jumlah anak yang memiliki skor Home rendah dan ibunya mengikuti sesi Parana';
@@ -988,7 +988,7 @@ class MmnFhwModel extends CI_Model{
         array_push($xlsForm, $series1);
         
         foreach ($bulan_map as $bln=>$num){
-            $form[ucfirst($bln)] = rand(15, 30);
+            $form[ucfirst($bln)] = 0;
         }
         $series1['page']='gen13';
         $series1['title']='Jumlah anak yang memiliki skor Home rendah dan ibunya mengikuti sesi Parana lengkap';
@@ -1000,7 +1000,7 @@ class MmnFhwModel extends CI_Model{
         
         
         foreach ($bulan_map as $bln=>$num){
-            $form[ucfirst($bln)] = rand(15, 30);
+            $form[ucfirst($bln)] = 0;
         }
         $series1['page']='gen14';
         $series1['title']='Persentase anak yang memiliki skor Home rendah dan ibunya mengikuti sesi Parana lengkap';
@@ -1011,7 +1011,7 @@ class MmnFhwModel extends CI_Model{
         array_push($xlsForm, $series1);
         
         foreach ($bulan_map as $bln=>$num){
-            $form[ucfirst($bln)] = rand(15, 30);
+            $form[ucfirst($bln)] = 0;
         }
         $series1['page']='gen15';
         $series1['title']='Jumlah anak yang memiliki skor Home rendah, ibunya ibunya telah mengikuti sesi Parana lengkap dan skor Homenya naik';
@@ -1023,7 +1023,7 @@ class MmnFhwModel extends CI_Model{
         
         
         foreach ($bulan_map as $bln=>$num){
-            $form[ucfirst($bln)] = rand(15, 30);
+            $form[ucfirst($bln)] = 0;
         }
         $series1['page']='gen16';
         $series1['title']='Persentase anak yang memiliki skor Home rendah, ibunya ibunya telah mengikuti sesi Parana lengkap dan skor Homenya naik';
@@ -1034,7 +1034,7 @@ class MmnFhwModel extends CI_Model{
         array_push($xlsForm, $series1);
         
         foreach ($bulan_map as $bln=>$num){
-            $form[ucfirst($bln)] = rand(15, 30);
+            $form[ucfirst($bln)] = 0;
         }
         $series1['page']='gen17';
         $series1['title']='Jumlah bayi yang mendapat Kunjungan Bayi Lengkap';
@@ -1046,7 +1046,7 @@ class MmnFhwModel extends CI_Model{
         
         
         foreach ($bulan_map as $bln=>$num){
-            $form[ucfirst($bln)] = rand(15, 30);
+            $form[ucfirst($bln)] = 0;
         }
         $series1['page']='gen18';
         $series1['title']='Persentase bayi yang mendapat Kunjungan Bayi Bayi Lengkap';
@@ -1057,7 +1057,7 @@ class MmnFhwModel extends CI_Model{
         array_push($xlsForm, $series1);
         
         foreach ($bulan_map as $bln=>$num){
-            $form[ucfirst($bln)] = rand(15, 30);
+            $form[ucfirst($bln)] = 0;
         }
         $series1['page']='gen19';
         $series1['title']='Jumlah anak yang mendapat Kunjungan Balita 1';
@@ -1069,7 +1069,7 @@ class MmnFhwModel extends CI_Model{
         
         
         foreach ($bulan_map as $bln=>$num){
-            $form[ucfirst($bln)] = rand(15, 30);
+            $form[ucfirst($bln)] = 0;
         }
         $series1['page']='gen20';
         $series1['title']='Persentase anak yang mendapat Kunjungan Balita 1';
@@ -1081,7 +1081,7 @@ class MmnFhwModel extends CI_Model{
         
         
         foreach ($bulan_map as $bln=>$num){
-            $form[ucfirst($bln)] = rand(15, 30);
+            $form[ucfirst($bln)] = 0;
         }
         $series1['page']='gen21';
         $series1['title']='Jumlah anak yang mendapat Kunjungan Balita 2';
@@ -1093,7 +1093,7 @@ class MmnFhwModel extends CI_Model{
         
         
         foreach ($bulan_map as $bln=>$num){
-            $form[ucfirst($bln)] = rand(15, 30);
+            $form[ucfirst($bln)] = 0;
         }
         $series1['page']='gen22';
         $series1['title']='Persentase anak yang mendapat Kunjungan Balita 2';

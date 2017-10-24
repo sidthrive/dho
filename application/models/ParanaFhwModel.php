@@ -10,21 +10,22 @@ class ParanaFhwModel extends CI_Model{
         $this->db = $this->load->database('analytics', TRUE);
     }
     
-    public function cakupanBulanIni($kab){
+    public function cakupanBulanIni($kab,$bln){
         $db = $this->load->database('analytics', TRUE);
         $y = date("Y");
-        $m = date("m");
-        $nm = date("m",  strtotime(date("Y-m-d")." +1 month"));
-        $startDate = $y."-".$m."-01";
+        $m = $bln;
+        $startDate = $y."-".($m<10?"0".$m:$m)."-01";
+        $nm = date("m",  strtotime($startDate." +1 month"));
         $endDate = date("Y-m-d",  strtotime($y."-".$nm."-01 -1 day"));
         $xlsForm = [];
         $form = [];
-        $desas = $this->loc->getDusun($kab);
+        $desas = $this->loc->getLocId($kab);
+        $location = $this->loc->getLocUserQuery($desas);
         
-        $form['Sesi 1'] = rand(15, 30);
-        $form['Sesi 2'] = rand(15, 30);
-        $form['Sesi 3'] = rand(15, 30);
-        $form['Sesi 4'] = rand(15, 30);
+        $form['Sesi 1'] = $db->query("SELECT kiId FROM parana1 WHERE ($location) AND submissionDate >= '$startDate' AND submissionDate <= '$endDate'")->num_rows();
+        $form['Sesi 2'] = $db->query("SELECT kiId FROM parana2 WHERE ($location) AND submissionDate >= '$startDate' AND submissionDate <= '$endDate'")->num_rows();
+        $form['Sesi 3'] = $db->query("SELECT kiId FROM parana3 WHERE ($location) AND submissionDate >= '$startDate' AND submissionDate <= '$endDate'")->num_rows();
+        $form['Sesi 4'] = $db->query("SELECT kiId FROM parana4 WHERE ($location) AND submissionDate >= '$startDate' AND submissionDate <= '$endDate'")->num_rows();
         
         $v1 = $form;
         
@@ -40,20 +41,23 @@ class ParanaFhwModel extends CI_Model{
         
     }
     
-    public function cakupanAkumulatif($kab){
+    public function cakupanAkumulatif($kab,$bln){
+        $db = $this->load->database('analytics', TRUE);
         $y = date("Y");
-        $m = date("m");
-        $nm = date("m",  strtotime(date("Y-m-d")." +1 month"));
-        $startDate = $y."-".$m."-01";
+        $m = $bln;
+        $startyear = $y."-01-01";
+        $startDate = $y."-".($m<10?"0".$m:$m)."-01";
+        $nm = date("m",  strtotime($startDate." +1 month"));
         $endDate = date("Y-m-d",  strtotime($y."-".$nm."-01 -1 day"));
         $xlsForm = [];
         $form = [];
-        $desas = $this->loc->getDusun($kab);
+        $desas = $this->loc->getLocId($kab);
+        $location = $this->loc->getLocUserQuery($desas);
         
-        $form['Sesi 1'] = rand(15, 30);
-        $form['Sesi 2'] = rand(15, 30);
-        $form['Sesi 3'] = rand(15, 30);
-        $form['Sesi 4'] = rand(15, 30);
+        $form['Sesi 1'] = $db->query("SELECT kiId FROM parana1 WHERE ($location) AND submissionDate >= '$startyear' AND submissionDate <= '$endDate'")->num_rows();
+        $form['Sesi 2'] = $db->query("SELECT kiId FROM parana2 WHERE ($location) AND submissionDate >= '$startyear' AND submissionDate <= '$endDate'")->num_rows();
+        $form['Sesi 3'] = $db->query("SELECT kiId FROM parana3 WHERE ($location) AND submissionDate >= '$startyear' AND submissionDate <= '$endDate'")->num_rows();
+        $form['Sesi 4'] = $db->query("SELECT kiId FROM parana4 WHERE ($location) AND submissionDate >= '$startyear' AND submissionDate <= '$endDate'")->num_rows();
         
         $v1 = $form;
         
@@ -68,14 +72,33 @@ class ParanaFhwModel extends CI_Model{
         return $xlsForm;
     }
     
-    public function semuabulan($kab){
+    public function semuabulan($kab,$user){
+        $db = $this->load->database('analytics', TRUE);
         $bulan_map = ['januari'=>1,'februari'=>2,'maret'=>3,'april'=>4,'mei'=>5,'juni'=>6,'juli'=>7,'agustus'=>8,'september'=>9,'oktober'=>10,'november'=>11,'desember'=>12];
+        $bulan_map_flip = array_flip($bulan_map);
+        $y = date("Y");
+        $startyear = $y."-01-01";
+        $endDate = $y."-12-31";
+        $data = [];
+        
+        $data['s1'] = $db->query("SELECT userId,MONTH(submissionDate) as month,count(*) as jml FROM parana1 WHERE userId='$user' AND submissionDate >= '$startyear' AND submissionDate <= '$endDate' group by MONTH(submissionDate)")->result();
+        $data['s2'] = $db->query("SELECT userId,MONTH(submissionDate) as month,count(*) as jml FROM parana2 WHERE userId='$user' AND submissionDate >= '$startyear' AND submissionDate <= '$endDate' group by MONTH(submissionDate)")->result();
+        $data['s3'] = $db->query("SELECT userId,MONTH(submissionDate) as month,count(*) as jml FROM parana3 WHERE userId='$user' AND submissionDate >= '$startyear' AND submissionDate <= '$endDate' group by MONTH(submissionDate)")->result();
+        $data['s4'] = $db->query("SELECT userId,MONTH(submissionDate) as month,count(*) as jml FROM parana4 WHERE userId='$user' AND submissionDate >= '$startyear' AND submissionDate <= '$endDate' group by MONTH(submissionDate)")->result();
+        
         $form = [];
         foreach ($bulan_map as $bln=>$num){
-            $form[ucfirst($bln)] = ['s1'=>rand(15, 30),'s2'=>rand(15, 30),'s3'=>rand(15, 30),'s4'=>rand(15, 30)];
+            $form[ucfirst($bln)] = ['s1'=>0,'s2'=>0,'s3'=>0,'s4'=>0];
         }
+        
+        foreach ($data as $s=>$ds){
+            foreach ($ds as $d){
+                $form[ucfirst($bulan_map_flip[$d->month])][$s] += $d->jml;
+            }
+        }
+        
         $xlsForm = [];
-        $series1['page']='mmn';
+        $series1['page']='Ibu';
         $series1['title']='Jumlah Ibu yang mengikuti sesi karana';
         $series1['symbol']='';
         $series1['form']=$form;

@@ -115,11 +115,11 @@ class Laporan extends CI_Controller{
 
             $this->load->model('MmnFhwModel');
             if($data['mode']=='bulan_ini'){
-                $data['xlsForm']=$this->MmnFhwModel->cakupanBulanIni($data['kab']);
+                $data['xlsForm']=$this->MmnFhwModel->cakupanBulanIni($data['kab'],$bulan_map_flip[$data['bulan']]);
             }elseif($data['mode']=='akumulatif'){
-                $data['xlsForm']=$this->MmnFhwModel->cakupanAkumulatif($data['kab']);
+                $data['xlsForm']=$this->MmnFhwModel->cakupanAkumulatif($data['kab'],$bulan_map_flip[$data['bulan']]);
             }elseif($data['mode']=='semua_bulan'){
-                $data['xlsForm']=$this->MmnFhwModel->semuabulan($data['kab']);
+                $data['xlsForm']=$this->MmnFhwModel->semuabulan($data['kab'],  array_search($data['desa'], $data['dusuns']));
             }
 
             $data['location'] = $this->loc->getAllLoc('bidan');
@@ -154,11 +154,11 @@ class Laporan extends CI_Controller{
 
             $this->load->model('MmnModel');
             if($data['mode']=='bulan_ini'){
-                $data['xlsForm']=$this->MmnModel->cakupanBulanIni($data['kab']);
+                $data['xlsForm']=$this->MmnModel->cakupanBulanIni($data['kab'],$bulan_map_flip[$data['bulan']]);
             }elseif($data['mode']=='akumulatif'){
-                $data['xlsForm']=$this->MmnModel->cakupanAkumulatif($data['kab']);
+                $data['xlsForm']=$this->MmnModel->cakupanAkumulatif($data['kab'],$bulan_map_flip[$data['bulan']]);
             }elseif($data['mode']=='semua_bulan'){
-                $data['xlsForm']=$this->MmnModel->semuabulan($data['kab']);
+                $data['xlsForm']=$this->MmnModel->semuabulan($data['kab'],  array_search($data['desa'], $data['desas']));
             }
 
             if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
@@ -208,11 +208,11 @@ class Laporan extends CI_Controller{
 
             $this->load->model('ParanaFhwModel');
             if($data['mode']=='bulan_ini'){
-                $data['xlsForm']=$this->ParanaFhwModel->cakupanBulanIni($data['kab']);
+                $data['xlsForm']=$this->ParanaFhwModel->cakupanBulanIni($data['kab'],$bulan_map_flip[$data['bulan']]);
             }elseif($data['mode']=='akumulatif'){
-                $data['xlsForm']=$this->ParanaFhwModel->cakupanAkumulatif($data['kab']);
+                $data['xlsForm']=$this->ParanaFhwModel->cakupanAkumulatif($data['kab'],$bulan_map_flip[$data['bulan']]);
             }elseif($data['mode']=='semua_bulan'){
-                $data['xlsForm']=$this->ParanaFhwModel->semuabulan($data['kab']);
+                $data['xlsForm']=$this->ParanaFhwModel->semuabulan($data['kab'],  array_search($data['desa'], $data['dusuns']));
             }
 
             $data['location'] = $this->loc->getAllLoc('bidan');
@@ -248,11 +248,11 @@ class Laporan extends CI_Controller{
 
             $this->load->model('ParanaModel');
             if($data['mode']=='bulan_ini'){
-                $data['xlsForm']=$this->ParanaModel->cakupanBulanIni($data['kab']);
+                $data['xlsForm']=$this->ParanaModel->cakupanBulanIni($data['kab'],$bulan_map_flip[$data['bulan']]);
             }elseif($data['mode']=='akumulatif'){
-                $data['xlsForm']=$this->ParanaModel->cakupanAkumulatif($data['kab']);
+                $data['xlsForm']=$this->ParanaModel->cakupanAkumulatif($data['kab'],$bulan_map_flip[$data['bulan']]);
             }elseif($data['mode']=='semua_bulan'){
-                $data['xlsForm']=$this->ParanaModel->semuabulan($data['kab']);
+                $data['xlsForm']=$this->ParanaModel->semuabulan($data['kab'],  array_search($data['desa'], $data['desas']));
             }
 
             if($this->session->userdata('level')=="supervisor"&&$this->session->userdata('tipe')!="all"){
