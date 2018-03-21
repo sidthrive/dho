@@ -335,4 +335,16 @@ class Ujian extends CI_Controller{
         $this->SiteAnalyticsModel->trackPage($this->uri->rsegment(1),$this->uri->rsegment(2),base_url().$this->uri->uri_string);
     }
 
+    public function setJadwal(){
+        $this->load->model('RandomStringGenerator');
+        $bidans = $this->UjianModel->getUser('all');
+        foreach ($bidans as $bidan) {
+            $data['id_user'] = $bidan->id;
+            $data['id_tes'] = 3;
+            $data['tanggal_tes'] = date('Y-m-d');
+            $data['token'] = $this->RandomStringGenerator->generate(32);
+            $this->UjianModel->addJadwalBidan($data);
+        }
+    }
+
 }
