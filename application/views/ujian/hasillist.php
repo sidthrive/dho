@@ -52,7 +52,8 @@
                             <?php if($this->uri->segment(1)=='ujian'&&$p->aktif=='no'){ ?>
                             <a href="<?=base_URL()?>ujian/hasil/lihat/<?=$p->id?>" style="width: 100%" class="btn btn-primary btn-sm" title="Lihat Hasil"><i class="icon-edit icon-white"> </i> Detail</a>
                             <?php }elseif($this->uri->segment(1)=='hhhscore'&&$p->aktif=='no'){ ?>
-                            <a href="<?=base_URL()?>hhhscore/headscore/lihat/<?=$p->id?>" style="width: 100%" class="btn btn-primary btn-sm" title="Lihat Hasil"><i class="icon-edit icon-white"> </i> Detail</a>
+                            <div><a href="<?=base_URL()?>hhhscore/headscore/lihat/<?=$p->id?>" style="width: 100%" class="btn btn-primary btn-sm" title="Lihat Hasil"><i class="icon-edit icon-white"> </i> Detail</a></div>
+                            <div><a href="<?=base_URL()?>download/headscore/<?=$p->id?>" style="width: 100%" class="btn btn-danger btn-sm" title="Lihat Hasil" target="_blank"><i class="icon-edit icon-white"> </i> Download</a></div>
                             <?php } ?>
                         </div>
                     </td>
